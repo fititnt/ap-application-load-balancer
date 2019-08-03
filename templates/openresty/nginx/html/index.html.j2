@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ inventory_hostname }}</title>
+<meta name="robots" content="noindex">
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>{{ inventory_hostname }}</h1>
+<ul>
+    <li>Apps: <strong>https://MyApp.{{ apps_domain }}</strong></li>
+    <li>Tsuru target: <a href="https://{{ tsuru_target }}">https://{{ tsuru_target }}</a></li>
+    <li>Tsuru dashboard: <a href="https://{{ tsuru_dashboard }}">https://{{ tsuru_dashboard }}</a></li>
+    <li>Minio: <a href="https://{{ minio_domain }}">https://{{ minio_domain }}</a></li>
+</ul>
+<!--
+<p>If you see this page, the OpenResty web platform is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="https://openresty.org/">openresty.org</a>.<br/>
+Commercial support is available at
+<a href="https://openresty.com/">openresty.com</a>.</p>
+<p><em>Thank you for flying OpenResty.</em></p>
+<p>{{ inventory_hostname }}</p>
+<p>{{ tsuru_target }}</p>
+<p>{{ tsuru_target }}</p>
+<p>{{ apps_domain }}</p>
+-->
+</body>
+</html>
