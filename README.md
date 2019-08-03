@@ -1,5 +1,9 @@
-paas-host
-=========
+# AP Application Load Balancer
+
+```bash
+tail -f /var/log/application_load_balancer/access.log
+tail -f /var/log/application_load_balancer/error.log
+```
 
 Um guia sem automação de ansible de como fazer algo parecido pode ser lido em
 <https://github.com/EticaAI/aguia-pescadora/blob/master/diario-de-bordo/tsuru-inicializacao/seu-computador.sh>.
@@ -16,27 +20,24 @@ Veja também
 Arquivos 
 
 - Erros do OpenResty (NGinx, AutoSSL, proxy de entrada...)
-    - `/usr/local/openresty/nginx/logs/error.log`
+    - `tail -f /usr/local/openresty/nginx/logs/error.log`
+    - `tail -f /var/log/openrestyautossl/error.log`
 - Acesso do OpenResty (NGinx, AutoSSL, proxy de entrada...)
-    - `/usr/local/openresty/nginx/logs/access.log`
+    - `tail -f /usr/local/openresty/nginx/logs/access.log`
+    - `tail -f /var/log/openrestyautossl/access.log`
+
+Dica: você pode usar também o ngxtop <https://github.com/lebinh/ngxtop>.
 
 Requirements
 ------------
 
-- Chave SSH sem senha (requerimento do Tsuru)
-- Tsuru Client
-- Docker
-- Docker Machine
-
-Em <https://github.com/EticaAI/aguia-pescadora/blob/master/diario-de-bordo/tsuru-inicializacao/seu-computador.sh>
-explica como instalar tais requerimentos
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Ubuntu
+  - Ubuntu 18.04 (Recommended)
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+[defaults/main.yml](defaults/main.yml)
 
 Dependencies
 ------------

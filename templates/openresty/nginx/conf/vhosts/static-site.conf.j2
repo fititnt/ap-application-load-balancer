@@ -1,0 +1,51 @@
+# {{ ansible_managed }}
+#
+server {
+    listen 443 ssl;
+    server_name  {{ item.server_name|default(item.domain) }};
+    root {{ item.path }};
+
+    access_log  {{ application_load_balancer_logs_path }}/access-{{ item.server_name|default(item.domain) }}.log  main;
+    error_log  {{ application_load_balancer_logs_path }}/error-{{ item.server_name|default(item.domain) }}.log;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+
+    ssl_certificate_by_lua_block {
+      auto_ssl:ssl_certificate()
+    }
+    ssl_certificate /etc/ssl/resty-auto-ssl-fallback.crt;
+    ssl_certificate_key /etc/ssl/resty-auto-ssl-fallback.key;
+
+    location / {
+        root   {{ item.path }};
+        index  index.html index.htm;
+    }
+}
+
+server {
+    listen 80;
+
+    server_name {{ item.server_name|default(item.domain) }};
+    return 301 https://{{ item.server_name|default(item.domain) }}$request_uri;
+}
+
+## Redireciona TODO trafego de dominios nao conhecidos para o HTTPS
+#server {
+#    listen 80 default_server;
+#
+#    server_name _;
+#
+#    return 301 https://$host$request_uri;
+#}
+
+#server {
+#    listen       80;
+#    server_name  {{ item.server_name|default(item.domain) }};
+#
+#    location / {
+#        root   {{ item.path }};
+#        index  index.html index.htm;
+#    }
+#}

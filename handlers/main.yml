@@ -1,6 +1,7 @@
 ---
-# handlers file for 1-node-testserver
+# FILE: {{ role_path }}/handlers/main.yml
 
+# TODO: ver meio de testar se arquivos de configuração estão ok ANTES de dar reload/restart no OpenResty (fititnt, 2019-07-28 23:15 BRT)
 
 - name: reload openresty
   service: name=openresty state=reloaded

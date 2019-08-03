@@ -1,0 +1,17 @@
+---
+
+# FILE:            {{ role_path }}/tasks/sites.yml
+# LICENSE:         Public Domain
+
+## NGinx Server Blocks (e.g. ~Apache Virtual Hosts)
+
+- name: "NGinx Server Blocks (e.g. ~Apache Virtual Hosts)"
+  template:
+    src: "{{ item.vhost_template|default(application_load_balancer_apps_serverblock_template) }}"
+    dest: "/usr/local/openresty/nginx/conf/sites-enabled/{{ item.domain }}.conf"
+    owner: root
+    group: "root"
+    mode: 0644
+    backup: yes
+  with_items: "{{ application_load_balancer_apps }}"
+  notify: reload openresty

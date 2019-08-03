@@ -1,10 +1,42 @@
 ---
-# defaults file for 1-node-tsuru-autossl
+# FILE: {{ role_path }}/defaults/main.yml
 
-# @see https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
-paas_host: "example.com"
-tsuru_target: "tsuru.{{paas_host}}"
-tsuru_dashboard: "tsuru-dashboard.{{paas_host}}"
-minio_domain: "minio.{{paas_host}}"
-minio_ip_port: "127.0.0.1:9000"
-apps_domain: "app.{{paas_host}}"
+application_load_balancer_name: "AP Application Load Balancer"
+application_load_balancer_hide_alb: yes
+application_load_balancer_forcedebug: no
+
+application_load_balancer_apps: []
+# application_load_balancer_apps_: []
+
+application_load_balancer_apps_serverblock_template: '{{ role_path }}/templates/openresty/nginx/conf/vhosts/static-site.conf.j2'
+
+# Note: at this moment, only "file" implemented. But later "syslog" could be one option
+application_load_balancer_logs_method: "file"
+
+# TODO: considerar implementar logrotate (fititnt, 2019-07-28 23:00 BRT)
+application_load_balancer_logs_path: "/var/log/application_load_balancer"
+
+### NGinx (OpenResty) __________________________________________________________
+application_load_balancer_nginxconf_template: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
+
+# If you use "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
+# and not a very customized nginx.conf, you can customize with these variables
+
+application_load_balancer_nginx_user: "www-data"
+
+# See {{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2
+application_load_balancer_nginx_maincontext_custom: |
+  # FILE: /usr/local/openresty/nginx/conf/nginx.conf
+  # NGINX CONTEXT: main (global)
+  # Change-me with variable application_load_balancer_nginx
+
+application_load_balancer_nginx_eventscontext_custom: |
+  # FILE: /usr/local/openresty/nginx/conf/nginx.conf
+  # NGINX CONTEXT: events
+  # Change-me with variable application_load_balancer_nginx_eventscontext_custom
+
+application_load_balancer_nginx_httpcontext_custom: |
+  # FILE: /usr/local/openresty/nginx/conf/nginx.conf
+  # NGINX CONTEXT: events
+  # Change-me with variable application_load_balancer_nginx_eventscontext_custom
+  
