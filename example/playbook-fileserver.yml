@@ -1,0 +1,22 @@
+---
+
+- name: "ap-application-load-balancer example: 1 node fileserver"
+  hosts: mnemosine
+  remote_user: root
+  vars:
+    application_load_balancer_apps:
+
+      - app_uid: "minio"
+        app_domain: "minio.example.org"
+        app_alb_strategy: "proxy"
+        app_alb_proxy: "127.0.0.0:9000"
+
+      - app_uid: "minio"
+        app_domain: "arquivo-interno.example.org"
+        app_alb_strategy: "proxy"
+        app_alb_proxy: ":::9091"
+
+
+  roles:
+    - common
+    - { role: ap-application-load-balancer }

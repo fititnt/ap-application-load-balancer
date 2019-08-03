@@ -3,9 +3,6 @@
 # FILE:            {{ role_path }}/tasks/openresty-luarocks-lua-resty-auto-ssl-install.yml
 # LICENSE:         Public Domain
 
-# openresty errors:
-# tail -f /usr/local/openresty/nginx/logs/error.log
-
 
 ## openresty? luarocks? lua-resty-auto-ssl? ____________________________________
 - name: "openresty?"

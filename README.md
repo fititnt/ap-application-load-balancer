@@ -1,32 +1,38 @@
-# AP Application Load Balancer
+# Águia Pescadora Application Load Balancer (AP-ALB)
+**[Not Production Ready] [Águia Pescadora](https://aguia-pescadora.etica.ai/)
+Application Load Balancer (Ansible Role)**.
+
+> TL;DR: you can use this and other works from Emerson Rocha or Etica.AI as
+reference (from underline tools to full use of Infrastructure As Code). But
+since we can't make promisses of full backward compatibility and we're testing
+in very specific scenarios we're not only OK that you can copy the Ansible Role
+and make you custom version, but strongly recommended strategy. The brand
+"Águia Pescadora" / "AP" / "ap-" are not used on internal code, so this code
+base is very useful to reuse parts betwen projects and even rebrand for
+humanitarian or commercial projects from who help we on Etica.AI.
+
+<!--Emerson Rocha dedicated this work to Public Domain -->
+
+# The Solution Stack
+
+## Core
+
+- [OpenResty](https://openresty.org) (NGinx Fork)
+- [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl)
+
+## Extras
+
+(...)
+
+## Debug
 
 ```bash
 tail -f /var/log/application_load_balancer/access.log
 tail -f /var/log/application_load_balancer/error.log
+# Minio keys
+cat /usr/local/share/minio/minio.sys/config/config.json
+cat /minio-test/.minio.sys/config/config.json
 ```
-
-Um guia sem automação de ansible de como fazer algo parecido pode ser lido em
-<https://github.com/EticaAI/aguia-pescadora/blob/master/diario-de-bordo/tsuru-inicializacao/seu-computador.sh>.
-
-Veja também
-
-- https://github.com/fititnt/cplp-aiops/issues/58
-- https://github.com/fititnt/cplp-aiops/issues/59
-- https://github.com/fititnt/cplp-aiops/tree/master/logbook/aguia-pescadora-charlie/__external-configs
-- https://github.com/EticaAI/aguia-pescadora/issues/26
-- https://github.com/EticaAI/aguia-pescadora/blob/master/diario-de-bordo/delta.sh
-
-
-Arquivos 
-
-- Erros do OpenResty (NGinx, AutoSSL, proxy de entrada...)
-    - `tail -f /usr/local/openresty/nginx/logs/error.log`
-    - `tail -f /var/log/openrestyautossl/error.log`
-- Acesso do OpenResty (NGinx, AutoSSL, proxy de entrada...)
-    - `tail -f /usr/local/openresty/nginx/logs/access.log`
-    - `tail -f /var/log/openrestyautossl/access.log`
-
-Dica: você pode usar também o ngxtop <https://github.com/lebinh/ngxtop>.
 
 Requirements
 ------------
@@ -39,10 +45,9 @@ Role Variables
 
 [defaults/main.yml](defaults/main.yml)
 
+<!--
 Dependencies
 ------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
 
 Example Playbook
 ----------------
@@ -55,5 +60,8 @@ Including an example of how to use your role (for instance, with variables passe
 
 License
 -------
+
+-->
+# License
 
 Public Domain

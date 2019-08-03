@@ -6,6 +6,7 @@ application_load_balancer_hide_alb: yes
 application_load_balancer_forcedebug: no
 
 application_load_balancer_apps: []
+
 # application_load_balancer_apps_: []
 
 application_load_balancer_apps_serverblock_template: '{{ role_path }}/templates/openresty/nginx/conf/vhosts/static-site.conf.j2'
@@ -40,3 +41,43 @@ application_load_balancer_nginx_httpcontext_custom: |
   # NGINX CONTEXT: events
   # Change-me with variable application_load_balancer_nginx_eventscontext_custom
   
+
+### vnStat _____________________________________________________________________
+# @see https://humdi.net/vnstat/
+# @see https://www.howtoforge.com/tutorial/vnstat-network-monitoring-ubuntu/
+
+
+
+### Application Load Balancer - Internal Use ___________________________________
+# If you are creating custom ALB Rules (e.g. OpenResty Server Blocks) you will
+# need to consider these rules
+
+
+application_load_balancer_apprule_automatichttps_httpsblock: |
+  ## Automatic HTTPS / 443 port (DO NOT REMOVE) - Start
+  # Fallback certificate
+  ssl_certificate /etc/ssl/resty-auto-ssl-fallback.crt;
+  ssl_certificate_key /etc/ssl/resty-auto-ssl-fallback.key;
+
+  # Real certificate
+  ssl_certificate_by_lua_block {
+    auto_ssl:ssl_certificate()
+  }
+
+  #  Let's Encrypt acme-challenge
+  location /.well-known/acme-challenge/ {
+    content_by_lua_block {
+      auto_ssl:challenge_server()
+    }
+  }
+  ## Automatic HTTPS / 443 port (DO NOT REMOVE) - Start
+
+application_load_balancer_apprule_automatichttp_httpsblock: |
+  ## Automatic HTTPS / :80 port (DO NOT REMOVE) - Start
+  #  Let's Encrypt acme-challenge
+  location /.well-known/acme-challenge/ {
+    content_by_lua_block {
+      auto_ssl:challenge_server()
+    }
+  }
+  ## Automatic HTTPS / :80 port (DO NOT REMOVE) - Start

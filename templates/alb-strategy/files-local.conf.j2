@@ -1,0 +1,33 @@
+# {{ ansible_managed }}
+#
+# Minio
+# https://docs.min.io/docs/setup-nginx-proxy-with-minio.html
+server {
+    listen 443 ssl;
+    server_name  {{ item.app_domain }};
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    {{ application_load_balancer_apprule_automatichttps_httpsblock }}
+
+    location / {
+        root   {{ item.app_root }};
+        index  {{ item.app_index|default('index.html index.htm') }};
+    }
+}
+
+server {
+    listen 80;
+
+    server_name {{ item.server_name|default(item.app_domain) }};
+    # return 301 https://{{ item.server_name|default(item.app_domain) }}$request_uri;
+
+    # TODO: testar configuração a seguir aqui, e permitir que ele faça o resto
+
+    # NOTA: curl -I http://site.com/.well-known/acme-challenge/aaaa
+    #       rem redirecionado para httpS em vez de exibir o acme challange
+
+
+    {{ application_load_balancer_apprule_automatichttp_httpsblock }}
+}

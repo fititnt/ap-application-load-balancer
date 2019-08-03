@@ -1,0 +1,48 @@
+# {{ ansible_managed }}
+#
+# Minio
+# https://docs.min.io/docs/setup-nginx-proxy-with-minio.html
+server {
+    listen 443 ssl;
+    server_name  {{ item.app_domain }};
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    {{ application_load_balancer_apprule_automatichttps_httpsblock }}
+
+    ## @see # https://docs.min.io/docs/setup-nginx-proxy-with-minio.html
+    # To allow special characters in headers
+    ignore_invalid_headers off;
+    # Allow any size file to be uploaded.  
+    # Set to a value such as 1000m; to restrict file size to a specific value
+    client_max_body_size 0;
+    # To disable buffering
+
+    location / {
+        add_header X-Served-By $hostname;
+        proxy_ignore_client_abort on;
+        proxy_set_header Host $host;
+
+        proxy_pass   {{ item.app_alb_proxy }};
+        # health_check uri=/minio/health/ready;
+        # healt check é apenas NGinx Plus? Humm
+        # health_check uri=/some/path;
+        # health_check interval=10 fails=3 passes=2;
+    }
+}
+
+server {
+    listen 80;
+
+    server_name {{ item.server_name|default(item.app_domain) }};
+    # return 301 https://{{ item.server_name|default(item.app_domain) }}$request_uri;
+
+    # TODO: testar configuração a seguir aqui, e permitir que ele faça o resto
+
+    # NOTA: curl -I http://site.com/.well-known/acme-challenge/aaaa
+    #       rem redirecionado para httpS em vez de exibir o acme challange
+
+
+    {{ application_load_balancer_apprule_automatichttp_httpsblock }}
+}

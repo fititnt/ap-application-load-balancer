@@ -11,10 +11,11 @@
 - name: Arquivos padrões do OpenResty
   include: default-files.yml
 
-- name: Cria configurações para servir cada site específico
-  include: sites.yml
+- name: ALB rule for each App
+  include: apps.yml
   tags:
-  - serverblocksetup
+  - alb
+  - alb-app
 
 #- name: Sites HTML estático
 #  include: sites-static.yml
