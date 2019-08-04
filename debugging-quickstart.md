@@ -10,6 +10,11 @@ netstat -ntulp
 systemctl status haproxy
 systemctl status openresty
 systemctl status ufw
+
+# Configuration files
+vim /etc/haproxy/haproxy.cfg
+vim /usr/local/openresty/nginx/conf/nginx.conf
+vim /usr/local/openresty/nginx/conf/sites-enabled/MYAPPHERE.conf
 ```
 
 ## HAProxy

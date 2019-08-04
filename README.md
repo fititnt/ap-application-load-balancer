@@ -13,41 +13,38 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 <!--Emerson Rocha dedicated this work to Public Domain -->
 
-# The Solution Stack
+# The Solution Stack of AP-ALB
 
-## Core
+- **Infrastructure as Code**:
+  - [Ansible](https://github.com/ansible/ansible) _(See: [Ansibe documentation](https://docs.ansible.com/))_
+- **Operational System**:
+  - [Ubuntu Server LTS](https://ubuntu.com/)
+- **Firewall**
+  - _Not implemented/Not Documented_
+- **Load Balancing**
+  - [HAProxy 2.0.x](https://github.com/haproxy/haproxy)
+    _(See: [HAProxy starter guide](https://cbonte.github.io/haproxy-dconv/2.0/intro.html),
+    [HAProxy Configuration Manual](https://cbonte.github.io/haproxy-dconv/2.0/configuration.html),
+    [HAProxy Management Guide](https://cbonte.github.io/haproxy-dconv/2.0/management.html))_
+  - [OpenResty](https://openresty.org) _(See: [NGINX Wiki!](https://www.nginx.com/resources/wiki/))_
+- **Automatic HTTPS**
+  - [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl)
+  - [Let’s Encrypt](https://letsencrypt.org/docs/)
 
-- [Ansible](https://github.com/ansible/ansible)
-- [Ubuntu Server LTS](https://ubuntu.com/)
-- [OpenResty](https://openresty.org) (NGinx Fork)
-- [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl)
+## How to use
 
-## Extras
+_(TODO: document how to use (fititnt, 2019-08-04 04:31 BRT)_
 
-> TODO: add non-core extras that (via configuration) can be enabled (fititnt, 2019-08-03 23:06 BRT)
+### Advanced usage
 
-## Debug
-
-```bash
-tail -f /var/log/application_load_balancer/access.log
-tail -f /var/log/application_load_balancer/error.log
-# Minio keys
-cat /usr/local/share/minio/minio.sys/config/config.json
-cat /minio-test/.minio.sys/config/config.json
-```
-
-Requirements
-------------
-
-- Ubuntu
-  - Ubuntu 18.04 (Recommended)
-
-Role Variables
---------------
-
-[defaults/main.yml](defaults/main.yml)
+- See variables [defaults/main.yml](defaults/main.yml)
+- See [debugging-quickstart.md](debugging-quickstart.md).
 
 # TODO
+
+- Rewrite/reorganize some tasks files, in special the
+  [tasks/default-files.yml](tasks/default-files.yml) that is doing too much for
+  different services
 - Document strategy to use AP-ALB to secure Elastic Search without X-Pack
   - Some links about
     - https://discuss.elastic.co/t/basic-authentication-of-es-without-x-pack/94840
