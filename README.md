@@ -17,12 +17,14 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 ## Core
 
+- [Ansible](https://github.com/ansible/ansible)
+- [Ubuntu Server LTS](https://ubuntu.com/)
 - [OpenResty](https://openresty.org) (NGinx Fork)
 - [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl)
 
 ## Extras
 
-(...)
+> TODO: add non-core extras that (via configuration) can be enabled (fititnt, 2019-08-03 23:06 BRT)
 
 ## Debug
 
@@ -45,23 +47,15 @@ Role Variables
 
 [defaults/main.yml](defaults/main.yml)
 
-<!--
-Dependencies
-------------
+# TODO
+- Document strategy to use AP-ALB to secure Elastic Search without X-Pack
+  - Some links about
+    - https://discuss.elastic.co/t/basic-authentication-of-es-without-x-pack/94840
+    - https://discuss.elastic.co/t/basic-auth-on-kibana-using-nginx/158871
 
-Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
-
-License
--------
-
--->
 # License
+[![Public Domain](https://i.creativecommons.org/p/zero/1.0/88x31.png)](UNLICENSE)
 
-Public Domain
+To the extent possible under law, [Etica.AI](https://etica.ai/) has waived all
+copyright and related or neighboring rights to this work to
+[Public Domain](UNLICENSE).
