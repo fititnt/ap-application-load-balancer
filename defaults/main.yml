@@ -85,6 +85,8 @@ application_load_balancer_apprule_automatichttp_httpsblock: |
 ## Internal use / Placeholder tags _____________________________________________
 application_load_balancer_openresty_httpport: 8080
 application_load_balancer_openresty_httpsport: 4443
+application_load_balancer_haproxy_httpport: 80
+application_load_balancer_haproxy_httpsport: 443
 application_load_balancer_haproxy_haproxy_template: "{{ role_path }}/files/haproxy-minimal.cfg.j2"
 
 #

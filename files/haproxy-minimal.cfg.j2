@@ -5,6 +5,9 @@
 # HELP:            https://cbonte.github.io/haproxy-dconv/2.0/intro.html
 # HELP:            https://cbonte.github.io/haproxy-dconv/2.0/configuration.html
 # HELP:            https://cbonte.github.io/haproxy-dconv/2.0/management.html
+#
+# To check if this file is valid, use
+# /usr/sbin/haproxy -c -V -f /etc/haproxy/haproxy.cfg
 
 global
 	log /dev/log	local0
@@ -43,3 +46,14 @@ defaults
 	errorfile 502 /etc/haproxy/errors/502.http
 	errorfile 503 /etc/haproxy/errors/503.http
 	errorfile 504 /etc/haproxy/errors/504.http
+
+listen http-in
+    bind *:{{ application_load_balancer_haproxy_httpport }}
+    server server1 127.0.0.1:{{ application_load_balancer_openresty_httpport }} maxconn 32
+
+listen https-in
+    # 'mode tcp' is required if backend is doing the full HTTPS termination
+    # @see https://serversforhackers.com/c/using-ssl-certificates-with-haproxy
+    mode tcp
+    bind *:{{ application_load_balancer_haproxy_httpsport }}
+    server server1 127.0.0.1:{{ application_load_balancer_openresty_httpsport }} maxconn 32

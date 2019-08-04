@@ -68,7 +68,7 @@
 - name: /usr/local/openresty/nginx/conf/nginx.conf
   template:
     # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
-    src: "{{ application_load_balancer_haproxy_haproxy_template }}"
+    src: "{{ application_load_balancer_nginxconf_template }}"
     dest: /usr/local/openresty/nginx/conf/nginx.conf
     owner: root
     group: root

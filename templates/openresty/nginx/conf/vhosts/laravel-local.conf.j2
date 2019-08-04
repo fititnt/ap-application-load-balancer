@@ -72,7 +72,8 @@ server {
 }
 
 server {
-    listen 80;
+    # listen 80;
+    listen {{ application_load_balancer_openresty_httpport };
 
     server_name {{ item.server_name|default(item.domain) }};
     # return 301 https://{{ item.server_name|default(item.domain) }}$request_uri;

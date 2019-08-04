@@ -3,7 +3,8 @@
 # Minio
 # https://docs.min.io/docs/setup-nginx-proxy-with-minio.html
 server {
-    listen 443 ssl;
+    # listen 443 ssl;
+    listen {{ application_load_balancer_openresty_httpsport }} ssl;
     server_name  {{ item.app_domain }};
 
     location = /favicon.ico { access_log off; log_not_found off; }
@@ -18,7 +19,8 @@ server {
 }
 
 server {
-    listen 80;
+    # listen 80;
+    listen {{ application_load_balancer_openresty_httpport }};
 
     server_name {{ item.server_name|default(item.app_domain) }};
     # return 301 https://{{ item.server_name|default(item.app_domain) }}$request_uri;

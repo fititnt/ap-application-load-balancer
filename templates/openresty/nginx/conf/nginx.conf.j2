@@ -82,7 +82,8 @@ http {
 
     # HTTPS server
     server {
-      listen 443 ssl;
+      # listen 443 ssl;
+      listen {{ application_load_balancer_openresty_httpsport }} ssl;
 
       # Dynamic handler for issuing or returning certs for SNI domains.
       ssl_certificate_by_lua_block {
@@ -103,7 +104,8 @@ http {
 
     # HTTP server
     server {
-      listen 80;
+      # listen 80;
+      listen {{ application_load_balancer_openresty_httpport }};
 
       # Endpoint used for performing domain verification with Let's Encrypt.
       location /.well-known/acme-challenge/ {
@@ -130,7 +132,8 @@ http {
     }
 
     server {
-        listen 443 ssl default_server;
+        # listen 443 ssl default_server;
+        listen {{ application_load_balancer_openresty_httpsport }} ssl default_server;
         server_name  _;
 
         location = /favicon.ico { access_log off; log_not_found off; }
@@ -159,7 +162,8 @@ http {
     }
 
     server {
-        listen 80 default_server;
+        #listen 80 default_server;
+        listen {{ application_load_balancer_openresty_httpport }} default_server;
     
         server_name _;
     
