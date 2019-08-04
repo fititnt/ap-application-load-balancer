@@ -7,9 +7,16 @@
 
 - name: Instalação de OpenResty, Lua Rest & Lua Resty AutoSSL (faz o HTTPS para os Apps)
   include: openresty-luarocks-lua-resty-auto-ssl-install.yml
+  tags:
+  - alb
+  - alb-openresty
 
+# TODO: break default-files.yml in multiple files (fititnt, 2019-08-04 01:34 BRT)
 - name: Arquivos padrões do OpenResty
   include: default-files.yml
+  tags:
+  - alb
+  - alb-openresty
 
 - name: ALB rule for each App
   include: apps.yml
@@ -17,10 +24,13 @@
   - alb
   - alb-app
 
+# ansible-playbook -i hosts mnemosine.yml --skip-tags "alb-openresty,alb-app"
 - name: HAproxy
   include: haproxy.yml
   tags:
+  - alb
   - alb-haproxy
+  when: application_load_balancer_forceignore_haproxy is defined and application_load_balancer_forceignore_haproxy != true
 
 #- name: Sites HTML estático
 #  include: sites-static.yml

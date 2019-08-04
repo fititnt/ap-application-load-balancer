@@ -9,3 +9,5 @@
 - name: restart openresty
   service: name=openresty state=restarted
 
+- name: reload haproxy
+  service: name=haproxy state=restarted

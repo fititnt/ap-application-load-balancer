@@ -13,3 +13,15 @@
   apt:
     name: 'haproxy=2.0.*'
     state: 'present'
+
+- name: /etc/haproxy/haproxy.cfg
+  template:
+    # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
+    src: "{{ application_load_balancer_haproxy_haproxy_template }}"
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+  notify:
+    - reload haproxy
