@@ -1,0 +1,15 @@
+---
+# FILE:            {{ role_path }}/tasks/haproxy.yml
+# LICENSE:         Public Domain
+
+# https://haproxy.debian.net/#?distribution=Ubuntu&release=bionic&version=2.0
+
+- name: "add-apt-repository ppa:vbernat/haproxy-2.0"
+  apt_repository:
+    repo: ppa:vbernat/haproxy-2.0
+    update_cache: yes
+
+- name: 'apt-get install haproxy=2.0.\*'
+  apt:
+    name: 'haproxy=2.0.*'
+    state: 'present'

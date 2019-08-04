@@ -17,6 +17,11 @@
   - alb
   - alb-app
 
+- name: HAproxy
+  include: haproxy.yml
+  tags:
+  - alb-haproxy
+
 #- name: Sites HTML estático
 #  include: sites-static.yml
 #  tags:

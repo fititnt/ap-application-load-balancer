@@ -81,3 +81,8 @@ application_load_balancer_apprule_automatichttp_httpsblock: |
     }
   }
   ## Automatic HTTPS / :80 port (DO NOT REMOVE) - Start
+
+## Internal use / Placeholder tags _____________________________________________
+application_load_balancer_forceignore_haproxy: no
+application_load_balancer_forceignore_openresty: no
+application_load_balancer_forceignore_ufw: no
