@@ -1,12 +1,12 @@
-# Águia Pescadora Application Load Balancer (AP-ALB)
-**[Not Production Ready] [Águia Pescadora](https://aguia-pescadora.etica.ai/)
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.2-beta
+**[Águia Pescadora](https://aguia-pescadora.etica.ai/)
 Application Load Balancer (Ansible Role)**.
 
 > TL;DR: you can use this and other works from Emerson Rocha or Etica.AI as
 reference (from underline tools to full use of Infrastructure As Code). But
 since we can't make promisses of full backward compatibility and we're testing
-in very specific scenarios we're not only OK that you can copy the Ansible Role
-and make you custom version, but strongly recommended strategy. The brand
+in very specific scenarios **we're not only OK that you can copy the Ansible Role
+and make you custom version, but strongly recommended strategy**. The brand
 "Águia Pescadora" / "AP" / "ap-" are not used on internal code, so this code
 base is very useful to reuse parts betwen projects and even rebrand for
 humanitarian or commercial projects from who help we on Etica.AI.
@@ -20,7 +20,9 @@ humanitarian or commercial projects from who help we on Etica.AI.
 - **Operational System**:
   - [Ubuntu Server LTS](https://ubuntu.com/)
 - **Firewall**
-  - _Not implemented/Not Documented_
+  - _Not implemented/Not Documented_.
+    - **Please use your own firewall rules**.
+    - Tip: you can use [EticaAI/aguia-pescadora-ansible-playbooks/tarefa/firewall](https://github.com/EticaAI/aguia-pescadora-ansible-playbooks/tree/master/tarefa/firewall) as reference.
 - **Load Balancing**
   - [HAProxy 2.0.x](https://github.com/haproxy/haproxy)
     _(See: [HAProxy starter guide](https://cbonte.github.io/haproxy-dconv/2.0/intro.html),
@@ -33,7 +35,10 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 ## How to use
 
-_(TODO: document how to use (fititnt, 2019-08-04 04:31 BRT)_
+TL;DR: See [example/playbook-basic.yml](example/playbook-basic.yml) and
+[example/playbook-complex.yml](example/playbook-complex.yml) for some examples
+of usage.
+
 
 ### Advanced usage
 
@@ -42,6 +47,8 @@ _(TODO: document how to use (fititnt, 2019-08-04 04:31 BRT)_
 
 # TODO
 
+- Improve documentation
+- Add at least one <https://asciinema.org/> demonstration
 - Rewrite/reorganize some tasks files, in special the
   [tasks/default-files.yml](tasks/default-files.yml) that is doing too much for
   different services

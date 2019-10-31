@@ -1,0 +1,24 @@
+---
+
+- name: "ap-application-load-balancer playbook example (complex)"
+  hosts: mnemosine
+  remote_user: root
+  vars:
+    application_load_balancer_name: "MyALBName/2.0"
+    application_load_balancer_forcedebug: yes
+    application_load_balancer_apps:
+
+      - app_uid: "static-home-page"
+        app_domain: "www.example.org"
+        app_root: "/var/www/html"
+        app_forcehttps: no
+        app_alb_strategy: "files-local"
+
+      - app_uid: "minio"
+        app_domain: "minio.example.org"
+        app_alb_strategy: "proxy"
+        app_forcehttps: yes
+        app_alb_proxy: ":::9091"
+
+  roles:
+    - { role: ap-application-load-balancer }
