@@ -23,7 +23,15 @@ server {
     listen {{ application_load_balancer_openresty_httpport }};
 
     server_name {{ item.server_name|default(item.app_domain) }};
-    # return 301 https://{{ item.server_name|default(item.app_domain) }}$request_uri;
+
+{% if item.app_forcehttps is defined and item.app_forcehttps is sameas true %}
+    return 301 https://{{ item.server_name|default(item.app_domain) }}$request_uri;
+{% endif %}
+
+    location / {
+        root   {{ item.app_root }};
+        index  {{ item.app_index|default('index.html index.htm') }};
+    }
 
     # TODO: testar configuração a seguir aqui, e permitir que ele faça o resto
 

@@ -15,6 +15,10 @@ systemctl status ufw
 vim /etc/haproxy/haproxy.cfg
 vim /usr/local/openresty/nginx/conf/nginx.conf
 vim /usr/local/openresty/nginx/conf/sites-enabled/MYAPPHERE.conf
+
+# Log files
+tail -f /var/log/application_load_balancer/access.log
+tail -f /var/log/application_load_balancer/error.log
 ```
 
 ## HAProxy
