@@ -1,0 +1,6 @@
+---
+
+- name: "sudo add-apt-repository ppa:ondrej/php"
+  apt_repository:
+    repo: ppa:ondrej/php
+    update_cache: yes

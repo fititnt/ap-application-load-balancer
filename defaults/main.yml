@@ -82,6 +82,11 @@ application_load_balancer_apprule_automatichttp_httpsblock: |
   }
   ## Automatic HTTPS / :80 port (DO NOT REMOVE) - Start
 
+### AP-ALB++ PHP _______________________________________________________________
+application_load_balancer_extra_php:
+  enable: false
+
+
 ## Internal use / Placeholder tags _____________________________________________
 application_load_balancer_openresty_httpport: 8080
 application_load_balancer_openresty_httpsport: 4443

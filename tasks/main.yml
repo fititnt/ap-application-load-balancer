@@ -18,19 +18,28 @@
   - alb
   - alb-openresty
 
-- name: ALB rule for each App
-  include: apps.yml
-  tags:
-  - alb
-  - alb-app
-
-# ansible-playbook -i hosts mnemosine.yml --skip-tags "alb-openresty,alb-app"
+# ansible-playbook -i hosts myplaybook.yml --skip-tags "alb-openresty,alb-app,alb-extra-php"
 - name: HAproxy
   include: haproxy.yml
   tags:
   - alb
   - alb-haproxy
   when: application_load_balancer_forceignore_haproxy is defined and application_load_balancer_forceignore_haproxy != true
+
+# ansible-playbook -i hosts myplaybook.yml --skip-tags "alb-openresty,alb-app,alb-haproxy"
+# ansible-playbook -i hosts eticaai-data-warehouse.yml --skip-tags "alb-openresty,alb-app,alb-haproxy"
+- name: "AP-ALB++: setup local installation of PHP-FPM (Use ppa:ondrej/php)"
+  include: extra-php.yml
+  tags:
+  - alb
+  - alb-extra-php
+  when: application_load_balancer_extra_php is defined and application_load_balancer_extra_php.enabled is defined and application_load_balancer_extra_php.enabled == true
+
+- name: ALB rule for each App
+  include: apps.yml
+  tags:
+  - alb
+  - alb-app
 
 #- name: Sites HTML estático
 #  include: sites-static.yml
