@@ -2,6 +2,24 @@
 **[Águia Pescadora](https://aguia-pescadora.etica.ai/)
 Application Load Balancer (Ansible Role)**.
 
+AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
+via [Ansible](https://docs.ansible.com/) to automate creation and maintance of
+with features common on expensive _Application Load Balancer_ of some cloud
+providers** (e.g. [Alibaba](https://www.alibabacloud.com/product/server-load-balancer),
+[AWS](https://aws.amazon.com/elasticloadbalancing/),
+[Azure](https://azure.microsoft.com/en-us/services/load-balancer/),
+[GCloud](https://cloud.google.com/load-balancing/),
+[IBM](https://www.ibm.com/cloud/load-balancer), etc). It can be used both to
+create your own ALB on cheaper hardware on these same cloud providers or
+have your own ALB on any other provider of VPSs or bare metal servers.
+
+**There is no vendor lock in**, not even as option on AP-ALB. But before you
+start the computer that will run and manage the target servers need already be
+able to connect them via SSH as sudo user. Even our choice on **HAproxy** and
+**OpenResty/NGinx** very likely to be the ones some big cloud providers use.
+
+<!--
+
 > TL;DR: you can use this and other works from Emerson Rocha or Etica.AI as
 reference (from underline tools to full use of Infrastructure As Code). But
 since we can't make promisses of full backward compatibility and we're testing
@@ -10,6 +28,8 @@ and make you custom version, but strongly recommended strategy**. The brand
 "Águia Pescadora" / "AP" / "ap-" are not used on internal code, so this code
 base is very useful to reuse parts betwen projects and even rebrand for
 humanitarian or commercial projects from who help we on Etica.AI.
+
+-->
 
 <!--Emerson Rocha dedicated this work to Public Domain -->
 
@@ -38,6 +58,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
   - [Let’s Encrypt](https://letsencrypt.org/docs/)
 
 ## How to use
+
 
 > TL;DR: See [example/playbook-basic.yml](example/playbook-basic.yml) and
 [example/playbook-complex.yml](example/playbook-complex.yml) for some examples
@@ -96,9 +117,8 @@ See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
   used on each application
 - See [debugging-quickstart.md](debugging-quickstart.md).
 
-# TODO
+# To Do
 
-- Improve documentation
 - Add at least one <https://asciinema.org/> demonstration
 - Rewrite/reorganize some tasks files, in special the
   [tasks/default-files.yml](tasks/default-files.yml) that is doing too much for
@@ -107,6 +127,11 @@ See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
   - Some links about
     - https://discuss.elastic.co/t/basic-authentication-of-es-without-x-pack/94840
     - https://discuss.elastic.co/t/basic-auth-on-kibana-using-nginx/158871
+- Add (or at least document) how to share HTTPS certificates accross cluster
+  of load balancers
+    - Hint: check <https://github.com/GUI/lua-resty-auto-ssl> and use Redis as
+      storage instead of local filesystem.
+
 
 # License
 [![Public Domain](https://i.creativecommons.org/p/zero/1.0/88x31.png)](UNLICENSE)
