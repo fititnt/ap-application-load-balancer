@@ -85,7 +85,49 @@ application_load_balancer_apprule_automatichttp_httpsblock: |
 ### AP-ALB++ PHP _______________________________________________________________
 application_load_balancer_extra_php:
   enable: false
+  php73:
+    enabled: true
+    state: present
+    packages:
+      # - your
+      # - custom
+      # - packages
 
+application_load_balancer_extra_php__default_php72_packages:
+  - php7.2-common
+  - php7.2-fpm
+  - php7.2-gd
+  - php7.2-curl
+  - php7.2-zip
+  - php7.2-mysql
+  - php7.2-imagick
+  - php7.2-geoip
+  - php7.2-intl
+  - php7.2-mbstring
+
+application_load_balancer_extra_php__default_php73_packages:
+  - php7.3-common
+  - php7.3-fpm
+  - php7.3-gd
+  - php7.3-curl
+  - php7.3-zip
+  - php7.3-mysql
+  - php7.3-imagick
+  - php7.3-geoip
+  - php7.3-intl
+  - php7.3-mbstring
+
+application_load_balancer_extra_php__default_php74_packages:
+  - php7.4-common
+  - php7.4-fpm
+  - php7.4-gd
+  - php7.4-curl
+  - php7.4-zip
+  - php7.4-mysql
+  - php7.4-imagick
+  - php7.4-geoip
+  - php7.4-intl
+  - php7.4-mbstring
 
 ## Internal use / Placeholder tags _____________________________________________
 application_load_balancer_openresty_httpport: 8080

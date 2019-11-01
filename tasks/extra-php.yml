@@ -4,3 +4,13 @@
   apt_repository:
     repo: ppa:ondrej/php
     update_cache: yes
+
+- name: 'apt-get install php73 (...)'
+  apt:
+    name: "{{ application_load_balancer_extra_php.php73.packages|default(application_load_balancer_extra_php__default_php73_packages) }}"
+    state: "{{ application_load_balancer_extra_php.php73.state|default('present') }}"
+  when: application_load_balancer_extra_php.php73 is defined and application_load_balancer_extra_php.php73.enabled is defined and application_load_balancer_extra_php.php73.enabled == true
+
+- name: debug
+  debug:
+    msg: "{{ application_load_balancer_extra_php }}"
