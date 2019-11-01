@@ -1,9 +1,6 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.3-beta
-**[Águia Pescadora](https://aguia-pescadora.etica.ai/)
-Application Load Balancer (Ansible Role)**.
-
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.4-beta
 AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
-via [Ansible](https://docs.ansible.com/) to automate creation and maintance of
+via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
 providers** (e.g. [Alibaba](https://www.alibabacloud.com/product/server-load-balancer),
 [AWS](https://aws.amazon.com/elasticloadbalancing/),
@@ -64,6 +61,15 @@ humanitarian or commercial projects from who help we on Etica.AI.
 [example/playbook-complex.yml](example/playbook-complex.yml) for some examples
 of usage.
 ### ALB Strategies
+For simplification each _group of rules_ is called "app" because most of the
+time this is the case. The parameter `app_alb_strategy` defines wich [OpenResty
+configuration template](templates/alb-strategy]) will be used as base to
+generate each file on
+`/usr/local/openresty/nginx/conf/sites-enabled/{{ app_uid }}.conf`.
+
+> Protip: if you already have experience editing NGinx configurations, the way
+AP-ALB automate the work for you will be very familiar.
+
 #### files-local
 Strategy to serve static files from the same server where the ALB is located.
 
@@ -93,7 +99,7 @@ Use ALB as reverse proxy.
 See [templates/alb-strategy/proxy.conf.j2](templates/alb-strategy/proxy.conf.j2).
 
 #### raw
-Use ALB as reverse proxy.
+Use a raw string to create an OpenResty configuration file.
 
 ```yaml
     application_load_balancer_apps:
