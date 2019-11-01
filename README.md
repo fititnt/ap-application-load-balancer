@@ -1,4 +1,4 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.2-beta
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.3-beta
 **[Águia Pescadora](https://aguia-pescadora.etica.ai/)
 Application Load Balancer (Ansible Role)**.
 
@@ -14,6 +14,10 @@ humanitarian or commercial projects from who help we on Etica.AI.
 <!--Emerson Rocha dedicated this work to Public Domain -->
 
 # The Solution Stack of AP-ALB
+
+> _One line emoji explanation_:
+>
+> ☺️ 🤖 :end: **HAProxy <sup>(:80, :443)</sup>** :end: **OpenResty <sup>(:8080, :4443 🔒)</sup>** :end: **App**
 
 - **Infrastructure as Code**:
   - [Ansible](https://github.com/ansible/ansible) _(See: [Ansibe documentation](https://docs.ansible.com/))_
@@ -35,14 +39,61 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 ## How to use
 
-TL;DR: See [example/playbook-basic.yml](example/playbook-basic.yml) and
+> TL;DR: See [example/playbook-basic.yml](example/playbook-basic.yml) and
 [example/playbook-complex.yml](example/playbook-complex.yml) for some examples
 of usage.
+### ALB Strategies
+#### files-local
+Strategy to serve static files from the same server where the ALB is located.
 
+```yaml
+    application_load_balancer_apps:
+
+      - app_uid: "static-files"
+        app_domain: "assets.example.org"
+        app_root: "/var/www/html"
+        app_forcehttps: yes
+        app_alb_strategy: "files-local"
+```
+See [templates/alb-strategy/files-local.conf.j2](templates/alb-strategy/files-local.conf.j2).
+
+#### proxy
+Use ALB as reverse proxy.
+
+```yaml
+    application_load_balancer_apps:
+
+      - app_uid: "minio"
+        app_domain: "minio.example.org"
+        app_alb_strategy: "proxy"
+        app_forcehttps: yes
+        app_alb_proxy: ":::9091"
+```
+See [templates/alb-strategy/proxy.conf.j2](templates/alb-strategy/proxy.conf.j2).
+
+#### raw
+Use ALB as reverse proxy.
+
+```yaml
+    application_load_balancer_apps:
+
+      - app_uid: "myrawconfiguration"
+        app_alb_strategy: "raw"
+        app_raw_conf: |
+          #
+          # Th content of app_raw_conf variable will be saved on the file
+          # /usr/local/openresty/nginx/conf/sites-enabled/myrawconfiguration.conf
+          #
+
+```
+
+See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
 
 ### Advanced usage
 
 - See variables [defaults/main.yml](defaults/main.yml)
+- See folder [templates/alb-strategy](templates/alb-strategy) for ALB strategies
+  used on each application
 - See [debugging-quickstart.md](debugging-quickstart.md).
 
 # TODO
