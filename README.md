@@ -56,7 +56,6 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 ## How to use
 
-
 > TL;DR: See [example/playbook-basic.yml](example/playbook-basic.yml) and
 [example/playbook-complex.yml](example/playbook-complex.yml) for some examples
 of usage.
@@ -69,6 +68,8 @@ generate each file on
 
 > Protip: if you already have experience editing NGinx configurations, the way
 AP-ALB automate the work for you will be very familiar.
+
+Note: [alb-extra.md](alb-extra.md) have some extra ALB-strategies.
 
 #### files-local
 Strategy to serve static files from the same server where the ALB is located.

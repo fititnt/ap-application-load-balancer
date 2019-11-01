@@ -5,7 +5,6 @@
     repo: ppa:ondrej/php
     update_cache: yes
 
-
 - name: '[ALB-Extra-PHP] php56 install/remove'
   apt:
     name: "{{ alb_extra_php_php56_packages }}"
