@@ -1,16 +1,51 @@
 ---
 
-- name: "sudo add-apt-repository ppa:ondrej/php"
+- name: "[ALB-Extra-PHP] sudo add-apt-repository ppa:ondrej/php"
   apt_repository:
     repo: ppa:ondrej/php
     update_cache: yes
 
-- name: 'apt-get install php73 (...)'
-  apt:
-    name: "{{ application_load_balancer_extra_php.php73.packages|default(application_load_balancer_extra_php__default_php73_packages) }}"
-    state: "{{ application_load_balancer_extra_php.php73.state|default('present') }}"
-  when: application_load_balancer_extra_php.php73 is defined and application_load_balancer_extra_php.php73.enabled is defined and application_load_balancer_extra_php.php73.enabled == true
 
-- name: debug
-  debug:
-    msg: "{{ application_load_balancer_extra_php }}"
+- name: '[ALB-Extra-PHP] php56 install/remove'
+  apt:
+    name: "{{ alb_extra_php_php56_packages }}"
+    state: "{{ alb_extra_php_php56_state|default('present') }}"
+  when: alb_extra_php_php56_enabled is defined and alb_extra_php_php56_enabled == true
+
+- name: '[ALB-Extra-PHP] php70 install/remove'
+  apt:
+    name: "{{ alb_extra_php_php70_packages }}"
+    state: "{{ alb_extra_php_php70_state|default('present') }}"
+  when: alb_extra_php_php70_enabled is defined and alb_extra_php_php70_enabled == true
+
+- name: '[ALB-Extra-PHP] php71 install/remove'
+  apt:
+    name: "{{ alb_extra_php_php71_packages }}"
+    state: "{{ alb_extra_php_php71_state|default('present') }}"
+  when: alb_extra_php_php71_enabled is defined and alb_extra_php_php71_enabled == true
+
+- name: '[ALB-Extra-PHP] php72 install/remove'
+  apt:
+    name: "{{ alb_extra_php_php72_packages }}"
+    state: "{{ alb_extra_php_php72_state|default('present') }}"
+  when: alb_extra_php_php72_enabled is defined and alb_extra_php_php72_enabled == true
+
+- name: '[ALB-Extra-PHP] php73 install/remove'
+  apt:
+    name: "{{ alb_extra_php_php73_packages }}"
+    state: "{{ alb_extra_php_php73_state|default('present') }}"
+  when: alb_extra_php_php73_enabled is defined and alb_extra_php_php73_enabled == true
+
+- name: '[ALB-Extra-PHP] php74 install/remove'
+  apt:
+    name: "{{ alb_extra_php_php74_packages }}"
+    state: "{{ alb_extra_php_php74_state|default('present') }}"
+  when: alb_extra_php_php74_enabled is defined and alb_extra_php_php74_enabled == true
+
+#- name: debug
+#  debug:
+#    msg: "{{ application_load_balancer_extra_php }}"
+
+#- name: debug2
+#  debug:
+#    msg: "{{ application_load_balancer_extra_php }}"

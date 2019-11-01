@@ -33,7 +33,8 @@
   tags:
   - alb
   - alb-extra-php
-  when: application_load_balancer_extra_php is defined and application_load_balancer_extra_php.enabled is defined and application_load_balancer_extra_php.enabled == true
+  when: application_load_balancer_forceignore_extra_php is defined and application_load_balancer_forceignore_extra_php != true
+  # when: application_load_balancer_extra_php is defined and application_load_balancer_extra_php.enabled is defined and application_load_balancer_extra_php.enabled == true
 
 - name: ALB rule for each App
   include: apps.yml
