@@ -1,4 +1,6 @@
 # ALB Extras
+> @TODO move this to dedicated Ansible Role at <https://github.com/fititnt/ap-application-load-balancer-extras> (fititnt, 2019-11-02 17:58 BRT)
+
 > **Important: the funcionality listed are not core functions of AP-ALB.**
 > It's recommented that you consider using more specific ansible roles
 > create your own and use AP-ALB core functions.
