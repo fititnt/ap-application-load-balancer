@@ -82,102 +82,17 @@ application_load_balancer_apprule_automatichttp_httpsblock: |
   }
   ## Automatic HTTPS / :80 port (DO NOT REMOVE) - Start
 
-### AP-ALB++ PHP _______________________________________________________________
-application_load_balancer_forceignore_extra_php: true
+### Defaults ___________________________________________________________________
+# @TODO rewrite alb-strategies to support these defaults (fititnt, 2019-11-02 20:40 BRT)
+application_load_balancer_default_app_domain: "localhost"
+application_load_balancer_default_app_root: "/var/www/html"
+application_load_balancer_default_app_forcehttps: no
+application_load_balancer_default_app_state: present
+application_load_balancer_default_app_alb_strategy: "files-local"
+application_load_balancer_default_app_php_socket_path: "/run/php/php7.3-fpm.sock"
 
-# For remove previous installed PHP packages, use:
-#   alb_extra_php_phpXX_enabled: true
-#   alb_extra_php_phpXX_state: absent
-
-
-## PHP 5.6
-alb_extra_php_php56_enabled: false
-alb_extra_php_php56_state: present
-alb_extra_php_php56_packages:
-  - php5.6-common
-  - php5.6-fpm
-  - php5.6-gd
-  - php5.6-curl
-  - php5.6-zip
-  - php5.6-mysql
-  - php5.6-imagick
-  - php5.6-geoip
-  - php5.6-intl
-  - php5.6-mbstring
-
-## PHP 7.0
-alb_extra_php_php70_enabled: false
-alb_extra_php_php70_state: present
-alb_extra_php_php70_packages:
-  - php7.0-common
-  - php7.0-fpm
-  - php7.0-gd
-  - php7.0-curl
-  - php7.0-zip
-  - php7.0-mysql
-  - php7.0-imagick
-  - php7.0-geoip
-  - php7.0-intl
-  - php7.0-mbstring
-
-## PHP 7.1
-alb_extra_php_php71_enabled: false
-alb_extra_php_php71_state: present
-alb_extra_php_php71_packages:
-  - php7.1-common
-  - php7.1-fpm
-  - php7.1-gd
-  - php7.1-curl
-  - php7.1-zip
-  - php7.1-mysql
-  - php7.1-imagick
-  - php7.1-geoip
-  - php7.1-intl
-  - php7.1-mbstring
-
-## PHP 7.2
-alb_extra_php_php72_enabled: false
-alb_extra_php_php72_state: present
-alb_extra_php_php72_packages:
-  - php7.2-common
-  - php7.2-fpm
-  - php7.2-gd
-  - php7.2-curl
-  - php7.2-zip
-  - php7.2-mysql
-  - php7.2-imagick
-  - php7.2-geoip
-  - php7.2-intl
-  - php7.2-mbstring
-
-# PHP 7.3
-alb_extra_php_php73_enabled: false
-alb_extra_php_php73_state: present
-alb_extra_php_php73_packages:
-  - php7.3-common
-  - php7.3-fpm
-  - php7.3-gd
-  - php7.3-curl
-  - php7.3-zip
-  - php7.3-mysql
-  - php7.3-imagick
-  - php7.3-geoip
-  - php7.3-intl
-  - php7.3-mbstring
-
-alb_extra_php_php74_enabled: false
-alb_extra_php_php74_state: present
-alb_extra_php_php74_packages:
-  - php7.4-common
-  - php7.4-fpm
-  - php7.4-gd
-  - php7.4-curl
-  - php7.4-zip
-  - php7.4-mysql
-  - php7.4-imagick
-  - php7.4-geoip
-  - php7.4-intl
-  - php7.4-mbstring
+### AP-ALB , PHP (suggestions for external roles) ______________________________
+application_load_balancer_strategy_socket_php__defaultsocket: "/run/php/php7.3-fpm.sock"
 
 ## Internal use / Placeholder tags _____________________________________________
 application_load_balancer_openresty_httpport: 8080
