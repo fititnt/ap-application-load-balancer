@@ -10,10 +10,12 @@ improved.
   - `/opt/alb/`
     - `/opt/alb/alb-data/` -> `/var/alb/`
     - `/opt/alb/alb-logs/` -> `/var/log/alb/`
+    - `/opt/alb/apps/` (Store OpenResty/NGinx rule for each app as `{{ app_id }}.conf`)
     - `/opt/alb/apps-data/` -> `/var/app/`
     - `/opt/alb/apps-logs/` -> `/var/log/app/`
     - `/opt/alb/haproxy/` -> `/etc/haproxy/`
     - `/opt/alb/nginx/` -> `/usr/local/openresty/nginx/`
+    - `/opt/alb/letsencrypt/` -> `/etc/resty-auto-ssl/letsencrypt/certs/` <!--(talvez /etc/resty-auto-ssl/storage/file) -->
 - **ALB logs files** (Note: Apps can have custom logs):
   - `/var/log/alb/access.log`
   - `/var/log/alb/error.log`
@@ -23,6 +25,8 @@ improved.
 
 ### Usage of Apps
 
+- **App rule**
+  - `/opt/alb/apps/{{ app_uid }}.conf`
 - **App data** _(if some parameter require custom folder to store data, but
   the specific path is not specified by the app, this pattern will be used)_
   - `/var/app/{{ app_uid }}/`

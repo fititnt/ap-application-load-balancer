@@ -6,6 +6,11 @@
   vars:
     alb_name: "MyALBName/2.0"
     alb_forcedebug: yes
+
+    ## Uncomment next line if you are debugging Let's encrypt (and do not want hit limits on Production)
+    # alb_letsencrypt_acmeurl_custom: "https://acme-staging-v02.api.letsencrypt.org/directory"
+
+    # Apps
     alb_apps:
 
       - app_uid: "static-home-page"

@@ -52,6 +52,9 @@ alb_nginx_httpcontext_custom: |
 # If you are creating custom ALB Rules (e.g. OpenResty Server Blocks) you will
 # need to consider these rules
 
+## Uncoment next line to use acme staging (for test Let's Encrypt)
+# See https://letsencrypt.org/docs/staging-environment/
+# alb_letsencrypt_acmeurl_custom: "https://acme-staging-v02.api.letsencrypt.org/directory"
 
 alb_apprule_automatichttps_httpsblock: |
   ## Automatic HTTPS / 443 port (DO NOT REMOVE) - Start

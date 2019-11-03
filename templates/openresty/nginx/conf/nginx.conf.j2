@@ -66,10 +66,23 @@ http {
     init_by_lua_block {
       auto_ssl = (require "resty.auto-ssl").new()
 
+      {% if alb_letsencrypt_acmeurl_custom is defined %}
+      auto_ssl:set("ca", "{{ alb_letsencrypt_acmeurl_custom }}")
+      {% endif %}
+
       -- Define a function to determine which SNI domains to automatically handle
       -- and register new certificates for. Defaults to not allowing any domains,
       -- so this must be configured.
       auto_ssl:set("allow_domain", function(domain)
+
+        -- Fail first if domain seems to be an IP.
+        -- @see https://github.com/GUI/lua-resty-auto-ssl/issues/26#issuecomment-366919522
+        if string.match(domain, "(%d+).(%d+).(%d+).(%d+)") or string.find(domain, ":", 1, true) then
+            ngx.log(ngx.ERR, "allow_domain do not allow HTTPS for IPs ", domain)
+            return false
+        end
+
+        -- TODO: improve this
         return true
       end)
 
@@ -161,14 +174,15 @@ http {
         }
     }
 
-    server {
-        #listen 80 default_server;
-        listen {{ alb_openresty_httpport }} default_server;
-    
-        server_name _;
-    
-        return 301 https://$host$request_uri;
-    }
+    # Next block force HTTPS redirection for domains without more specific rule
+    #server {
+    #    #listen 80 default_server;
+    #    listen {{ alb_openresty_httpport }} default_server;
+    #
+    #    server_name _;
+    #
+    #    return 301 https://$host$request_uri;
+    #}
 
     include "/usr/local/openresty/nginx/conf/sites-enabled/*.conf";
 
