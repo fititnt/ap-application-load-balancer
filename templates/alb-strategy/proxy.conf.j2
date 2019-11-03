@@ -2,13 +2,13 @@
 #
 server {
     # listen 443 ssl;
-    listen {{ application_load_balancer_openresty_httpsport }} ssl;
-    server_name  {{ item.app_domain }};
+    listen {{ alb_openresty_httpsport }} ssl;
+    server_name  {{ item.app_domain | default(alb_default_app_domain) }};
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
 
-    {{ application_load_balancer_apprule_automatichttps_httpsblock }}
+    {{ alb_apprule_automatichttps_httpsblock }}
 
     ## @see # https://docs.min.io/docs/setup-nginx-proxy-with-minio.html
     # To allow special characters in headers
@@ -33,12 +33,12 @@ server {
 
 server {
     # listen 80;
-    listen {{ application_load_balancer_openresty_httpport }};
+    listen {{ alb_openresty_httpport }};
 
-    server_name {{ item.server_name|default(item.app_domain) }};
+    server_name {{ item.app_domain | default(alb_default_app_domain) }};
 
 {% if item.app_forcehttps is defined and item.app_forcehttps is sameas true %}
-    return 301 https://{{ item.server_name|default(item.app_domain) }}$request_uri;
+    return 301 https://{{ item.app_domain | default(alb_default_app_domain) }}$request_uri;
 {% endif %}
 
     # TODO: testar configuração a seguir aqui, e permitir que ele faça o resto
@@ -47,5 +47,5 @@ server {
     #       rem redirecionado para httpS em vez de exibir o acme challange
 
 
-    {{ application_load_balancer_apprule_automatichttp_httpsblock }}
+    {{ alb_apprule_automatichttp_httpsblock }}
 }

@@ -17,13 +17,13 @@
     mode: '0644'
     # recurse: yes
 
-- name: mkdir {{ application_load_balancer_logs_path }}
+- name: mkdir {{ alb_logs_path }}
   file:
-    path: "{{ application_load_balancer_logs_path }}"
+    path: "{{ alb_logs_path }}"
     state: directory
     mode: '0644'
     recurse: yes
-  when: application_load_balancer_logs_method is defined and application_load_balancer_logs_method == "file"
+  when: alb_logs_method is defined and alb_logs_method == "file"
 
 - name: /usr/local/openresty/nginx/html/index.html
   template:
@@ -68,7 +68,7 @@
 - name: /usr/local/openresty/nginx/conf/nginx.conf
   template:
     # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
-    src: "{{ application_load_balancer_nginxconf_template }}"
+    src: "{{ alb_nginxconf_template }}"
     dest: /usr/local/openresty/nginx/conf/nginx.conf
     owner: root
     group: root

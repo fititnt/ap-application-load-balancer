@@ -4,7 +4,7 @@
   hosts: mnemosine
   remote_user: root
   vars:
-    application_load_balancer_apps:
+    alb_apps:
 
       - app_uid: "static-home-page"
         app_domain: "www.example.org"

@@ -17,7 +17,7 @@
 - name: /etc/haproxy/haproxy.cfg
   template:
     # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
-    src: "{{ application_load_balancer_haproxy_haproxy_template }}"
+    src: "{{ alb_haproxy_haproxy_template }}"
     dest: /etc/haproxy/haproxy.cfg
     owner: root
     group: root

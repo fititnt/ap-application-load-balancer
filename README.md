@@ -59,6 +59,19 @@ humanitarian or commercial projects from who help we on Etica.AI.
 > TL;DR: See [example/playbook-basic.yml](example/playbook-basic.yml) and
 [example/playbook-complex.yml](example/playbook-complex.yml) for some examples
 of usage.
+
+### Important directories
+> @TODO: rewrite paths from "application_load_balancer" to just "alb" (fititnt, 2019-11-02 21:24 BRT)
+
+- ALB
+  - ALB Files
+    - `/opt/alb/`
+  - ALB default directory for logs (TL;DR: "the default place for the error.log/access.log from OpenResty/NGinx")
+    - `/var/log/alb/`
+- OpenResty
+  - `/usr/local/openresty/`
+  - Tip: OpenResty, even if is a fork of NGinx, **will not** use /etc/nginx/ (but `/usr/local/openresty/nginx/`)
+
 ### ALB Strategies
 For simplification each _group of rules_ is called "app" because most of the
 time this is the case. The parameter `app_alb_strategy` defines wich [OpenResty
@@ -73,7 +86,7 @@ AP-ALB automate the work for you will be very familiar.
 Strategy to serve static files from the same server where the ALB is located.
 
 ```yaml
-    application_load_balancer_apps:
+    alb_apps:
 
       - app_uid: "static-files"
         app_domain: "assets.example.org"
@@ -87,7 +100,7 @@ See [templates/alb-strategy/files-local.conf.j2](templates/alb-strategy/files-lo
 Use ALB as reverse proxy.
 
 ```yaml
-    application_load_balancer_apps:
+    alb_apps:
 
       - app_uid: "minio"
         app_domain: "minio.example.org"
@@ -101,7 +114,7 @@ See [templates/alb-strategy/proxy.conf.j2](templates/alb-strategy/proxy.conf.j2)
 Use a raw string to create an OpenResty configuration file.
 
 ```yaml
-    application_load_balancer_apps:
+    alb_apps:
 
       - app_uid: "myrawconfiguration"
         app_alb_strategy: "raw"

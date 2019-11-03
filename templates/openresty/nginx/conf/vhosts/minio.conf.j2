@@ -4,7 +4,7 @@
 # https://docs.min.io/docs/setup-nginx-proxy-with-minio.html
 server {
     # listen 443 ssl;
-    listen {{ application_load_balancer_openresty_httpsport }} ssl;
+    listen {{ alb_openresty_httpsport }} ssl;
     server_name  {{ minio_domain }};
 
     location = /favicon.ico { access_log off; log_not_found off; }

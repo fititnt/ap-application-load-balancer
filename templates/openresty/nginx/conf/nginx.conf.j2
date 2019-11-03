@@ -5,20 +5,20 @@
 ## Recommended reading list:
 # - https://www.nginx.com/blog/tuning-nginx/
 
-user  {{ application_load_balancer_nginx_user }};
+user  {{ alb_nginx_user }};
 worker_processes  auto;
 
-error_log  {{ application_load_balancer_logs_path }}/error.log;
+error_log  {{ alb_logs_path }}/error.log;
 #error_log  logs/error.log  notice;
 #error_log  logs/error.log  info;
 
 #pid        logs/nginx.pid;
 
-{{ application_load_balancer_nginx_maincontext_custom }}
+{{ alb_nginx_maincontext_custom }}
 
 events {
     worker_connections  1024;
-{{ application_load_balancer_nginx_eventscontext_custom }}
+{{ alb_nginx_eventscontext_custom }}
 }
 
 
@@ -35,7 +35,7 @@ http {
                       '$status $body_bytes_sent "$http_referer" '
                       '"$http_user_agent" "$http_x_forwarded_for"';
 
-    access_log  {{ application_load_balancer_logs_path }}/access.log  main;
+    access_log  {{ alb_logs_path }}/access.log  main;
 
     sendfile        on;
     #tcp_nopush     on;
@@ -83,7 +83,7 @@ http {
     # HTTPS server
     server {
       # listen 443 ssl;
-      listen {{ application_load_balancer_openresty_httpsport }} ssl;
+      listen {{ alb_openresty_httpsport }} ssl;
 
       # Dynamic handler for issuing or returning certs for SNI domains.
       ssl_certificate_by_lua_block {
@@ -105,7 +105,7 @@ http {
     # HTTP server
     server {
       # listen 80;
-      listen {{ application_load_balancer_openresty_httpport }};
+      listen {{ alb_openresty_httpport }};
 
       # Endpoint used for performing domain verification with Let's Encrypt.
       location /.well-known/acme-challenge/ {
@@ -133,7 +133,7 @@ http {
 
     server {
         # listen 443 ssl default_server;
-        listen {{ application_load_balancer_openresty_httpsport }} ssl default_server;
+        listen {{ alb_openresty_httpsport }} ssl default_server;
         server_name  _;
 
         location = /favicon.ico { access_log off; log_not_found off; }
@@ -163,7 +163,7 @@ http {
 
     server {
         #listen 80 default_server;
-        listen {{ application_load_balancer_openresty_httpport }} default_server;
+        listen {{ alb_openresty_httpport }} default_server;
     
         server_name _;
     
@@ -172,5 +172,5 @@ http {
 
     include "/usr/local/openresty/nginx/conf/sites-enabled/*.conf";
 
-    {{ application_load_balancer_nginx_httpcontext_custom }}
+    {{ alb_nginx_httpcontext_custom }}
 }

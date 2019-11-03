@@ -31,8 +31,8 @@ server {
     auth_basic_user_file {{ item.auth_basic_user_file }};
 {% endif %}
 
-    access_log  {{ application_load_balancer_logs_path }}/access-{{ item.server_name|default(item.domain) }}.log  main;
-    error_log  {{ application_load_balancer_logs_path }}/error-{{ item.server_name|default(item.domain) }}.log;
+    access_log  {{ alb_logs_path }}/access-{{ item.server_name|default(item.domain) }}.log  main;
+    error_log  {{ alb_logs_path }}/error-{{ item.server_name|default(item.domain) }}.log;
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
@@ -73,7 +73,7 @@ server {
 
 server {
     # listen 80;
-    listen {{ application_load_balancer_openresty_httpport };
+    listen {{ alb_openresty_httpport };
 
     server_name {{ item.server_name|default(item.domain) }};
     # return 301 https://{{ item.server_name|default(item.domain) }}$request_uri;
