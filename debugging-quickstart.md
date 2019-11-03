@@ -28,7 +28,7 @@
 ### HAProxy
 
 > NOTE: to stop AL-ALB to revert manual changes on `/etc/haproxy/haproxy.cfg`,
-> set `application_load_balancer_forceignore_haproxy: true`.
+> set `alb_forceignore_haproxy: true`.
 
 By default AP-ALB will have an HAProxy in front of HTTP and HTTPS port of the
 OpenResty. So if you did not disabled explicitly (for some reason like otimizing
@@ -80,8 +80,8 @@ vim /usr/local/openresty/nginx/conf/nginx.conf
 vim /usr/local/openresty/nginx/conf/sites-enabled/MYAPPHERE.conf
 
 # Log files
-tail -f /var/log/application_load_balancer/access.log
-tail -f /var/log/application_load_balancer/error.log
+tail -f /var/log/alb/access.log
+tail -f /var/log/alb/error.log
 ```
 
 ## HAProxy

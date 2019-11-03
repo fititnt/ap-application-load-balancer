@@ -60,18 +60,6 @@ humanitarian or commercial projects from who help we on Etica.AI.
 [example/playbook-complex.yml](example/playbook-complex.yml) for some examples
 of usage.
 
-### Important directories
-> @TODO: rewrite paths from "application_load_balancer" to just "alb" (fititnt, 2019-11-02 21:24 BRT)
-
-- ALB
-  - ALB Files
-    - `/opt/alb/`
-  - ALB default directory for logs (TL;DR: "the default place for the error.log/access.log from OpenResty/NGinx")
-    - `/var/log/alb/`
-- OpenResty
-  - `/usr/local/openresty/`
-  - Tip: OpenResty, even if is a fork of NGinx, **will not** use /etc/nginx/ (but `/usr/local/openresty/nginx/`)
-
 ### ALB Strategies
 For simplification each _group of rules_ is called "app" because most of the
 time this is the case. The parameter `app_alb_strategy` defines wich [OpenResty
@@ -137,18 +125,7 @@ See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
 
 # To Do
 
-- Add at least one <https://asciinema.org/> demonstration
-- Rewrite/reorganize some tasks files, in special the
-  [tasks/default-files.yml](tasks/default-files.yml) that is doing too much for
-  different services
-- Document strategy to use AP-ALB to secure Elastic Search without X-Pack
-  - Some links about
-    - https://discuss.elastic.co/t/basic-authentication-of-es-without-x-pack/94840
-    - https://discuss.elastic.co/t/basic-auth-on-kibana-using-nginx/158871
-- Add (or at least document) how to share HTTPS certificates accross cluster
-  of load balancers
-    - Hint: check <https://github.com/GUI/lua-resty-auto-ssl> and use Redis as
-      storage instead of local filesystem.
+See [alb-internals.md#To-Do](alb-internals.md#To-Do)
 
 
 # License
