@@ -124,6 +124,10 @@ http {
 
       # Endpoint used for performing domain verification with Let's Encrypt.
       location /.well-known/acme-challenge/ {
+
+        error_log  /var/log/alb/letsencrypt.log;
+        access_log  /var/log/alb/letsencrypt.log  main;
+
         content_by_lua_block {
           auto_ssl:challenge_server()
         }

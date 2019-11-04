@@ -29,6 +29,30 @@
     mode: '0644'
     owner: root
 
+- name: touch /var/log/alb/access.log
+  file:
+    path: /var/log/alb/access.log
+    state: touch
+    mode: '0644'
+    owner: www-data
+    group: www-data
+
+- name: touch /var/log/alb/error.log
+  file:
+    path: /var/log/alb/error.log
+    state: touch
+    mode: '0644'
+    owner: www-data
+    group: www-data
+
+- name: touch /var/log/alb/letsencrypt.log
+  file:
+    path: /var/log/alb/letsencrypt.log
+    state: touch
+    mode: '0644'
+    owner: www-data
+    group: www-data
+
 - name: mkdir /opt/alb/apps/
   file:
     path: /opt/alb/apps/

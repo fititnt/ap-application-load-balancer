@@ -109,7 +109,8 @@ alb_default_app_root: "/var/www/html"
 alb_default_app_index: "index.html index.htm"
 alb_default_app_forcehttps: no
 alb_default_app_state: present
-alb_default_app_alb_strategy: "files-local"
+# alb_default_app_alb_strategy: "files-local"
+alb_default_app_alb_strategy: "hello-world"
 alb_default_app_php_socket_path: "/run/php/php7.3-fpm.sock"
 
 ### AP-ALB , PHP (suggestions for external roles) ______________________________

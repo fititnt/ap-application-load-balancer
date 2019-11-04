@@ -88,6 +88,14 @@ vim /usr/local/openresty/nginx/conf/sites-enabled/MYAPPHERE.conf
 tail -f /var/log/alb/access.log
 tail -f /var/log/alb/error.log
 tail -f /var/log/haproxy.log
+
+## Multitail
+sudo apt-get install multitail
+
+multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log
+multitail -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/APPNAMEHERE/error.log
+multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/APPNAMEHERE/error.log
+
 ```
 
 ## HAProxy

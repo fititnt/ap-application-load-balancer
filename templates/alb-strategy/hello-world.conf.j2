@@ -16,8 +16,12 @@ server {
     {{ alb_apprule_automatichttps_httpsblock }}
 
     location / {
-        root   {{ item.app_root | default(alb_default_app_root) }};
-        index  {{ item.app_index | default(alb_default_app_index) }};
+        # MIME type determined by default_type:
+        default_type 'text/plain';
+
+        content_by_lua_block {
+            ngx.say('Hello, world, {{ item.app_uid }}!')
+        }
     }
 }
 
@@ -42,15 +46,15 @@ server {
 {% else %}
 #### HTTPS redirect not enforced, allow HTTP block serve content - START
 
-    location / {
-        root   {{ item.app_root | default(alb_default_app_root) }};
-        index  {{ item.app_index | default(alb_default_app_index) }};
+    location /lua_content {
+        # MIME type determined by default_type:
+        default_type 'text/plain';
+
+        content_by_lua_block {
+            ngx.say('Hello, world, {{ item.app_uid }}!')
+        }
     }
 
-    # TODO: testar configuração a seguir aqui, e permitir que ele faça o resto
-
-    # NOTA: curl -I http://site.com/.well-known/acme-challenge/aaaa
-    #       rem redirecionado para httpS em vez de exibir o acme challange
 #### HTTPS redirect not enforced, allow HTTP block serve content - END
 {% endif %}
 

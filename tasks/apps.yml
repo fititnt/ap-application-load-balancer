@@ -27,3 +27,32 @@
   with_items: "{{ alb_apps }}"
   when: alb_apps is defined and alb_apps[0] is defined
   notify: reload openresty
+
+- name: mkdir /var/log/app/[app_uid]
+  file:
+    path: /var/log/app/{{ item.app_uid }}
+    state: directory
+    mode: '0644'
+    owner: root
+  with_items: "{{ alb_apps }}"
+  when: alb_apps is defined and alb_apps[0] is defined
+
+- name: mkdir /var/log/app/[app_uid]/access.log
+  file:
+    path: /var/log/app/{{ item.app_uid }}/access.log
+    state: touch
+    mode: '0644'
+    owner: www-data
+    group: www-data
+  with_items: "{{ alb_apps }}"
+  when: alb_apps is defined and alb_apps[0] is defined
+
+- name: mkdir /var/log/app/[app_uid]/error.log
+  file:
+    path: /var/log/app/{{ item.app_uid }}/error.log
+    state: touch
+    mode: '0644'
+    owner: www-data
+    group: www-data
+  with_items: "{{ alb_apps }}"
+  when: alb_apps is defined and alb_apps[0] is defined
