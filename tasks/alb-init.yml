@@ -1,0 +1,109 @@
+---
+
+# FILE:            {{ role_path }}/tasks/alb-init.yml
+# LICENSE:         Public Domain
+#
+# alb-init tasks runs before other software is installed on the system
+
+## Let's create all directories that would not be created by OpenResty or HAproxy
+# @see https://github.com/fititnt/ap-application-load-balancer/blob/master/alb-internals.md
+
+
+- name: mkdir /opt/alb/
+  file:
+    path: /opt/alb/
+    state: directory
+    mode: '0644'
+    owner: root
+
+- name: mkdir /var/alb/
+  file:
+    path: /var/alb/
+    state: directory
+    mode: '0644'
+    owner: root
+
+- name: mkdir /var/log/alb/
+  file:
+    path: /var/log/alb/
+    state: directory
+    mode: '0644'
+    owner: root
+
+- name: mkdir /opt/alb/apps/
+  file:
+    path: /opt/alb/apps/
+    state: directory
+    mode: '0644'
+    owner: root
+
+- name: mkdir /var/app/
+  file:
+    path: /var/app/
+    state: directory
+    mode: '0644'
+    owner: root
+
+- name: mkdir /var/log/app
+  file:
+    path: /var/log/app
+    state: directory
+    mode: '0644'
+    owner: root
+
+- name: ln -s /var/alb/ /opt/alb/alb-data
+  file:
+    src: /var/alb/
+    dest: /opt/alb/alb-data
+    owner: root
+    state: link
+    # force: yes
+
+- name: ln -s /var/log/alb/ /opt/alb/alb-logs
+  file:
+    src: /var/log/alb/
+    dest: /opt/alb/alb-logs
+    owner: root
+    state: link
+    # force: yes
+
+- name: ln -s /var/app/ /opt/alb/apps-data
+  file:
+    src: /var/app/
+    dest: /opt/alb/apps-data
+    owner: root
+    state: link
+    # force: yes
+
+- name: ln -s /var/log/app/ /opt/alb/apps-logs
+  file:
+    src: /var/log/app/
+    dest: /opt/alb/apps-logs
+    owner: root
+    state: link
+    # force: yes
+
+# The next links have force: yes because are likely to not exist on first installation
+- name: ln -s /etc/haproxy/ /opt/alb/haproxy
+  file:
+    src: /etc/haproxy/
+    dest: /opt/alb/haproxy
+    owner: root
+    state: link
+    force: yes
+
+- name: ln -s /usr/local/openresty/nginx/ /opt/alb/nginx
+  file:
+    src: /usr/local/openresty/nginx/
+    dest: /opt/alb/nginx
+    owner: root
+    state: link
+    force: yes
+
+- name: ln -s /etc/resty-auto-ssl/letsencrypt/certs/ /opt/alb/letsencrypt
+  file:
+    src: /etc/resty-auto-ssl/letsencrypt/certs/
+    dest: /opt/alb/letsencrypt
+    owner: root
+    state: link
+    force: yes

@@ -3,7 +3,11 @@
 # FILE:            {{ role_path }}/tasks/main.yml
 # LICENSE:         Public Domain
 
-# @see https://docs.ansible.com/ansible/latest/modules/apt_module.html
+- name: alb-init.yml
+  include: alb-init.yml
+  tags:
+  - alb
+  - alb-init
 
 - name: Instalação de OpenResty, Lua Rest & Lua Resty AutoSSL (faz o HTTPS para os Apps)
   include: openresty-luarocks-lua-resty-auto-ssl-install.yml
@@ -11,12 +15,11 @@
   - alb
   - alb-openresty
 
-# TODO: break default-files.yml in multiple files (fititnt, 2019-08-04 01:34 BRT)
-- name: Arquivos padrões do OpenResty
-  include: default-files.yml
+- name: alb-openresty-after.yml
+  include: alb-openresty-after.yml
   tags:
   - alb
-  - alb-openresty
+  - alb-openresty-after
 
 # ansible-playbook -i hosts myplaybook.yml --skip-tags "alb-openresty,alb-app,alb-extra-php"
 - name: HAproxy
@@ -25,6 +28,13 @@
   - alb
   - alb-haproxy
   when: alb_forceignore_haproxy is defined and alb_forceignore_haproxy != true
+
+# TODO: break default-files.yml in multiple files (fititnt, 2019-08-04 01:34 BRT)
+#- name: Arquivos padrões do OpenResty
+#  include: default-files.yml
+#  tags:
+#  - alb
+#  - alb-openresty
 
 # ansible-playbook -i hosts myplaybook.yml --skip-tags "alb-openresty,alb-app,alb-haproxy"
 # ansible-playbook -i hosts eticaai-data-warehouse.yml --skip-tags "alb-openresty,alb-app,alb-haproxy"
@@ -52,3 +62,9 @@
 #  #loop: "{{ openrestyautossl_sites_static | dict2items }}"
 #  tags:
 #  - serverblocksetup
+
+- name: alb-final.yml
+  include: alb-final.yml
+  tags:
+  - alb
+  - alb-final
