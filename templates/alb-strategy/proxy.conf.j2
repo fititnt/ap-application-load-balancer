@@ -37,6 +37,8 @@ server {
 
     server_name {{ item.app_domain | default(alb_default_app_domain) }};
 
+    # @TODO colocar o redirect 301 abaixo explicitamente exeto para
+    #       /.well-known/acme-challenge/ e evitar clusterfuck (fititnt, 2019-11-03 03:30 BRT)
 {% if item.app_forcehttps is defined and item.app_forcehttps is sameas true %}
     return 301 https://{{ item.app_domain | default(alb_default_app_domain) }}$request_uri;
 {% endif %}

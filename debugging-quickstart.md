@@ -82,6 +82,7 @@ vim /usr/local/openresty/nginx/conf/sites-enabled/MYAPPHERE.conf
 # Log files
 tail -f /var/log/alb/access.log
 tail -f /var/log/alb/error.log
+tail -f /var/log/haproxy.log
 ```
 
 ## HAProxy

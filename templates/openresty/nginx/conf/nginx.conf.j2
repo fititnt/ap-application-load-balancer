@@ -66,9 +66,9 @@ http {
     init_by_lua_block {
       auto_ssl = (require "resty.auto-ssl").new()
 
-      {% if alb_letsencrypt_acmeurl_custom is defined %}
+{% if alb_letsencrypt_acmeurl_custom is defined %}
       auto_ssl:set("ca", "{{ alb_letsencrypt_acmeurl_custom }}")
-      {% endif %}
+{% endif %}
 
       -- Define a function to determine which SNI domains to automatically handle
       -- and register new certificates for. Defaults to not allowing any domains,
@@ -82,8 +82,9 @@ http {
             return false
         end
 
-        -- TODO: improve this
-        return true
+{{ alb_letsencrypt_allow_domain_customlua|default('') }}
+
+        {{ alb_letsencrypt_allow_domain_default|default('return true') }}
       end)
 
       auto_ssl:init()
