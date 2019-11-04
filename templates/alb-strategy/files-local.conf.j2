@@ -24,11 +24,14 @@ server {
 
     server_name {{ item.app_domain | default(alb_default_app_domain) }};
 
-    # @TODO colocar o redirect 301 abaixo explicitamente exeto para
-    #       /.well-known/acme-challenge/ e evitar clusterfuck (fititnt, 2019-11-03 03:30 BRT)
 {% if item.app_forcehttps is defined and item.app_forcehttps is sameas true %}
-    return 301 https://{{ item.app_domain | default(alb_default_app_domain) }}$request_uri;
-{% endif %}
+    ## item.app_forcehttps: true
+    ## redirect 301 except for Let's Encrypt HTTPS check.
+    location / {
+        return 301 https://{{ item.app_domain | default(alb_default_app_domain) }}$request_uri;
+    }
+{% else %}
+#### HTTPS redirect not enforced, allow HTTP block serve content - START
 
     location / {
         root   {{ item.app_root }};
@@ -39,7 +42,8 @@ server {
 
     # NOTA: curl -I http://site.com/.well-known/acme-challenge/aaaa
     #       rem redirecionado para httpS em vez de exibir o acme challange
-
+#### HTTPS redirect not enforced, allow HTTP block serve content - END
+{% endif %}
 
     {{ alb_apprule_automatichttp_httpsblock }}
 }

@@ -74,6 +74,11 @@ systemctl status haproxy
 systemctl status openresty
 systemctl status ufw
 
+journalctl -xe -u haproxy
+journalctl -xe -u openresty
+
+openresty -t
+
 # Configuration files
 vim /etc/haproxy/haproxy.cfg
 vim /usr/local/openresty/nginx/conf/nginx.conf
