@@ -13,8 +13,8 @@ server {
     {{ alb_apprule_automatichttps_httpsblock }}
 
     location / {
-        root   {{ item.app_root }};
-        index  {{ item.app_index|default('index.html index.htm') }};
+        root   {{ item.app_root | default(alb_default_app_root) }};
+        index  {{ item.app_index | default(alb_default_app_index) }};
     }
 }
 
@@ -24,7 +24,7 @@ server {
 
     server_name {{ item.app_domain | default(alb_default_app_domain) }};
 
-{% if item.app_forcehttps is defined and item.app_forcehttps is sameas true %}
+{% if (item.app_forcehttps is defined and item.app_forcehttps is sameas true) or (item.app_forcehttps is undefined and alb_default_app_forcehttps is sameas true) %}
     ## item.app_forcehttps: true
     ## redirect 301 except for Let's Encrypt HTTPS check.
     location / {
@@ -34,8 +34,8 @@ server {
 #### HTTPS redirect not enforced, allow HTTP block serve content - START
 
     location / {
-        root   {{ item.app_root }};
-        index  {{ item.app_index|default('index.html index.htm') }};
+        root   {{ item.app_root | default(alb_default_app_root) }};
+        index  {{ item.app_index | default(alb_default_app_index) }};
     }
 
     # TODO: testar configuração a seguir aqui, e permitir que ele faça o resto

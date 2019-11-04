@@ -186,7 +186,8 @@ http {
     #    return 301 https://$host$request_uri;
     #}
 
-    include "/usr/local/openresty/nginx/conf/sites-enabled/*.conf";
+    # include "/usr/local/openresty/nginx/conf/sites-enabled/*.conf";
+    include "/opt/alb/apps/*.conf";
 
     {{ alb_nginx_httpcontext_custom }}
 }

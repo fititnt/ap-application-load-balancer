@@ -3,27 +3,27 @@
 # FILE:            {{ role_path }}/tasks/default-files.yml
 # LICENSE:         Public Domain
 
-- name: mkdir -p /usr/local/openresty/nginx/conf/sites-available
-  file:
-    path: /usr/local/openresty/nginx/conf/sites-available
-    state: directory
-    mode: '0644'
+#- name: mkdir -p /usr/local/openresty/nginx/conf/sites-available
+#  file:
+#    path: /usr/local/openresty/nginx/conf/sites-available
+#    state: directory
+#    mode: '0644'
+#    # recurse: yes
+
+#- name: mkdir -p /usr/local/openresty/nginx/conf/sites-enabled
+#  file:
+#    path: /usr/local/openresty/nginx/conf/sites-enabled
+#    state: directory
+#    mode: '0644'
     # recurse: yes
 
-- name: mkdir -p /usr/local/openresty/nginx/conf/sites-enabled
-  file:
-    path: /usr/local/openresty/nginx/conf/sites-enabled
-    state: directory
-    mode: '0644'
-    # recurse: yes
-
-- name: mkdir {{ alb_logs_path }}
-  file:
-    path: "{{ alb_logs_path }}"
-    state: directory
-    mode: '0644'
-    recurse: yes
-  when: alb_logs_method is defined and alb_logs_method == "file"
+#- name: mkdir {{ alb_logs_path }}
+#  file:
+#    path: "{{ alb_logs_path }}"
+#    state: directory
+#    mode: '0644'
+#    recurse: yes
+#  when: alb_logs_method is defined and alb_logs_method == "file"
 
 - name: /usr/local/openresty/nginx/html/index.html
   template:

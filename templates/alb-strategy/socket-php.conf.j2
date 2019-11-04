@@ -19,7 +19,7 @@ server {
     client_max_body_size 0;
     # To disable buffering
 
-    root {{ item.app_root }};
+    root {{ item.app_root | default(alb_default_app_root) }};
 
     location / {
         try_files $uri $uri/ /index.php?$query_string;
@@ -43,7 +43,7 @@ server {
 
     server_name {{ item.app_domain | default(alb_default_app_domain) }};
 
-{% if item.app_forcehttps is defined and item.app_forcehttps is sameas true %}
+{% if (item.app_forcehttps is defined and item.app_forcehttps is sameas true) or (item.app_forcehttps is undefined and alb_default_app_forcehttps is sameas true) %}
     ## item.app_forcehttps: true
     ## redirect 301 except for Let's Encrypt HTTPS check.
     location / {
@@ -57,7 +57,7 @@ server {
     # NOTA: curl -I http://site.com/.well-known/acme-challenge/aaaa
     #       rem redirecionado para httpS em vez de exibir o acme challange
 
-    root {{ item.app_root }};
+    root {{ item.app_root | default(alb_default_app_root) }};
 
     location / {
         try_files $uri $uri/ /index.php?$query_string;

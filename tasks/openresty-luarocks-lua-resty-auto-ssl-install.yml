@@ -5,19 +5,19 @@
 
 
 ## openresty? luarocks? lua-resty-auto-ssl? ____________________________________
-- name: "openresty?"
+- name: "openresty? (Safe to ignore error first time!)"
   shell: openresty -v
   register: is_openresty
   changed_when: false
   ignore_errors: true
 
-- name: "luarocks?"
+- name: "luarocks?  (Safe to ignore error first time!)"
   shell: luarocks --version
   register: is_luarocks
   changed_when: false
   ignore_errors: true
 
-- name: "lua-resty-auto-ssl?"
+- name: "lua-resty-auto-ssl?  (Safe to ignore error first time!)"
   stat:
     path: /etc/resty-auto-ssl
   register: is_restyautossl

@@ -18,11 +18,12 @@
 - name: "ALB App Rules"
   template:
     # src: "{{ item.vhost_template|default(alb_apps_serverblock_template) }}"
-    src: "{{ role_path }}/templates/alb-strategy/{{ item.app_alb_strategy }}.conf.j2"
-    dest: "/usr/local/openresty/nginx/conf/sites-enabled/{{ item.app_uid }}.conf"
+    src: "{{ role_path }}/templates/alb-strategy/{{ item.app_alb_strategy | default(alb_default_app_alb_strategy) }}.conf.j2"
+    dest: "/opt/alb/apps/{{ item.app_uid }}.conf"
     owner: root
     group: "root"
     mode: 0644
     backup: yes
   with_items: "{{ alb_apps }}"
+  when: alb_apps is defined and alb_apps[0] is defined
   notify: reload openresty

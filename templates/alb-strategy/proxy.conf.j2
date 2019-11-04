@@ -37,7 +37,7 @@ server {
 
     server_name {{ item.app_domain | default(alb_default_app_domain) }};
 
-{% if item.app_forcehttps is defined and item.app_forcehttps is sameas true %}
+{% if (item.app_forcehttps is defined and item.app_forcehttps is sameas true) or (item.app_forcehttps is undefined and alb_default_app_forcehttps is sameas true) %}
     ## item.app_forcehttps: true
     ## redirect 301 except for Let's Encrypt HTTPS check.
     location / {

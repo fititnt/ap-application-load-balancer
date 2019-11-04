@@ -55,8 +55,8 @@ alb_nginx_eventscontext_custom: |
 
 alb_nginx_httpcontext_custom: |
   # FILE: /usr/local/openresty/nginx/conf/nginx.conf
-  # NGINX CONTEXT: events
-  # Change-me with variable alb_nginx_eventscontext_custom
+  # NGINX CONTEXT: http
+  # Change-me with variable alb_nginx_httpcontext_custom
   
 
 ### vnStat _____________________________________________________________________
@@ -106,6 +106,7 @@ alb_apprule_automatichttp_httpsblock: |
 # @TODO rewrite alb-strategies to support these defaults (fititnt, 2019-11-02 20:40 BRT)
 alb_default_app_domain: "localhost"
 alb_default_app_root: "/var/www/html"
+alb_default_app_index: "index.html index.htm"
 alb_default_app_forcehttps: no
 alb_default_app_state: present
 alb_default_app_alb_strategy: "files-local"
