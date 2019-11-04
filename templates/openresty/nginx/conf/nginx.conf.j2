@@ -84,8 +84,8 @@ http {
 
 {{ alb_letsencrypt_allow_domain_customlua|default('') }}
 
-        ngx.log(ngx.NOTICE, "allow_domain default {{ alb_letsencrypt_allow_domain_default|default('return true') }} to ", domain)
-        {{ alb_letsencrypt_allow_domain_default|default('return true') }}
+        ngx.log(ngx.NOTICE, "allow_domain default {{ alb_letsencrypt_default|default('return true') }} to ", domain)
+        {{ alb_letsencrypt_default|default('return true') }}
       end)
 
       auto_ssl:init()

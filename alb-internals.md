@@ -6,24 +6,37 @@ improved.
 
 ### Internal usage of ALB
 
+If debugging ALB (and not just one App) these directories and folders are the
+ones you are likely to be interested.
+
+Think the folder `/opt/alb/` as one [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar).
+for all other folders and files that are important.
+
 - **ALB configuration files**:
   - `/opt/alb/`
+    - **`/opt/alb/alb.conf`** -> `/usr/local/openresty/nginx/conf/nginx.conf`
+    - **`/opt/alb/nlb.cfg`** -> `/etc/haproxy/haproxy.cfg`
     - `/opt/alb/alb-data/` -> `/var/alb/`
     - `/opt/alb/alb-logs/` -> `/var/log/alb/`
-    - `/opt/alb/apps/` (Store OpenResty/NGinx rule for each app as `{{ app_id }}.conf`)
+    - `/opt/alb/apps/` _(Store OpenResty/NGinx rule for each app as **`/opt/alb/apps/{{ app_id }}.conf`**)_
     - `/opt/alb/apps-data/` -> `/var/app/`
     - `/opt/alb/apps-logs/` -> `/var/log/app/`
     - `/opt/alb/haproxy/` -> `/etc/haproxy/`
     - `/opt/alb/nginx/` -> `/usr/local/openresty/nginx/`
-    - `/opt/alb/letsencrypt/` -> `/etc/resty-auto-ssl/letsencrypt/certs/` <!--(talvez /etc/resty-auto-ssl/storage/file) -->
-- **ALB logs files** (Note: Apps can have custom logs):
+    - `/opt/alb/letsencrypt/` -> `/etc/resty-auto-ssl/letsencrypt/`
+- **ALB logs files**:
   - `/var/log/alb/access.log`
   - `/var/log/alb/error.log`
+  - `/var/log/alb/letsencrypt.log` _(Planned, but not implemented)_
+  - `/var/log/alb/apps/` -> `/var/log/app/`
 - **_Reserved (but not implemented) for potential future usage with data created
   on runtime by ALB_**
   - `/var/alb/`
 
 ### Usage of Apps
+
+If your ALB setup already is working, these are the files and folders that
+are specific for each App.
 
 - **App rule**
   - `/opt/alb/apps/{{ app_uid }}.conf`

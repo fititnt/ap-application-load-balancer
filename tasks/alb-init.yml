@@ -4,11 +4,10 @@
 # LICENSE:         Public Domain
 #
 # alb-init tasks runs before other software is installed on the system
-
-## Let's create all directories that would not be created by OpenResty or HAproxy
 # @see https://github.com/fititnt/ap-application-load-balancer/blob/master/alb-internals.md
 
 
+## Let's create all directories that would not be created by OpenResty or HAproxy
 - name: mkdir /opt/alb/
   file:
     path: /opt/alb/
@@ -51,6 +50,7 @@
     mode: '0644'
     owner: root
 
+# Syntactic sugar symbolic links
 - name: ln -s /var/alb/ /opt/alb/alb-data
   file:
     src: /var/alb/
@@ -71,6 +71,14 @@
   file:
     src: /var/app/
     dest: /opt/alb/apps-data
+    owner: root
+    state: link
+    # force: yes
+
+- name: ln -s /var/log/app/ /var/log/alb/apps
+  file:
+    src: /var/log/app/
+    dest: /var/log/alb/apps
     owner: root
     state: link
     # force: yes
@@ -100,10 +108,27 @@
     state: link
     force: yes
 
-- name: ln -s /etc/resty-auto-ssl/letsencrypt/certs/ /opt/alb/letsencrypt
+- name: ln -s /etc/resty-auto-ssl/letsencrypt/ /opt/alb/letsencrypt
   file:
-    src: /etc/resty-auto-ssl/letsencrypt/certs/
+    src: /etc/resty-auto-ssl/letsencrypt/
     dest: /opt/alb/letsencrypt
+    owner: root
+    state: link
+    force: yes
+
+# alb.conf is a syntax sugar to real nginx.conf
+- name: ln -s /usr/local/openresty/nginx/conf/nginx.conf /opt/alb/alb.conf
+  file:
+    src: /usr/local/openresty/nginx/conf/nginx.conf
+    dest: /opt/alb/alb.conf
+    owner: root
+    state: link
+    force: yes
+
+- name: ln -s /etc/haproxy/haproxy.cfg /opt/alb/nlb.cfg
+  file:
+    src: /etc/haproxy/haproxy.cfg
+    dest: /opt/alb/nlb.cfg
     owner: root
     state: link
     force: yes
