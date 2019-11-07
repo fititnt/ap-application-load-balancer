@@ -7,8 +7,8 @@ server {
     listen {{ alb_openresty_httpsport }} ssl;
     server_name {{ item.app_domain | default(alb_default_app_domain) }};
 
-    error_log  /var/log/app/{{ app_uid }}/error.log;
-    access_log  /var/log/app/{{ app_uid }}/access.log  main;
+    error_log  /var/log/app/{{ item.app_uid }}/error.log;
+    access_log  /var/log/app/{{ item.app_uid }}/access.log  main;
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
@@ -27,8 +27,8 @@ server {
 
     server_name {{ item.app_domain | default(alb_default_app_domain) }};
 
-    error_log  /var/log/app/{{ app_uid }}/error.log;
-    access_log  /var/log/app/{{ app_uid }}/access.log  main;
+    error_log  /var/log/app/{{ item.app_uid }}/error.log;
+    access_log  /var/log/app/{{ item.app_uid }}/access.log  main;
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
