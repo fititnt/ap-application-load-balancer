@@ -1,4 +1,4 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.4.5-beta
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.5.0-alpha
 AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
@@ -10,10 +10,14 @@ providers** (e.g. [Alibaba](https://www.alibabacloud.com/product/server-load-bal
 create your own ALB on cheaper hardware on these same cloud providers or
 have your own ALB on any other provider of VPSs or bare metal servers.
 
-**There is no vendor lock in**, not even as option on AP-ALB. But before you
-start the computer that will run and manage the target servers need already be
-able to connect them via SSH as sudo user. Even our choice on **HAproxy** and
-**OpenResty/NGinx** very likely to be the ones some big cloud providers use.
+All stack is open source software, yet our main choices **HAproxy** and
+**OpenResty/NGinx** are very likely to be the ones some big cloud providers use.
+
+**There is no vendor lock in**, not even as option on AP-ALB we do not enforce
+any specific cloud provider: but you should already have 1+ VPSs or bare metals
+able to execute Ansible playbooks (Ubuntu Server 18.04+ are more tested). The AP-ABL [License is Public Domain](#License)
+and is ok if you or your company use this role to create your own custom
+versions.
 
 <!--
 
@@ -54,18 +58,36 @@ humanitarian or commercial projects from who help we on Etica.AI.
   - [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl)
   - [Let’s Encrypt](https://letsencrypt.org/docs/)
 
+See [ALB Internals](alb-internals.md) quick overview of how AP-ALB make the
+solution stack work. (TL;DR: `cd /opt/alb/` and/or `ls -lha /opt/alb/` on a
+configured server see the important files or symbolic links that matter).
+
 ## How to use
 
-> TL;DR: See [example/playbook-basic.yml](example/playbook-basic.yml) and
-[example/playbook-complex.yml](example/playbook-complex.yml) for some examples
+> Note: this guide assumes that you at least
+>
+> 1. **Have Ansible installed on some computer**
+>     1. [https://docs.ansible.com: Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/index.html)
+>     2. Tip: if is your first time with Ansible, this computer is likely to be
+>        own computer and NOT the server where you want to install ALB
+> 2. **Have at least one VPS or Bare metal VPS that can be controlled by your
+>    installation Ansible**
+> 3. **Have basic knowledge on how to use Ansible Playbooks**
+>     1. [https://docs.ansible.com: Working With Playbooks](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html)
+>     2. Hint: `ap-application-load-balancer` can be imported as a Ansible Role, but
+>       it is not released on Ansible Galaxy (it means you can copy some version of
+>       AP-ALB and place on sub-folder `roles/ap-application-load-balancer`)
+
+### Examples of complete Ansible Playbooks
+- [example/playbook-basic.yml](example/playbook-basic.yml)
+- [example/playbook-complex.yml](example/playbook-complex.yml) for some examples
 of usage.
 
 ### ALB Strategies
 For simplification each _group of rules_ is called "app" because most of the
 time this is the case. The parameter `app_alb_strategy` defines wich [OpenResty
 configuration template](templates/alb-strategy]) will be used as base to
-generate each file on
-`/usr/local/openresty/nginx/conf/sites-enabled/{{ app_uid }}.conf`.
+generate each file on `/opt/alb/apps/{{ app_uid }}.conf`.
 
 > Protip: if you already have experience editing NGinx configurations, the way
 AP-ALB automate the work for you will be very familiar.
