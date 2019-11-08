@@ -9,6 +9,32 @@
     alb_name: "MyALBName/2.0"
     alb_forcedebug: yes
 
+    # /opt/alb/remoteadmins
+    alb_ips_remoteadmins:
+       - 1.2.3.4
+    # /opt/alb/dmz
+    alb_ips_dmz:
+       - 143.54.2.20
+       - 150.162.2.10
+       - 146.164.170.36
+    # /var/alb/ips_whitelist.txt
+    alb_ips_whitelist:
+       - 127.0.0.1
+       - 123.123.123
+    # /var/alb/ips_blacklist.txt
+    alb_ips_blacklist:
+       - 123.123.123.123
+       - 210.210.210.210
+    # /var/alb/domains_whitelist.txt
+    alb_domains_whitelist:
+       - "example.net"
+       - "www.example.com"
+       - "*.example.org"
+    # /var/alb/domains_blacklist.txt
+    alb_domains_blacklist:
+       - "let-ssl-expire.example.net"
+       - "dont-ask-letsencrypt.example.com"
+
     ## Uncomment next line if you are debugging Let's encrypt (and do not want hit limits on Production)
     # alb_letsencrypt_acmeurl_custom: "https://acme-staging-v02.api.letsencrypt.org/directory"
 

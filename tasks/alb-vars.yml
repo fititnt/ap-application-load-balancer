@@ -2,42 +2,103 @@
 # NOTE: This file is just a quick test to create empty files on remote host.
 #       Later will be refatored (fititnt, 2019-11-07 20:14 BRT)
 
-- name: touch /opt/alb/dmz # Placeholder for eventual file to host IPs with privileged access to local machine
-  file:
-    path: /opt/alb/dmz
-    state: touch
-    mode: '0644'
+## TODO: fix some of these files do not removing old values (fititnt, 2019-11-08 01:34 BRT)
+
+- name: alb_ips_remoteadmins? /opt/alb/remoteadmins
+  lineinfile:
+    path: /opt/alb/remoteadmins
+    line: "{{ item }}"
     owner: root
     group: root
+    mode: '0644'
+    create: yes
+  loop: "{{ alb_ips_remoteadmins }}"
+  when: alb_ips_remoteadmins is defined and alb_ips_remoteadmins | length > 0
 
-- name: touch /var/alb/ips_whitelist.txt
-  file:
+- name: alb_ips_dmz? /opt/alb/dmz
+  lineinfile:
+    path: /opt/alb/dmz
+    line: "{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+    create: yes
+  loop: "{{ alb_ips_dmz }}"
+  when: alb_ips_dmz is defined and alb_ips_dmz | length > 0
+
+- name: alb_ips_whitelist? /var/alb/ips_whitelist.txt
+  lineinfile:
     path: /var/alb/ips_whitelist.txt
-    state: touch
-    mode: '0644'
+    line: "{{ item }}"
     owner: alb
     group: alb
+    mode: '0644'
+    create: yes
+  loop: "{{ alb_ips_whitelist }}"
+  when: alb_ips_whitelist is defined and alb_ips_whitelist | length > 0
 
-- name: touch /var/alb/ips_blacklist.txt
-  file:
+#- name: touch /var/alb/ips_whitelist.txt
+#  file:
+#    path: /var/alb/ips_whitelist.txt
+#    state: touch
+#    mode: '0644'
+#    owner: alb
+#    group: alb
+
+
+- name: alb_ips_blacklist? /var/alb/ips_blacklist.txt
+  lineinfile:
     path: /var/alb/ips_blacklist.txt
-    state: touch
-    mode: '0644'
+    line: "{{ item }}"
     owner: alb
     group: alb
+    mode: '0644'
+    create: yes
+  loop: "{{ alb_ips_blacklist }}"
+  when: alb_ips_blacklist is defined and alb_ips_blacklist | length > 0
 
-- name: touch /var/alb/domains_whitelist.txt
-  file:
+#- name: touch /var/alb/ips_blacklist.txt
+#  file:
+#    path: /var/alb/ips_blacklist.txt
+#    state: touch
+#    mode: '0644'
+#    owner: alb
+#    group: alb
+
+- name: alb_domains_whitelist? /var/alb/domains_whitelist.txt
+  lineinfile:
     path: /var/alb/domains_whitelist.txt
-    state: touch
-    mode: '0644'
+    line: "{{ item }}"
     owner: alb
     group: alb
+    mode: '0644'
+    create: yes
+  loop: "{{ alb_domains_whitelist }}"
+  when: alb_domains_whitelist is defined and alb_domains_whitelist | length > 0
 
-- name: touch /var/alb/domains_blacklist.txt
-  file:
+#- name: touch /var/alb/domains_whitelist.txt
+#  file:
+#    path: /var/alb/domains_whitelist.txt
+#    state: touch
+#    mode: '0644'
+#    owner: alb
+#    group: alb
+
+- name: alb_domains_blacklist? /var/alb/domains_blacklist.txt
+  lineinfile:
     path: /var/alb/domains_blacklist.txt
-    state: touch
-    mode: '0644'
+    line: "{{ item }}"
     owner: alb
     group: alb
+    mode: '0644'
+    create: yes
+  loop: "{{ alb_domains_blacklist }}"
+  when: alb_domains_blacklist is defined and alb_domains_blacklist | length > 0
+
+#- name: touch /var/alb/domains_blacklist.txt
+#  file:
+#    path: /var/alb/domains_blacklist.txt
+#    state: touch
+#    mode: '0644'
+#    owner: alb
+#    group: alb
