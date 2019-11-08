@@ -49,11 +49,11 @@ defaults
 
 listen http-in
     bind *:{{ alb_haproxy_httpport }}
-    server server1 127.0.0.1:{{ alb_openresty_httpport }} maxconn 32
+    server openresty_server1 {{ alb_openresty_ip }}:{{ alb_openresty_httpport }} maxconn 32
 
 listen https-in
     # 'mode tcp' is required if backend is doing the full HTTPS termination
     # @see https://serversforhackers.com/c/using-ssl-certificates-with-haproxy
     mode tcp
     bind *:{{ alb_haproxy_httpsport }}
-    server server1 127.0.0.1:{{ alb_openresty_httpsport }} maxconn 32
+    server openresty_server1 {{ alb_openresty_ip }}:{{ alb_openresty_httpsport }} maxconn 32

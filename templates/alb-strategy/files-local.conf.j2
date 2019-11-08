@@ -4,7 +4,7 @@
 
 server {
     # listen 443 ssl;
-    listen {{ alb_openresty_httpsport }} ssl;
+    listen {{ alb_openresty_ip}}:{{ alb_openresty_httpsport }} ssl;
     server_name {{ item.app_domain | default(alb_default_app_domain) }};
 
     error_log  /var/log/app/{{ item.app_uid }}/error.log;
@@ -25,7 +25,7 @@ server {
 
 server {
     # listen 80;
-    listen {{ alb_openresty_httpport }};
+    listen {{ alb_openresty_ip}}:{{ alb_openresty_httpport }};
 
     server_name {{ item.app_domain | default(alb_default_app_domain) }};
 

@@ -16,12 +16,6 @@
     name: 'haproxy=2.0.*'
     state: 'present'
 
-- name: sudo systemctl enable haproxy.service
-  systemd:
-    name: haproxy
-    state: started
-    enabled: yes
-
 - name: /etc/haproxy/haproxy.cfg
   template:
     # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
@@ -33,3 +27,13 @@
     backup: yes
   notify:
     - reload haproxy
+
+# Enabled/Started must be AFTER moving new /etc/haproxy/haproxy.cfg
+# configurations or Ansible will not be able to update one new valid
+# configuration if old one was already with error. By moving this step
+# after we avoid user being forced to solve manually on the server 
+- name: sudo systemctl enable haproxy.service
+  systemd:
+    name: haproxy
+    state: started
+    enabled: yes

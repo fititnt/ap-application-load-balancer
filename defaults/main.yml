@@ -118,6 +118,8 @@ alb_default_app_php_socket_path: "/run/php/php7.3-fpm.sock"
 alb_strategy_socket_php__defaultsocket: "/run/php/php7.3-fpm.sock"
 
 ## Internal use / Placeholder tags _____________________________________________
+alb_openresty_ip: 127.0.0.1
+# alb_openresty_ip: 0.0.0.0 ## Use this if want to expose openresty
 alb_openresty_httpport: 8080
 alb_openresty_httpsport: 4443
 alb_haproxy_httpport: 80
@@ -129,6 +131,7 @@ alb_forceignore_haproxy: false
 alb_forceignore_openresty: false
 alb_forceignore_ufw: false
 
+alb_vars_saveondisk: yes
 
 alb_logrotate_template_alb: "{{ role_path }}/templates/logrotate/alb.j2"
 alb_logrotate_template_alb_apps: "{{ role_path }}/templates/logrotate/alb_apps.j2"

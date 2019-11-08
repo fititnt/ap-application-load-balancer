@@ -13,7 +13,9 @@
     mode: '0644'
     create: yes
   loop: "{{ alb_ips_remoteadmins }}"
-  when: alb_ips_remoteadmins is defined and alb_ips_remoteadmins | length > 0
+  when:
+    - alb_vars_saveondisk is defined and alb_vars_saveondisk is sameas true
+    - alb_ips_remoteadmins is defined and alb_ips_remoteadmins | length > 0
 
 - name: alb_ips_dmz? /opt/alb/dmz
   lineinfile:
@@ -24,7 +26,9 @@
     mode: '0644'
     create: yes
   loop: "{{ alb_ips_dmz }}"
-  when: alb_ips_dmz is defined and alb_ips_dmz | length > 0
+  when:
+    - alb_vars_saveondisk is defined and alb_vars_saveondisk is sameas true
+    - alb_ips_dmz is defined and alb_ips_dmz | length > 0
 
 - name: alb_ips_whitelist? /var/alb/ips_whitelist.txt
   lineinfile:
@@ -35,7 +39,9 @@
     mode: '0644'
     create: yes
   loop: "{{ alb_ips_whitelist }}"
-  when: alb_ips_whitelist is defined and alb_ips_whitelist | length > 0
+  when:
+    - alb_vars_saveondisk is defined and alb_vars_saveondisk is sameas true
+    - alb_ips_whitelist is defined and alb_ips_whitelist | length > 0
 
 #- name: touch /var/alb/ips_whitelist.txt
 #  file:
@@ -55,7 +61,9 @@
     mode: '0644'
     create: yes
   loop: "{{ alb_ips_blacklist }}"
-  when: alb_ips_blacklist is defined and alb_ips_blacklist | length > 0
+  when:
+    - alb_vars_saveondisk is defined and alb_vars_saveondisk is sameas true
+    - alb_ips_blacklist is defined and alb_ips_blacklist | length > 0
 
 #- name: touch /var/alb/ips_blacklist.txt
 #  file:
@@ -74,7 +82,9 @@
     mode: '0644'
     create: yes
   loop: "{{ alb_domains_whitelist }}"
-  when: alb_domains_whitelist is defined and alb_domains_whitelist | length > 0
+  when:
+    - alb_vars_saveondisk is defined and alb_vars_saveondisk is sameas true
+    - alb_domains_whitelist is defined and alb_domains_whitelist | length > 0
 
 #- name: touch /var/alb/domains_whitelist.txt
 #  file:
@@ -93,7 +103,9 @@
     mode: '0644'
     create: yes
   loop: "{{ alb_domains_blacklist }}"
-  when: alb_domains_blacklist is defined and alb_domains_blacklist | length > 0
+  when:
+    - alb_vars_saveondisk is defined and alb_vars_saveondisk is sameas true
+    - alb_domains_blacklist is defined and alb_domains_blacklist | length > 0
 
 #- name: touch /var/alb/domains_blacklist.txt
 #  file:

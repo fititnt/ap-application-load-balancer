@@ -98,7 +98,7 @@ http {
     # HTTPS server
     server {
       # listen 443 ssl;
-      listen {{ alb_openresty_httpsport }} ssl;
+      listen {{ alb_openresty_ip}}:{{ alb_openresty_httpsport }} ssl;
 
       # Dynamic handler for issuing or returning certs for SNI domains.
       ssl_certificate_by_lua_block {
@@ -120,7 +120,7 @@ http {
     # HTTP server
     server {
       # listen 80;
-      listen {{ alb_openresty_httpport }};
+      listen {{ alb_openresty_ip}}:{{ alb_openresty_httpport }};
 
       # Endpoint used for performing domain verification with Let's Encrypt.
       location /.well-known/acme-challenge/ {
@@ -183,7 +183,7 @@ http {
     # Next block force HTTPS redirection for domains without more specific rule
     #server {
     #    #listen 80 default_server;
-    #    listen {{ alb_openresty_httpport }} default_server;
+    #    listen {{ alb_openresty_ip}}:{{ alb_openresty_httpport }} default_server;
     #
     #    server_name _;
     #

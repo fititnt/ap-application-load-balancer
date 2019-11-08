@@ -19,6 +19,7 @@ for all other folders and files that are important.
     - `/opt/alb/alb-data/` -> `/var/alb/`
     - `/opt/alb/alb-logs/` -> `/var/log/alb/`
     - `/opt/alb/apps/` _(Store OpenResty/NGinx rule for each app as **`/opt/alb/apps/{{ app_id }}.conf`**)_
+    - `/opt/alb/info/` _(Planed, not fully implemented)_
     - `/opt/alb/apps-data/` -> `/var/app/`
     - `/opt/alb/apps-logs/` -> `/var/log/app/`
     - `/opt/alb/haproxy/` -> `/etc/haproxy/`
@@ -27,10 +28,9 @@ for all other folders and files that are important.
 - **ALB logs files**:
   - `/var/log/alb/access.log`
   - `/var/log/alb/error.log`
-  - `/var/log/alb/letsencrypt.log` _(Planned, but not implemented)_
+  - `/var/log/alb/letsencrypt.log`
   - `/var/log/alb/apps/` -> `/var/log/app/`
-- **_Reserved (but not implemented) for potential future usage with data created
-  on runtime by ALB_**
+- **Data created on Runtime by ALB** _(Planed, not fully implemented)_
   - `/var/alb/`
 
 ### Shared usage for third party tools
@@ -39,9 +39,17 @@ Some variables when present on a play of a playbook using ALB will create or
 update contents of specific files on each server. **Consider this list as
 suggestion, not as one strong enforcement, and that most of these options will
 not automatically be considered if not enabled for other tools**, in special the
-ones that could be useful for Firewalls. If reusing these variables on your
-own projects maybe instead of using the generated files on remote server can
-be easy to just use the variables.
+ones that could be useful for Firewalls. 
+
+Some considerations:
+- `alb_vars_saveondisk: no` will enforce not store the suggested variables on
+  these documented paths.
+  - **Use this option if you are concerned with vunerable applications that
+    could leak sensive data**.
+- Since you is already using Ansible if want to reuse these data on other tools
+  consider that can be simple use the ALBs variables as information.
+  - It can be easier do this can change other applications to watch for changes
+    on these files.
 
 #### `alb_ips_remoteadmins`
 - File: `/opt/alb/remoteadmins`

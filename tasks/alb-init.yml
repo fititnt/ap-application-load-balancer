@@ -76,6 +76,13 @@
     mode: '0644'
     owner: root
 
+- name: mkdir /opt/alb/info/
+  file:
+    path: /opt/alb/info/
+    state: directory
+    mode: '0644'
+    owner: root
+
 - name: mkdir /var/app/
   file:
     path: /var/app/
