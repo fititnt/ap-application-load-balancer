@@ -33,6 +33,34 @@ for all other folders and files that are important.
   on runtime by ALB_**
   - `/var/alb/`
 
+### Shared usage for third party tools
+
+Some variables when present on a play of a playbook using ALB will create or
+update contents of specific files on each server. **Consider this list as
+suggestion, not as one strong enforcement, and that most of these options will
+not automatically be considered if not enabled for other tools**, in special the
+ones that could be useful for Firewalls. If reusing these variables on your
+own projects maybe instead of using the generated files on remote server can
+be easy to just use the variables.
+
+#### `alb_ips_remoteadmins`
+- File: `/opt/alb/remoteadmins`
+
+#### `alb_ips_dmz`
+- File: `/opt/alb/dmz`
+
+#### `alb_ips_whitelist`
+- File: `/var/alb/ips_whitelist.txt`
+
+#### `alb_ips_blacklist`
+- File: `/var/alb/ips_blacklist.txt`
+
+#### `alb_domains_whitelist`
+- File: `/var/alb/domains_whitelist.txt`
+
+#### `alb_domains_blacklist`
+- File: `/var/alb/domains_blacklist.txt`
+
 ### Usage of Apps
 
 If your ALB setup already is working, these are the files and folders that

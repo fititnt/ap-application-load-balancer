@@ -3,7 +3,7 @@
 # TODO: update this example to add more features created after the v0.4+ (fititnt, 2019-11-07 19:00)
 
 - name: "ap-application-load-balancer playbook example (complex)"
-  hosts: mnemosine
+  hosts: my_complex_hosts
   remote_user: root
   vars:
     alb_name: "MyALBName/2.0"
