@@ -102,6 +102,13 @@ alb_apprule_automatichttp_httpsblock: |
   }
   ## Automatic HTTPS / :80 port (DO NOT REMOVE) - Start
 
+### HAProxy ____________________________________________________________________
+alb_haproxy_stats_enabled: no
+alb_haproxy_stats_ip: 0.0.0.0
+alb_haproxy_stats_port: 8404
+alb_haproxy_stats_uri: "/haproxy?stats"
+alb_haproxy_stats_realm: "{{ alb_name }}"
+
 ### Defaults ___________________________________________________________________
 # @TODO rewrite alb-strategies to support these defaults (fititnt, 2019-11-02 20:40 BRT)
 alb_default_app_domain: "localhost"

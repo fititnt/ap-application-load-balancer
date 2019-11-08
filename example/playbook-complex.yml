@@ -9,6 +9,8 @@
     alb_name: "MyALBName/2.0"
     alb_forcedebug: yes
 
+    alb_haproxy_stats_port: 8404
+
     # /opt/alb/remoteadmins
     alb_ips_remoteadmins:
        - 1.2.3.4

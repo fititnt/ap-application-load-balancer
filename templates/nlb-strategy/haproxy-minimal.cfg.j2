@@ -57,3 +57,7 @@ listen https-in
     mode tcp
     bind *:{{ alb_haproxy_httpsport }}
     server openresty_server1 {{ alb_openresty_ip }}:{{ alb_openresty_httpsport }} maxconn 32
+
+{% if (alb_haproxy_stats_enabled is defined and alb_haproxy_stats_enabled is sameas true) %}
+{% include "partials/haproxy-stats.cfg.j2" %}
+{% endif %}

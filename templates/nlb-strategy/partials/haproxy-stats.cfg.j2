@@ -1,0 +1,11 @@
+## nlb-strategy/partials/haproxy-stats.cfg.j2
+
+# TODO: improve security (fititnt, 2019-11-08 19:10 BRT)
+# @see https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#stats%20uri
+
+frontend stats
+    bind {{ alb_haproxy_stats_ip | default('127.0.0.1') }}:{{ alb_haproxy_stats_port | default('8404') }}
+    stats enable
+    stats uri {{ alb_haproxy_stats_uri | default('/haproxy?stats') }}
+    stats refresh 10s
+    # stats admin if TRUE

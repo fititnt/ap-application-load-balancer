@@ -1,0 +1,8 @@
+---
+# @TODO improve this draft later (fititnt, 2019-11-08 19:25 BRT)
+# @see https://stackoverflow.com/questions/39819378/ansible-get-current-target-hosts-ip-address
+- name: Find my public ip
+  uri: 
+    url: http://ifconfig.me/ip
+    return_content: yes
+  register: ip_response
