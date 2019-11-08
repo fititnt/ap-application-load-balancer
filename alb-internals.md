@@ -77,7 +77,18 @@ avoid conflicts with existend content, and is not a requirement at all.
 
 ## To Do
 
-- Add at least one <https://asciinema.org/> demonstration
+- Add at least one <https://asciinema.org/> demonstration with some example of ALB working in practice
+- Implement logrotate default log files of ALB
+  - `/var/log/alb/access.log`
+  - `/var/log/alb/error.log`
+  - `/var/log/alb/letsencrypt.log`
+- Implement some strategy on how to handle logrotate rules for apps. _(This can
+  be hard considering that some apps can be removed and the system forgot then)_
+  - `/var/log/app/{{ app_uid }}/access.log`
+  - `/var/log/app/{{ app_uid }}/error.log`
+
+<!--
+
 - Rewrite/reorganize some tasks files, in special the
   [tasks/default-files.yml](tasks/default-files.yml) that is doing too much for
   different services
@@ -89,3 +100,5 @@ avoid conflicts with existend content, and is not a requirement at all.
   of load balancers
     - Hint: check <https://github.com/GUI/lua-resty-auto-ssl> and use Redis as
       storage instead of local filesystem.
+
+-->

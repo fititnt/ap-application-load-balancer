@@ -94,6 +94,26 @@ AP-ALB automate the work for you will be very familiar.
 
 **For full list of ALB Strategies, look at [templates/alb-strategy](templates/alb-strategy)**
 
+#### hello-world
+
+The `hello-world` replaced [files-local](#files-local) strategy as default if
+you do not specify a `app_alb_strategy`. It can be specially useful to obtain
+SSL Certificates or already have some placeholder.
+
+If `app_debug: true` or `alb_forcedebug: yes` it can be used to give more
+information faster.
+
+```yaml
+    alb_apps:
+
+      - app_uid: "hello-world"
+        app_domain: "debug.example.org"
+        app_debug: true
+        app_alb_strategy: "hello-world"
+```
+
+See [templates/alb-strategy/hello-world.conf.j2](templates/alb-strategy/hello-world.conf.j2).
+
 #### files-local
 Strategy to serve static files from the same server where the ALB is located.
 
@@ -139,6 +159,11 @@ Use a raw string to create an OpenResty configuration file.
 ```
 
 See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
+
+#### socket-php
+> This strategy is a draft and/or can be removed or made obsolet by [proxy](#proxy).
+
+See [templates/alb-strategy/socket-php.conf.j2](templates/alb-strategy/socket-php.conf.j2).
 
 ### Advanced usage
 

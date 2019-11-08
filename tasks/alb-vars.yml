@@ -1,3 +1,43 @@
 ---
 # NOTE: This file is just a quick test to create empty files on remote host.
 #       Later will be refatored (fititnt, 2019-11-07 20:14 BRT)
+
+- name: touch /opt/alb/dmz # Placeholder for eventual file to host IPs with privileged access to local machine
+  file:
+    path: /opt/alb/dmz
+    state: touch
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: touch /var/alb/ips_whitelist.txt
+  file:
+    path: /var/alb/ips_whitelist.txt
+    state: touch
+    mode: '0644'
+    owner: alb
+    group: alb
+
+- name: touch /var/alb/ips_blacklist.txt
+  file:
+    path: /var/alb/ips_blacklist.txt
+    state: touch
+    mode: '0644'
+    owner: alb
+    group: alb
+
+- name: touch /var/alb/domains_whitelist.txt
+  file:
+    path: /var/alb/domains_whitelist.txt
+    state: touch
+    mode: '0644'
+    owner: alb
+    group: alb
+
+- name: touch /var/alb/domains_blacklist.txt
+  file:
+    path: /var/alb/domains_blacklist.txt
+    state: touch
+    mode: '0644'
+    owner: alb
+    group: alb
