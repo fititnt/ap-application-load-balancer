@@ -5,6 +5,18 @@ alb_name: "AP Application Load Balancer"
 alb_hide_alb: yes
 alb_forcedebug: no
 
+alb_superuser_auth:
+#  - username: Admin1
+#    password: "plain-password"
+#  - username: Admin2
+#    password: "plain-password2"
+#  - username: SuperUser2
+#    password: "!vault |...." # You can use Ansible Vault (encripted values) https://docs.ansible.com/ansible/latest/user_guide/vault.html
+alb_superuser_ip: null
+alb_superuser_autodiscoveripnull: yes
+
+### APPs _______________________________________________________________________
+
 alb_apps: []
 
 alb_letsencrypt_allow_domain_whitelist:

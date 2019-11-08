@@ -9,7 +9,15 @@
     alb_name: "MyALBName/2.0"
     alb_forcedebug: yes
 
-    alb_haproxy_stats_port: 8404
+    alb_haproxy_stats_enabled: yes
+
+    alb_superuser_auth:
+     - username: Admin1
+       password: "plain-password"
+     - username: Admin2
+       password: "plain-password2"
+    alb_superuser_ip: 123.123.123.123
+    # alb_superuser_autodiscoveripnull: yes Not implemented yet
 
     # /opt/alb/remoteadmins
     alb_ips_remoteadmins:
