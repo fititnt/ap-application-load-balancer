@@ -6,6 +6,22 @@
 # alb-init tasks runs before other software is installed on the system
 # @see https://github.com/fititnt/ap-application-load-balancer/blob/master/alb-internals.md
 
+# Example group command from Ansible Playbooks
+- name: Create group alb if already does not exist
+  group:
+    name: alb
+    state: present
+
+- name: Create system user alb
+  user:
+    name: alb
+    comment: "System user for ALB (Application Load Balancer)"
+    system: yes
+    create_home: no
+    shell: /usr/sbin/nologin
+    group: alb
+    groups: www-data
+# TODO: check on new installations www-data user already exist and this command would not fail (fititnt, 2019-11-07 21:11 BRT)
 
 ## Let's create all directories that would not be created by OpenResty or HAproxy
 - name: mkdir /opt/alb/

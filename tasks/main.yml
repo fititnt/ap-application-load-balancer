@@ -3,6 +3,13 @@
 # FILE:            {{ role_path }}/tasks/main.yml
 # LICENSE:         Public Domain
 
+- name: alb-vars.yml (temporary file, will be replaced later)
+  include: alb-vars.yml
+  tags:
+  - alb
+  - alb-init
+  - alb-vars
+
 - name: alb-init.yml
   include: alb-init.yml
   tags:

@@ -15,9 +15,9 @@ All stack is open source software, yet our main choices **HAproxy** and
 
 **There is no vendor lock in**, not even as option on AP-ALB we do not enforce
 any specific cloud provider: but you should already have 1+ VPSs or bare metals
-able to execute Ansible playbooks (Ubuntu Server 18.04+ are more tested). The AP-ABL [License is Public Domain](#License)
-and is ok if you or your company use this role to create your own custom
-versions.
+able to execute Ansible playbooks (Ubuntu Server 18.04+ are more tested).
+The AP-ABL [license is Public Domain](#License) and is ok if you or your company
+use this role to create your own custom versions.
 
 <!--
 
@@ -86,11 +86,13 @@ of usage.
 ### ALB Strategies
 For simplification each _group of rules_ is called "app" because most of the
 time this is the case. The parameter `app_alb_strategy` defines wich [OpenResty
-configuration template](templates/alb-strategy]) will be used as base to
+configuration template](templates/alb-strategy) will be used as base to
 generate each file on `/opt/alb/apps/{{ app_uid }}.conf`.
 
 > Protip: if you already have experience editing NGinx configurations, the way
 AP-ALB automate the work for you will be very familiar.
+
+**For full list of ALB Strategies, look at [templates/alb-strategy](templates/alb-strategy)**
 
 #### files-local
 Strategy to serve static files from the same server where the ALB is located.
@@ -144,10 +146,6 @@ See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
 - See folder [templates/alb-strategy](templates/alb-strategy) for ALB strategies
   used on each application
 - See [debugging-quickstart.md](debugging-quickstart.md).
-
-# To Do
-
-See [alb-internals.md#To-Do](alb-internals.md#To-Do)
 
 
 # License
