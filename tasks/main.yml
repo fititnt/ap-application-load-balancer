@@ -41,6 +41,7 @@
   tags:
   - alb
   - alb-app
+  - alb-apps
 
 - name: logrotate.yml
   include: logrotate.yml

@@ -1,0 +1,11 @@
+## alb-strategy/partials/add_headers.conf.j2
+add_header  X-Upstream  "Teste" always;
+{% if (item.app_debug is defined and item.app_debug is sameas true) or (alb_forcedebug is defined and alb_forcedebug is sameas true) or (alb_default_app_forcedebug is defined and alb_default_app_forcedebug is sameas true) %}
+add_header  X-ALB-app_uid {{ item.app_uid }};
+add_header  X-ALB-app_alb_strategy {{ item.app_alb_strategy | default('undefined') }};
+add_header  X-ALB-app_domain {{ item.app_domain | default('undefined') }};
+add_header  X-ALB-app_debug {{ item.app_debug | default('undefined') }};
+add_header  X-ALB-app_root {{ item.app_root | default('undefined') }};
+add_header  X-ALB-app_forcehttps {{ item.app_forcehttps | default('undefined') }};
+add_header  X-ALB-app_alb_proxy {{ item.app_alb_proxy | default('undefined') }};
+{% endif %}

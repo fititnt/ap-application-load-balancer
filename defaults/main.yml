@@ -108,6 +108,7 @@ alb_default_app_domain: "localhost"
 alb_default_app_root: "/var/www/html"
 alb_default_app_index: "index.html index.htm"
 alb_default_app_forcehttps: no
+alb_default_app_forcedebug: yes
 alb_default_app_state: present
 # alb_default_app_alb_strategy: "files-local"
 alb_default_app_alb_strategy: "hello-world"
