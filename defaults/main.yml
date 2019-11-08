@@ -127,3 +127,10 @@ alb_haproxy_haproxy_template: "{{ role_path }}/templates/nlb-strategy/haproxy-mi
 alb_forceignore_haproxy: false
 alb_forceignore_openresty: false
 alb_forceignore_ufw: false
+
+
+alb_logrotate_template_alb: "{{ role_path }}/templates/logrotate/alb.j2"
+alb_logrotate_template_alb_apps: "{{ role_path }}/templates/logrotate/alb_apps.j2"
+
+# alb_openresty_pidfile: "/var/run/nginx.pid"
+alb_openresty_pidfile: "/usr/local/openresty/nginx/logs/nginx.pid"

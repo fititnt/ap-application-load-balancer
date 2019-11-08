@@ -78,14 +78,10 @@ avoid conflicts with existend content, and is not a requirement at all.
 ## To Do
 
 - Add at least one <https://asciinema.org/> demonstration with some example of ALB working in practice
-- Implement logrotate default log files of ALB
-  - `/var/log/alb/access.log`
-  - `/var/log/alb/error.log`
-  - `/var/log/alb/letsencrypt.log`
-- Implement some strategy on how to handle logrotate rules for apps. _(This can
-  be hard considering that some apps can be removed and the system forgot then)_
-  - `/var/log/app/{{ app_uid }}/access.log`
-  - `/var/log/app/{{ app_uid }}/error.log`
+- Add (or at least document) how to share HTTPS certificates accross cluster
+of load balancers
+  - Hint: check <https://github.com/GUI/lua-resty-auto-ssl> and use Redis as
+    storage instead of local filesystem.
 
 <!--
 
@@ -96,9 +92,5 @@ avoid conflicts with existend content, and is not a requirement at all.
   - Some links about
     - https://discuss.elastic.co/t/basic-authentication-of-es-without-x-pack/94840
     - https://discuss.elastic.co/t/basic-auth-on-kibana-using-nginx/158871
-- Add (or at least document) how to share HTTPS certificates accross cluster
-  of load balancers
-    - Hint: check <https://github.com/GUI/lua-resty-auto-ssl> and use Redis as
-      storage instead of local filesystem.
 
 -->

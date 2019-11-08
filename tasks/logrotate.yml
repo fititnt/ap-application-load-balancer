@@ -1,0 +1,19 @@
+---
+
+- name: /etc/logrotate.d/alb
+  template:
+    src: "{{ alb_logrotate_template_alb }}"
+    dest: /etc/logrotate.d/alb
+    owner: root
+    group: root
+    mode: '0644'
+    backup: no
+
+- name: /etc/logrotate.d/alb_apps
+  template:
+    src: "{{ alb_logrotate_template_alb_apps }}"
+    dest: /etc/logrotate.d/alb_apps
+    owner: root
+    group: root
+    mode: '0644'
+    backup: no

@@ -77,12 +77,17 @@ systemctl status ufw
 journalctl -xe -u haproxy
 journalctl -xe -u openresty
 
+## Validate/test configurations
 openresty -t
+logrotate -d /etc/logrotate.d/alb
+logrotate -d /etc/logrotate.d/alb_apps
 
 # Configuration files
 vim /etc/haproxy/haproxy.cfg
 vim /usr/local/openresty/nginx/conf/nginx.conf
 vim /usr/local/openresty/nginx/conf/sites-enabled/MYAPPHERE.conf
+vim /etc/logrotate.d/alb
+vim /etc/logrotate.d/alb_apps
 
 # Log files
 tail -f /var/log/alb/access.log

@@ -12,7 +12,7 @@ error_log  {{ alb_logs_path }}/error.log;
 #error_log  logs/error.log  notice;
 #error_log  logs/error.log  info;
 
-#pid        logs/nginx.pid;
+pid        {{ alb_openresty_pidfile }};
 
 {{ alb_nginx_maincontext_custom }}
 
