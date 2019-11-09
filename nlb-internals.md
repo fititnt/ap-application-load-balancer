@@ -7,11 +7,31 @@ main objective, when otimizing automation with Ansible on this project. It does
 not means that the HAproxy is not important: it is! To list some details:
 
 - HAProxy is by default is installed with ALB and is in front of every ALB App.
-  - The averange user maybe not even need to know what HAProxy is doing
+  - The averange user maybe not even need to know what HAProxy is doing. **The
+    idea is "it just works fine" out of the box**.
   - **BUT** if later on production some feature get too complicated to push
-    OpenResty to the limits... the **HAProxy already is there!**.
+    OpenResty to the limits... the **HAProxy already is there!**
 - HAProxy reuse some variables of AP-ALB
+- Yes, OpenResty logs already will register the user Real IP
 - (...)
+
+## Ports
+> Note: these defaults can be changed.
+
+- HAproxy `0.0.0.0:80` -> OpenResty: `127.0.0.1:8080`
+  - HAProxy listem to HTTP :80 port then will redirect to OpenResty :8080
+  - Even without custom firewall rule the extra OpenResty port will not be open
+    to the world.
+- HAproxy `0.0.0.0:443` -> OpenResty: `127.0.0.1:4443`
+  - HAProxy listem to HTTPS :443 port then will redirect to OpenResty :4443
+  - Even without custom firewall rule the extra OpenResty port will not be open
+    to the world.
+  - The HTTPS/TLS termination is done by OpenResty.
+    - This is an option that could be improved later and make HAProxy also do
+      the HTTPS.
+
+HAproxy can be used for other types of load balancing, like to intermediate
+MariaDB/MySQL, MongoDB, Apache, etc in a very efficient way.
 
 ## Directory structures
 
