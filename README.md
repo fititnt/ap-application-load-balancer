@@ -1,4 +1,4 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.5.0-alpha
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.6.0-alpha
 AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
@@ -19,6 +19,10 @@ able to execute Ansible playbooks (Ubuntu Server 18.04+ are more tested).
 The AP-ABL [license is Public Domain](#License) and is ok if you or your company
 use this role to create your own custom versions.
 
+> **Which version should you use? Choose at [ap-application-load-balancer/releases](https://github.com/fititnt/ap-application-load-balancer/releases)**. You can use the master branch, but we recommend review new updates.
+ALB is meant to be used non-stop on production servers, so you can stick with
+some version or maintain your own private changes.
+
 <!--
 
 > TL;DR: you can use this and other works from Emerson Rocha or Etica.AI as
@@ -38,15 +42,14 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 > _One line emoji explanation_:
 >
-> ☺️ 🤖 :end: **HAProxy <sup>(:80, :443)</sup>** :end: **OpenResty <sup>(:8080, :4443 🔒)</sup>** :end: **App**
+> ☺️ 🤖 :end: **UFW <sup>(:1-65535)</sup>** :end: **HAProxy <sup>(:80, :443)</sup>** :end: **OpenResty <sup>(:8080, :4443 🔒)</sup>** :end: **App**
 
 - **Infrastructure as Code**:
   - [Ansible](https://github.com/ansible/ansible) _(See: [Ansibe documentation](https://docs.ansible.com/))_
 - **Operational System**:
   - [Ubuntu Server LTS](https://ubuntu.com/)
 - **Firewall**
-  - _Not implemented/Not Documented_.
-    - **Please use your own firewall rules**.
+  - MVP with UFW is planned for ALB v0.6.0-alpha.
     - Tip: you can use [EticaAI/aguia-pescadora-ansible-playbooks/tarefa/firewall](https://github.com/EticaAI/aguia-pescadora-ansible-playbooks/tree/master/tarefa/firewall) as reference.
 - **Load Balancing**
   - [HAProxy 2.0.x](https://github.com/haproxy/haproxy)
