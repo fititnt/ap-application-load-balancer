@@ -1,6 +1,17 @@
 ---
 
+- name: "allow-dmz: FROM {{ alb_dmz }}"
+  ufw:
+    rule: "{{ item.rule | default('allow') }}"
+    from: '{{ item.ip }}'
+    comment: "{{ alb_ufw_commentprefix }} {{ item.comment | default('DMZ from ' + item.name) }}"
+  loop: "{{ alb_dmz }}"
+  when: "alb_dmz is defined"
 
-- name: "allow-dmz"
-  debug: 
-    msg: teste ufw 123 allow-dmz
+- name: "allow-dmz: TO {{ alb_dmz }}"
+  ufw:
+    rule: "{{ item.rule | default('allow') }}"
+    dest: '{{ item.ip }}'
+    comment: "{{ alb_ufw_commentprefix }} {{ item.comment | default('DMZ dest ' + item.name) }}"
+  loop: "{{ alb_dmz }}"
+  when: "alb_dmz is defined"

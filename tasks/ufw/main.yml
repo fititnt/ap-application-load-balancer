@@ -1,6 +1,9 @@
 ---
 # tasks/ufw/main.yml
 
+- name: clusterfuck-pre-check.yml
+  include: clusterfuck-pre-check.yml
+
 ## ufw status verbose  (before) ________________________________________________
 
 - name: "ufw status verbose (before)"
@@ -33,3 +36,6 @@
 
 - name: "ufw status verbose print (after)"
   debug: var=ufw_status_verbose2.stdout_lines
+
+- name: clusterfuck-post-check.yml
+  include: clusterfuck-post-check.yml

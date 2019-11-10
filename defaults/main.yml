@@ -139,6 +139,9 @@ alb_strategy_socket_php__defaultsocket: "/run/php/php7.3-fpm.sock"
 ## Firewall  ___________________________________________________________________
 alb_ssh_port: 22
 
+alb_ufw_clusterfuck_ignore:
+#  - "alb_ufw_rule_always"
+
 # This rule will be forced, and the user will have to overide this default to
 # not allow make SSH port on limit
 alb_ufw_rule_always:
