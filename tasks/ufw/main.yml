@@ -5,7 +5,6 @@
   include: clusterfuck-pre-check.yml
 
 ## ufw status verbose  (before) ________________________________________________
-
 - name: "ufw status verbose (before)"
   shell: "ufw status verbose"
   become: "yes"
@@ -21,11 +20,18 @@
 - name: allow-dmz.yml
   include: allow-dmz.yml
 
-- name: allow-superuser.yml
-  include: allow-superuser.yml
+- name: allow-bastion-hosts.yml
+  include: allow-bastion-hosts.yml
+
+- name: allow-jump-boxes.yml
+  include: allow-jump-boxes.yml
 
 - name: default-policies.yml
   include: default-policies.yml
+
+- name: "UFW state {{ alb_ufw_state | default (alb_ufw_state__default) }}"
+  ufw:
+    state: "{{ alb_ufw_state | default (alb_ufw_state__default) }}"
 
 ## ufw status verbose  (after) ________________________________________________
 - name: "ufw status verbose (after)"

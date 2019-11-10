@@ -168,6 +168,8 @@ alb_ufw_policy__default:
   - direction: outgoing
     policy: allow
 
+alb_ufw_state__default: enabled
+
 ## Internal use / Placeholder tags _____________________________________________
 alb_openresty_ip: 127.0.0.1
 # alb_openresty_ip: 0.0.0.0 ## Use this if want to expose openresty

@@ -35,8 +35,11 @@ author of AP-ALB also released under Public Domain. Check:
        password: "plain-password2"
     alb_superuser_ip: 123.123.123.123
 
-    alb_superusers:
-      - 123.126.157.169
+    alb_bastion_hosts:
+      - 123.126.157.123
+
+    alb_jump_boxes:
+      - 123.126.157.124
 
     alb_dmz:
       - ip: 123.23.23.115

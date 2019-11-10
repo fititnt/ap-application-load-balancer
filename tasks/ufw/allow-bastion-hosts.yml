@@ -1,0 +1,25 @@
+---
+
+# @TODO both allow-bastion-hosts and allow-jump-boxes are not allowing more
+#       customized options and simply allowing all from and to the servers.
+#       Improve this on future (fititnt, 2019-11-10 06:41 BRT)
+
+- name: "allow-bastion-hosts: FROM {{ alb_bastion_hosts }}"
+  ufw:
+    rule: "{{ item.rule | default('allow') }}"
+    from: "{{ item.ip | default(item) }}"
+    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('Bastion Host FROM ' + item.name | default(ansible_loop.index0 | string)) }}"
+  loop: "{{ alb_bastion_hosts }}"
+  loop_control:
+    extended: yes
+  when: "alb_bastion_hosts is defined"
+
+- name: "allow-bastion-hosts: TO {{ alb_bastion_hosts }}"
+  ufw:
+    rule: "{{ item.rule | default('allow') }}"
+    dest: "{{ item.ip | default(item) }}"
+    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('Bastion Host TO ' + item.name | default(ansible_loop.index0 | string)) }}"
+  loop: "{{ alb_bastion_hosts }}"
+  loop_control:
+    extended: yes
+  when: "alb_bastion_hosts is defined"
