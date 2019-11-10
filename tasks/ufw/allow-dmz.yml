@@ -3,15 +3,20 @@
 - name: "allow-dmz: FROM {{ alb_dmz }}"
   ufw:
     rule: "{{ item.rule | default('allow') }}"
-    from: '{{ item.ip }}'
-    comment: "{{ alb_ufw_commentprefix }} {{ item.comment | default('DMZ from ' + item.name) }}"
+    from: "{{ item.ip | default(item) }}"
+    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('DMZ FROM ' + item.name | default(ansible_loop.index0 | string)) }}"
   loop: "{{ alb_dmz }}"
+  loop_control:
+    extended: yes
   when: "alb_dmz is defined"
 
 - name: "allow-dmz: TO {{ alb_dmz }}"
   ufw:
     rule: "{{ item.rule | default('allow') }}"
-    dest: '{{ item.ip }}'
-    comment: "{{ alb_ufw_commentprefix }} {{ item.comment | default('DMZ dest ' + item.name) }}"
+    dest: "{{ item.ip | default(item) }}"
+    delete: "{{ item.delete | default('no')}}"
+    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('DMZ TO ' + item.name | default(ansible_loop.index0 | string)) }}"
   loop: "{{ alb_dmz }}"
+  loop_control:
+    extended: yes
   when: "alb_dmz is defined"

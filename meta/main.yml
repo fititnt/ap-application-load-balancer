@@ -3,7 +3,8 @@ galaxy_info:
   description: Águia Pescadora Application Load Balancer (AP-ALB)
   company: Etica.AI
   license: Unlicense
-  min_ansible_version: 2.4
+  # Ansible 2.8 because we use Extended Loop control https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#extended-loop-variables
+  min_ansible_version: 2.8
   platforms:
     - name: Ubuntu
       versions:
