@@ -1,5 +1,35 @@
 ---
 # tasks/ufw/main.yml
 
+## ufw status verbose  (before) ________________________________________________
+
+- name: "ufw status verbose (before)"
+  shell: "ufw status verbose"
+  become: "yes"
+  changed_when: false
+  register: ufw_status_verbose1
+
+- name: "ufw status verbose print (before)"
+  debug: var=ufw_status_verbose1.stdout_lines
+
 - name: install-ufw.yml
   include: install-ufw.yml
+
+- name: allow-dmz.yml
+  include: allow-dmz.yml
+
+- name: allow-superuser.yml
+  include: allow-superuser.yml
+
+- name: default-policies.yml
+  include: default-policies.yml
+
+## ufw status verbose  (after) ________________________________________________
+- name: "ufw status verbose (after)"
+  shell: "ufw status verbose"
+  become: "yes"
+  changed_when: false
+  register: ufw_status_verbose2
+
+- name: "ufw status verbose print (after)"
+  debug: var=ufw_status_verbose2.stdout_lines

@@ -1,10 +1,5 @@
 ---
 
-
-- name: "teste ufw"
-  debug: 
-    msg: teste ufw 123
-
 - name: sudo apt install ufw
   apt: 
     package: ufw 

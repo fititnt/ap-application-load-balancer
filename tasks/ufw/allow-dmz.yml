@@ -1,0 +1,6 @@
+---
+
+
+- name: "allow-dmz"
+  debug: 
+    msg: teste ufw 123 allow-dmz

@@ -136,6 +136,35 @@ alb_default_app_php_socket_path: "/run/php/php7.3-fpm.sock"
 ### AP-ALB , PHP (suggestions for external roles) ______________________________
 alb_strategy_socket_php__defaultsocket: "/run/php/php7.3-fpm.sock"
 
+## Firewall  ___________________________________________________________________
+alb_ssh_port: 22
+
+# This rule will be forced, and the user will have to overide this default to
+# not allow make SSH port on limit
+alb_ufw_rule_always:
+  - rule: limit
+    port: "{{ alb_ssh_port }}"
+    proto: tcp
+    comment: "alb_ufw_rule_always"
+
+alb_ufw_rules__default:
+  - rule: allow
+    port: 80
+    proto: tcp
+    comment: "alb_ufw_rules__default"
+  - rule: allow
+    port: 443
+    proto: tcp
+    comment: "alb_ufw_rules__default"
+
+alb_ufw_commentprefix: "[ALB/UFW] "
+
+alb_ufw_policy__default:
+  - direction: incoming
+    policy: deny
+  - direction: outgoing
+    policy: allow
+
 ## Internal use / Placeholder tags _____________________________________________
 alb_openresty_ip: 127.0.0.1
 # alb_openresty_ip: 0.0.0.0 ## Use this if want to expose openresty

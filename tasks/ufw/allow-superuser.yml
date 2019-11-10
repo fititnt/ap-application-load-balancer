@@ -1,0 +1,6 @@
+---
+
+
+- name: "allow-superuser.yml"
+  debug:
+    msg: teste ufw 123 allow-superuser.yml
