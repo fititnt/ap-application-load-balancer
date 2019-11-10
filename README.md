@@ -16,7 +16,7 @@ All stack is open source software, yet our main choices **HAproxy** and
 **There is no vendor lock in**, not even as option on AP-ALB we do not enforce
 any specific cloud provider: but you should already have 1+ VPSs or bare metals
 able to execute Ansible playbooks (Ubuntu Server 18.04+ are more tested).
-The AP-ABL [license is Public Domain](#License) and is ok if you or your company
+The AP-ALB [license is Public Domain](#License) and is ok if you or your company
 use this role to create your own custom versions.
 
 > **Which version should you use? Choose at [ap-application-load-balancer/releases](https://github.com/fititnt/ap-application-load-balancer/releases)**. You can use the master branch, but we recommend review new updates.
@@ -83,8 +83,7 @@ configured server see the important files or symbolic links that matter).
 
 ### Examples of complete Ansible Playbooks
 - [example/playbook-basic.yml](example/playbook-basic.yml)
-- [example/playbook-complex.yml](example/playbook-complex.yml) for some examples
-of usage.
+- [example/playbook-complex.yml](example/playbook-complex.yml)
 
 ### ALB Strategies
 For simplification each _group of rules_ is called "app" because most of the

@@ -49,6 +49,15 @@
   - alb
   - alb-logrotate
 
+# ansible-playbook -i hosts myplaybook.yml --tags "alb-ufw"
+- name: ufw/main.yml
+  include: ufw/main.yml
+  tags:
+  - alb
+  - alb-ufw
+  - alb-firewall
+  # when: alb_forceignore_ufw is defined and alb_forceignore_haproxy != true
+
 - name: alb-final.yml
   include: alb-final.yml
   tags:
