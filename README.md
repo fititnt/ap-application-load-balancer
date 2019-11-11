@@ -39,6 +39,9 @@ humanitarian or commercial projects from who help we on Etica.AI.
 <!-- TOC depthFrom:2 -->
 
 - [The Solution Stack of AP-ALB](#the-solution-stack-of-ap-alb)
+    - [ALB Goals](#alb-goals)
+        - [Relatively decoupled subcomponents](#relatively-decoupled-subcomponents)
+        - [Don't stop services even when the administrator deploy invalid requests](#dont-stop-services-even-when-the-administrator-deploy-invalid-requests)
 - [Quickstart Guide](#quickstart-guide)
     - [The minimum you already should know to use AP-ALB](#the-minimum-you-already-should-know-to-use-ap-alb)
     - [Apps](#apps)
@@ -48,6 +51,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
             - [proxy](#proxy)
             - [raw](#raw)
             - [socket-php](#socket-php)
+    - [Firewall](#firewall)
     - [Complete examples using AP-ALB](#complete-examples-using-ap-alb)
     - [Quickstart on how to hotfix/debug production servers](#quickstart-on-how-to-hotfixdebug-production-servers)
 - [Advanced usage](#advanced-usage)
@@ -86,6 +90,30 @@ humanitarian or commercial projects from who help we on Etica.AI.
     - [HAProxy](https://yaml.org/) <sup>(Only for very advanced cases)</sup>
 
 > See [Advanced usage](#advanced-usage).
+
+### ALB Goals
+
+#### Relatively decoupled subcomponents
+At [defaults/main.yml](defaults/main.yml), you have
+
+```yaml
+### Enable/Disable ALB subcomponents ___________________________________________
+## Note: these defaults will install everyting, except the firewall.
+alb_manange_all: yes
+alb_manange_haproxy: yes
+alb_manange_openresty: yes
+alb_manange_ufw: no
+
+## Note: the next options is better leave it alone
+alb_manange_apps: "{{ alb_manange_openresty }}"
+alb_manange_logrotate: "{{ alb_manange_haproxy or alb_manange_openresty }}"
+```
+
+> @TODO short explanation on how to reuse only parts of the subcomponents (fititnt, 2019-11-11 00:13 BRT)
+
+#### Don't stop services even when the administrator deploy invalid requests
+
+> @TODO short explanation on how alert errors (fititnt, 2019-11-11 00:13 BRT)
 
 ## Quickstart Guide
 
@@ -189,6 +217,46 @@ See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
 
 See [templates/alb-strategy/socket-php.conf.j2](templates/alb-strategy/socket-php.conf.j2).
 
+### Firewall
+> `alb_manange_ufw: yes` is required.
+
+```yaml
+
+# Allow ALB/UFW manage
+alb_manange_ufw: yes
+
+
+##  
+# @see https://en.wikipedia.org/wiki/DMZ_(computing)
+# ALB/UFW will use alb_dmz to make all traffic FROM/TO to this machine free
+alb_dmz:
+  - ip: 167.86.127.220
+    name: apps_server_apalbdemo
+  - ip: 167.86.127.225
+    name: db_server_apalbdemo
+
+# @see https://en.wikipedia.org/wiki/Bastion_host
+# ALB/UFW will use alb_bastion_hosts to make all traffic FROM/TO to this machine free
+# This behavior could change on future to make it more configurable
+alb_bastion_hosts:
+  - ip: 177.126.157.169
+    name: aguia-pescadora-delta.etica.ai
+
+# @see https://en.wikipedia.org/wiki/Jump_server
+# ALB/UFW will use alb_jump_boxes to make all traffic FROM/TO to this machine free
+# This behavior could change on future to make it more configurable
+alb_jump_boxes:
+  - ip: 192.0.2.10
+    name: TEST-NET-1 (example IP)
+
+
+```
+
+
+> @TODO write more information about firewalls (fititnt, 2019-11-11 00:55 BRT)
+
+See also [Firewall Internals](firewall-internals.md) <sup>(working draft)</sup>.
+
 ### Complete examples using AP-ALB
 - [example/playbook-basic.yml](example/playbook-basic.yml)
 - [example/playbook-complex.yml](example/playbook-complex.yml)
@@ -199,14 +267,10 @@ See [debugging-quickstart.md](debugging-quickstart.md).
 
 ## Advanced usage
 
+- See variables [defaults/main.yml](defaults/main.yml)
 - [ALB Internals](alb-internals.md)
 - [NLB Internals](nlb-internals.md) <sup>(working draft)</sup>
 - [Firewall Internals](firewall-internals.md) <sup>(working draft)</sup>
-
-- See variables [defaults/main.yml](defaults/main.yml)
-- See folder [templates/alb-strategy](templates/alb-strategy) for ALB strategies
-  used on each application
-- See [debugging-quickstart.md](debugging-quickstart.md).
 
 ## FAQ
 
