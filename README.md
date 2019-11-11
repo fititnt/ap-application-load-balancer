@@ -51,7 +51,13 @@ humanitarian or commercial projects from who help we on Etica.AI.
             - [proxy](#proxy)
             - [raw](#raw)
             - [socket-php](#socket-php)
+    - [OpenResty](#openresty)
+        - [lua-resty-auto-ssl](#lua-resty-auto-ssl)
+    - [HAProxy](#haproxy)
+        - [HAProxy stats page](#haproxy-stats-page)
+        - [HAProxy TLS Termination](#haproxy-tls-termination)
     - [Firewall](#firewall)
+        - [Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)](#applying-only-firewall-rules-on-a-specific-server-ie-do-not-install-haproxy-openresty)
     - [Complete examples using AP-ALB](#complete-examples-using-ap-alb)
     - [Quickstart on how to hotfix/debug production servers](#quickstart-on-how-to-hotfixdebug-production-servers)
 - [Advanced usage](#advanced-usage)
@@ -217,16 +223,50 @@ See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
 
 See [templates/alb-strategy/socket-php.conf.j2](templates/alb-strategy/socket-php.conf.j2).
 
+### OpenResty
+
+> _@TODO add quick guide on OpenResty features here (fititnt, 2019-11-11 02:01 BRT_
+
+Please check [ALB Internals](alb-internals.md).
+
+#### lua-resty-auto-ssl
+
+> _@TODO add quick guide on lua-resty-auto-ssl here (fititnt, 2019-11-11 02:06 BRT_
+
+See [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl).
+
+### HAProxy
+
+> _@TODO add quick guide on HAProxy features here (fititnt, 2019-11-11 02:01 BRT_
+
+Please check [NLB Internals](nlb-internals.md) <sup>(working draft)</sup>.
+
+#### HAProxy stats page
+
+> _@TODO add quick guide on HAProxy stats page here (fititnt, 2019-11-11 02:01 BRT_
+
+#### HAProxy TLS Termination
+
+At least for the ALB v0.6.1-alpha we do not provice automated way to implement
+automatic HTTPS using only HAProxy. We implement using
+[lua-resty-auto-ssl](#lua-resty-auto-ssl).
+
+Still possible to do it but you will need to implement additional logic.
+
 ### Firewall
-> `alb_manange_ufw: yes` is required.
+> _To avoid acidental use, this feature is not enabled by default.
+> `alb_manange_ufw: yes` is explicitly required._
+
+> _Protip: Check Mode ("Dry Run") with `--tags alb-ufw --check`. This will 
+ test changes **without** applying._
+
+See also [Firewall Internals](firewall-internals.md) <sup>(working draft)</sup>.
 
 ```yaml
 
-# Allow ALB/UFW manage
+# Allow ALB/UFW manage (required)
 alb_manange_ufw: yes
 
-
-##  
 # @see https://en.wikipedia.org/wiki/DMZ_(computing)
 # ALB/UFW will use alb_dmz to make all traffic FROM/TO to this machine free
 alb_dmz:
@@ -249,13 +289,23 @@ alb_jump_boxes:
   - ip: 192.0.2.10
     name: TEST-NET-1 (example IP)
 
-
 ```
 
+#### Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)
+Is possible to reuse the YAML syntax of AP-ALB to only configure firewall of a
+server, without installing HAProxy, OpenResty, creating `/opt/alb/apps/` folders
+etc.
 
-> @TODO write more information about firewalls (fititnt, 2019-11-11 00:55 BRT)
+This could be useful for database servers.
 
-See also [Firewall Internals](firewall-internals.md) <sup>(working draft)</sup>.
+```yaml
+# Works on ALB v0.6.1-alpha. Future versions may require other options disabled
+alb_manange_haproxy: no
+alb_manange_openresty: no
+alb_manange_ufw: yes
+
+# Use alb_ufw_rules, alb_dmz, alb_bastion_hosts, alb_jump_boxes etc
+```
 
 ### Complete examples using AP-ALB
 - [example/playbook-basic.yml](example/playbook-basic.yml)
