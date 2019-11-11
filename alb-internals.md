@@ -3,26 +3,6 @@
 may be useful (TL;DR: _the HAproxy part_), but we try to provide good defaults
 so maybe you could ignore HAProxy if it just works for you.
 
-## FAQ
-
-- _How much overhead of RAM and CPU a server with AP-ALB have compared with
-  alternative NameOfAlternative?_
-  - **The overhead of HAProxy and OpenResty is low. Trust me.**
-- _AP-ALB is mean to be installed just only _on frontend servers_ that are exposed to
-  public IPs and then access internal servers?_
-  - **This use is just one of the cases**  (and the most intuitive compared to
-    cloud ALBs)
-  - **BUT you can also have, as example, both**
-    - **all-in-one (BothApplication/Network Load Balancer and some
-       PHP/Python/Java/Etc servers) on a single machine or**
-    - **put AP-ALB servers behind AP-ALB servers.**
-- _If AP-ALB could be installed "on everyting" it means even on database servers?_
-  - **If you are both your application server and database server are on same
-    host, yes**
-  - **But if you have to choose betwen put a network load balancer (the HAProxy)
-      or on the database(s) server(s) or on the application server(s) (the
-      ones running PHP/Python/NodeJS/Java/Etc) put on you application servers.**
-
 ## Directory structures
 
 ### Internal usage of ALB

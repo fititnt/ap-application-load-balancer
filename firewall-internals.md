@@ -1,4 +1,4 @@
-# firewall-internals
+# Firewall Internals
 
 ## Ad-Hoc (without AP-ALB role)
 At [tasks/ap-firewall/](tasks/ap-firewall/) is possible to use one Ad-Hoc

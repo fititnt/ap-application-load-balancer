@@ -19,10 +19,6 @@ able to execute Ansible playbooks (Ubuntu Server 18.04+ are more tested).
 The AP-ALB [license is Public Domain](#License) and is ok if you or your company
 use this role to create your own custom versions.
 
-> **Which version should you use? Choose at [ap-application-load-balancer/releases](https://github.com/fititnt/ap-application-load-balancer/releases)**. You can use the master branch, but we recommend review new updates.
-ALB is meant to be used non-stop on production servers, so you can stick with
-some version or maintain your own private changes.
-
 <!--
 
 > TL;DR: you can use this and other works from Emerson Rocha or Etica.AI as
@@ -38,19 +34,42 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 <!--Emerson Rocha dedicated this work to Public Domain -->
 
-# The Solution Stack of AP-ALB
+---
+
+<!-- TOC depthFrom:2 -->
+
+- [The Solution Stack of AP-ALB](#the-solution-stack-of-ap-alb)
+- [Quickstart Guide](#quickstart-guide)
+    - [The minimum you already should know to use AP-ALB](#the-minimum-you-already-should-know-to-use-ap-alb)
+    - [Apps](#apps)
+        - [ALB Strategies](#alb-strategies)
+            - [hello-world](#hello-world)
+            - [files-local](#files-local)
+            - [proxy](#proxy)
+            - [raw](#raw)
+            - [socket-php](#socket-php)
+    - [Complete examples using AP-ALB](#complete-examples-using-ap-alb)
+    - [Quickstart on how to hotfix/debug production servers](#quickstart-on-how-to-hotfixdebug-production-servers)
+- [Advanced usage](#advanced-usage)
+- [FAQ](#faq)
+- [License](#license)
+
+<!-- /TOC -->
+
+---
+
+## The Solution Stack of AP-ALB
 
 > _One line emoji explanation_:
 >
 > ☺️ 🤖 :end: **UFW <sup>(:1-65535)</sup>** :end: **HAProxy <sup>(:80, :443)</sup>** :end: **OpenResty <sup>(:8080, :4443 🔒)</sup>** :end: **App**
 
 - **Infrastructure as Code**:
-  - [Ansible](https://github.com/ansible/ansible) _(See: [Ansibe documentation](https://docs.ansible.com/))_
+  - [Ansible 2.8+](https://github.com/ansible/ansible) _(See: [Ansibe documentation](https://docs.ansible.com/))_
 - **Operational System**:
-  - [Ubuntu Server LTS](https://ubuntu.com/)
+  - [Ubuntu Server LTS 18.04+](https://ubuntu.com/)
 - **Firewall**
-  - MVP with UFW is planned for ALB v0.6.0-alpha.
-    - Tip: you can use [EticaAI/aguia-pescadora-ansible-playbooks/tarefa/firewall](https://github.com/EticaAI/aguia-pescadora-ansible-playbooks/tree/master/tarefa/firewall) as reference.
+  - [UFW](https://help.ubuntu.com/community/UFW)
 - **Load Balancing**
   - [HAProxy 2.0.x](https://github.com/haproxy/haproxy)
     _(See: [HAProxy starter guide](https://cbonte.github.io/haproxy-dconv/2.0/intro.html),
@@ -60,12 +79,17 @@ humanitarian or commercial projects from who help we on Etica.AI.
 - **Automatic HTTPS**
   - [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl)
   - [Let’s Encrypt](https://letsencrypt.org/docs/)
+- **The Apps/Rules configuration**
+  - [YAML Syntax](https://yaml.org/)
+    - [OpenResty](https://yaml.org/) / [NGinx](http://nginx.org/en/docs/) syntax <sup>(To make your own YAML template apps)</sup>
+      - TL;DR: `/opt/alb/apps/{{ app_uid }}.conf` is where each App/Rule is stored
+    - [HAProxy](https://yaml.org/) <sup>(Only for very advanced cases)</sup>
 
-See [ALB Internals](alb-internals.md) quick overview of how AP-ALB make the
-solution stack work. (TL;DR: `cd /opt/alb/` and/or `ls -lha /opt/alb/` on a
-configured server see the important files or symbolic links that matter).
+> See [Advanced usage](#advanced-usage).
 
-## How to use
+## Quickstart Guide
+
+### The minimum you already should know to use AP-ALB
 
 > Note: this guide assumes that you at least
 >
@@ -81,12 +105,9 @@ configured server see the important files or symbolic links that matter).
 >       it is not released on Ansible Galaxy (it means you can copy some version of
 >       AP-ALB and place on sub-folder `roles/ap-application-load-balancer`)
 
-### Examples of complete Ansible Playbooks
-- [example/playbook-basic.yml](example/playbook-basic.yml)
-- [example/playbook-complex.yml](example/playbook-complex.yml)
-- <https://github.com/fititnt/ap-alb-demo>
+### Apps
 
-### ALB Strategies
+#### ALB Strategies
 For simplification each _group of rules_ is called "app" because most of the
 time this is the case. The parameter `app_alb_strategy` defines wich [OpenResty
 configuration template](templates/alb-strategy) will be used as base to
@@ -97,7 +118,7 @@ AP-ALB automate the work for you will be very familiar.
 
 **For full list of ALB Strategies, look at [templates/alb-strategy](templates/alb-strategy)**
 
-#### hello-world
+##### hello-world
 
 The `hello-world` replaced [files-local](#files-local) strategy as default if
 you do not specify a `app_alb_strategy`. It can be specially useful to obtain
@@ -117,7 +138,7 @@ information faster.
 
 See [templates/alb-strategy/hello-world.conf.j2](templates/alb-strategy/hello-world.conf.j2).
 
-#### files-local
+##### files-local
 Strategy to serve static files from the same server where the ALB is located.
 
 ```yaml
@@ -131,7 +152,7 @@ Strategy to serve static files from the same server where the ALB is located.
 ```
 See [templates/alb-strategy/files-local.conf.j2](templates/alb-strategy/files-local.conf.j2).
 
-#### proxy
+##### proxy
 Use ALB as reverse proxy.
 
 ```yaml
@@ -145,7 +166,7 @@ Use ALB as reverse proxy.
 ```
 See [templates/alb-strategy/proxy.conf.j2](templates/alb-strategy/proxy.conf.j2).
 
-#### raw
+##### raw
 Use a raw string to create an OpenResty configuration file.
 
 ```yaml
@@ -163,20 +184,56 @@ Use a raw string to create an OpenResty configuration file.
 
 See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
 
-#### socket-php
+##### socket-php
 > This strategy is a draft and/or can be removed or made obsolet by [proxy](#proxy).
 
 See [templates/alb-strategy/socket-php.conf.j2](templates/alb-strategy/socket-php.conf.j2).
 
-### Advanced usage
+### Complete examples using AP-ALB
+- [example/playbook-basic.yml](example/playbook-basic.yml)
+- [example/playbook-complex.yml](example/playbook-complex.yml)
+- <https://github.com/fititnt/ap-alb-demo>
+
+### Quickstart on how to hotfix/debug production servers
+See [debugging-quickstart.md](debugging-quickstart.md).
+
+## Advanced usage
+
+- [ALB Internals](alb-internals.md)
+- [NLB Internals](nlb-internals.md) <sup>(working draft)</sup>
+- [Firewall Internals](firewall-internals.md) <sup>(working draft)</sup>
 
 - See variables [defaults/main.yml](defaults/main.yml)
 - See folder [templates/alb-strategy](templates/alb-strategy) for ALB strategies
   used on each application
 - See [debugging-quickstart.md](debugging-quickstart.md).
 
+## FAQ
 
-# License
+- _Which version of AP-ALB should you use?_
+  - **Choose at [ap-application-load-balancer/releases](https://github.com/fititnt/ap-application-load-balancer/releases)**.
+    You can use the master branch, but we recommend review new updates.
+    ALB is meant to be used non-stop on production servers, so you can stick
+    with some version or maintain your own private changes.
+- _How much overhead of RAM and CPU a server with AP-ALB have compared with
+  alternative NameOfAlternative?_
+  - **The overhead of HAProxy and OpenResty is low. Trust me.**
+- _AP-ALB is mean to be installed just only _on frontend servers_ that are exposed to
+  public IPs and then access internal servers?_
+  - **This use is just one of the cases**  (and the most intuitive compared to
+    cloud ALBs)
+  - **BUT you can also have, as example, both**
+    - **all-in-one (BothApplication/Network Load Balancer and some
+       PHP/Python/Java/Etc servers) on a single machine or**
+    - **put AP-ALB servers behind AP-ALB servers.**
+- _If AP-ALB could be installed "on everyting" it means even on database servers?_
+  - **If you are both your application server and database server are on same
+    host, yes**
+  - **But if you have to choose betwen put a network load balancer (the HAProxy)
+      or on the database(s) server(s) or on the application server(s) (the
+      ones running PHP/Python/NodeJS/Java/Etc) put on you application servers.**
+
+## License
 [![Public Domain](https://i.creativecommons.org/p/zero/1.0/88x31.png)](UNLICENSE)
 
 To the extent possible under law, [Etica.AI](https://etica.ai/) has waived all

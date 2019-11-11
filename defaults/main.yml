@@ -16,7 +16,7 @@ alb_superuser_ip: null
 alb_superuser_autodiscoveripnull: yes
 
 ### Enable/Disable ALB subcomponents ___________________________________________
-# @TODO implement these variables for real (fititnt, 2019-11-10 21:52 BRT)
+## Note: these defaults will install everyting, except the firewall.
 alb_manange_all: yes
 alb_manange_haproxy: yes
 alb_manange_openresty: yes
@@ -133,19 +133,6 @@ alb_haproxy_stats_uri: "/haproxy?stats"
 alb_haproxy_stats_realm: "{{ alb_name }}"
 
 ### Defaults ___________________________________________________________________
-# @TODO rewrite alb-strategies to support these defaults (fititnt, 2019-11-02 20:40 BRT)
-alb_default_app_domain: "localhost"
-alb_default_app_root: "/var/www/html"
-alb_default_app_index: "index.html index.htm"
-alb_default_app_forcehttps: no
-alb_default_app_forcedebug: yes
-alb_default_app_state: present
-# alb_default_app_alb_strategy: "files-local"
-alb_default_app_alb_strategy: "hello-world"
-alb_default_app_php_socket_path: "/run/php/php7.3-fpm.sock"
-
-### AP-ALB , PHP (suggestions for external roles) ______________________________
-alb_strategy_socket_php__defaultsocket: "/run/php/php7.3-fpm.sock"
 
 ## Firewall  ___________________________________________________________________
 alb_ssh_port: 22
@@ -155,7 +142,7 @@ alb_ufw_clusterfuck_ignore:
 
 # This rule will be forced, and the user will have to overide this default to
 # not allow make SSH port on limit
-alb_ufw_rule_always:
+alb_ufw_rules_always:
   - rule: limit
     port: "{{ alb_ssh_port }}"
     proto: tcp
