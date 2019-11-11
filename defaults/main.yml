@@ -15,6 +15,17 @@ alb_superuser_auth:
 alb_superuser_ip: null
 alb_superuser_autodiscoveripnull: yes
 
+### Enable/Disable ALB subcomponents ___________________________________________
+# @TODO implement these variables for real (fititnt, 2019-11-10 21:52 BRT)
+alb_manange_all: yes
+alb_manange_haproxy: yes
+alb_manange_openresty: yes
+alb_manange_ufw: no
+
+## Note: the next options is better leave it alone
+alb_manange_apps: "{{ alb_manange_openresty }}"
+alb_manange_logrotate: "{{ alb_manange_haproxy or alb_manange_openresty }}"
+
 ### APPs _______________________________________________________________________
 
 alb_apps: []
@@ -171,6 +182,7 @@ alb_ufw_policy__default:
 alb_ufw_state__default: enabled
 
 ## Internal use / Placeholder tags _____________________________________________
+alb_version: "v0.6.1-alpha"
 alb_openresty_ip: 127.0.0.1
 # alb_openresty_ip: 0.0.0.0 ## Use this if want to expose openresty
 alb_openresty_httpport: 8080

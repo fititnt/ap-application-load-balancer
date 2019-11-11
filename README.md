@@ -1,4 +1,4 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.6.0-alpha
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.6.1-alpha
 AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
@@ -84,6 +84,7 @@ configured server see the important files or symbolic links that matter).
 ### Examples of complete Ansible Playbooks
 - [example/playbook-basic.yml](example/playbook-basic.yml)
 - [example/playbook-complex.yml](example/playbook-complex.yml)
+- <https://github.com/fititnt/ap-alb-demo>
 
 ### ALB Strategies
 For simplification each _group of rules_ is called "app" because most of the

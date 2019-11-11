@@ -3,38 +3,56 @@
 # FILE:            {{ role_path }}/tasks/main.yml
 # LICENSE:         Public Domain
 
+- name: "ALB version {{ alb_version }}"
+  debug: 
+    msg: "{{ alb_version }}"
+
 - name: alb-vars.yml (temporary file, will be replaced later)
   include: alb-vars.yml
   tags:
-  - alb
-  - alb-init
-  - alb-vars
+    - alb
+    - alb-init
+    - alb-vars
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_apps is sameas true
 
 - name: alb-init.yml
   include: alb-init.yml
   tags:
   - alb
   - alb-init
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_apps is sameas true
 
 - name: Instalação de OpenResty, Lua Rest & Lua Resty AutoSSL (faz o HTTPS para os Apps)
   include: openresty-luarocks-lua-resty-auto-ssl-install.yml
   tags:
   - alb
   - alb-openresty
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_openresty is sameas true
 
 - name: alb-openresty-after.yml
   include: alb-openresty-after.yml
   tags:
   - alb
   - alb-openresty-after
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_openresty is sameas true
 
-# ansible-playbook -i hosts myplaybook.yml --skip-tags "alb-openresty,alb-app,alb-extra-php"
 - name: HAproxy
   include: haproxy.yml
   tags:
   - alb
   - alb-haproxy
-  when: alb_forceignore_haproxy is defined and alb_forceignore_haproxy != true
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_haproxy is sameas true
+    - alb_forceignore_haproxy is defined and alb_forceignore_haproxy != true
 
 - name: ALB rule for each App
   include: apps.yml
@@ -42,12 +60,18 @@
   - alb
   - alb-app
   - alb-apps
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_apps is sameas true
 
 - name: logrotate.yml
   include: logrotate.yml
   tags:
   - alb
   - alb-logrotate
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_logrotate is sameas true
 
 # ansible-playbook -i hosts myplaybook.yml --tags "alb-ufw"
 - name: ufw/main.yml
@@ -57,9 +81,14 @@
   - alb-ufw
   - alb-firewall
   # when: alb_forceignore_ufw is defined and alb_forceignore_haproxy != true
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_ufw is sameas true
 
 - name: alb-final.yml
   include: alb-final.yml
   tags:
   - alb
   - alb-final
+  when:
+    - alb_manange_all is sameas true

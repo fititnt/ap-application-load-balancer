@@ -1,18 +1,16 @@
 ---
 
-- name: "default-policies.yml"
-  debug: 
-    msg: teste ufw 123 default-policies.yml
-
 - set_fact:
     alb_ufw__policies: "{{ alb_ufw_policy | default(alb_ufw_policy__default) }}"
 
 - name: "default-policies.yml"
   debug: 
-    msg: "aa {{ alb_ufw__policies }}"
+    msg: "{{ alb_ufw__policies }}"
 
-#- name: "sudo ufw default [alb_ufw_policy OR alb_ufw_policy__default]"
-#  ufw: direction={{ item.direction }} policy={{ item.policy }}
-#  with_items: "{{ alb_ufw__policies }}"
-#  notify:
-#    - restart ufw
+- name: "sudo ufw default [alb_ufw_policy OR alb_ufw_policy__default]"
+  ufw:
+    direction: "{{item.direction }}"
+    policy: "{{ item.policy }}"
+  with_items: "{{ alb_ufw__policies }}"
+  notify:
+    - restart ufw
