@@ -1,4 +1,4 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.6.1-alpha
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.6.2-alpha
 AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
@@ -40,6 +40,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 - [The Solution Stack of AP-ALB](#the-solution-stack-of-ap-alb)
     - [ALB Goals](#alb-goals)
+        - [Stability over](#stability-over)
         - [Relatively decoupled subcomponents](#relatively-decoupled-subcomponents)
         - [Don't stop services even when the administrator deploy invalid requests](#dont-stop-services-even-when-the-administrator-deploy-invalid-requests)
 - [Quickstart Guide](#quickstart-guide)
@@ -99,6 +100,11 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 ### ALB Goals
 
+<!--
+#### Stability over
+
+-->
+
 #### Relatively decoupled subcomponents
 At [defaults/main.yml](defaults/main.yml), you have
 
@@ -109,6 +115,10 @@ alb_manange_all: yes
 alb_manange_haproxy: yes
 alb_manange_openresty: yes
 alb_manange_ufw: no
+
+## Optionated (but NOT required) group of tasks.
+alb_manange_common: yes  # hostname, timezone (UTC) [See tasks/common/common.yml]
+alb_manange_devtools: no # net-tools, htop, hatop [tasks/devtools/devtools.yml]
 
 ## Note: the next options is better leave it alone
 alb_manange_apps: "{{ alb_manange_openresty }}"

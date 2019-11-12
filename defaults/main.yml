@@ -22,9 +22,9 @@ alb_manange_haproxy: yes
 alb_manange_openresty: yes
 alb_manange_ufw: no
 
-# These modules are optionated defaults. You can change it
-alb_manange_common: yes
-alb_manange_devtools: no
+## Optionated (but NOT required) group of tasks.
+alb_manange_common: yes  # hostname, timezone (UTC) [See tasks/common/common.yml]
+alb_manange_devtools: no # net-tools, htop, hatop [tasks/devtools/devtools.yml]
 
 ## Note: the next options is better leave it alone
 alb_manange_apps: "{{ alb_manange_openresty }}"
@@ -173,7 +173,7 @@ alb_ufw_policy__default:
 alb_ufw_state__default: enabled
 
 ## Internal use / Placeholder tags _____________________________________________
-alb_version: "v0.6.1-alpha"
+alb_version: "v0.6.2-alpha"
 alb_openresty_ip: 127.0.0.1
 # alb_openresty_ip: 0.0.0.0 ## Use this if want to expose openresty
 alb_openresty_httpport: 8080

@@ -1,4 +1,38 @@
 ---
+# FILE:            {{ role_path }}/tasks/devtools/devtools.yml
+# LICENSE:         Public Domain
+
+# Requires: `alb_manange_devtools: yes` variable
+# To only apply this in a play: `--tags alb-devtools`
+# To only skip this in a play: `--skip-tags alb-ufw`
+
+
 - name: "devtools.yml"
   debug:
     msg: "devtools.yml"
+
+- name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: sudo apt-get install net-tools (for netstat)
+  apt:
+   name: net-tools
+   state: present
+
+- name: sudo apt-get install htop
+  apt:
+   name: htop
+   state: present
+
+# @see http://feurix.org/projects/hatop/
+- name: "sudo apt-get install hatop [Run with 'hatop -s /run/haproxy/admin.sock']"
+  apt:
+   name: hatop
+   state: present
+  when:
+    - alb_manange_haproxy is sameas true
+
+# @TODO: consider ngxtop https://www.tecmint.com/ngxtop-monitor-nginx-log-files-in-real-time-in-linux/
+#        (fititnt, 2019-11-11 22:18 BRT)
