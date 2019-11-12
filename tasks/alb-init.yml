@@ -6,6 +6,15 @@
 # alb-init tasks runs before other software is installed on the system
 # @see https://github.com/fititnt/ap-application-load-balancer/blob/master/alb-internals.md
 
+- name: mkdir -p /etc/ansible/facts.d/
+  file:
+    path: /etc/ansible/facts.d/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    recurse: true
+
 # Example group command from Ansible Playbooks
 - name: Create group alb if already does not exist
   group:

@@ -40,8 +40,8 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 - [The Solution Stack of AP-ALB](#the-solution-stack-of-ap-alb)
     - [ALB Goals](#alb-goals)
-        - [Stability over](#stability-over)
-        - [Relatively decoupled subcomponents](#relatively-decoupled-subcomponents)
+        - [Well maintained subcomponents by the community](#well-maintained-subcomponents-by-the-community)
+        - [Decoupled subcomponents when makes sense](#decoupled-subcomponents-when-makes-sense)
         - [Don't stop services even when the administrator deploy invalid requests](#dont-stop-services-even-when-the-administrator-deploy-invalid-requests)
 - [Quickstart Guide](#quickstart-guide)
     - [The minimum you already should know to use AP-ALB](#the-minimum-you-already-should-know-to-use-ap-alb)
@@ -100,12 +100,11 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 ### ALB Goals
 
-<!--
-#### Stability over
+#### Well maintained subcomponents by the community
 
--->
+> @TODO short explanation on subcomponents (fititnt, 2019-11-11 00:13 BRT)
 
-#### Relatively decoupled subcomponents
+#### Decoupled subcomponents when makes sense
 At [defaults/main.yml](defaults/main.yml), you have
 
 ```yaml
@@ -331,6 +330,9 @@ See [debugging-quickstart.md](debugging-quickstart.md).
 - [ALB Internals](alb-internals.md)
 - [NLB Internals](nlb-internals.md) <sup>(working draft)</sup>
 - [Firewall Internals](firewall-internals.md) <sup>(working draft)</sup>
+
+> Tip: OpenResty allow usage of LuaJIT. You can test lua language online at
+<https://www.lua.org/cgi-bin/demo>
 
 ## FAQ
 
