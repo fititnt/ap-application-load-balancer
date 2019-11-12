@@ -22,6 +22,10 @@ alb_manange_haproxy: yes
 alb_manange_openresty: yes
 alb_manange_ufw: no
 
+# These modules are optionated defaults. You can change it
+alb_manange_common: yes
+alb_manange_devtools: no
+
 ## Note: the next options is better leave it alone
 alb_manange_apps: "{{ alb_manange_openresty }}"
 alb_manange_logrotate: "{{ alb_manange_haproxy or alb_manange_openresty }}"

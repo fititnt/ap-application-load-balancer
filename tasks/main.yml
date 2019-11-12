@@ -7,6 +7,24 @@
   debug: 
     msg: "{{ alb_version }}"
 
+- name: "common/common.yml"
+  include: common/common.yml
+  tags:
+    - alb
+    - alb-common
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_common is sameas true
+
+- name: "devtools/devtools.yml"
+  include: devtools/devtools.yml
+  tags:
+    - alb
+    - alb-devtools
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_devtools is sameas true
+
 - name: alb-vars.yml (temporary file, will be replaced later)
   include: alb-vars.yml
   tags:

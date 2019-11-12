@@ -1,0 +1,5 @@
+---
+
+- name: "common.yml"
+  debug:
+    msg: "common.yml"
