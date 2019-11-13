@@ -51,9 +51,13 @@
 - name: default-policies.yml
   include: default-policies.yml
 
-- name: "UFW state {{ alb_ufw_state | default (alb_ufw_state__default) }}"
+#- name: "UFW state {{ alb_ufw_state | default (alb_ufw_state__default) }}"
+#  ufw:
+#    state: "{{ alb_ufw_state | default (alb_ufw_state__default) }}"
+
+- name: "UFW state enabled"
   ufw:
-    state: "{{ alb_ufw_state | default (alb_ufw_state__default) }}"
+    state: "enabled"
 
 ## ufw status verbose  (after) ________________________________________________
 - name: "ufw status verbose (after)"

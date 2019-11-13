@@ -12,8 +12,14 @@
 - name: reload haproxy
   service: name=haproxy state=restarted
 
+### @todo checar este erro em vez de transformar o reload em restarted
+## Failed to reload ufw.service: Job type reload is not applicable for unit ufw.service.
+## See system logs and 'systemctl status ufw.service' for details.
+## (fititnt, 2019-11-13 09:56 BRT)
+
 - name: reload ufw
-  service: name=ufw state=reloaded
+  #service: name=ufw state=reloaded
+  service: name=ufw state=restarted
 
 - name: restart ufw
   service: name=ufw state=restarted
