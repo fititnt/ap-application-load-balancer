@@ -17,6 +17,9 @@
 - name: install-ufw.yml
   include: install-ufw.yml
 
+- name: rules.yml
+  include: rules.yml
+
 - name: allow-dmz.yml
   include: allow-dmz.yml
 

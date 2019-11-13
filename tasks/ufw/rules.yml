@@ -1,0 +1,14 @@
+---
+
+
+
+- name: "alb_ufw_rules {{ alb_ufw_rules }}"
+  ufw:
+    rule: "{{ item.rule | default('allow') }}"
+    dest: "{{ item.ip | default(item) }}"
+    delete: "{{ item.delete | default('no')}}"
+    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('custom rule')) }}"
+  loop: "{{ alb_ufw_rules }}"
+  loop_control:
+    extended: yes
+  when: "alb_ufw_rules is defined"

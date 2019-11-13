@@ -152,6 +152,8 @@ alb_ufw_rules_always:
     proto: tcp
     comment: "alb_ufw_rule_always"
 
+# User is expected to configure the alb_ufw_rules
+
 alb_ufw_rules__default:
   - rule: allow
     port: 80
@@ -171,6 +173,9 @@ alb_ufw_policy__default:
     policy: allow
 
 alb_ufw_state__default: enabled
+
+alb_ufw_rule__default: "allow" # allow, deny, limit, reject
+alb_ufw_to_ip__default: "any" # allow, deny, limit, reject
 
 ## Internal use / Placeholder tags _____________________________________________
 alb_version: "v0.6.2-alpha"
