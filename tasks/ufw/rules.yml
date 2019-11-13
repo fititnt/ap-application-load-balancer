@@ -1,13 +1,111 @@
 ---
+# FILE:            {{ role_path }}/tasks/ufw/rules.yml
+# LICENSE:         Public Domain
 
-
+# Please see Ansible oficial documentation at
+# https://docs.ansible.com/ansible/latest/modules/ufw_module.html
+# The alb_ufw_rules array accept all parameters, except these ones
+#    - default, policy (Change the default policy for incoming or outgoing traffic.)
+#    - state
+#    - name, app (Use profile located in /etc/ufw/applications.d)
 
 - name: "alb_ufw_rules {{ alb_ufw_rules }}"
   ufw:
-    rule: "{{ item.rule | default('allow') }}"
-    dest: "{{ item.ip | default(item) }}"
-    delete: "{{ item.delete | default('no')}}"
-    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('custom rule')) }}"
+    ### rule
+    ## Add firewall rule
+    # Choises:
+    #   - allow
+    #   - deny
+    #   - limit
+    #   - reject
+    rule: "{{ item.rule | default(omit) }}"
+
+    ## interface, if
+    # Specify interface for rule.
+    interface: "{{ item.interface | default(omit) }}"
+    if: "{{ item.if | default(omit) }}"
+
+    ### direction
+    ## Select direction for a rule or default policy command.
+    # Choises:
+    #   - in
+    #   - incoming
+    #   - out
+    #   - outgoing
+    #   - routed
+    direction: "{{ item.direction | default(omit) }}"
+
+    ### protocol, proto
+    ## TCP/IP protocol.
+    # Choises:
+    #   - any
+    #   - tcp
+    #   - udp
+    #   - ipv6
+    #   - esp
+    #   - ah
+    #   - gre
+    #   - igmp
+    protocol: "{{ item.protocol | default(omit) }}"
+    proto: "{{ item.proto | default(omit) }}"
+
+    ## route
+    # Apply the rule to routed/forwarded packets.
+    # Choises:
+    #   - no
+    #   - yes
+    route: "{{ item.route | default(omit) }}"
+
+    ## log
+    # Log new connections matched to this rule
+    # Choises:
+    #   - no
+    #   - yes
+    log: "{{ item.log | default(omit) }}"
+
+    ## logging
+    # Toggles logging. Logged packets use the LOG_KERN syslog facility.
+    # Choises:
+    #   - on
+    #   - off
+    #   - low
+    #   - medium
+    #   - high
+    #   - full
+    logging: "{{ item.logging | default(omit) }}"
+
+    ## from_ip, from, to
+    # Source IP address.
+    # Default: "any"
+    from_ip: "{{ item.from_ip | default(omit) }}"
+    from: "{{ item.from | default(omit) }}"
+    src: "{{ item.src | default(omit) }}"
+  
+    ## from_port
+    # Destination port.
+    from_port: "{{ item.from_port | default(omit) }}"
+
+    ## to_ip, dest, to
+    # Destination IP address.
+    # Default: "any"
+    to_ip: "{{ item.to_ip | default(omit) }}"
+    dest: "{{ item.dest | default(omit) }}"
+    to: "{{ item.to | default(omit) }}"
+  
+    ## to_port, port
+    # Destination port.
+    to_port: "{{ item.to_port | default(omit) }}"
+    port: "{{ item.port | default(omit) }}"
+
+    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('alb_ufw_rules') }}"
+
+    ## delete
+    # Delete rule.
+    # Choises:
+    #   - no
+    #   - yes
+    delete: "{{ item.delete | default(omit) }}"
+
   loop: "{{ alb_ufw_rules }}"
   loop_control:
     extended: yes

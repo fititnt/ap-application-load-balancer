@@ -178,7 +178,7 @@ alb_ufw_rule__default: "allow" # allow, deny, limit, reject
 alb_ufw_to_ip__default: "any" # allow, deny, limit, reject
 
 ## Internal use / Placeholder tags _____________________________________________
-alb_version: "v0.6.2-alpha"
+alb_version: "v0.6.3-alpha"
 alb_openresty_ip: 127.0.0.1
 # alb_openresty_ip: 0.0.0.0 ## Use this if want to expose openresty
 alb_openresty_httpport: 8080
