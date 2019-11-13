@@ -12,5 +12,8 @@
 - name: reload haproxy
   service: name=haproxy state=restarted
 
+- name: reload ufw
+  service: name=ufw state=reloaded
+
 - name: restart ufw
   service: name=ufw state=restarted

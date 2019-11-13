@@ -17,8 +17,27 @@
 - name: install-ufw.yml
   include: install-ufw.yml
 
-- name: rules.yml
+- name: ufw-reset.yml
+  include: ufw-reset.yml
+  when: 
+    - "alb_ufw_canreset is defined and alb_ufw_canreset is sameas true"
+    - "alb_ufw_reset is defined and alb_ufw_canreset is sameas true"
+
+- name: "ALB/UFW/Rules alb_ufw_rules_always"
   include: rules.yml
+  vars:
+    ufw_rules: "{{ alb_ufw_rules_always }}"
+    ufw_commentprefix: "{{ alb_ufw_commentprefix }}"
+    name_of_rules: "alb_ufw_rules_always"
+  when: "alb_ufw_rules_always is defined"
+
+- name: "ALB/UFW/Rules alb_ufw_rules"
+  include: rules.yml
+  vars:
+    ufw_rules: "{{ alb_ufw_rules }}"
+    ufw_commentprefix: "{{ alb_ufw_commentprefix }}"
+    name_of_rules: "alb_ufw_rules"
+  when: "alb_ufw_rules is defined"
 
 - name: allow-dmz.yml
   include: allow-dmz.yml

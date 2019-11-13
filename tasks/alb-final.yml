@@ -11,3 +11,10 @@
     src: files/alb_apps.fact
     dest: /etc/ansible/facts.d/alb_apps.fact
     mode: '0644'
+
+- name: /etc/ansible/facts.d/alb_ufw.fact
+  template:
+    # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
+    src: files/alb_ufw.fact
+    dest: /etc/ansible/facts.d/alb_ufw.fact
+    mode: '0644'

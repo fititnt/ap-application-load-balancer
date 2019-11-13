@@ -9,7 +9,7 @@
 #    - state
 #    - name, app (Use profile located in /etc/ufw/applications.d)
 
-- name: "alb_ufw_rules {{ alb_ufw_rules }}"
+- name: "alb/ufw {{ name_of_rules }}"
   ufw:
     ### rule
     ## Add firewall rule
@@ -97,7 +97,7 @@
     to_port: "{{ item.to_port | default(omit) }}"
     port: "{{ item.port | default(omit) }}"
 
-    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('alb_ufw_rules') }}"
+    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default(name_of_rules) }}"
 
     ## delete
     # Delete rule.
@@ -106,7 +106,8 @@
     #   - yes
     delete: "{{ item.delete | default(omit) }}"
 
-  loop: "{{ alb_ufw_rules }}"
+  loop: "{{ ufw_rules }}"
   loop_control:
     extended: yes
-  when: "alb_ufw_rules is defined"
+  notify: reload ufw
+  when: "ufw_rules is defined"
