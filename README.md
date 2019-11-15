@@ -1,4 +1,4 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.6.4-beta
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.7.0-alpha
 AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
@@ -40,9 +40,10 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 - [The Solution Stack of AP-ALB](#the-solution-stack-of-ap-alb)
     - [ALB Goals](#alb-goals)
-        - [Well maintained subcomponents by the community](#well-maintained-subcomponents-by-the-community)
+        - [Automatic updates of components after deployed](#automatic-updates-of-components-after-deployed)
+        - [Resilient to sysadmin errors on production servers](#resilient-to-sysadmin-errors-on-production-servers)
+            - [What about one-click rollback feature?](#what-about-one-click-rollback-feature)
         - [Decoupled subcomponents when makes sense](#decoupled-subcomponents-when-makes-sense)
-        - [Don't stop services even when the administrator deploy invalid requests](#dont-stop-services-even-when-the-administrator-deploy-invalid-requests)
 - [Quickstart Guide](#quickstart-guide)
     - [The minimum you already should know to use AP-ALB](#the-minimum-you-already-should-know-to-use-ap-alb)
     - [Apps](#apps)
@@ -100,9 +101,52 @@ humanitarian or commercial projects from who help we on Etica.AI.
 
 ### ALB Goals
 
-#### Well maintained subcomponents by the community
+#### Automatic updates of components after deployed
 
-> @TODO short explanation on subcomponents (fititnt, 2019-11-11 00:13 BRT)
+The AP-ALB Infrastructure as Code written in Ansible can be labeled as `beta` or
+`Release Candidate` but **the end result is aimed to be running non-stop in
+production at least with security updates without human intervention**.
+
+**Who guarantees updates:**
+- **HAProxy 2.0**:
+  - _Note: version **haproxy=2.0.\*** is locked_
+  - <https://haproxy.debian.net/#?distribution=Ubuntu&release=bionic&version=2.0>
+- **OpenrResty**: 
+  - We use OpenResty® provides official pre-built packages
+  - <https://openresty.org/en/linux-packages.html>
+- **Automatic HTTPS**
+  - GUI/lua-resty-auto-ssl
+    - We use OpenrResty package mananger
+    - `luarocks install lua-resty-auto-ssl`
+  - At moment we do not provide out of the box HTTPS using only HAProxy
+    - Trust me. We do not found ways to automate Automatic HTTPS with HAProxy.
+      to not require some level of human interation from time to time.
+- **UFW**
+  - Default from the system
+
+If you manage make the initial setup with ALB works and just to be sure reboot
+at least once, _is likely that if you forgot your server running it could be
+working fine untill [Ubuntu Server EOLs](https://ubuntu.com/about/release-cycle)
+(e.g. if Using Ubuntu 18.04 LTS could be 2023 or 2028)_.
+
+#### Resilient to sysadmin errors on production servers
+
+ALP do it's best to not stop services even when the administrator deploy invalid
+configurations on production.
+
+A human can be so self-confident (or not knowing the difference) and after
+updating configurations on production instead of _reload a service_ go ahead and
+_restart a service_. Sometimes is not only about packat loss (user or external
+services receiving errors for a second) but with configuration errors will stop
+an online service.
+
+##### What about one-click rollback feature?
+
+Note that we do not support [`one-click rollback` Ansistrano-like style](https://github.com/ansistrano/deploy)
+... **yet**. HAProxy & OpenResty is likely to resist errors, and have backup
+files for every old configuration on the target servers, but if you use custom
+configurations beyond what ALB is designed, you still will need to log on the
+server and rename older files or re-run a playbook with ALB to allow fix it.
 
 #### Decoupled subcomponents when makes sense
 At [defaults/main.yml](defaults/main.yml), you have
@@ -126,9 +170,6 @@ alb_manange_logrotate: "{{ alb_manange_haproxy or alb_manange_openresty }}"
 
 > @TODO short explanation on how to reuse only parts of the subcomponents (fititnt, 2019-11-11 00:13 BRT)
 
-#### Don't stop services even when the administrator deploy invalid requests
-
-> @TODO short explanation on how alert errors (fititnt, 2019-11-11 00:13 BRT)
 
 ## Quickstart Guide
 
