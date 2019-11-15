@@ -46,6 +46,9 @@ humanitarian or commercial projects from who help we on Etica.AI.
         - [Decoupled subcomponents when makes sense](#decoupled-subcomponents-when-makes-sense)
 - [Quickstart Guide](#quickstart-guide)
     - [The minimum you already should know to use AP-ALB](#the-minimum-you-already-should-know-to-use-ap-alb)
+    - [Complete examples using AP-ALB](#complete-examples-using-ap-alb)
+    - [Quickstart on how to hotfix/debug production servers](#quickstart-on-how-to-hotfixdebug-production-servers)
+- [ALB components](#alb-components)
     - [Apps](#apps)
         - [ALB Strategies](#alb-strategies)
             - [hello-world](#hello-world)
@@ -53,15 +56,17 @@ humanitarian or commercial projects from who help we on Etica.AI.
             - [proxy](#proxy)
             - [raw](#raw)
             - [socket-php](#socket-php)
-    - [OpenResty](#openresty)
-        - [lua-resty-auto-ssl](#lua-resty-auto-ssl)
+    - [common](#common)
+    - [devtools](#devtools)
+    - [Firewall](#firewall)
+        - [Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)](#applying-only-firewall-rules-on-a-specific-server-ie-do-not-install-haproxy-openresty)
+        - [External documentation about UFW and Ansible](#external-documentation-about-ufw-and-ansible)
     - [HAProxy](#haproxy)
         - [HAProxy stats page](#haproxy-stats-page)
         - [HAProxy TLS Termination](#haproxy-tls-termination)
-    - [Firewall](#firewall)
-        - [Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)](#applying-only-firewall-rules-on-a-specific-server-ie-do-not-install-haproxy-openresty)
-    - [Complete examples using AP-ALB](#complete-examples-using-ap-alb)
-    - [Quickstart on how to hotfix/debug production servers](#quickstart-on-how-to-hotfixdebug-production-servers)
+    - [logrotate](#logrotate)
+    - [OpenResty](#openresty)
+        - [lua-resty-auto-ssl](#lua-resty-auto-ssl)
 - [Advanced usage](#advanced-usage)
 - [FAQ](#faq)
 - [License](#license)
@@ -170,7 +175,6 @@ alb_manange_logrotate: "{{ alb_manange_haproxy or alb_manange_openresty }}"
 
 > @TODO short explanation on how to reuse only parts of the subcomponents (fititnt, 2019-11-11 00:13 BRT)
 
-
 ## Quickstart Guide
 
 ### The minimum you already should know to use AP-ALB
@@ -189,9 +193,40 @@ alb_manange_logrotate: "{{ alb_manange_haproxy or alb_manange_openresty }}"
 >       it is not released on Ansible Galaxy (it means you can copy some version of
 >       AP-ALB and place on sub-folder `roles/ap-application-load-balancer`)
 
+### Complete examples using AP-ALB
+- [example/playbook-basic.yml](example/playbook-basic.yml)
+- [example/playbook-complex.yml](example/playbook-complex.yml)
+- <https://github.com/fititnt/ap-alb-demo>
+
+### Quickstart on how to hotfix/debug production servers
+See [debugging-quickstart.md](debugging-quickstart.md).
+
+## ALB components
+
+- **To permanently enable management by ALB for ALL components (default)**
+  - `alb_manange_ufw: yes`
+- **To permanently disable management by ALB for ALL components**
+  - `alb_manange_ufw: no`
+
 ### Apps
 
-#### ALB Strategies
+> Tip: `apps` requires [OpenResty](#openresty).
+
+- **To permanently enable management by ALB**
+  - `alb_manange_apps: yes`
+    - `alb_manange_openresty: yes` <sup>(Charlie Foxtrot when not enabled)</sup>
+- **To permanently disable management by ALB**
+  - `alb_manange_apps: no`
+- **Check Mode ("Dry Run"): only test changes without applying**
+  - `--tags alb-apps --check`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-apps --check`
+- **To temporarily only execute ALB/Apps tasks**
+  - `--tags alb-apps`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-apps`
+- **To temporarily only skips ALB/Apps tasks**
+  - `--skip-tags alb-apps`
+  - Example: `ansible-playbook -i hosts main.yml --skip-tags alb-apps`
+
 For simplification each _group of rules_ is called "app" because most of the
 time this is the case. The parameter `app_alb_strategy` defines wich [OpenResty
 configuration template](templates/alb-strategy) will be used as base to
@@ -199,6 +234,8 @@ generate each file on `/opt/alb/apps/{{ app_uid }}.conf`.
 
 > Protip: if you already have experience editing NGinx configurations, the way
 AP-ALB automate the work for you will be very familiar.
+
+#### ALB Strategies
 
 **For full list of ALB Strategies, look at [templates/alb-strategy](templates/alb-strategy)**
 
@@ -273,42 +310,56 @@ See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
 
 See [templates/alb-strategy/socket-php.conf.j2](templates/alb-strategy/socket-php.conf.j2).
 
-### OpenResty
+### common
 
-> _@TODO add quick guide on OpenResty features here (fititnt, 2019-11-11 02:01 BRT_
+- **To permanently enable management by ALB**
+  - `alb_manange_common: yes`
+- **To permanently disable management by ALB**
+  - `alb_manange_common: no`
+- **Check Mode ("Dry Run"): only test changes without applying**
+  - `--tags alb-common --check`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-common  --check`
 
-Please check [ALB Internals](alb-internals.md).
+This optionated package is enabled by default, but is not a requeriment. 
 
-#### lua-resty-auto-ssl
+Check [tasks/common/common.yml](tasks/common/common.yml).
 
-> _@TODO add quick guide on lua-resty-auto-ssl here (fititnt, 2019-11-11 02:06 BRT_
+### devtools
 
-See [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl).
+- **To permanently enable management by ALB**
+  - `alb_manange_devtools: yes`
+- **To permanently disable management by ALB**
+  - `alb_manange_devtools: no`
+- **Check Mode ("Dry Run"): only test changes without applying**
+  - `--tags alb-devtools --check`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-devtools  --check`
 
-### HAProxy
+This package is not enabled by default, and is not a requeriment. It's is just
+one optionated suggestion of software to debug.
 
-> _@TODO add quick guide on HAProxy features here (fititnt, 2019-11-11 02:01 BRT_
-
-Please check [NLB Internals](nlb-internals.md) <sup>(working draft)</sup>.
-
-#### HAProxy stats page
-
-> _@TODO add quick guide on HAProxy stats page here (fititnt, 2019-11-11 02:01 BRT_
-
-#### HAProxy TLS Termination
-
-At least for the ALB v0.6.1-alpha we do not provice automated way to implement
-automatic HTTPS using only HAProxy. We implement using
-[lua-resty-auto-ssl](#lua-resty-auto-ssl).
-
-Still possible to do it but you will need to implement additional logic.
+Check [tasks/devtools/devtools.yml](tasks/devtools/devtools.yml).
 
 ### Firewall
-> _To avoid acidental use, this feature is not enabled by default.
-> `alb_manange_ufw: yes` is explicitly required._
+> _To avoid acidental use, this feature is not enabled by default (and will
+> **never** be on any future release). `alb_manange_ufw: yes` is explicitly
+> required._
 
 > _Protip: Check Mode ("Dry Run") with `--tags alb-ufw --check`. This will 
  test changes **without** applying._
+
+- **To permanently enable management by ALB**
+  - `alb_manange_ufw: yes`
+- **To permanently disable management by ALB**
+  - `alb_manange_ufw: no`
+- **Check Mode ("Dry Run"): only test changes without applying**
+  - `--tags alb-ufw --check`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-ufw  --check`
+- **To temporarily only execute ALB/UFW tasks**
+  - `--tags alb-ufw`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-ufw`
+- **To temporarily only skips ALB/UFW tasks**
+  - `--skip-tags alb-ufw`
+  - Example: `ansible-playbook -i hosts main.yml --skip-tags alb-ufw`
 
 See also [Firewall Internals](firewall-internals.md) <sup>(working draft)</sup>.
 
@@ -357,13 +408,87 @@ alb_manange_ufw: yes
 # Use alb_ufw_rules, alb_dmz, alb_bastion_hosts, alb_jump_boxes etc
 ```
 
-### Complete examples using AP-ALB
-- [example/playbook-basic.yml](example/playbook-basic.yml)
-- [example/playbook-complex.yml](example/playbook-complex.yml)
-- <https://github.com/fititnt/ap-alb-demo>
+#### External documentation about UFW and Ansible
 
-### Quickstart on how to hotfix/debug production servers
-See [debugging-quickstart.md](debugging-quickstart.md).
+- Ansible documentation: <https://docs.ansible.com/ansible/latest/modules/ufw_module.html>
+- UFW Introduction: <https://help.ubuntu.com/community/UFW>
+- UFW Manual: <http://manpages.ubuntu.com/manpages/cosmic/en/man8/ufw.8.html>
+
+### HAProxy
+
+- **To permanently enable management by ALB**
+  - `alb_manange_haproxy: yes`
+- **To permanently disable management by ALB**
+  - `alb_manange_haproxy: no`
+- **Check Mode ("Dry Run"): only test changes without applying**
+  - `--tags alb-openresty --check`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-haproxy --check`
+- **To temporarily only execute ALB/HAProxy tasks**
+  - `--tags alb-ufw`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-haproxy`
+- **To temporarily only skips ALB/HAProxy tasks**
+  - `--skip-tags alb-openresty`
+  - Example: `ansible-playbook -i hosts main.yml --skip-tags alb-haproxy`
+
+Please check [NLB Internals](nlb-internals.md) <sup>(working draft)</sup>.
+
+#### HAProxy stats page
+
+> _@TODO add quick guide on HAProxy stats page here (fititnt, 2019-11-11 02:01 BRT_
+
+#### HAProxy TLS Termination
+
+At least for the ALB v0.6.1-alpha we do not provice automated way to implement
+automatic HTTPS using only HAProxy. We implement using
+[lua-resty-auto-ssl](#lua-resty-auto-ssl).
+
+Still possible to do it but you will need to implement additional logic.
+
+### logrotate
+Logrotate is enabled by default on [defaults/main.yml](defaults/main.yml) when
+`alb_manange_openresty: yes` or `alb_manange_apps: yes`.
+
+You can selectively disable with `alb_manange_logrotate: no`, but would be
+recommended implement your own log strategy.
+
+Check [tasks/logrotate/logrotate.yml](tasks/logrotate/logrotate.yml).
+
+### OpenResty
+
+- **To permanently enable management by ALB**
+  - `alb_manange_openresty: yes`
+- **To permanently disable management by ALB**
+  - `alb_manange_openresty: no`
+- **Check Mode ("Dry Run"): only test changes without applying**
+  - `--tags alb-openresty --check`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-openresty --check`
+- **To temporarily only execute ALB/OpenResty tasks**
+  - `--tags alb-ufw`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-openresty`
+- **To temporarily only skips ALB/OpenResty tasks**
+  - `--skip-tags alb-openresty`
+  - Example: `ansible-playbook -i hosts main.yml --skip-tags alb-openresty`
+
+OpenResty, out of the box, have default values assuming [HAProxy](#haproxy)
+is installed on the same host in front. If want to change this behavior,
+consider change **at least** these variables from the defaults on
+[defaults/main.yml](defaults/main.yml):
+
+```yaml
+alb_manange_haproxy: no
+alb_openresty_ip: 0.0.0.0
+alb_openresty_httpport: 80
+alb_openresty_httpsport: 443
+```
+
+Please check [ALB Internals](alb-internals.md).
+
+#### lua-resty-auto-ssl
+
+`GUI/lua-resty-auto-ssl` used with [OpenResty](#openresty) to allow Automatic
+HTTPS on-the-fly.
+
+See [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl).
 
 ## Advanced usage
 

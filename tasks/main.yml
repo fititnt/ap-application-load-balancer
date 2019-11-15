@@ -75,9 +75,8 @@
 - name: ALB rule for each App
   include: apps/apps.yml
   tags:
-  - alb
-  - alb-app
-  - alb-apps
+    - alb
+    - alb-apps
   when:
     - alb_manange_all is sameas true
     - alb_manange_apps is sameas true

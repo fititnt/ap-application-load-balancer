@@ -28,7 +28,7 @@ alb_manange_devtools: no # net-tools, htop, hatop [tasks/devtools/devtools.yml]
 
 ## Note: the next options is better leave it alone
 alb_manange_apps: "{{ alb_manange_openresty }}"
-alb_manange_logrotate: "{{ alb_manange_haproxy or alb_manange_openresty }}"
+alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
 
 ### APPs _______________________________________________________________________
 
