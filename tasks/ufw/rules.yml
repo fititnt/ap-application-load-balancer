@@ -9,7 +9,7 @@
 #    - state
 #    - name, app (Use profile located in /etc/ufw/applications.d)
 
-- name: "alb/ufw {{ name_of_rules }}"
+- name: "ufw | {{ name_of_rules }}"
   ufw:
     ### rule
     ## Add firewall rule

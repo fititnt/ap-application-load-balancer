@@ -4,7 +4,7 @@
 #       customized options and simply allowing all from and to the servers.
 #       Improve this on future (fititnt, 2019-11-10 06:41 BRT)
 
-- name: "allow-bastion-hosts: FROM {{ alb_bastion_hosts }}"
+- name: "ufw | allow-bastion-hosts: FROM {{ alb_bastion_hosts }}"
   ufw:
     rule: "{{ item.rule | default('allow') }}"
     from: "{{ item.ip | default(item) }}"
@@ -14,7 +14,7 @@
     extended: yes
   when: "alb_bastion_hosts is defined"
 
-- name: "allow-bastion-hosts: TO {{ alb_bastion_hosts }}"
+- name: "ufw | allow-bastion-hosts: TO {{ alb_bastion_hosts }}"
   ufw:
     rule: "{{ item.rule | default('allow') }}"
     dest: "{{ item.ip | default(item) }}"

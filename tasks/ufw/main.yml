@@ -1,29 +1,29 @@
 ---
 # tasks/ufw/main.yml
 
-- name: clusterfuck-pre-check.yml
+- name: ufw | clusterfuck-pre-check.yml
   include: clusterfuck-pre-check.yml
 
 ## ufw status verbose  (before) ________________________________________________
-- name: "ufw status verbose (before)"
+- name: "ufw | ufw status verbose (before)"
   shell: "ufw status verbose"
   become: "yes"
   changed_when: false
   register: ufw_status_verbose1
 
-- name: "ufw status verbose print (before)"
+- name: "ufw | ufw status verbose print (before)"
   debug: var=ufw_status_verbose1.stdout_lines
 
-- name: install-ufw.yml
+- name: ufw | install-ufw.yml
   include: install-ufw.yml
 
-- name: ufw-reset.yml
+- name: ufw | ufw-reset.yml
   include: ufw-reset.yml
   when: 
     - "alb_ufw_canreset is defined and alb_ufw_canreset is sameas true"
     - "alb_ufw_reset is defined and alb_ufw_canreset is sameas true"
 
-- name: "ALB/UFW/Rules alb_ufw_rules_always"
+- name: "ufw | Rules alb_ufw_rules_always"
   include: rules.yml
   vars:
     ufw_rules: "{{ alb_ufw_rules_always }}"
@@ -31,7 +31,7 @@
     name_of_rules: "alb_ufw_rules_always"
   when: "alb_ufw_rules_always is defined"
 
-- name: "ALB/UFW/Rules alb_ufw_rules"
+- name: "ufw | Rules alb_ufw_rules"
   include: rules.yml
   vars:
     ufw_rules: "{{ alb_ufw_rules }}"
@@ -39,21 +39,21 @@
     name_of_rules: "alb_ufw_rules"
   when: "alb_ufw_rules is defined"
 
-- name: allow-dmz.yml
+- name: ufw | allow-dmz.yml
   include: allow-dmz.yml
 
-- name: allow-bastion-hosts.yml
+- name: ufw | allow-bastion-hosts.yml
   include: allow-bastion-hosts.yml
 
-- name: allow-jump-boxes.yml
+- name: ufw | allow-jump-boxes.yml
   include: allow-jump-boxes.yml
 
-- name: default-policies.yml
+- name: ufw | default-policies.yml
   include: default-policies.yml
 
 ## @see https://github.com/ansible/ansible/issues/45446
 
-- name: Configure the kernel to keep connections alive when enabling the firewall
+- name: ufw | Configure the kernel to keep connections alive when enabling the firewall
   sysctl:
     name: net.netfilter.nf_conntrack_tcp_be_liberal
     value: '1'
@@ -71,19 +71,19 @@
 #  ufw:
 #    state: "{{ alb_ufw_state | default (alb_ufw_state__default) }}"
 
-- name: "UFW state enabled"
+- name: "ufw | UFW state enabled"
   ufw:
     state: "enabled"
 
 ## ufw status verbose  (after) ________________________________________________
-- name: "ufw status verbose (after)"
+- name: "ufw | ufw status verbose (after)"
   shell: "ufw status verbose"
   become: "yes"
   changed_when: false
   register: ufw_status_verbose2
 
-- name: "ufw status verbose print (after)"
+- name: "ufw | ufw status verbose print (after)"
   debug: var=ufw_status_verbose2.stdout_lines
 
-- name: clusterfuck-post-check.yml
+- name: ufw | clusterfuck-post-check.yml
   include: clusterfuck-post-check.yml

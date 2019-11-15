@@ -25,7 +25,7 @@
 #    recurse: yes
 #  when: alb_logs_method is defined and alb_logs_method == "file"
 
-- name: /usr/local/openresty/nginx/html/index.html
+- name: openresty | /usr/local/openresty/nginx/html/index.html
   template:
     src: "{{ role_path }}/templates/openresty/nginx/html/index.html.j2"
     dest: /usr/local/openresty/nginx/html/index.html
@@ -33,7 +33,7 @@
     group: root
     mode: '0644'
 
-- name: /usr/local/openresty/nginx/html/favicon.ico
+- name: openresty | /usr/local/openresty/nginx/html/favicon.ico
   template:
     src: "{{ role_path }}/templates/openresty/nginx/html/favicon.ico"
     dest: /usr/local/openresty/nginx/html/favicon.ico
@@ -41,7 +41,7 @@
     group: root
     mode: '0644'
 
-- name: /usr/local/openresty/nginx/html/robots.txt
+- name: openresty | /usr/local/openresty/nginx/html/robots.txt
   template:
     src: "{{ role_path }}/templates/openresty/nginx/html/robots.txt"
     dest: /usr/local/openresty/nginx/html/robots.txt
@@ -49,7 +49,7 @@
     group: root
     mode: '0644'
 
-- name: /usr/local/openresty/nginx/html/404.html
+- name: openresty | /usr/local/openresty/nginx/html/404.html
   template:
     src: "{{ role_path }}/templates/openresty/nginx/html/404.html.j2"
     dest: /usr/local/openresty/nginx/html/404.html
@@ -57,7 +57,7 @@
     group: root
     mode: '0644'
 
-- name: /usr/local/openresty/nginx/html/50x.html
+- name: openresty | /usr/local/openresty/nginx/html/50x.html
   template:
     src: "{{ role_path }}/templates/openresty/nginx/html/50x.html.j2"
     dest: /usr/local/openresty/nginx/html/50x.html
@@ -65,7 +65,7 @@
     group: root
     mode: '0644'
 
-- name: /usr/local/openresty/nginx/conf/nginx.conf
+- name: openresty | /usr/local/openresty/nginx/conf/nginx.conf
   template:
     # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
     src: "{{ alb_nginxconf_template }}"

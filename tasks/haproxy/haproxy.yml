@@ -1,22 +1,22 @@
 ---
-# FILE:            {{ role_path }}/tasks/haproxy.yml
+# FILE:            {{ role_path }}/tasks/haproxy/haproxy.yml
 # LICENSE:         Public Domain
 
 # TODO: fix issue with at very first time HAProxy is not started after installation (fititnt, 2019-11-04 20:40 BRT)
 
 # https://haproxy.debian.net/#?distribution=Ubuntu&release=bionic&version=2.0
 
-- name: "add-apt-repository ppa:vbernat/haproxy-2.0"
+- name: "haproxy | add-apt-repository ppa:vbernat/haproxy-2.0"
   apt_repository:
     repo: ppa:vbernat/haproxy-2.0
     update_cache: yes
 
-- name: 'apt-get install haproxy=2.0.\*'
+- name: 'haproxy | apt-get install haproxy=2.0.\*'
   apt:
     name: 'haproxy=2.0.*'
     state: 'present'
 
-- name: /etc/haproxy/haproxy.cfg
+- name: haproxy | /etc/haproxy/haproxy.cfg
   template:
     # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
     src: "{{ alb_haproxy_haproxy_template }}"
@@ -32,7 +32,7 @@
 # configurations or Ansible will not be able to update one new valid
 # configuration if old one was already with error. By moving this step
 # after we avoid user being forced to solve manually on the server 
-- name: sudo systemctl enable haproxy.service
+- name: haproxy | sudo systemctl enable haproxy.service
   systemd:
     name: haproxy
     state: started

@@ -1,6 +1,6 @@
 ---
 
-- name: "allow-dmz: FROM {{ alb_dmz }}"
+- name: "ufw | allow-dmz: FROM {{ alb_dmz }}"
   ufw:
     rule: "{{ item.rule | default('allow') }}"
     from: "{{ item.ip | default(item) }}"
@@ -10,7 +10,7 @@
     extended: yes
   when: "alb_dmz is defined"
 
-- name: "allow-dmz: TO {{ alb_dmz }}"
+- name: "ufw | allow-dmz: TO {{ alb_dmz }}"
   ufw:
     rule: "{{ item.rule | default('allow') }}"
     dest: "{{ item.ip | default(item) }}"

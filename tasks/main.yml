@@ -45,7 +45,7 @@
     - alb_manange_apps is sameas true
 
 - name: Instalação de OpenResty, Lua Rest & Lua Resty AutoSSL (faz o HTTPS para os Apps)
-  include: openresty-luarocks-lua-resty-auto-ssl-install.yml
+  include: openresty/openresty-luarocks-lua-resty-auto-ssl-install.yml
   tags:
   - alb
   - alb-openresty
@@ -53,8 +53,8 @@
     - alb_manange_all is sameas true
     - alb_manange_openresty is sameas true
 
-- name: alb-openresty-after.yml
-  include: alb-openresty-after.yml
+- name: openresty/alb-openresty-after.yml
+  include: openresty/alb-openresty-after.yml
   tags:
   - alb
   - alb-openresty-after
@@ -63,7 +63,7 @@
     - alb_manange_openresty is sameas true
 
 - name: HAproxy
-  include: haproxy.yml
+  include: haproxy/haproxy.yml
   tags:
   - alb
   - alb-haproxy
@@ -73,7 +73,7 @@
     - alb_forceignore_haproxy is defined and alb_forceignore_haproxy != true
 
 - name: ALB rule for each App
-  include: apps.yml
+  include: apps/apps.yml
   tags:
   - alb
   - alb-app
@@ -82,8 +82,8 @@
     - alb_manange_all is sameas true
     - alb_manange_apps is sameas true
 
-- name: logrotate.yml
-  include: logrotate.yml
+- name: logrotate/logrotate.yml
+  include: logrotate/logrotate.yml
   tags:
   - alb
   - alb-logrotate

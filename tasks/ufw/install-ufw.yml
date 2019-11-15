@@ -1,6 +1,6 @@
 ---
 
-- name: sudo apt install ufw
+- name: ufw | sudo apt install ufw
   apt: 
     package: ufw 
     state: present

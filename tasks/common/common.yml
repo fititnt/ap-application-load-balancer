@@ -11,27 +11,27 @@
 #        @see https://www.toptechskills.com/ansible-tutorials-courses/speed-up-ansible-playbooks-pipelining-mitogen/
 #        (fititnt, 2019-11-11 21:56 BRT)
 
-- name: "[Ansible likes aptitude over apt-get] sudo apt-get install aptitude"
+- name: "common | [Ansible likes aptitude over apt-get] sudo apt-get install aptitude"
   apt:
    name: aptitude
    state: present
 
-- name: "[Padronize the hostname] sudo hostnamectl set-hostname {{ inventory_hostname }}"
+- name: "common | [Padronize the hostname] sudo hostnamectl set-hostname {{ inventory_hostname }}"
   hostname:
     name: "{{ inventory_hostname }}"
   when: inventory_hostname_short != ansible_hostname
 
-- name: "[Padronize the hostname] sudo hostnamectl set-hostname {{ inventory_hostname }}"
+- name: "common | [Padronize the hostname] sudo hostnamectl set-hostname {{ inventory_hostname }}"
   hostname:
     name: "{{ inventory_hostname }}"
   when: inventory_hostname_short != ansible_hostname
 
-- name: "[Padronize the Timezone as UTC] sudo timedatectl set-timezone UTC"
+- name: "common | [Padronize the Timezone as UTC] sudo timedatectl set-timezone UTC"
   timezone:
     name: UTC
   when: ansible_facts['date_time']['tz'] != 'UTC'
 
-- name: mkdir -p /etc/ansible/facts.d/
+- name: common | mkdir -p /etc/ansible/facts.d/
   file:
     path: /etc/ansible/facts.d/
     state: directory

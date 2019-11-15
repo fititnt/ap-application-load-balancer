@@ -1,5 +1,5 @@
 ---
 
-- name: ufw-reset
+- name: ufw | ufw-reset
   ufw:
     state: reset

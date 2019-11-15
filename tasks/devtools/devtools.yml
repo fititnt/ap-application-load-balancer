@@ -7,27 +7,27 @@
 # To only skip this in a play: `--skip-tags alb-ufw`
 
 
-- name: "devtools.yml"
-  debug:
-    msg: "devtools.yml"
+#- name: "devtools | devtools.yml"
+#  debug:
+#    msg: "devtools.yml"
 
-- name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+- name: devtools | Only run "update_cache=yes" if the last one is more than 3600 seconds ago
   apt:
     update_cache: yes
     cache_valid_time: 3600
 
-- name: sudo apt-get install net-tools (for netstat)
+- name: devtools | sudo apt-get install net-tools (for netstat)
   apt:
    name: net-tools
    state: present
 
-- name: sudo apt-get install htop
+- name: devtools | sudo apt-get install htop
   apt:
    name: htop
    state: present
 
 # @see http://feurix.org/projects/hatop/
-- name: "sudo apt-get install hatop [Run with 'hatop -s /run/haproxy/admin.sock']"
+- name: "devtools | sudo apt-get install hatop [Run with 'hatop -s /run/haproxy/admin.sock']"
   apt:
    name: hatop
    state: present

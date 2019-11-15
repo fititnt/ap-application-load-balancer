@@ -15,7 +15,7 @@
 #  with_items: "{{ alb_apps }}"
 #  notify: reload openresty
 
-- name: "ALB App Rules"
+- name: "Apps | ALB App Rules"
   template:
     # src: "{{ item.vhost_template|default(alb_apps_serverblock_template) }}"
     src: "{{ role_path }}/templates/alb-strategy/{{ item.app_alb_strategy | default(alb_default_app_alb_strategy) }}.conf.j2"
@@ -28,7 +28,7 @@
   when: alb_apps is defined and alb_apps[0] is defined
   notify: reload openresty
 
-- name: mkdir /var/log/app/[app_uid]
+- name: Apps | mkdir /var/log/app/[app_uid]
   file:
     path: /var/log/app/{{ item.app_uid }}
     state: directory
@@ -37,7 +37,7 @@
   with_items: "{{ alb_apps }}"
   when: alb_apps is defined and alb_apps[0] is defined
 
-- name: mkdir /var/log/app/[app_uid]/access.log
+- name: Apps | mkdir /var/log/app/[app_uid]/access.log
   file:
     path: /var/log/app/{{ item.app_uid }}/access.log
     state: touch
@@ -47,7 +47,7 @@
   with_items: "{{ alb_apps }}"
   when: alb_apps is defined and alb_apps[0] is defined
 
-- name: mkdir /var/log/app/[app_uid]/error.log
+- name: Apps | mkdir /var/log/app/[app_uid]/error.log
   file:
     path: /var/log/app/{{ item.app_uid }}/error.log
     state: touch

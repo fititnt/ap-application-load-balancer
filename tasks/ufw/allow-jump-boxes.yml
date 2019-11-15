@@ -4,7 +4,7 @@
 #       customized options and simply allowing all from and to the servers.
 #       Improve this on future (fititnt, 2019-11-10 06:41 BRT)
 
-- name: "allow-jump-boxes: FROM {{ alb_jump_boxes }}"
+- name: "ufw | allow-jump-boxes: FROM {{ alb_jump_boxes }}"
   ufw:
     rule: "{{ item.rule | default('allow') }}"
     from: "{{ item.ip | default(item) }}"
@@ -14,7 +14,7 @@
     extended: yes
   when: "alb_jump_boxes is defined"
 
-- name: "allow-jump-boxes: TO {{ alb_jump_boxes }}"
+- name: "ufw | allow-jump-boxes: TO {{ alb_jump_boxes }}"
   ufw:
     rule: "{{ item.rule | default('allow') }}"
     dest: "{{ item.ip | default(item) }}"
