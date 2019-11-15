@@ -1,1 +1,4 @@
+#!/bin/bash
+cat <<EOF
 {{ alb_apps | to_json }}
+EOF

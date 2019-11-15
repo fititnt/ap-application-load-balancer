@@ -175,7 +175,7 @@ alb_ufw_facts:
  - alb_ufw_rules_always: "{{ alb_ufw_rules_always }}"
 
 ## Internal use / Placeholder tags _____________________________________________
-alb_version: "v0.6.3-beta"
+alb_version: "v0.6.4-beta"
 alb_openresty_ip: 127.0.0.1
 # alb_openresty_ip: 0.0.0.0 ## Use this if want to expose openresty
 alb_openresty_httpport: 8080

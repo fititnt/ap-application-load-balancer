@@ -31,6 +31,15 @@
     name: UTC
   when: ansible_facts['date_time']['tz'] != 'UTC'
 
+- name: mkdir -p /etc/ansible/facts.d/
+  file:
+    path: /etc/ansible/facts.d/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    recurse: true
+
 #- name: sudo apt-get install software-properties-common
 #  apt:
 #    name: "software-properties-common"

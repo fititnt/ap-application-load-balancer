@@ -115,6 +115,7 @@ avoid conflicts with existend content, and is not a requirement at all.
 ## To Do
 
 - Add at least one <https://asciinema.org/> demonstration with some example of ALB working in practice
+- On [tasks/](tasks/) move haproxy.yml, logrotate.yml, openresty*.yml to subfolders & prefix tasks names
 - Add (or at least document) how to share HTTPS certificates accross cluster
 of load balancers
   - Hint: check <https://github.com/GUI/lua-resty-auto-ssl> and use Redis as
