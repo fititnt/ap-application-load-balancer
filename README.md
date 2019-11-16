@@ -10,6 +10,11 @@ providers** (e.g. [Alibaba](https://www.alibabacloud.com/product/server-load-bal
 create your own ALB on cheaper hardware on these same cloud providers or
 have your own ALB on any other provider of VPSs or bare metal servers.
 
+[![asciicast](https://asciinema.org/a/281411.svg)](https://asciinema.org/a/281411)
+> Source code for this demo at <https://github.com/fititnt/ap-alb-demo/releases/tag/v0.6.4-beta>
+
+<!--
+
 All stack is open source software, yet our main choices **HAproxy** and
 **OpenResty/NGinx** are very likely to be the ones some big cloud providers use.
 
@@ -18,6 +23,8 @@ any specific cloud provider: but you should already have 1+ VPSs or bare metals
 able to execute Ansible playbooks (Ubuntu Server 18.04+ are more tested).
 The AP-ALB [license is Public Domain](#License) and is ok if you or your company
 use this role to create your own custom versions.
+
+-->
 
 <!--
 
@@ -58,15 +65,20 @@ humanitarian or commercial projects from who help we on Etica.AI.
             - [socket-php](#socket-php)
     - [common](#common)
     - [devtools](#devtools)
-    - [Firewall](#firewall)
-        - [Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)](#applying-only-firewall-rules-on-a-specific-server-ie-do-not-install-haproxy-openresty)
-        - [External documentation about UFW and Ansible](#external-documentation-about-ufw-and-ansible)
+        - [hatop](#hatop)
+        - [htop](#htop)
+        - [multitail](#multitail)
+        - [netstat](#netstat)
     - [HAProxy](#haproxy)
         - [HAProxy stats page](#haproxy-stats-page)
         - [HAProxy TLS Termination](#haproxy-tls-termination)
     - [logrotate](#logrotate)
     - [OpenResty](#openresty)
+        - [Run OpenResty without HAProxy](#run-openresty-without-haproxy)
         - [lua-resty-auto-ssl](#lua-resty-auto-ssl)
+    - [UFW](#ufw)
+        - [Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)](#applying-only-firewall-rules-on-a-specific-server-ie-do-not-install-haproxy-openresty)
+        - [External documentation about UFW and Ansible](#external-documentation-about-ufw-and-ansible)
 - [Advanced usage](#advanced-usage)
 - [FAQ](#faq)
 - [License](#license)
@@ -154,26 +166,7 @@ configurations beyond what ALB is designed, you still will need to log on the
 server and rename older files or re-run a playbook with ALB to allow fix it.
 
 #### Decoupled subcomponents when makes sense
-At [defaults/main.yml](defaults/main.yml), you have
-
-```yaml
-### Enable/Disable ALB subcomponents ___________________________________________
-## Note: these defaults will install everyting, except the firewall.
-alb_manange_all: yes
-alb_manange_haproxy: yes
-alb_manange_openresty: yes
-alb_manange_ufw: no
-
-## Optionated (but NOT required) group of tasks.
-alb_manange_common: yes  # hostname, timezone (UTC) [See tasks/common/common.yml]
-alb_manange_devtools: no # net-tools, htop, hatop [tasks/devtools/devtools.yml]
-
-## Note: the next options is better leave it alone
-alb_manange_apps: "{{ alb_manange_openresty }}"
-alb_manange_logrotate: "{{ alb_manange_haproxy or alb_manange_openresty }}"
-```
-
-> @TODO short explanation on how to reuse only parts of the subcomponents (fititnt, 2019-11-11 00:13 BRT)
+See [ALB components](#alb-components).
 
 ## Quickstart Guide
 
@@ -207,6 +200,32 @@ See [debugging-quickstart.md](debugging-quickstart.md).
   - `alb_manange_ufw: yes`
 - **To permanently disable management by ALB for ALL components**
   - `alb_manange_ufw: no`
+
+The most important components to run the [ALB Apps](#apps) are
+[OpenResty](#openresty) <sup>(strong requeriment; installed by default)</sup> and
+[HAProxy](#haproxy) <sup>(recommended suggestion, but optional; installed by default)</sup>.
+The next one, if the cloud/baremetal provider already does not provider some firewall or
+you lack of better option is the [UFW](#ufw)
+<sup>(situational recommended suggestion; NOT installed by default)</sup>.
+
+For more details check [defaults/main.yml](defaults/main.yml):
+
+```yaml
+### Enable/Disable ALB subcomponents ___________________________________________
+## Note: these defaults will install everyting, except the firewall.
+alb_manange_all: yes
+alb_manange_haproxy: yes
+alb_manange_openresty: yes
+alb_manange_ufw: no
+
+## Optionated (but NOT required) group of tasks.
+alb_manange_common: yes  # hostname, timezone (UTC) [See tasks/common/common.yml]
+alb_manange_devtools: no # net-tools, htop, hatop [tasks/devtools/devtools.yml]
+
+## Note: the next options is better leave it alone
+alb_manange_apps: "{{ alb_manange_openresty }}"
+alb_manange_logrotate: "{{ alb_manange_haproxy or alb_manange_openresty }}"
+```
 
 ### Apps
 
@@ -320,7 +339,7 @@ See [templates/alb-strategy/socket-php.conf.j2](templates/alb-strategy/socket-ph
   - `--tags alb-common --check`
   - Example: `ansible-playbook -i hosts main.yml --tags alb-common  --check`
 
-This optionated package is enabled by default, but is not a requeriment. 
+This optionated package is enabled by default, but is not a requeriment.
 
 Check [tasks/common/common.yml](tasks/common/common.yml).
 
@@ -339,12 +358,132 @@ one optionated suggestion of software to debug.
 
 Check [tasks/devtools/devtools.yml](tasks/devtools/devtools.yml).
 
-### Firewall
+#### hatop
+> HAtop is only installed if HAproxy is enabled ( `alb_manange_haproxy: yes`),
+  e.g. only enabling devtools (`alb_manange_devtools: yes`) is not sufficient
+
+```bash
+hatop -s /run/haproxy/admin.sock
+```
+See <http://feurix.org/projects/hatop/>
+
+#### htop
+
+```bash
+htop
+```
+See <https://hisham.hm/htop/>.
+
+#### multitail
+
+```bash
+
+# This command will always work on a new installed ALB with OpenResty or Apps enabled
+multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log
+
+# This is how you watch logs only for an `app_uid: APPNAMEHERE`
+multitail -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/APPNAMEHERE/error.log
+
+# This is how you watch logs only for an `app_uid: APPNAMEHERE` and all other important logs of ALB
+multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/APPNAMEHERE/error.log
+```
+
+See <https://www.vanheusden.com/multitail/examples.php>.
+
+#### netstat
+
+```bash
+# Show open ports
+sudo netstat -ntulp
+```
+
+### HAProxy
+
+- **To permanently enable management by ALB**
+  - `alb_manange_haproxy: yes`
+- **To permanently disable management by ALB**
+  - `alb_manange_haproxy: no`
+- **Check Mode ("Dry Run"): only test changes without applying**
+  - `--tags alb-openresty --check`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-haproxy --check`
+- **To temporarily only execute ALB/HAProxy tasks**
+  - `--tags alb-ufw`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-haproxy`
+- **To temporarily only skips ALB/HAProxy tasks**
+  - `--skip-tags alb-openresty`
+  - Example: `ansible-playbook -i hosts main.yml --skip-tags alb-haproxy`
+
+Please check [NLB Internals](nlb-internals.md) <sup>(working draft)</sup>.
+
+#### HAProxy stats page
+
+> _@TODO add quick guide on HAProxy stats page here (fititnt, 2019-11-11 02:01 BRT_
+
+#### HAProxy TLS Termination
+
+At least for the ALB v0.6.1-alpha we do not provice automated way to implement
+automatic HTTPS using only HAProxy. We implement using
+[lua-resty-auto-ssl](#lua-resty-auto-ssl).
+
+Still possible to do it but you will need to implement additional logic.
+
+### logrotate
+Logrotate is enabled by default on [defaults/main.yml](defaults/main.yml) when
+`alb_manange_openresty: yes` or `alb_manange_apps: yes`.
+
+You can selectively disable with `alb_manange_logrotate: no`, but would be
+recommended implement your own log strategy.
+
+Check [tasks/logrotate/logrotate.yml](tasks/logrotate/logrotate.yml).
+
+### OpenResty
+
+- **To permanently enable management by ALB**
+  - `alb_manange_openresty: yes`
+- **To permanently disable management by ALB**
+  - `alb_manange_openresty: no`
+- **Check Mode ("Dry Run"): only test changes without applying**
+  - `--tags alb-openresty --check`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-openresty --check`
+- **To temporarily only execute ALB/OpenResty tasks**
+  - `--tags alb-ufw`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-openresty`
+- **To temporarily only skips ALB/OpenResty tasks**
+  - `--skip-tags alb-openresty`
+  - Example: `ansible-playbook -i hosts main.yml --skip-tags alb-openresty`
+
+Please check [ALB Internals](alb-internals.md).
+
+#### Run OpenResty without HAProxy
+
+> Strong suggestion: the memory footprint of using HAproxy in front of OpenResty
+> is not a good reason to not leave enabled.
+
+OpenResty, out of the box, have default values assuming [HAProxy](#haproxy)
+is installed on the same host in front. If want to change this behavior,
+consider change **at least** these variables from the defaults on
+[defaults/main.yml](defaults/main.yml):
+
+```yaml
+alb_manange_haproxy: no
+alb_openresty_ip: 0.0.0.0
+alb_openresty_httpport: 80
+alb_openresty_httpsport: 443
+```
+
+#### lua-resty-auto-ssl
+
+`GUI/lua-resty-auto-ssl` used with [OpenResty](#openresty) to allow Automatic
+HTTPS on-the-fly.
+
+See [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl).
+
+### UFW
 > _To avoid acidental use, this feature is not enabled by default (and will
 > **never** be on any future release). `alb_manange_ufw: yes` is explicitly
 > required._
 
-> _Protip: Check Mode ("Dry Run") with `--tags alb-ufw --check`. This will 
+> _Protip: Check Mode ("Dry Run") with `--tags alb-ufw --check`. This will
  test changes **without** applying._
 
 - **To permanently enable management by ALB**
@@ -414,81 +553,6 @@ alb_manange_ufw: yes
 - UFW Introduction: <https://help.ubuntu.com/community/UFW>
 - UFW Manual: <http://manpages.ubuntu.com/manpages/cosmic/en/man8/ufw.8.html>
 
-### HAProxy
-
-- **To permanently enable management by ALB**
-  - `alb_manange_haproxy: yes`
-- **To permanently disable management by ALB**
-  - `alb_manange_haproxy: no`
-- **Check Mode ("Dry Run"): only test changes without applying**
-  - `--tags alb-openresty --check`
-  - Example: `ansible-playbook -i hosts main.yml --tags alb-haproxy --check`
-- **To temporarily only execute ALB/HAProxy tasks**
-  - `--tags alb-ufw`
-  - Example: `ansible-playbook -i hosts main.yml --tags alb-haproxy`
-- **To temporarily only skips ALB/HAProxy tasks**
-  - `--skip-tags alb-openresty`
-  - Example: `ansible-playbook -i hosts main.yml --skip-tags alb-haproxy`
-
-Please check [NLB Internals](nlb-internals.md) <sup>(working draft)</sup>.
-
-#### HAProxy stats page
-
-> _@TODO add quick guide on HAProxy stats page here (fititnt, 2019-11-11 02:01 BRT_
-
-#### HAProxy TLS Termination
-
-At least for the ALB v0.6.1-alpha we do not provice automated way to implement
-automatic HTTPS using only HAProxy. We implement using
-[lua-resty-auto-ssl](#lua-resty-auto-ssl).
-
-Still possible to do it but you will need to implement additional logic.
-
-### logrotate
-Logrotate is enabled by default on [defaults/main.yml](defaults/main.yml) when
-`alb_manange_openresty: yes` or `alb_manange_apps: yes`.
-
-You can selectively disable with `alb_manange_logrotate: no`, but would be
-recommended implement your own log strategy.
-
-Check [tasks/logrotate/logrotate.yml](tasks/logrotate/logrotate.yml).
-
-### OpenResty
-
-- **To permanently enable management by ALB**
-  - `alb_manange_openresty: yes`
-- **To permanently disable management by ALB**
-  - `alb_manange_openresty: no`
-- **Check Mode ("Dry Run"): only test changes without applying**
-  - `--tags alb-openresty --check`
-  - Example: `ansible-playbook -i hosts main.yml --tags alb-openresty --check`
-- **To temporarily only execute ALB/OpenResty tasks**
-  - `--tags alb-ufw`
-  - Example: `ansible-playbook -i hosts main.yml --tags alb-openresty`
-- **To temporarily only skips ALB/OpenResty tasks**
-  - `--skip-tags alb-openresty`
-  - Example: `ansible-playbook -i hosts main.yml --skip-tags alb-openresty`
-
-OpenResty, out of the box, have default values assuming [HAProxy](#haproxy)
-is installed on the same host in front. If want to change this behavior,
-consider change **at least** these variables from the defaults on
-[defaults/main.yml](defaults/main.yml):
-
-```yaml
-alb_manange_haproxy: no
-alb_openresty_ip: 0.0.0.0
-alb_openresty_httpport: 80
-alb_openresty_httpsport: 443
-```
-
-Please check [ALB Internals](alb-internals.md).
-
-#### lua-resty-auto-ssl
-
-`GUI/lua-resty-auto-ssl` used with [OpenResty](#openresty) to allow Automatic
-HTTPS on-the-fly.
-
-See [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl).
 
 ## Advanced usage
 

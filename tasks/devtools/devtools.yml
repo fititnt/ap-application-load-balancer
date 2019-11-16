@@ -26,6 +26,11 @@
    name: htop
    state: present
 
+- name: devtools | sudo apt-get install multitail
+  apt:
+   name: multitail
+   state: present
+
 # @see http://feurix.org/projects/hatop/
 - name: "devtools | sudo apt-get install hatop [Run with 'hatop -s /run/haproxy/admin.sock']"
   apt:
