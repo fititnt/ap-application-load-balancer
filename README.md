@@ -63,8 +63,8 @@ humanitarian or commercial projects from who help we on Etica.AI.
             - [proxy](#proxy)
             - [raw](#raw)
             - [socket-php](#socket-php)
-    - [common](#common)
-    - [devtools](#devtools)
+    - [Common](#common)
+    - [DevTools](#devtools)
         - [hatop](#hatop)
         - [htop](#htop)
         - [multitail](#multitail)
@@ -72,7 +72,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
     - [HAProxy](#haproxy)
         - [HAProxy stats page](#haproxy-stats-page)
         - [HAProxy TLS Termination](#haproxy-tls-termination)
-    - [logrotate](#logrotate)
+    - [Logrotate](#logrotate)
     - [OpenResty](#openresty)
         - [Run OpenResty without HAProxy](#run-openresty-without-haproxy)
         - [lua-resty-auto-ssl](#lua-resty-auto-ssl)
@@ -329,7 +329,7 @@ See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
 
 See [templates/alb-strategy/socket-php.conf.j2](templates/alb-strategy/socket-php.conf.j2).
 
-### common
+### Common
 
 - **To permanently enable management by ALB**
   - `alb_manange_common: yes`
@@ -343,7 +343,7 @@ This optionated package is enabled by default, but is not a requeriment.
 
 Check [tasks/common/common.yml](tasks/common/common.yml).
 
-### devtools
+### DevTools
 
 - **To permanently enable management by ALB**
   - `alb_manange_devtools: yes`
@@ -427,7 +427,7 @@ automatic HTTPS using only HAProxy. We implement using
 
 Still possible to do it but you will need to implement additional logic.
 
-### logrotate
+### Logrotate
 Logrotate is enabled by default on [defaults/main.yml](defaults/main.yml) when
 `alb_manange_openresty: yes` or `alb_manange_apps: yes`.
 

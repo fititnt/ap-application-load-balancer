@@ -1,11 +1,53 @@
-# ALB Internals
-> Tip: at [NLB Internals](alb-internals.md) there is additional features that
+# AP-ALB Internals
+
+<!-- TOC depthFrom:1 -->
+
+- [AP-ALB Internals](#ap-alb-internals)
+- [Overview](#overview)
+    - [ALB Internals](#alb-internals)
+        - [Directory structures](#directory-structures)
+            - [Internal usage of ALB](#internal-usage-of-alb)
+            - [Shared usage for third party tools](#shared-usage-for-third-party-tools)
+                - [`alb_ips_remoteadmins`](#alb_ips_remoteadmins)
+                - [`alb_ips_dmz`](#alb_ips_dmz)
+                - [`alb_ips_whitelist`](#alb_ips_whitelist)
+                - [`alb_ips_blacklist`](#alb_ips_blacklist)
+                - [`alb_domains_whitelist`](#alb_domains_whitelist)
+                - [`alb_domains_blacklist`](#alb_domains_blacklist)
+            - [Usage of Apps](#usage-of-apps)
+        - [System users](#system-users)
+    - [NLB Internals](#nlb-internals)
+        - [Ports](#ports)
+        - [Directory structures](#directory-structures-1)
+- [AP-ALB Component Internals](#ap-alb-component-internals)
+    - [Apps](#apps)
+    - [Common](#common)
+    - [DevTools](#devtools)
+    - [HAProxy](#haproxy)
+    - [Logrotate](#logrotate)
+    - [OpenResty](#openresty)
+    - [UFW](#ufw)
+        - [Summary](#summary)
+        - [External documentation](#external-documentation)
+        - [With AP-ALB role](#with-ap-alb-role)
+            - [Example 1](#example-1)
+        - [Ad-Hoc (without AP-ALB role)](#ad-hoc-without-ap-alb-role)
+            - [Visual example with asciinema](#visual-example-with-asciinema)
+- [To Do](#to-do)
+
+<!-- /TOC -->
+
+# Overview
+
+## ALB Internals
+
+> Tip: at [NLB Internals](#nlb-internals) there is additional features that
 may be useful (TL;DR: _the HAproxy part_), but we try to provide good defaults
 so maybe you could ignore HAProxy if it just works for you.
 
-## Directory structures
+### Directory structures
 
-### Internal usage of ALB
+#### Internal usage of ALB
 
 If debugging ALB (and not just one App) these directories and folders are the
 ones you are likely to be interested.
@@ -34,7 +76,7 @@ for all other folders and files that are important.
 - **Data created on Runtime by ALB** _(Planed, not fully implemented)_
   - `/var/alb/`
 
-### Shared usage for third party tools
+#### Shared usage for third party tools
 
 Some variables when present on a play of a playbook using ALB will create or
 update contents of specific files on each server. **Consider this list as
@@ -52,25 +94,25 @@ Some considerations:
   - It can be easier do this can change other applications to watch for changes
     on these files.
 
-#### `alb_ips_remoteadmins`
+##### `alb_ips_remoteadmins`
 - File: `/opt/alb/remoteadmins`
 
-#### `alb_ips_dmz`
+##### `alb_ips_dmz`
 - File: `/opt/alb/dmz`
 
-#### `alb_ips_whitelist`
+##### `alb_ips_whitelist`
 - File: `/var/alb/ips_whitelist.txt`
 
-#### `alb_ips_blacklist`
+##### `alb_ips_blacklist`
 - File: `/var/alb/ips_blacklist.txt`
 
-#### `alb_domains_whitelist`
+##### `alb_domains_whitelist`
 - File: `/var/alb/domains_whitelist.txt`
 
-#### `alb_domains_blacklist`
+##### `alb_domains_blacklist`
 - File: `/var/alb/domains_blacklist.txt`
 
-### Usage of Apps
+#### Usage of Apps
 
 If your ALB setup already is working, these are the files and folders that
 are specific for each App.
@@ -88,7 +130,7 @@ Tip: `/var/www/SomeFolder` and `/home/SomeUser/SomeFolder` are common pattens
 of folders for your apps. The use of `/var/app/{{ app_uid }}/` is mostly to
 avoid conflicts with existend content, and is not a requirement at all.
 
-## System users
+### System users
 
 - `www-data`
   - This user (created OpenResty) is used sometimes as default user for common
@@ -98,21 +140,159 @@ avoid conflicts with existend content, and is not a requirement at all.
 - `{{ app_uid }}` or `{{ app_systemuser }}` (Optional, not created by default)
   - Planned, but not implemented
 
-<!--
-## Important directories
+## NLB Internals
+> Tip: consider reading first the [ALB Internals](#alb-internals).
 
-- ALB
-  - ALB Files
-    - `/opt/alb/`
-  - ALB default directory for logs (TL;DR: "the default place for the error.log/access.log from OpenResty/NGinx")
-    - `/var/log/alb/`
-- OpenResty
-  - `/usr/local/openresty/`
-  - Tip: OpenResty, even if is a fork of NGinx, **will not** use /etc/nginx/ (but `/usr/local/openresty/nginx/`)
--->
+Before going further, consider that the features related to _"network load
+balancer"_ (the _"more Layer 4 features"_) from AP-ALB are _an extra_, not a
+main objective, when otimizing automation with Ansible on this project. It does
+not means that the HAproxy is not important: it is! To list some details:
 
+- HAProxy is by default is installed with ALB and is in front of every ALB App.
+  - The averange user maybe not even need to know what HAProxy is doing. **The
+    idea is "it just works fine" out of the box**.
+  - **BUT** if later on production some feature get too complicated to push
+    OpenResty to the limits... the **HAProxy already is there!**
+- HAProxy reuse some variables of AP-ALB
+- Yes, OpenResty logs already will register the user Real IP
+- (...)
 
-## To Do
+### Ports
+> Note: these defaults can be changed.
+
+- HAproxy `0.0.0.0:80` -> OpenResty: `127.0.0.1:8080`
+  - HAProxy listem to HTTP :80 port then will redirect to OpenResty :8080
+  - Even without custom firewall rule the extra OpenResty port will not be open
+    to the world.
+- HAproxy `0.0.0.0:443` -> OpenResty: `127.0.0.1:4443`
+  - HAProxy listem to HTTPS :443 port then will redirect to OpenResty :4443
+  - Even without custom firewall rule the extra OpenResty port will not be open
+    to the world.
+  - The HTTPS/TLS termination is done by OpenResty.
+    - This is an option that could be improved later and make HAProxy also do
+      the HTTPS.
+
+HAproxy can be used for other types of load balancing, like to intermediate
+MariaDB/MySQL, MongoDB, Apache, etc in a very efficient way.
+
+### Directory structures
+
+As version **v0.6.0-alpha**, `/opt/nlb/` is symbolic link to `/opt/alb/`. This
+may change on future.
+
+- **NLB configuration files**:
+  - `/opt/nlb/` -> `/opt/alb/`
+    - **`/opt/alb/alb.conf`** -> `/usr/local/openresty/nginx/conf/nginx.conf`
+    - **`/opt/alb/nlb.cfg`** -> `/etc/haproxy/haproxy.cfg`
+    - `/opt/alb/alb-data/` -> `/var/alb/`
+    - `/opt/alb/alb-logs/` -> `/var/log/alb/`
+    - `/opt/alb/apps/` _(Store OpenResty/NGinx rule for each app as **`/opt/alb/apps/{{ app_id }}.conf`**)_
+    - `/opt/alb/info/` _(Planed, not fully implemented)_
+    - `/opt/alb/apps-data/` -> `/var/app/`
+    - `/opt/alb/apps-logs/` -> `/var/log/app/`
+    - `/opt/alb/haproxy/` -> `/etc/haproxy/`
+    - `/opt/alb/nginx/` -> `/usr/local/openresty/nginx/`
+    - `/opt/alb/letsencrypt/` -> `/etc/resty-auto-ssl/letsencrypt/`
+
+_@TODO improve documentation (fititnt, 2019-11-08 23:10 BRT)_
+
+# AP-ALB Component Internals
+
+## Apps
+
+## Common
+
+## DevTools
+
+## HAProxy
+
+## Logrotate
+
+## OpenResty
+
+## UFW
+
+> _To avoid acidental use, this feature is not enabled by default.
+> `alb_manange_ufw: yes` is explicitly required._
+
+> _Under certain circumstances, even if `alb_manange_ufw: yes` is enabled, 
+port `alb_ssh_port: 22` will be kept open or the ALB will stop before starting
+changing the UFW. You can override this on `alb_ufw_rules_always` or following
+the instructions on the error message._
+
+<!-- TOC depthFrom:2 -->
+
+- [Summary](#summary)
+- [External documentation](#external-documentation)
+- [With AP-ALB role](#with-ap-alb-role)
+    - [Example 1](#example-1)
+- [Ad-Hoc (without AP-ALB role)](#ad-hoc-without-ap-alb-role)
+    - [Visual example with asciinema](#visual-example-with-asciinema)
+
+<!-- /TOC -->
+
+### Summary
+- **To permanently enable management by ALB**
+  - `alb_manange_ufw: yes`
+- **To permanently disable management by ALB**
+  - `alb_manange_ufw: no`
+- **Check Mode ("Dry Run"): only test changes without applying**
+  - `--tags alb-ufw --check`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-ufw  --check`
+- **To temporarily only execute ALB/UFW tasks**
+  - `--tags alb-ufw`
+  - Example: `ansible-playbook -i hosts main.yml --tags alb-ufw`
+- **To temporarily only skips ALB/UFW tasks**
+  - `--skip-tags alb-ufw`
+  - Example: `ansible-playbook -i hosts main.yml --skip-tags alb-ufw`
+
+### External documentation
+
+- Ansible documentation: <https://docs.ansible.com/ansible/latest/modules/ufw_module.html>
+- UFW Introduction: <https://help.ubuntu.com/community/UFW>
+- UFW Manual: <http://manpages.ubuntu.com/manpages/cosmic/en/man8/ufw.8.html>
+
+### With AP-ALB role
+
+#### Example 1
+
+```yaml
+# draft
+- name: "ap-application-load-balancer playbook example (complex)"
+  hosts: my_complex_hosts
+  remote_user: root
+  vars:
+
+    alb_bastion_hosts:
+      - 123.126.157.123
+
+    alb_jump_boxes:
+      - 123.126.157.124
+
+    alb_dmz:
+      - ip: 123.23.23.115
+        name: cdn3
+      - ip: 123.123.123.123
+        name: lalala
+        delete: yes
+```
+
+### Ad-Hoc (without AP-ALB role)
+At [tasks/ap-firewall/](tasks/ap-firewall/) is possible to use one Ad-Hoc
+Ansible scripts that do simple setup of UFW on one a single or a cluster of
+VPSs. This folder is one extra copy of the original work was from the same
+author of AP-ALB also released under Public Domain. Check:
+<https://github.com/EticaAI/aguia-pescadora-ansible-playbooks/tree/master/tarefa/firewall>.
+
+#### Visual example with asciinema
+
+[![asciicast](https://asciinema.org/a/258426.svg)](https://asciinema.org/a/258426)
+
+---
+
+> _@TODO: document the optimal setup of firewall using AP-ALB (fititnt, 2019-11-08 22:13 BRT)_
+
+# To Do
 
 - Add (or at least document) how to share HTTPS certificates accross cluster
 of load balancers
