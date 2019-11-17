@@ -15,8 +15,9 @@ alb_superuser_auth:
 alb_superuser_ip: null
 alb_superuser_autodiscoveripnull: yes
 
-### Enable/Disable ALB subcomponents ___________________________________________
-## Note: these defaults will install everyting, except the firewall.
+### AP-ALB Components overview _________________________________________________
+# The defaults of v0.7.0 will use: Apps, Common, HAProxy, Logrotate, OpenResty
+# You can enable/disable components. Or explicity enforce on your configuration
 alb_manange_all: yes
 alb_manange_haproxy: yes
 alb_manange_openresty: yes
@@ -29,6 +30,8 @@ alb_manange_devtools: no # net-tools, htop, hatop [tasks/devtools/devtools.yml]
 ## Note: the next options is better leave it alone
 alb_manange_apps: "{{ alb_manange_openresty }}"
 alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
+
+### AP-ALB Shared usage ________________________________________________________
 
 ### APPs _______________________________________________________________________
 

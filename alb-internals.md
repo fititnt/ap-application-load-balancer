@@ -1,8 +1,8 @@
-# AP-ALB Internals
+# Águia Pescadora Application Load Balancer Internals
 
 <!-- TOC depthFrom:1 -->
 
-- [AP-ALB Internals](#ap-alb-internals)
+- [Águia Pescadora Application Load Balancer Internals](#águia-pescadora-application-load-balancer-internals)
 - [Overview](#overview)
     - [ALB Internals](#alb-internals)
         - [Directory structures](#directory-structures)
@@ -133,10 +133,9 @@ avoid conflicts with existend content, and is not a requirement at all.
 ### System users
 
 - `www-data`
-  - This user (created OpenResty) is used sometimes as default user for common
-    programs.
+  - This user (created OpenResty if already does not exist on the system) is
+    used sometimes as default user for common programs.
 - `alb`
-  - Planned, but not implemented
 - `{{ app_uid }}` or `{{ app_systemuser }}` (Optional, not created by default)
   - Planned, but not implemented
 
@@ -194,21 +193,34 @@ may change on future.
     - `/opt/alb/nginx/` -> `/usr/local/openresty/nginx/`
     - `/opt/alb/letsencrypt/` -> `/etc/resty-auto-ssl/letsencrypt/`
 
-_@TODO improve documentation (fititnt, 2019-11-08 23:10 BRT)_
+_@TODO improve documentation of NLB Internals (fititnt, 2019-11-08 23:10 BRT)_
 
 # AP-ALB Component Internals
 
 ## Apps
 
+- See [README.md#apps](README.md#apps)
+- See [ALB Internals](#alb-internals)
+
 ## Common
+
+- See [README.md#common](README.md#common)
 
 ## DevTools
 
+- See [README.md#devtools](README.md#devtools)
+
 ## HAProxy
+
+- See [NLB Internals](#nlb-internals).
 
 ## Logrotate
 
+- See [README.md#logrotate](README.md#logrotate)
+
 ## OpenResty
+
+- See [ALB Internals](#alb-internals).
 
 ## UFW
 
@@ -219,17 +231,6 @@ _@TODO improve documentation (fititnt, 2019-11-08 23:10 BRT)_
 port `alb_ssh_port: 22` will be kept open or the ALB will stop before starting
 changing the UFW. You can override this on `alb_ufw_rules_always` or following
 the instructions on the error message._
-
-<!-- TOC depthFrom:2 -->
-
-- [Summary](#summary)
-- [External documentation](#external-documentation)
-- [With AP-ALB role](#with-ap-alb-role)
-    - [Example 1](#example-1)
-- [Ad-Hoc (without AP-ALB role)](#ad-hoc-without-ap-alb-role)
-    - [Visual example with asciinema](#visual-example-with-asciinema)
-
-<!-- /TOC -->
 
 ### Summary
 - **To permanently enable management by ALB**
@@ -251,42 +252,6 @@ the instructions on the error message._
 - Ansible documentation: <https://docs.ansible.com/ansible/latest/modules/ufw_module.html>
 - UFW Introduction: <https://help.ubuntu.com/community/UFW>
 - UFW Manual: <http://manpages.ubuntu.com/manpages/cosmic/en/man8/ufw.8.html>
-
-### With AP-ALB role
-
-#### Example 1
-
-```yaml
-# draft
-- name: "ap-application-load-balancer playbook example (complex)"
-  hosts: my_complex_hosts
-  remote_user: root
-  vars:
-
-    alb_bastion_hosts:
-      - 123.126.157.123
-
-    alb_jump_boxes:
-      - 123.126.157.124
-
-    alb_dmz:
-      - ip: 123.23.23.115
-        name: cdn3
-      - ip: 123.123.123.123
-        name: lalala
-        delete: yes
-```
-
-### Ad-Hoc (without AP-ALB role)
-At [tasks/ap-firewall/](tasks/ap-firewall/) is possible to use one Ad-Hoc
-Ansible scripts that do simple setup of UFW on one a single or a cluster of
-VPSs. This folder is one extra copy of the original work was from the same
-author of AP-ALB also released under Public Domain. Check:
-<https://github.com/EticaAI/aguia-pescadora-ansible-playbooks/tree/master/tarefa/firewall>.
-
-#### Visual example with asciinema
-
-[![asciicast](https://asciinema.org/a/258426.svg)](https://asciinema.org/a/258426)
 
 ---
 

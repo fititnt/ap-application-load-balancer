@@ -160,7 +160,9 @@ an online service.
 ##### What about one-click rollback feature?
 
 Note that we do not support [`one-click rollback` Ansistrano-like style](https://github.com/ansistrano/deploy)
-... **yet**. HAProxy & OpenResty is likely to resist errors, and have backup
+... **yet**.
+
+HAProxy & OpenResty is likely to resist errors, and have backup
 files for every old configuration on the target servers, but if you use custom
 configurations beyond what ALB is designed, you still will need to log on the
 server and rename older files or re-run a playbook with ALB to allow fix it.
@@ -197,22 +199,36 @@ See [debugging-quickstart.md](debugging-quickstart.md).
 ## ALB components
 
 - **To permanently enable management by ALB for ALL components (default)**
-  - `alb_manange_ufw: yes`
+  - `alb_manange_all: yes`
 - **To permanently disable management by ALB for ALL components**
-  - `alb_manange_ufw: no`
+  - `alb_manange_all: no`
 
-The most important components to run the [ALB Apps](#apps) are
+---
+
+**TL;DR on ALB Components**
+
+- The most important components to run the [ALB Apps](#apps) are
 [OpenResty](#openresty) <sup>(strong requeriment; installed by default)</sup> and
 [HAProxy](#haproxy) <sup>(recommended suggestion, but optional; installed by default)</sup>.
-The next one, if the cloud/baremetal provider already does not provider some firewall or
-you lack of better option is the [UFW](#ufw)
-<sup>(situational recommended suggestion; NOT installed by default)</sup>.
+  - Note that some ALB Components actually **are** designed to run fine even
+    without [ALB Apps](#apps) / [OpenResty](#openresty) / [HAProxy](#haproxy).
+    - Notable example is [UFW](#ufw) and common case would be a database server.
+- The next important ALB Component is [UFW](#ufw)
+<sup>(situational recommended suggestion; NOT enabled by default to mitigate
+CharlieFoxtrots)</sup>. Consider enable when:
+  - Your cloud provider (at least for the package you are paying) does not have
+    better solution
+    - Or if have, you do not want cloud vendor lock-in
+  - You do not have better solutions using Ansible and are OK with the [UFW](#ufw)
+    defaults.
 
-For more details check [defaults/main.yml](defaults/main.yml):
+For full details, check [defaults/main.yml](defaults/main.yml). The main part
+for a overview is:
 
 ```yaml
-### Enable/Disable ALB subcomponents ___________________________________________
-## Note: these defaults will install everyting, except the firewall.
+### AP-ALB Components overview _________________________________________________
+# The defaults of v0.7.0+ will use: Apps, Common, HAProxy, Logrotate, OpenResty
+# You can enable/disable components. Or explicity enforce on your configuration
 alb_manange_all: yes
 alb_manange_haproxy: yes
 alb_manange_openresty: yes
@@ -224,8 +240,10 @@ alb_manange_devtools: no # net-tools, htop, hatop [tasks/devtools/devtools.yml]
 
 ## Note: the next options is better leave it alone
 alb_manange_apps: "{{ alb_manange_openresty }}"
-alb_manange_logrotate: "{{ alb_manange_haproxy or alb_manange_openresty }}"
+alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
 ```
+
+---
 
 ### Apps
 
@@ -556,13 +574,14 @@ alb_manange_ufw: yes
 
 ## Advanced usage
 
-- See variables [defaults/main.yml](defaults/main.yml)
 - [ALB Internals](alb-internals.md)
-- [NLB Internals](nlb-internals.md) <sup>(working draft)</sup>
-- [Firewall Internals](firewall-internals.md) <sup>(working draft)</sup>
+
+<!--
 
 > Tip: OpenResty allow usage of LuaJIT. You can test lua language online at
 <https://www.lua.org/cgi-bin/demo>
+
+-->
 
 ## FAQ
 
