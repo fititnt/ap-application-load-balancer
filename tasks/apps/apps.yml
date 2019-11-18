@@ -15,6 +15,13 @@
 #  with_items: "{{ alb_apps }}"
 #  notify: reload openresty
 
+- name: /etc/ansible/facts.d/alb_apps.fact
+  template:
+    src: files/alb_apps.fact
+    dest: /etc/ansible/facts.d/alb_apps.fact
+    mode: 0755
+  register: alb_apps_facts_deployed
+
 - name: "Apps | ALB App Rules"
   template:
     # src: "{{ item.vhost_template|default(alb_apps_serverblock_template) }}"
@@ -25,7 +32,9 @@
     mode: 0644
     backup: yes
   with_items: "{{ alb_apps }}"
-  when: alb_apps is defined and alb_apps[0] is defined
+  when:
+    - alb_apps is defined and alb_apps[0] is defined
+    - alb_apps_facts_deployed is changed
   notify: reload openresty
 
 - name: Apps | mkdir /var/log/app/[app_uid]
@@ -35,7 +44,9 @@
     mode: '0644'
     owner: root
   with_items: "{{ alb_apps }}"
-  when: alb_apps is defined and alb_apps[0] is defined
+  when:
+    - alb_apps is defined and alb_apps[0] is defined
+    - alb_apps_facts_deployed is changed
 
 - name: Apps | mkdir /var/log/app/[app_uid]/access.log
   file:
@@ -45,7 +56,9 @@
     owner: www-data
     group: www-data
   with_items: "{{ alb_apps }}"
-  when: alb_apps is defined and alb_apps[0] is defined
+  when:
+    - alb_apps is defined and alb_apps[0] is defined
+    - alb_apps_facts_deployed is changed
 
 - name: Apps | mkdir /var/log/app/[app_uid]/error.log
   file:
@@ -55,4 +68,6 @@
     owner: www-data
     group: www-data
   with_items: "{{ alb_apps }}"
-  when: alb_apps is defined and alb_apps[0] is defined
+  when:
+   - alb_apps is defined and alb_apps[0] is defined
+   - alb_apps_facts_deployed is changed

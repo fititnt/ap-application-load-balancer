@@ -1,8 +1,12 @@
 ---
 # tasks/ufw/main.yml
 
-- name: ufw | check-if-need-update.yml
-  include: check-if-need-update.yml
+- name: /etc/ansible/facts.d/alb_ufw.fact
+  template:
+    src: files/alb_ufw.fact
+    dest: /etc/ansible/facts.d/alb_ufw.fact
+    mode: 0755
+  register: alb_ufw_facts_deployed
 
 ## ufw status verbose  (before) ________________________________________________
 - name: "ufw | ufw status verbose (before)"
@@ -10,18 +14,25 @@
   become: "yes"
   changed_when: false
   register: ufw_status_verbose1
+  when:
+    - alb_ufw_facts_deployed is changed
 
 - name: "ufw | ufw status verbose print (before)"
   debug: var=ufw_status_verbose1.stdout_lines
+  when:
+    - alb_ufw_facts_deployed is changed
 
 - name: ufw | install-ufw.yml
   include: install-ufw.yml
+  when:
+    - alb_ufw_facts_deployed is changed
 
 - name: ufw | ufw-reset.yml
   include: ufw-reset.yml
-  when: 
+  when:
     - "alb_ufw_canreset is defined and alb_ufw_canreset is sameas true"
     - "alb_ufw_reset is defined and alb_ufw_canreset is sameas true"
+    - alb_ufw_facts_deployed is changed
 
 - name: "ufw | Rules alb_ufw_rules_always"
   include: rules.yml
@@ -29,7 +40,9 @@
     ufw_rules: "{{ alb_ufw_rules_always }}"
     ufw_commentprefix: "{{ alb_ufw_commentprefix }}"
     name_of_rules: "alb_ufw_rules_always"
-  when: "alb_ufw_rules_always is defined"
+  when:
+    - "alb_ufw_rules_always is defined"
+    - alb_ufw_facts_deployed is changed
 
 - name: "ufw | Rules alb_ufw_rules"
   include: rules.yml
@@ -37,19 +50,29 @@
     ufw_rules: "{{ alb_ufw_rules }}"
     ufw_commentprefix: "{{ alb_ufw_commentprefix }}"
     name_of_rules: "alb_ufw_rules"
-  when: "alb_ufw_rules is defined"
+  when:
+    - "alb_ufw_rules is defined"
+    - alb_ufw_facts_deployed is changed
 
 - name: ufw | allow-dmz.yml
   include: allow-dmz.yml
+  when:
+    - alb_ufw_facts_deployed is changed
 
 - name: ufw | allow-bastion-hosts.yml
   include: allow-bastion-hosts.yml
+  when:
+    - alb_ufw_facts_deployed is changed
 
 - name: ufw | allow-jump-boxes.yml
   include: allow-jump-boxes.yml
+  when:
+    - alb_ufw_facts_deployed is changed
 
 - name: ufw | default-policies.yml
   include: default-policies.yml
+  when:
+    - alb_ufw_facts_deployed is changed
 
 ## @see https://github.com/ansible/ansible/issues/45446
 
@@ -60,6 +83,8 @@
     state: present
     sysctl_set: yes
     reload: yes
+  when:
+    - alb_ufw_facts_deployed is changed
 
 # TASK [ap-application-load-balancer : Configure the kernel to keep connections alive when enabling the firewall] ********************
 #  [WARNING]: The value 1 (type int) in a string field was converted to '1' (type string). If this does not look like what you
@@ -74,6 +99,8 @@
 - name: "ufw | UFW state enabled"
   ufw:
     state: "enabled"
+  when:
+    - alb_ufw_facts_deployed is changed
 
 ## ufw status verbose  (after) ________________________________________________
 - name: "ufw | ufw status verbose (after)"
@@ -81,6 +108,10 @@
   become: "yes"
   changed_when: false
   register: ufw_status_verbose2
+  when:
+    - alb_ufw_facts_deployed is changed
 
 - name: "ufw | ufw status verbose print (after)"
   debug: var=ufw_status_verbose2.stdout_lines
+  when:
+    - alb_ufw_facts_deployed is changed

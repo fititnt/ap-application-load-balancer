@@ -21,11 +21,6 @@
     name: "{{ inventory_hostname }}"
   when: inventory_hostname_short != ansible_hostname
 
-- name: "common | [Padronize the hostname] sudo hostnamectl set-hostname {{ inventory_hostname }}"
-  hostname:
-    name: "{{ inventory_hostname }}"
-  when: inventory_hostname_short != ansible_hostname
-
 - name: "common | [Padronize the Timezone as UTC] sudo timedatectl set-timezone UTC"
   timezone:
     name: UTC

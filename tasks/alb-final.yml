@@ -14,18 +14,20 @@
     mode: 0755
   when: (alb_manange_haproxy is sameas true) or (alb_manange_openresty is sameas true) or (alb_manange_ufw is sameas true) or (alb_manange_common is sameas true) or (alb_manange_devtools is sameas true) or (alb_manange_apps is sameas true) or (alb_manange_logrotate is sameas true) 
 
-- name: /etc/ansible/facts.d/alb_apps.fact
-  template:
-    src: files/alb_apps.fact
-    dest: /etc/ansible/facts.d/alb_apps.fact
-    mode: 0755
-  when:
-    - alb_manange_apps is sameas true
+# Moved to Apps
+#- name: /etc/ansible/facts.d/alb_apps.fact
+#  template:
+#    src: files/alb_apps.fact
+#    dest: /etc/ansible/facts.d/alb_apps.fact
+#    mode: 0755
+#  when:
+#    - alb_manange_apps is sameas true
 
-- name: /etc/ansible/facts.d/alb_ufw.fact
-  template:
-    src: files/alb_ufw.fact
-    dest: /etc/ansible/facts.d/alb_ufw.fact
-    mode: 0755
-  when:
-    - alb_manange_ufw is sameas true
+# Moved to UFW
+#- name: /etc/ansible/facts.d/alb_ufw.fact
+#  template:
+#    src: files/alb_ufw.fact
+#    dest: /etc/ansible/facts.d/alb_ufw.fact
+#    mode: 0755
+#  when:
+#    - alb_manange_ufw is sameas true
