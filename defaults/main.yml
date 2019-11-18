@@ -27,6 +27,9 @@ alb_manange_ufw: no
 alb_manange_common: yes  # hostname, timezone (UTC) [See tasks/common/common.yml]
 alb_manange_devtools: no # net-tools, htop, hatop [tasks/devtools/devtools.yml]
 
+## Sanity Check run at very beginning
+alb_manange_sanitycheck: yes
+
 ## Note: the next options is better leave it alone
 alb_manange_apps: "{{ alb_manange_openresty }}"
 alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
@@ -61,7 +64,6 @@ alb_apps_serverblock_template: '{{ role_path }}/templates/openresty/nginx/conf/v
 # Note: at this moment, only "file" implemented. But later "syslog" could be one option
 alb_logs_method: "file"
 
-# TODO: considerar implementar logrotate (fititnt, 2019-07-28 23:00 BRT)
 alb_logs_path: "/var/log/alb"
 
 ### NGinx (OpenResty) __________________________________________________________
@@ -219,16 +221,8 @@ alb_ufw_state__default: enabled
 alb_ufw_rule__default: "allow" # allow, deny, limit, reject
 alb_ufw_to_ip__default: "any" # allow, deny, limit, reject
 
-# This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
-alb_ufw_facts:
-  alb_ufw_rules: "{{ alb_ufw_rules | default(None) }}"
-  alb_ufw_rules_always: "{{ alb_ufw_rules_always | default(None) }}"
-  alb_dmz: "{{ alb_dmz | default(None) }}"
-  alb_bastion_hosts: "{{ alb_bastion_hosts | default(None) }}"
-  alb_jump_boxes: "{{ alb_jump_boxes | default(None) }}"
 
 ## Internal use / Placeholder tags _____________________________________________
-alb_version: "v0.7.0-alpha"
 alb_openresty_ip: 127.0.0.1
 # alb_openresty_ip: 0.0.0.0 ## Use this if want to expose openresty
 alb_openresty_httpport: 8080
@@ -237,7 +231,6 @@ alb_haproxy_httpport: 80
 alb_haproxy_httpsport: 443
 alb_haproxy_haproxy_template: "{{ role_path }}/templates/nlb-strategy/haproxy-minimal.cfg.j2"
 
-#
 alb_forceignore_haproxy: false
 alb_forceignore_openresty: false
 alb_forceignore_ufw: false

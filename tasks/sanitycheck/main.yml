@@ -4,5 +4,5 @@
 
 - name: "sanitycheck:ufw | clusterfuck-pre-check.yml"
   include: ufw/clusterfuck-pre-check.yml
-  when: 
+  when:
     - "alb_manange_ufw is defined and alb_manange_ufw is sameas true"

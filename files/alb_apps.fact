@@ -1,4 +1,4 @@
 #!/bin/bash
 cat <<EOF
-{{ alb_apps | to_json }}
+{{ alb_apps_facts | to_json }}
 EOF

@@ -1,0 +1,22 @@
+---
+# FILE:            {{ role_path }}/example/show-alb-hosts-facts.yml
+# LICENSE:         Public Domain
+
+# To print facts with this playbook, use:
+#    ansible-playbook show-alb-hosts-facts.yml -i hosts
+
+# To use Ansible Ad Hoc command (does not need this playbook), use
+#    ansible all -m setup -a "filter=ansible_local" -i hosts
+
+- name: "Show ALB facts from previous run (/etc/ansible/facts.d/alb*.facts)"
+  hosts: all
+  tasks:
+    - name: Show ALB facts from previous run (/etc/ansible/facts.d/alb*.facts)
+      setup:
+        filter: "ansible_local"
+        gather_subset:
+         - '!all'
+         - '!min'
+         - 'facter'
+    - debug: 
+        msg: "{{ ansible_facts['ansible_local'] }}"

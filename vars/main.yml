@@ -1,2 +1,29 @@
 ---
 # vars file for ap-application-load-balancer
+alb_version: "v0.7.1-alpha"
+
+# This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
+alb_lastrun_facts:
+  alb_version: "{{ alb_version }}"
+  alb_date_time: "{{ ansible_date_time.iso8601 }}"
+  alb_manange:
+    alb_manange_all: "{{ alb_manange_all | default(None) }}"
+    alb_manange_haproxy: "{{ alb_manange_haproxy | default(None) }}"
+    alb_manange_openresty: "{{ alb_manange_openresty | default(None) }}"
+    alb_manange_common: "{{ alb_manange_common | default(None) }}"
+    alb_manange_devtools: "{{ alb_manange_devtools | default(None) }}"
+    alb_manange_sanitycheck: "{{ alb_manange_sanitycheck | default(None) }}"
+    alb_manange_apps: "{{ alb_manange_sanitycheck | default(None) }}"
+    alb_manange_logrotate: "{{ alb_manange_sanitycheck | default(None) }}"
+
+# This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
+alb_apps_facts:
+  alb_apps: "{{ alb_apps | default(None) }}"
+
+  # This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
+alb_ufw_facts:
+  alb_ufw_rules: "{{ alb_ufw_rules | default(None) }}"
+  alb_ufw_rules_always: "{{ alb_ufw_rules_always | default(None) }}"
+  alb_dmz: "{{ alb_dmz | default(None) }}"
+  alb_bastion_hosts: "{{ alb_bastion_hosts | default(None) }}"
+  alb_jump_boxes: "{{ alb_jump_boxes | default(None) }}"
