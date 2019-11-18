@@ -1,0 +1,39 @@
+---
+
+- name: Check that the somefile.conf exists
+  stat:
+    path: /etc/ansible/facts.d/alb_ufw.fact
+  register: stat_result
+
+- set_fact:
+    alb_ufw_fact_old: "{{ lookup('template', 'files/alb_ufw.fact') }}"
+
+- name: Slurp hosts /etc/ansible/facts.d/alb_ufw.fact
+  slurp:
+    src: /etc/ansible/facts.d/alb_ufw.fact
+  register: slurpfile
+
+- set_fact:
+    alb_ufw_fact_new: "{{ slurpfile['content'] | b64decode }}"
+
+- debug: msg="old  {{ alb_ufw_fact_old }}"
+- debug: msg="new {{ alb_ufw_fact_new }}"
+
+- set_fact:
+    alb_ufw_needupdate: "alb_ufw_fact_old is sameas alb_ufw_fact_new"
+
+- debug:
+    msg: "alb_ufw_needupdate:  {{ alb_ufw_needupdate }}"
+
+#- name: files/alb_ufw.fact
+#  debug: 
+#    msg: "{{ rendered_template }}"
+#  when: "slurpfile['content'] | b64decode  is sameas rendered_template"
+
+#- name: files/alb_ufw.fact
+#  debug: 
+#    msg: "{{ rendered_template }}"
+
+#- name: Check /etc/ansible/facts.d/alb_ufw.fact
+#  debug: 
+#    msg: "{{ ansible_facts['ansible_local']['alb_ufw'] | default(None) }}"

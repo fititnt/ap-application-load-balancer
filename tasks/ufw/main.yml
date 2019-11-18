@@ -1,6 +1,9 @@
 ---
 # tasks/ufw/main.yml
 
+- name: ufw | check-if-need-update.yml
+  include: check-if-need-update.yml
+
 ## ufw status verbose  (before) ________________________________________________
 - name: "ufw | ufw status verbose (before)"
   shell: "ufw status verbose"

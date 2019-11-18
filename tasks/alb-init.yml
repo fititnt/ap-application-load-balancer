@@ -6,7 +6,7 @@
 # alb-init tasks runs before other software is installed on the system
 # @see https://github.com/fititnt/ap-application-load-balancer/blob/master/alb-internals.md
 
-- name: mkdir -p /etc/ansible/facts.d/
+- name: alb-init | mkdir -p /etc/ansible/facts.d/
   file:
     path: /etc/ansible/facts.d/
     state: directory
@@ -16,12 +16,12 @@
     recurse: true
 
 # Example group command from Ansible Playbooks
-- name: Create group alb if already does not exist
+- name: alb-init | Create group alb if already does not exist
   group:
     name: alb
     state: present
 
-- name: Create system user alb
+- name: alb-init | Create system user alb
   user:
     name: alb
     comment: "System user for ALB (Application Load Balancer)"
@@ -33,28 +33,28 @@
 # TODO: check on new installations www-data user already exist and this command would not fail (fititnt, 2019-11-07 21:11 BRT)
 
 ## Let's create all directories that would not be created by OpenResty or HAproxy
-- name: mkdir /opt/alb/
+- name: alb-init | mkdir /opt/alb/
   file:
     path: /opt/alb/
     state: directory
     mode: '0644'
     owner: root
 
-- name: mkdir /var/alb/
+- name: alb-init | mkdir /var/alb/
   file:
     path: /var/alb/
     state: directory
     mode: '0644'
     owner: root
 
-- name: mkdir /var/log/alb/
+- name: alb-init | mkdir /var/log/alb/
   file:
     path: /var/log/alb/
     state: directory
     mode: '0644'
     owner: root
 
-- name: touch /var/log/alb/access.log
+- name: alb-init | touch /var/log/alb/access.log
   file:
     path: /var/log/alb/access.log
     state: touch
@@ -62,7 +62,7 @@
     owner: www-data
     group: www-data
 
-- name: touch /var/log/alb/error.log
+- name: alb-init | touch /var/log/alb/error.log
   file:
     path: /var/log/alb/error.log
     state: touch
@@ -70,7 +70,7 @@
     owner: www-data
     group: www-data
 
-- name: touch /var/log/alb/letsencrypt.log
+- name: alb-init | touch /var/log/alb/letsencrypt.log
   file:
     path: /var/log/alb/letsencrypt.log
     state: touch
@@ -78,28 +78,28 @@
     owner: www-data
     group: www-data
 
-- name: mkdir /opt/alb/apps/
+- name: alb-init | mkdir /opt/alb/apps/
   file:
     path: /opt/alb/apps/
     state: directory
     mode: '0644'
     owner: root
 
-- name: mkdir /opt/alb/info/
+- name: alb-init | mkdir /opt/alb/info/
   file:
     path: /opt/alb/info/
     state: directory
     mode: '0644'
     owner: root
 
-- name: mkdir /var/app/
+- name: alb-init | mkdir /var/app/
   file:
     path: /var/app/
     state: directory
     mode: '0644'
     owner: root
 
-- name: mkdir /var/log/app
+- name: alb-init | mkdir /var/log/app
   file:
     path: /var/log/app
     state: directory
@@ -107,7 +107,7 @@
     owner: root
 
 # Syntactic sugar symbolic links
-- name: ln -s /var/alb/ /opt/alb/alb-data
+- name: alb-init | ln -s /var/alb/ /opt/alb/alb-data
   file:
     src: /var/alb/
     dest: /opt/alb/alb-data
@@ -115,7 +115,7 @@
     state: link
     # force: yes
 
-- name: ln -s /var/log/alb/ /opt/alb/alb-logs
+- name: alb-init | ln -s /var/log/alb/ /opt/alb/alb-logs
   file:
     src: /var/log/alb/
     dest: /opt/alb/alb-logs
@@ -123,7 +123,7 @@
     state: link
     # force: yes
 
-- name: ln -s /var/app/ /opt/alb/apps-data
+- name: alb-init | ln -s /var/app/ /opt/alb/apps-data
   file:
     src: /var/app/
     dest: /opt/alb/apps-data
@@ -131,7 +131,7 @@
     state: link
     # force: yes
 
-- name: ln -s /var/log/app/ /var/log/alb/apps
+- name: alb-init | ln -s /var/log/app/ /var/log/alb/apps
   file:
     src: /var/log/app/
     dest: /var/log/alb/apps
@@ -139,7 +139,7 @@
     state: link
     # force: yes
 
-- name: ln -s /var/log/app/ /opt/alb/apps-logs
+- name: alb-init | ln -s /var/log/app/ /opt/alb/apps-logs
   file:
     src: /var/log/app/
     dest: /opt/alb/apps-logs
@@ -148,7 +148,7 @@
     # force: yes
 
 # The next links have force: yes because are likely to not exist on first installation
-- name: ln -s /etc/haproxy/ /opt/alb/haproxy
+- name: alb-init | ln -s /etc/haproxy/ /opt/alb/haproxy
   file:
     src: /etc/haproxy/
     dest: /opt/alb/haproxy
@@ -156,7 +156,7 @@
     state: link
     force: yes
 
-- name: ln -s /usr/local/openresty/nginx/ /opt/alb/nginx
+- name: alb-init | ln -s /usr/local/openresty/nginx/ /opt/alb/nginx
   file:
     src: /usr/local/openresty/nginx/
     dest: /opt/alb/nginx
@@ -164,7 +164,7 @@
     state: link
     force: yes
 
-- name: ln -s /etc/resty-auto-ssl/letsencrypt/ /opt/alb/letsencrypt
+- name: alb-init | ln -s /etc/resty-auto-ssl/letsencrypt/ /opt/alb/letsencrypt
   file:
     src: /etc/resty-auto-ssl/letsencrypt/
     dest: /opt/alb/letsencrypt
@@ -173,7 +173,7 @@
     force: yes
 
 # alb.conf is a syntax sugar to real nginx.conf
-- name: ln -s /usr/local/openresty/nginx/conf/nginx.conf /opt/alb/alb.conf
+- name: alb-init | ln -s /usr/local/openresty/nginx/conf/nginx.conf /opt/alb/alb.conf
   file:
     src: /usr/local/openresty/nginx/conf/nginx.conf
     dest: /opt/alb/alb.conf
@@ -181,7 +181,7 @@
     state: link
     force: yes
 
-- name: ln -s /etc/haproxy/haproxy.cfg /opt/alb/nlb.cfg
+- name: alb-init | ln -s /etc/haproxy/haproxy.cfg /opt/alb/nlb.cfg
   file:
     src: /etc/haproxy/haproxy.cfg
     dest: /opt/alb/nlb.cfg
