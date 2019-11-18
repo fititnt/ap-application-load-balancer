@@ -7,6 +7,7 @@
     - [ALB Internals](#alb-internals)
         - [Directory structures](#directory-structures)
             - [Internal usage of ALB](#internal-usage-of-alb)
+            - [Usage of Apps](#usage-of-apps)
             - [Shared usage for third party tools](#shared-usage-for-third-party-tools)
                 - [`alb_ips_remoteadmins`](#alb_ips_remoteadmins)
                 - [`alb_ips_dmz`](#alb_ips_dmz)
@@ -14,7 +15,6 @@
                 - [`alb_ips_blacklist`](#alb_ips_blacklist)
                 - [`alb_domains_whitelist`](#alb_domains_whitelist)
                 - [`alb_domains_blacklist`](#alb_domains_blacklist)
-            - [Usage of Apps](#usage-of-apps)
         - [System users](#system-users)
     - [NLB Internals](#nlb-internals)
         - [Ports](#ports)
@@ -29,10 +29,6 @@
     - [UFW](#ufw)
         - [Summary](#summary)
         - [External documentation](#external-documentation)
-        - [With AP-ALB role](#with-ap-alb-role)
-            - [Example 1](#example-1)
-        - [Ad-Hoc (without AP-ALB role)](#ad-hoc-without-ap-alb-role)
-            - [Visual example with asciinema](#visual-example-with-asciinema)
 - [To Do](#to-do)
 
 <!-- /TOC -->
@@ -76,6 +72,24 @@ for all other folders and files that are important.
 - **Data created on Runtime by ALB** _(Planed, not fully implemented)_
   - `/var/alb/`
 
+#### Usage of Apps
+
+If your ALB setup already is working, these are the files and folders that
+are specific for each App.
+
+- **App rule**
+  - `/opt/alb/apps/{{ app_uid }}.conf`
+- **App data** _(if some parameter require custom folder to store data, but
+  the specific path is not specified by the app, this pattern will be used)_
+  - `/var/app/{{ app_uid }}/`
+- **App logs** _(when not using `/var/log/alb/...` and not specified custom path)_
+  - `/var/log/app/{{ app_uid }}/access.log`
+  - `/var/log/app/{{ app_uid }}/error.log`
+
+Tip: `/var/www/SomeFolder` and `/home/SomeUser/SomeFolder` are common pattens
+of folders for your apps. The use of `/var/app/{{ app_uid }}/` is mostly to
+avoid conflicts with existend content, and is not a requirement at all.
+
 #### Shared usage for third party tools
 
 Some variables when present on a play of a playbook using ALB will create or
@@ -112,23 +126,6 @@ Some considerations:
 ##### `alb_domains_blacklist`
 - File: `/var/alb/domains_blacklist.txt`
 
-#### Usage of Apps
-
-If your ALB setup already is working, these are the files and folders that
-are specific for each App.
-
-- **App rule**
-  - `/opt/alb/apps/{{ app_uid }}.conf`
-- **App data** _(if some parameter require custom folder to store data, but
-  the specific path is not specified by the app, this pattern will be used)_
-  - `/var/app/{{ app_uid }}/`
-- **App logs** _(when not using `/var/log/alb/...` and not specified custom path)_
-  - `/var/log/app/{{ app_uid }}/access.log`
-  - `/var/log/app/{{ app_uid }}/error.log`
-
-Tip: `/var/www/SomeFolder` and `/home/SomeUser/SomeFolder` are common pattens
-of folders for your apps. The use of `/var/app/{{ app_uid }}/` is mostly to
-avoid conflicts with existend content, and is not a requirement at all.
 
 ### System users
 

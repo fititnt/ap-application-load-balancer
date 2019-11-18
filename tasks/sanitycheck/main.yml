@@ -1,0 +1,8 @@
+---
+
+# @todo replace 'clusterfuck' references as sanitycheck and put here (fititnt, 2019-11-15 06:54 BRT)
+
+- name: "sanitycheck:ufw | clusterfuck-pre-check.yml"
+  include: ufw/clusterfuck-pre-check.yml
+  when: 
+    - "alb_manange_ufw is defined and alb_manange_ufw is sameas true"

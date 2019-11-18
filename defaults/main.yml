@@ -141,11 +141,24 @@ alb_haproxy_stats_realm: "{{ alb_name }}"
 
 ### Defaults ___________________________________________________________________
 
-## Firewall  ___________________________________________________________________
+### Component: UFW  ____________________________________________________________
 alb_ssh_port: 22
 
-alb_ufw_clusterfuck_ignore:
-#  - "alb_ufw_rule_always"
+## Examples of variables to use with ALB/UFW, start ----------------------------
+# Is possible to configure other values from ALB/UFW, but there are most common
+
+# You very likely want to setup the alb_ufw_rules. This example allows HTTP port
+# and HTTPS outside alb_dmz/alb_bastion_hosts/alb_jump_boxes
+#
+#    alb_ufw_rules:
+#      - rule: limit
+#        port: 80
+#        proto: tcp
+#        comment: "HTTP"
+#      - rule: allow
+#        port: 443
+#        proto: tcp
+#        comment: "HTTPS"
 
 # This rule will be forced, and the user will have to overide this default to
 # not allow make SSH port on limit
@@ -155,7 +168,40 @@ alb_ufw_rules_always:
     proto: tcp
     comment: "SSH port not closed by default (Override with alb_ufw_rule_always)"
 
-# User is expected to configure the alb_ufw_rules
+## @see https://en.wikipedia.org/wiki/DMZ_(computing)
+## ALB/UFW will use alb_dmz to make all traffic FROM/TO to this machine free
+#
+#    alb_dmz:
+#      - ip: 203.0.113.1
+#        name: my_apps_server
+#      - ip: 203.0.113.2
+#        name: my_db_server
+#      - ip: 203.0.113.3
+#        name: any_other_server_inside_the_network
+
+# @see https://en.wikipedia.org/wiki/Bastion_host
+# ALB/UFW will use alb_bastion_hosts to make all traffic FROM/TO to this machine free
+# This behavior could change on future to make it more configurable
+#
+#    alb_bastion_hosts:
+#      - ip: 192.0.2.255
+#        name: "My Bastion Host"
+
+# @see https://en.wikipedia.org/wiki/Jump_server
+# ALB/UFW will use alb_jump_boxes to make all traffic FROM/TO to this machine free
+# This behavior could change on future to make it more configurable
+#
+#    alb_jump_boxes:
+#      - ip: 192.0.2.10
+#        name: "my jumpbox server"
+
+## Recommended variables to use, end -------------------------------------------
+
+
+
+alb_ufw_clusterfuck_ignore:
+#  - "alb_ufw_rule_always"
+
 
 alb_ufw_canreset: yes
 alb_ufw_reset: no
@@ -173,12 +219,16 @@ alb_ufw_state__default: enabled
 alb_ufw_rule__default: "allow" # allow, deny, limit, reject
 alb_ufw_to_ip__default: "any" # allow, deny, limit, reject
 
+# This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
 alb_ufw_facts:
- - alb_ufw_rules: "{{ alb_ufw_rules }}"
- - alb_ufw_rules_always: "{{ alb_ufw_rules_always }}"
+  alb_ufw_rules: "{{ alb_ufw_rules | default(None) }}"
+  alb_ufw_rules_always: "{{ alb_ufw_rules_always | default(None) }}"
+  alb_dmz: "{{ alb_dmz | default(None) }}"
+  alb_bastion_hosts: "{{ alb_bastion_hosts | default(None) }}"
+  alb_jump_boxes: "{{ alb_jump_boxes | default(None) }}"
 
 ## Internal use / Placeholder tags _____________________________________________
-alb_version: "v0.6.4-beta"
+alb_version: "v0.7.0-alpha"
 alb_openresty_ip: 127.0.0.1
 # alb_openresty_ip: 0.0.0.0 ## Use this if want to expose openresty
 alb_openresty_httpport: 8080

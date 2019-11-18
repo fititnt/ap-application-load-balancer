@@ -7,6 +7,15 @@
   debug: 
     msg: "{{ alb_version }}"
 
+- name: "sanitycheck/main.yml"
+  include: sanitycheck/main.yml
+  tags:
+    - alb
+    - alb-sanitycheck
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_sanitycheck is sameas true
+
 - name: "common/common.yml"
   include: common/common.yml
   tags:

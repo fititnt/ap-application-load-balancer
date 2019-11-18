@@ -1,4 +1,4 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.7.0-alpha
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.7.1-alpha
 AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
@@ -62,7 +62,6 @@ humanitarian or commercial projects from who help we on Etica.AI.
             - [files-local](#files-local)
             - [proxy](#proxy)
             - [raw](#raw)
-            - [socket-php](#socket-php)
     - [Common](#common)
     - [DevTools](#devtools)
         - [hatop](#hatop)
@@ -76,6 +75,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
     - [OpenResty](#openresty)
         - [Run OpenResty without HAProxy](#run-openresty-without-haproxy)
         - [lua-resty-auto-ssl](#lua-resty-auto-ssl)
+    - [SanityCheck](#sanitycheck)
     - [UFW](#ufw)
         - [Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)](#applying-only-firewall-rules-on-a-specific-server-ie-do-not-install-haproxy-openresty)
         - [External documentation about UFW and Ansible](#external-documentation-about-ufw-and-ansible)
@@ -238,6 +238,8 @@ alb_manange_ufw: no
 alb_manange_common: yes  # hostname, timezone (UTC) [See tasks/common/common.yml]
 alb_manange_devtools: no # net-tools, htop, hatop [tasks/devtools/devtools.yml]
 
+alb_manange_sanitycheck: yes
+
 ## Note: the next options is better leave it alone
 alb_manange_apps: "{{ alb_manange_openresty }}"
 alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
@@ -341,11 +343,6 @@ Use a raw string to create an OpenResty configuration file.
 ```
 
 See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
-
-##### socket-php
-> This strategy is a draft and/or can be removed or made obsolet by [proxy](#proxy).
-
-See [templates/alb-strategy/socket-php.conf.j2](templates/alb-strategy/socket-php.conf.j2).
 
 ### Common
 
@@ -495,6 +492,17 @@ alb_openresty_httpsport: 443
 HTTPS on-the-fly.
 
 See [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl).
+
+### SanityCheck
+- **To permanently enable management by ALB (default)**
+  - `alb_manange_sanitycheck: yes`
+- **To permanently disable management by ALB**
+  - `alb_manange_sanitycheck: no`
+
+This ALB component (enabled by default) will run at very start of a play and
+try to do some very basic sanity checks that have a tendency to cause a
+node or a [entire cluster to enter on a non-operational state](https://en.wiktionary.org/wiki/clusterfuck)
+via human mistakes on ALB configurations.
 
 ### UFW
 > _To avoid acidental use, this feature is not enabled by default (and will
