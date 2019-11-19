@@ -51,6 +51,9 @@ humanitarian or commercial projects from who help we on Etica.AI.
         - [Resilient to sysadmin errors on production servers](#resilient-to-sysadmin-errors-on-production-servers)
             - [What about one-click rollback feature?](#what-about-one-click-rollback-feature)
         - [Decoupled subcomponents when makes sense](#decoupled-subcomponents-when-makes-sense)
+    - [ALB Non-Goals](#alb-non-goals)
+        - [Custom end user graphical interface or no need of sudo to deploy proxy rules](#custom-end-user-graphical-interface-or-no-need-of-sudo-to-deploy-proxy-rules)
+            - [Potential alternatives](#potential-alternatives)
 - [Quickstart Guide](#quickstart-guide)
     - [The minimum you already should know to use AP-ALB](#the-minimum-you-already-should-know-to-use-ap-alb)
     - [Complete examples using AP-ALB](#complete-examples-using-ap-alb)
@@ -169,6 +172,30 @@ server and rename older files or re-run a playbook with ALB to allow fix it.
 
 #### Decoupled subcomponents when makes sense
 See [ALB components](#alb-components).
+
+### ALB Non-Goals
+> **non-goal** (plural non-goals)
+> A potential goal or requirement which is explicitly excluded from the scope of a project.
+> [wiktionary for non-goal](https://en.wiktionary.org/wiki/non-goal)
+
+#### Custom end user graphical interface or no need of sudo to deploy proxy rules
+One of the big features of Load Balancers of big cloud providers is that they
+have some way (like a web interface) for a user create their rules. Is possible
+to make this for ALB, our target audience very likely is doing an ALB for
+themselves and would have root access anyway on some cheap VPSs.
+
+##### Potential alternatives
+
+- **ALB + AWX Project (Ansible tower open source)**
+  - AWX Project allows granular access when deploying changes with Ansible.
+  - <https://github.com/ansible/awx>
+  - <https://docs.ansible.com/ansible-tower/index.html>
+- **ALB + Tsuru** (or any other PaaS)
+  - Tsuru, years before Kubernetes was a thing, already allowed deploy apps
+    similar to what Heroku does. You could only use the Auto HTTPS from ALB,
+    use App rules for thinkgs that you really want control, and everyting else
+    proxy to Tsuru.
+  - <https://tsuru.io/>
 
 ## Quickstart Guide
 
