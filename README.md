@@ -294,7 +294,15 @@ implementation.
 
 #### Autentication Credentials
 
-:warning: `alb_auth_*` (...)
+- :information_source: `password` fields are expected to have plaintext when
+  executed via Ansible
+  - **but you can use Ansible Valt to decrypt these passwords at run time**
+    - <https://docs.ansible.com/ansible/latest/user_guide/vault.html>
+    - and then commit on your git repository
+- :warning: `alb_auth_*` is meant to be used for **host level / system level**
+  related autentication credentials.
+  - :+1: good usage: HAProxy status page, Basic Auth for your internal systems
+  - :-1: bad usage: ~default for end user autentication for their private pages~ (think `app_auth_*`)
 
 ```yaml
 alb_auth_users:
@@ -303,13 +311,23 @@ alb_auth_users:
   - username: Admin2
     password: "plain-password2"
   - username: SuperUser2
-    password: "!vault |...." # You can use Ansible Vault (encripted values) https://docs.ansible.com/ansible/latest/user_guide/
-# (...)
+    password: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      62313365396662343061393464336163383764373764613633653634306231386433626436623361
+      6134333665353966363534333632666535333761666131620a663537646436643839616531643561
+      63396265333966386166373632626539326166353965363262633030333630313338646335303630
+      3438626666666137650a353638643435666633633964366338633066623234616432373231333331
+      6564
 
 ```
 
 #### Bastion Hosts
-- <https://en.wikipedia.org/wiki/Bastion_host>
+- About Bastion Hosts: <https://en.wikipedia.org/wiki/Bastion_host>
+- :information_source: Both [Bastion Hosts](#bastion-hosts) and [Jump Server](#jump-server)
+  (but NOT [DMZ (DeMilitarized Zone)](#dmz-demilitarized-zone), since some
+  implementations could not even ask passwords) are good candidates for you add
+  some host from outside, like a trusted server from the same client or other
+  you own plus your own dinamic IP adress of your local machine.
 
 ```yaml
 alb_bastion_hosts:
@@ -318,7 +336,10 @@ alb_bastion_hosts:
 ```
 
 #### DMZ (DeMilitarized Zone)
-- <https://en.wikipedia.org/wiki/DMZ_(computing)>
+- About DMZ: <https://en.wikipedia.org/wiki/DMZ_(computing)>
+- :warning: **`alb_dmz` is expected to only have trusted IPs or IPs ranges** (think almost equivalent to localhost access)
+  - ALB/UFW if enabled by default will allow all traffic FROM/TO these IPs.
+  - ALB/HAproxy Stats page if enabled by default will consider this as trusted
 
 ```yaml
 alb_dmz:
@@ -331,7 +352,12 @@ alb_dmz:
 ```
 
 #### Jump Server
-- <https://en.wikipedia.org/wiki/Jump_server>
+- About Jump Server: <https://en.wikipedia.org/wiki/Jump_server>
+- :information_source: Both [Bastion Hosts](#bastion-hosts) and [Jump Server](#jump-server)
+(but NOT [DMZ (DeMilitarized Zone)](#dmz-demilitarized-zone), since some
+implementations could not even ask passwords) are good candidates for you add
+some host from outside, like a trusted server from the same client or other
+you own plus your own dinamic IP adress of your local machine.
 
 ```yaml
 alb_jump_boxes:
