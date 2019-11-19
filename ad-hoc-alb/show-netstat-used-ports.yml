@@ -1,0 +1,20 @@
+---
+# FILE:            {{ role_path }}/ad-hoc-alb/show-alb-hosts-facts.yml
+# LICENSE:         Public Domain
+
+#    ansible-playbook roles/ap-application-load-balancer/ad-hoc-alb/show-netstat-used-ports.yml -i hosts.yml
+#    ansible-playbook show-netstat-used-ports.yml -i hosts.yml
+#    ansible all -a "netstat -ntulp" -i hosts.yml
+
+- name: "ad-hoc-alb | show-netstat-used-ports"
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: "ad-hoc-alb | sudo netstat -ntulp"
+      shell: "netstat -ntulp"
+      become: "yes"
+      changed_when: false
+      register: ad_hoc_alb_ufw_status_verbose
+
+    - debug: 
+        msg: "{{ ad_hoc_alb_ufw_status_verbose.stdout_lines }}"

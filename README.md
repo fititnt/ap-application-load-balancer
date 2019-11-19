@@ -318,13 +318,12 @@ alb_auth_users:
       63396265333966386166373632626539326166353965363262633030333630313338646335303630
       3438626666666137650a353638643435666633633964366338633066623234616432373231333331
       6564
-
 ```
 
 #### Bastion Hosts
 - About Bastion Hosts: <https://en.wikipedia.org/wiki/Bastion_host>
 - :information_source: Both [Bastion Hosts](#bastion-hosts) and [Jump Server](#jump-server)
-  (but NOT [DMZ (DeMilitarized Zone)](#dmz-demilitarized-zone), since some
+  (but NOT [DMZ (DeMilitarized Zone)](#dmz-demilitarized-zone)), since some
   implementations could not even ask passwords) are good candidates for you add
   some host from outside, like a trusted server from the same client or other
   you own plus your own dinamic IP adress of your local machine.

@@ -1,0 +1,21 @@
+---
+# FILE:            {{ role_path }}/ad-hoc-alb/show-alb-hosts-facts.yml
+# LICENSE:         Public Domain
+
+#    ansible-playbook roles/ap-application-load-balancer/ad-hoc-alb/show-ufw-status.yml -i hosts.yml
+#    ansible-playbook show-ufw-status.yml -i hosts.yml
+#    ansible all -a "ufw status verbose" -i hosts.yml
+
+- name: "ad-hoc-alb | show-ufw-status"
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: "ad-hoc-alb | sudo ufw status verbose"
+      shell: "ufw status verbose"
+      become: "yes"
+      changed_when: false
+      register: ad_hoc_alb_ufw_status_verbose
+
+    - debug: 
+        msg: "{{ ad_hoc_alb_ufw_status_verbose.stdout_lines }}"
+

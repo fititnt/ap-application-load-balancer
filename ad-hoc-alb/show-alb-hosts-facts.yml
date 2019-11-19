@@ -1,6 +1,10 @@
 ---
-# FILE:            {{ role_path }}/example/show-alb-hosts-facts.yml
+# FILE:            {{ role_path }}/ad-hoc-alb/show-alb-hosts-facts.yml
 # LICENSE:         Public Domain
+
+#    ansible-playbook roles/ap-application-load-balancer/ad-hoc-alb/show-alb-hosts-facts.yml -i hosts.yml
+#    ansible-playbook show-alb-hosts-facts.yml -i hosts.yml
+#    ansible all -m setup -a "filter=ansible_local" -i hosts.yml
 
 # To print facts with this playbook, use:
 #    ansible-playbook show-alb-hosts-facts.yml -i hosts
