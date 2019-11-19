@@ -60,6 +60,10 @@ humanitarian or commercial projects from who help we on Etica.AI.
     - [Quickstart on how to hotfix/debug production servers](#quickstart-on-how-to-hotfixdebug-production-servers)
 - [ALB components](#alb-components)
     - [Shared options](#shared-options)
+        - [Autentication Credentials](#autentication-credentials)
+        - [Bastion Hosts](#bastion-hosts)
+        - [DMZ (DeMilitarized Zone)](#dmz-demilitarized-zone)
+        - [Jump Server](#jump-server)
     - [Apps](#apps)
         - [ALB Strategies](#alb-strategies)
             - [hello-world](#hello-world)
@@ -277,56 +281,62 @@ alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
 
 ### Shared options
 
-check [defaults/main.yml](defaults/main.yml), _"AP-ALB Components: shared options"_
+- :information_source: [defaults/main.yml](defaults/main.yml)
+  - _"AP-ALB Components: shared options"_ section
+- :information_source: [vars/main.yml](vars/main.yml)
+  - Some components may use variables that are not on defaults, like
+    `alb_trusted_hosts: "{{ alb_dmz + alb_bastion_hosts + alb_jump_boxes }}"`.
+    This may be the second place to review for security issues on your context.
+
+**Shared options** are how we call variable conventions that could be used as
+default option to improve more specific ALB Components or your own custom
+implementation.
+
+#### Autentication Credentials
+
+:warning: `alb_auth_*` (...)
 
 ```yaml
-### AP-ALB Components: shared options __________________________________________
-# Some variables are used on more than one ALB component by default for avoiding
-# some repetitive work (...) 
+alb_auth_users:
+  - username: Admin1
+    password: "plain-password"
+  - username: Admin2
+    password: "plain-password2"
+  - username: SuperUser2
+    password: "!vault |...." # You can use Ansible Vault (encripted values) https://docs.ansible.com/ansible/latest/user_guide/
+# (...)
 
-## @TODO: rework alb_superuser* for v0.7.x or v0.8.x (fititnt, 2019-11-19 07:53 BRT)
+```
 
-alb_superuser_auth: []
-# alb_superuser_auth:
-#   - username: Admin1
-#     password: "plain-password"
-#   - username: Admin2
-#     password: "plain-password2"
-#   - username: SuperUser2
-#     password: "!vault |...." # You can use Ansible Vault (encripted values) https://docs.ansible.com/ansible/latest/user_guide/vault.html
+#### Bastion Hosts
+- <https://en.wikipedia.org/wiki/Bastion_host>
 
-alb_superuser_ip: null
-alb_superuser_autodiscoveripnull: yes
+```yaml
+alb_bastion_hosts:
+  - ip: 192.0.2.255
+    name: "My Bastion Host"
+```
 
-## @see https://en.wikipedia.org/wiki/DMZ_(computing)
-## ALB/UFW will use alb_dmz to make all traffic FROM/TO to this machine free
-#
-alb_dmz: []
-# alb_dmz:
-#  - ip: 203.0.113.1
-#    name: my_apps_server
-#  - ip: 203.0.113.2
-#    name: my_db_server
-#  - ip: 203.0.113.3
-#    name: any_other_server_inside_the_network
+#### DMZ (DeMilitarized Zone)
+- <https://en.wikipedia.org/wiki/DMZ_(computing)>
 
-# @see https://en.wikipedia.org/wiki/Bastion_host
-# ALB/UFW will use alb_bastion_hosts to make all traffic FROM/TO to this machine free
-# This behavior could change on future to make it more configurable
-#
-alb_bastion_hosts: []
-# alb_bastion_hosts:
-#  - ip: 192.0.2.255
-#    name: "My Bastion Host"
+```yaml
+alb_dmz:
+ - ip: 203.0.113.1
+   name: my_apps_server
+ - ip: 203.0.113.2
+   name: my_db_server
+ - ip: 203.0.113.3
+   name: any_other_server_inside_the_network
+```
 
-# @see https://en.wikipedia.org/wiki/Jump_server
-# ALB/UFW will use alb_jump_boxes to make all traffic FROM/TO to this machine free
-# This behavior could change on future to make it more configurable
-#
-alb_jump_boxes: []
-# alb_jump_boxes:
-#  - ip: 192.0.2.10
-#    name: "my jumpbox server"
+#### Jump Server
+- <https://en.wikipedia.org/wiki/Jump_server>
+
+```yaml
+alb_jump_boxes:
+  - ip: 192.0.2.10
+    name: "my jumpbox server"
 ```
 
 ### Apps
