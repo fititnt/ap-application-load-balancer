@@ -9,6 +9,25 @@ alb_trusted_hosts: "{{ alb_dmz + alb_bastion_hosts + alb_jump_boxes }}"
 alb_trusted_hosts_ips: "{{ alb_trusted_hosts | map(attribute='ip') | list }}"
 
 # This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
+alb_apps_facts:
+  alb_apps: "{{ alb_apps | default(None) }}"
+
+# This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
+#alb_common_facts:
+#  common_tasks:
+#    - "install aptitude"
+#    - "hostnamectl set-hostname inventory_hostname_short"
+#    - "timedatectl set-timezone UTC"
+#    - "mkdir -p /etc/ansible/facts.d/"
+
+alb_devtools_facts:
+  devtools_installed:
+    hatop: "{{ alb_manange_haproxy }}"
+    htop: yes
+    multitail: yes
+    net_tools: yes
+
+# This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
 alb_lastrun_facts:
   alb_version: "{{ alb_version }}"
   alb_date_time: "{{ ansible_date_time.iso8601 }}"
@@ -22,9 +41,6 @@ alb_lastrun_facts:
     alb_manange_apps: "{{ alb_manange_sanitycheck | default(None) }}"
     alb_manange_logrotate: "{{ alb_manange_sanitycheck | default(None) }}"
 
-# This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
-alb_apps_facts:
-  alb_apps: "{{ alb_apps | default(None) }}"
 
   # This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
 alb_ufw_facts:

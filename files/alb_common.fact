@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# TODO: consider if is really necessary this check (fititnt, 2019-11-19 06:59 BRT)
+
+cat <<EOF
+{{ alb_common_facts | to_json }}
+EOF

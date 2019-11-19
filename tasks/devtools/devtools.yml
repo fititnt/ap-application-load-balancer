@@ -11,6 +11,13 @@
 #  debug:
 #    msg: "devtools.yml"
 
+- name: /etc/ansible/facts.d/alb_devtools.fact
+  template:
+    src: files/alb_devtools.fact
+    dest: /etc/ansible/facts.d/alb_devtools.fact
+    mode: 0755
+  register: alb_devtools_facts_deployed
+
 - name: devtools | Only run "update_cache=yes" if the last one is more than 3600 seconds ago
   apt:
     update_cache: yes
@@ -18,18 +25,24 @@
 
 - name: devtools | sudo apt-get install net-tools (for netstat)
   apt:
-   name: net-tools
-   state: present
+    name: net-tools
+    state: present
+  when:
+    - alb_devtools_facts_deployed is changed
 
 - name: devtools | sudo apt-get install htop
   apt:
    name: htop
    state: present
+  when:
+    - alb_devtools_facts_deployed is changed
 
 - name: devtools | sudo apt-get install multitail
   apt:
    name: multitail
    state: present
+  when:
+    - alb_devtools_facts_deployed is changed
 
 # @see http://feurix.org/projects/hatop/
 - name: "devtools | sudo apt-get install hatop [Run with 'hatop -s /run/haproxy/admin.sock']"
@@ -38,6 +51,7 @@
    state: present
   when:
     - alb_manange_haproxy is sameas true
+    - alb_devtools_facts_deployed is changed
 
 # @TODO: consider ngxtop https://www.tecmint.com/ngxtop-monitor-nginx-log-files-in-real-time-in-linux/
 #        (fititnt, 2019-11-11 22:18 BRT)

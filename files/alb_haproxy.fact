@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# TODO: implement this alb_haproxy_facts (fititnt, 2019-11-19 07:09 BRT)
+
+cat <<EOF
+{{ alb_haproxy_facts | to_json }}
+EOF

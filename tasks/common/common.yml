@@ -15,6 +15,22 @@
 #    msg: "ansible_facts.packages {{ ansible_facts.packages }}"
 #    msg: "ansible_facts.packages {{ ansible_facts.packages }}"
 
+#- name: common | mkdir -p /etc/ansible/facts.d/
+#  file:
+#    path: /etc/ansible/facts.d/
+#    state: directory
+#    owner: root
+#    group: root
+#    mode: 0755
+#    recurse: true
+
+#- name: /etc/ansible/facts.d/alb_common.fact
+#  template:
+#    src: files/alb_common.fact
+#    dest: /etc/ansible/facts.d/alb_common.fact
+#    mode: 0755
+#  register: alb_common_facts_deployed
+
 - name: "common | [Ansible likes aptitude over apt-get] sudo apt-get install aptitude"
   apt:
     name: aptitude
