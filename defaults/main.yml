@@ -5,16 +5,6 @@ alb_name: "AP Application Load Balancer"
 alb_hide_alb: yes
 alb_forcedebug: no
 
-alb_superuser_auth:
-#  - username: Admin1
-#    password: "plain-password"
-#  - username: Admin2
-#    password: "plain-password2"
-#  - username: SuperUser2
-#    password: "!vault |...." # You can use Ansible Vault (encripted values) https://docs.ansible.com/ansible/latest/user_guide/vault.html
-alb_superuser_ip: null
-alb_superuser_autodiscoveripnull: yes
-
 ### AP-ALB Components overview _________________________________________________
 # The defaults of v0.7.0 will use: Apps, Common, HAProxy, Logrotate, OpenResty
 # You can enable/disable components. Or explicity enforce on your configuration
@@ -34,9 +24,55 @@ alb_manange_sanitycheck: yes
 alb_manange_apps: "{{ alb_manange_openresty }}"
 alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
 
-### AP-ALB Shared usage ________________________________________________________
+### AP-ALB Components: shared options __________________________________________
+# Some variables are used on more than one ALB component by default for avoiding
+# some repetitive work (...) 
 
-### APPs _______________________________________________________________________
+## @TODO: rework alb_superuser* for v0.7.x or v0.8.x (fititnt, 2019-11-19 07:53 BRT)
+
+alb_superuser_auth: []
+# alb_superuser_auth:
+#   - username: Admin1
+#     password: "plain-password"
+#   - username: Admin2
+#     password: "plain-password2"
+#   - username: SuperUser2
+#     password: "!vault |...." # You can use Ansible Vault (encripted values) https://docs.ansible.com/ansible/latest/user_guide/vault.html
+
+alb_superuser_ip: null
+alb_superuser_autodiscoveripnull: yes
+
+## @see https://en.wikipedia.org/wiki/DMZ_(computing)
+## ALB/UFW will use alb_dmz to make all traffic FROM/TO to this machine free
+#
+alb_dmz: []
+# alb_dmz:
+#  - ip: 203.0.113.1
+#    name: my_apps_server
+#  - ip: 203.0.113.2
+#    name: my_db_server
+#  - ip: 203.0.113.3
+#    name: any_other_server_inside_the_network
+
+# @see https://en.wikipedia.org/wiki/Bastion_host
+# ALB/UFW will use alb_bastion_hosts to make all traffic FROM/TO to this machine free
+# This behavior could change on future to make it more configurable
+#
+alb_bastion_hosts: []
+# alb_bastion_hosts:
+#  - ip: 192.0.2.255
+#    name: "My Bastion Host"
+
+# @see https://en.wikipedia.org/wiki/Jump_server
+# ALB/UFW will use alb_jump_boxes to make all traffic FROM/TO to this machine free
+# This behavior could change on future to make it more configurable
+#
+alb_jump_boxes: []
+# alb_jump_boxes:
+#  - ip: 192.0.2.10
+#    name: "my jumpbox server"
+
+### AP-ALB Component: Apps _____________________________________________________
 
 alb_apps: []
 
@@ -66,7 +102,7 @@ alb_logs_method: "file"
 
 alb_logs_path: "/var/log/alb"
 
-### NGinx (OpenResty) __________________________________________________________
+### AP-ALB Component: OpenResty ________________________________________________
 alb_nginxconf_template: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
 
 # If you use "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
@@ -89,17 +125,15 @@ alb_nginx_httpcontext_custom: |
   # FILE: /usr/local/openresty/nginx/conf/nginx.conf
   # NGINX CONTEXT: http
   # Change-me with variable alb_nginx_httpcontext_custom
-  
 
-### vnStat _____________________________________________________________________
-# @see https://humdi.net/vnstat/
-# @see https://www.howtoforge.com/tutorial/vnstat-network-monitoring-ubuntu/
+## OpenResty, internals --------------------------------------------------------
+# @TODO note to self, consider moving these defaults as template partials
+#       instead of variables to be used on YAML, but allow user change the
+#       paths of the files. This maybe be more intuitive
+#       (fititnt, 2019-11-19 07:43 BRT)
 
-
-
-### Application Load Balancer - Internal Use ___________________________________
 # If you are creating custom ALB Rules (e.g. OpenResty Server Blocks) you will
-# need to consider these rules
+# need to consider these rules.
 
 ## Uncoment next line to use acme staging (for test Let's Encrypt)
 # See https://letsencrypt.org/docs/staging-environment/
@@ -134,16 +168,24 @@ alb_apprule_automatichttp_httpsblock: |
   }
   ## Automatic HTTPS / :80 port (DO NOT REMOVE) - Start
 
-### HAProxy ____________________________________________________________________
+### AP-ALB Component: Common ___________________________________________________
+# No variables for ALB Component Common
+
+### AP-ALB Component: DevTools _________________________________________________
+# No variables for ALB Component DevTools
+
+### AP-ALB Component: HAProxy __________________________________________________
 alb_haproxy_stats_enabled: no
 alb_haproxy_stats_ip: 0.0.0.0
 alb_haproxy_stats_port: 8404
 alb_haproxy_stats_uri: "/haproxy?stats"
 alb_haproxy_stats_realm: "{{ alb_name }}"
 
-### Defaults ___________________________________________________________________
+### AP-ALB Component: Logrotate ________________________________________________
+alb_logrotate_template_alb: "{{ role_path }}/templates/logrotate/alb.j2"
+alb_logrotate_template_alb_apps: "{{ role_path }}/templates/logrotate/alb_apps.j2"
 
-### Component: UFW  ____________________________________________________________
+### AP-ALB Component: UFW  _____________________________________________________
 alb_ssh_port: 22
 
 ## Examples of variables to use with ALB/UFW, start ----------------------------
@@ -170,43 +212,10 @@ alb_ufw_rules_always:
     proto: tcp
     comment: "SSH port not closed by default (Override with alb_ufw_rule_always)"
 
-## @see https://en.wikipedia.org/wiki/DMZ_(computing)
-## ALB/UFW will use alb_dmz to make all traffic FROM/TO to this machine free
-#
-alb_dmz: []
-# alb_dmz:
-#  - ip: 203.0.113.1
-#    name: my_apps_server
-#  - ip: 203.0.113.2
-#    name: my_db_server
-#  - ip: 203.0.113.3
-#    name: any_other_server_inside_the_network
-
-# @see https://en.wikipedia.org/wiki/Bastion_host
-# ALB/UFW will use alb_bastion_hosts to make all traffic FROM/TO to this machine free
-# This behavior could change on future to make it more configurable
-#
-alb_bastion_hosts: []
-# alb_bastion_hosts:
-#  - ip: 192.0.2.255
-#    name: "My Bastion Host"
-
-# @see https://en.wikipedia.org/wiki/Jump_server
-# ALB/UFW will use alb_jump_boxes to make all traffic FROM/TO to this machine free
-# This behavior could change on future to make it more configurable
-#
-alb_jump_boxes: []
-# alb_jump_boxes:
-#  - ip: 192.0.2.10
-#    name: "my jumpbox server"
-
 ## Recommended variables to use, end -------------------------------------------
-
-
 
 alb_ufw_clusterfuck_ignore:
 #  - "alb_ufw_rule_always"
-
 
 alb_ufw_canreset: yes
 alb_ufw_reset: no
@@ -224,6 +233,8 @@ alb_ufw_state__default: enabled
 alb_ufw_rule__default: "allow" # allow, deny, limit, reject
 alb_ufw_to_ip__default: "any" # allow, deny, limit, reject
 
+#### ======================================================================= ###
+# TODO: move these variables to other places of this file (fititnt, 2019-11-19 07:46)
 
 ## Internal use / Placeholder tags _____________________________________________
 alb_openresty_ip: 127.0.0.1
@@ -240,8 +251,6 @@ alb_forceignore_ufw: false
 
 alb_vars_saveondisk: yes
 
-alb_logrotate_template_alb: "{{ role_path }}/templates/logrotate/alb.j2"
-alb_logrotate_template_alb_apps: "{{ role_path }}/templates/logrotate/alb_apps.j2"
 
 # alb_openresty_pidfile: "/var/run/nginx.pid"
 alb_openresty_pidfile: "/usr/local/openresty/nginx/logs/nginx.pid"

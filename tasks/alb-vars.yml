@@ -4,6 +4,10 @@
 
 ## TODO: fix some of these files do not removing old values (fititnt, 2019-11-08 01:34 BRT)
 
+## NOTICE: this file is temporary (maybe permanent) disabled, see
+##         https://github.com/fititnt/ap-application-load-balancer/issues/8#issuecomment-555401930
+##         (fititnt, 2019-11-19 08:17 BRT)
+
 - name: alb_ips_remoteadmins? /opt/alb/remoteadmins
   lineinfile:
     path: /opt/alb/remoteadmins

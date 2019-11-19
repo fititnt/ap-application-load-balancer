@@ -1,4 +1,4 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.7.1-alpha
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.7.2-alpha
 AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
@@ -59,6 +59,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
     - [Complete examples using AP-ALB](#complete-examples-using-ap-alb)
     - [Quickstart on how to hotfix/debug production servers](#quickstart-on-how-to-hotfixdebug-production-servers)
 - [ALB components](#alb-components)
+    - [Shared options](#shared-options)
     - [Apps](#apps)
         - [ALB Strategies](#alb-strategies)
             - [hello-world](#hello-world)
@@ -273,6 +274,60 @@ alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
 ```
 
 ---
+
+### Shared options
+
+check [defaults/main.yml](defaults/main.yml), _"AP-ALB Components: shared options"_
+
+```yaml
+### AP-ALB Components: shared options __________________________________________
+# Some variables are used on more than one ALB component by default for avoiding
+# some repetitive work (...) 
+
+## @TODO: rework alb_superuser* for v0.7.x or v0.8.x (fititnt, 2019-11-19 07:53 BRT)
+
+alb_superuser_auth: []
+# alb_superuser_auth:
+#   - username: Admin1
+#     password: "plain-password"
+#   - username: Admin2
+#     password: "plain-password2"
+#   - username: SuperUser2
+#     password: "!vault |...." # You can use Ansible Vault (encripted values) https://docs.ansible.com/ansible/latest/user_guide/vault.html
+
+alb_superuser_ip: null
+alb_superuser_autodiscoveripnull: yes
+
+## @see https://en.wikipedia.org/wiki/DMZ_(computing)
+## ALB/UFW will use alb_dmz to make all traffic FROM/TO to this machine free
+#
+alb_dmz: []
+# alb_dmz:
+#  - ip: 203.0.113.1
+#    name: my_apps_server
+#  - ip: 203.0.113.2
+#    name: my_db_server
+#  - ip: 203.0.113.3
+#    name: any_other_server_inside_the_network
+
+# @see https://en.wikipedia.org/wiki/Bastion_host
+# ALB/UFW will use alb_bastion_hosts to make all traffic FROM/TO to this machine free
+# This behavior could change on future to make it more configurable
+#
+alb_bastion_hosts: []
+# alb_bastion_hosts:
+#  - ip: 192.0.2.255
+#    name: "My Bastion Host"
+
+# @see https://en.wikipedia.org/wiki/Jump_server
+# ALB/UFW will use alb_jump_boxes to make all traffic FROM/TO to this machine free
+# This behavior could change on future to make it more configurable
+#
+alb_jump_boxes: []
+# alb_jump_boxes:
+#  - ip: 192.0.2.10
+#    name: "my jumpbox server"
+```
 
 ### Apps
 
