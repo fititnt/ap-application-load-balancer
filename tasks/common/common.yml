@@ -11,10 +11,15 @@
 #        @see https://www.toptechskills.com/ansible-tutorials-courses/speed-up-ansible-playbooks-pipelining-mitogen/
 #        (fititnt, 2019-11-11 21:56 BRT)
 
+#- debug:
+#    msg: "ansible_facts.packages {{ ansible_facts.packages }}"
+#    msg: "ansible_facts.packages {{ ansible_facts.packages }}"
+
 - name: "common | [Ansible likes aptitude over apt-get] sudo apt-get install aptitude"
   apt:
-   name: aptitude
-   state: present
+    name: aptitude
+    state: present
+  # when: 'aptitude' not in ansible_facts
 
 - name: "common | [Padronize the hostname] sudo hostnamectl set-hostname {{ inventory_hostname }}"
   hostname:
@@ -35,6 +40,7 @@
     mode: 0755
     recurse: true
 
-#- name: sudo apt-get install software-properties-common
+#- name: common | sudo apt-get install software-properties-common
 #  apt:
 #    name: "software-properties-common"
+  # when: "'software-properties-common' not in ansible_facts.packages"

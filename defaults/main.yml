@@ -173,29 +173,32 @@ alb_ufw_rules_always:
 ## @see https://en.wikipedia.org/wiki/DMZ_(computing)
 ## ALB/UFW will use alb_dmz to make all traffic FROM/TO to this machine free
 #
-#    alb_dmz:
-#      - ip: 203.0.113.1
-#        name: my_apps_server
-#      - ip: 203.0.113.2
-#        name: my_db_server
-#      - ip: 203.0.113.3
-#        name: any_other_server_inside_the_network
+alb_dmz: []
+# alb_dmz:
+#  - ip: 203.0.113.1
+#    name: my_apps_server
+#  - ip: 203.0.113.2
+#    name: my_db_server
+#  - ip: 203.0.113.3
+#    name: any_other_server_inside_the_network
 
 # @see https://en.wikipedia.org/wiki/Bastion_host
 # ALB/UFW will use alb_bastion_hosts to make all traffic FROM/TO to this machine free
 # This behavior could change on future to make it more configurable
 #
-#    alb_bastion_hosts:
-#      - ip: 192.0.2.255
-#        name: "My Bastion Host"
+alb_bastion_hosts: []
+# alb_bastion_hosts:
+#  - ip: 192.0.2.255
+#    name: "My Bastion Host"
 
 # @see https://en.wikipedia.org/wiki/Jump_server
 # ALB/UFW will use alb_jump_boxes to make all traffic FROM/TO to this machine free
 # This behavior could change on future to make it more configurable
 #
-#    alb_jump_boxes:
-#      - ip: 192.0.2.10
-#        name: "my jumpbox server"
+alb_jump_boxes: []
+# alb_jump_boxes:
+#  - ip: 192.0.2.10
+#    name: "my jumpbox server"
 
 ## Recommended variables to use, end -------------------------------------------
 

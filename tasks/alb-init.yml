@@ -14,12 +14,16 @@
     group: root
     mode: 0755
     recurse: true
+  when:
+    - alb_version_lastrun != alb_version
 
 # Example group command from Ansible Playbooks
 - name: alb-init | Create group alb if already does not exist
   group:
     name: alb
     state: present
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | Create system user alb
   user:
@@ -30,6 +34,8 @@
     shell: /usr/sbin/nologin
     group: alb
     groups: www-data
+  when:
+    - alb_version_lastrun != alb_version
 # TODO: check on new installations www-data user already exist and this command would not fail (fititnt, 2019-11-07 21:11 BRT)
 
 ## Let's create all directories that would not be created by OpenResty or HAproxy
@@ -39,6 +45,8 @@
     state: directory
     mode: '0644'
     owner: root
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | mkdir /var/alb/
   file:
@@ -46,6 +54,8 @@
     state: directory
     mode: '0644'
     owner: root
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | mkdir /var/log/alb/
   file:
@@ -53,6 +63,8 @@
     state: directory
     mode: '0644'
     owner: root
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | touch /var/log/alb/access.log
   file:
@@ -61,6 +73,8 @@
     mode: '0644'
     owner: www-data
     group: www-data
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | touch /var/log/alb/error.log
   file:
@@ -69,6 +83,8 @@
     mode: '0644'
     owner: www-data
     group: www-data
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | touch /var/log/alb/letsencrypt.log
   file:
@@ -77,6 +93,8 @@
     mode: '0644'
     owner: www-data
     group: www-data
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | mkdir /opt/alb/apps/
   file:
@@ -84,6 +102,8 @@
     state: directory
     mode: '0644'
     owner: root
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | mkdir /opt/alb/info/
   file:
@@ -91,6 +111,8 @@
     state: directory
     mode: '0644'
     owner: root
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | mkdir /var/app/
   file:
@@ -98,6 +120,8 @@
     state: directory
     mode: '0644'
     owner: root
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | mkdir /var/log/app
   file:
@@ -105,6 +129,8 @@
     state: directory
     mode: '0644'
     owner: root
+  when:
+    - alb_version_lastrun != alb_version
 
 # Syntactic sugar symbolic links
 - name: alb-init | ln -s /var/alb/ /opt/alb/alb-data
@@ -114,6 +140,8 @@
     owner: root
     state: link
     # force: yes
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | ln -s /var/log/alb/ /opt/alb/alb-logs
   file:
@@ -122,6 +150,8 @@
     owner: root
     state: link
     # force: yes
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | ln -s /var/app/ /opt/alb/apps-data
   file:
@@ -130,6 +160,8 @@
     owner: root
     state: link
     # force: yes
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | ln -s /var/log/app/ /var/log/alb/apps
   file:
@@ -138,6 +170,8 @@
     owner: root
     state: link
     # force: yes
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | ln -s /var/log/app/ /opt/alb/apps-logs
   file:
@@ -146,6 +180,8 @@
     owner: root
     state: link
     # force: yes
+  when:
+    - alb_version_lastrun != alb_version
 
 # The next links have force: yes because are likely to not exist on first installation
 - name: alb-init | ln -s /etc/haproxy/ /opt/alb/haproxy
@@ -155,6 +191,8 @@
     owner: root
     state: link
     force: yes
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | ln -s /usr/local/openresty/nginx/ /opt/alb/nginx
   file:
@@ -163,6 +201,8 @@
     owner: root
     state: link
     force: yes
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | ln -s /etc/resty-auto-ssl/letsencrypt/ /opt/alb/letsencrypt
   file:
@@ -171,6 +211,8 @@
     owner: root
     state: link
     force: yes
+  when:
+    - alb_version_lastrun != alb_version
 
 # alb.conf is a syntax sugar to real nginx.conf
 - name: alb-init | ln -s /usr/local/openresty/nginx/conf/nginx.conf /opt/alb/alb.conf
@@ -180,6 +222,8 @@
     owner: root
     state: link
     force: yes
+  when:
+    - alb_version_lastrun != alb_version
 
 - name: alb-init | ln -s /etc/haproxy/haproxy.cfg /opt/alb/nlb.cfg
   file:
@@ -188,3 +232,5 @@
     owner: root
     state: link
     force: yes
+  when:
+    - alb_version_lastrun != alb_version

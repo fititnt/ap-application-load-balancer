@@ -1,6 +1,12 @@
 ---
 # vars file for ap-application-load-balancer
-alb_version: "v0.7.1-alpha"
+alb_version: "v0.7.1-alpha.2"
+alb_version_lastrun: -1
+
+# alb_trusted_ips: "{% set myList = [1,5,3,4,2] %}"
+# alb_trusted_ips: "{{ alb_dmz | default([]) + alb_bastion_hosts | default([]) + alb_jump_boxes | default([])}}"
+alb_trusted_hosts: "{{ alb_dmz + alb_bastion_hosts + alb_jump_boxes }}"
+alb_trusted_hosts_ips: "{{ alb_trusted_hosts | map(attribute='ip') | list }}"
 
 # This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
 alb_lastrun_facts:

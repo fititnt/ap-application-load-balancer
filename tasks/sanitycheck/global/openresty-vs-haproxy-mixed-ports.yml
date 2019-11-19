@@ -1,0 +1,8 @@
+---
+
+# @todo: em alguns casos o HAProxy poderá falhar se o OpenResty foi iniciado
+#        ANTES do arquivo de configuração dele estar para carregar na porta 8888
+#        e 4443. Então isso gera um clusterfuck que requer reiniciar o openresty
+#        e então o resto dá certo.
+#        Este comentário aqui é para procurar listar este problema e tentar
+#        apontar uma solução ou mesmo aplicar ela (fititnt, 2019-11-18 11:15 BRT)
