@@ -28,19 +28,23 @@ alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
 # Some variables are used on more than one ALB component by default for avoiding
 # some repetitive work (...) 
 
-## @TODO: rework alb_superuser* for v0.7.x or v0.8.x (fititnt, 2019-11-19 07:53 BRT)
-
-alb_superuser_auth: []
-# alb_superuser_auth:
+alb_auth_users: []
+# alb_auth_users:
 #   - username: Admin1
 #     password: "plain-password"
 #   - username: Admin2
 #     password: "plain-password2"
 #   - username: SuperUser2
-#     password: "!vault |...." # You can use Ansible Vault (encripted values) https://docs.ansible.com/ansible/latest/user_guide/vault.html
+#     password: !vault |
+#       $ANSIBLE_VAULT;1.1;AES256
+#       62313365396662343061393464336163383764373764613633653634306231386433626436623361
+#       6134333665353966363534333632666535333761666131620a663537646436643839616531643561
+#       63396265333966386166373632626539326166353965363262633030333630313338646335303630
+#       3438626666666137650a353638643435666633633964366338633066623234616432373231333331
+#       6564
 
-alb_superuser_ip: null
-alb_superuser_autodiscoveripnull: yes
+# alb_superuser_ip: null                 # deprecated
+# alb_superuser_autodiscoveripnull: yes  # deprecated
 
 ## @see https://en.wikipedia.org/wiki/DMZ_(computing)
 ## ALB/UFW will use alb_dmz to make all traffic FROM/TO to this machine free
@@ -188,7 +192,7 @@ alb_haproxy_stats_enabled: no
 alb_haproxy_stats_ip: 0.0.0.0 # 0.0.0.0 means exposed for everyone. Use firewall!
 alb_haproxy_stats_port: 8404
 alb_haproxy_stats_uri: "/haproxy?stats"
-alb_haproxy_stats_realm: "{{ alb_name }}/{{ inventory_hostname }}"
+alb_haproxy_stats_realm: "{{ alb_name }}: {{ inventory_hostname }}"
 
 ### AP-ALB Component: Logrotate ________________________________________________
 alb_logrotate_template_alb: "{{ role_path }}/templates/logrotate/alb.j2"

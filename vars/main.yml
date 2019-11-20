@@ -1,15 +1,27 @@
 ---
 # vars file for ap-application-load-balancer
-alb_version: "v0.7.2-alpha"
+alb_version: "v0.7.3-alpha"
 alb_version_lastrun: -1
+
+### ALB Internal Variables: Mixed usage ________________________________________
 
 # alb_trusted_ips: "{% set myList = [1,5,3,4,2] %}"
 # alb_trusted_ips: "{{ alb_dmz | default([]) + alb_bastion_hosts | default([]) + alb_jump_boxes | default([])}}"
 alb_trusted_hosts: "{{ alb_dmz + alb_bastion_hosts + alb_jump_boxes }}"
 alb_trusted_hosts_ips: "{{ alb_trusted_hosts | map(attribute='ip') | list }}"
 
+### ALB Internal Variables: Component HAProxy __________________________________
+
 # This variable is used to calculate if we really can enable HAProxy Stats on this host
 alb_haproxy_stats_safetoenable: "{{ alb_haproxy_stats_enabled is defined and alb_haproxy_stats_enabled is sameas true }}"
+alb_haproxy_stats_authcredentials: "{{ alb_auth_users }}"
+alb_haproxy_stats_realm_escaped: "{{ alb_haproxy_stats_realm | regex_replace(' ', '\\ ') }}" # HAproxy requires escape " " with "\ "
+# alb_haproxy_stats_realm: "{{ alb_haproxy_stats_realm | regex_replace(' ', '\\\\_') }}" # HAproxy requires escape " " with "\ "
+# alb_haproxy_stats_realm: "{{ alb_haproxy_stats_realm.split(' ').join('\ ') }}" # HAproxy requires escape " " with "\ "
+# alb_haproxy_stats_realm: "{{ alb_haproxy_stats_realm | split(' ') | join('\ ') }}" # HAproxy requires escape " " with "\ "
+
+
+### ALB Internal Variables: Facts ______________________________________________
 
 # This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
 alb_apps_facts:
@@ -31,7 +43,6 @@ alb_devtools_facts:
     net_tools: yes
 
 alb_haproxy_facts:
-  template: "{{ alb_haproxy_haproxy_template }}"
   ip: "{{ alb_haproxy_ip }}"
   httpport: "{{ alb_haproxy_httpport }}"
   httpsport: "{{ alb_haproxy_httpsport }}"
@@ -41,6 +52,7 @@ alb_haproxy_facts:
   stats_port: "{{ alb_haproxy_stats_port }}"
   stats_uri: "{{ alb_haproxy_stats_uri }}"
   stats_realm: "{{ alb_haproxy_stats_realm }}"
+  trusted_hosts_ips: "{{ alb_trusted_hosts_ips }}"
   openresty_ip: "{{ alb_openresty_ip }}"
   openresty_httpport: "{{ alb_openresty_httpport }}"
   openresty_httpsport: "{{ alb_openresty_httpsport }}"

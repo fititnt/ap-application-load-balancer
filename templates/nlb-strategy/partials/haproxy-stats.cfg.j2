@@ -7,19 +7,20 @@ frontend stats
     bind {{ alb_haproxy_stats_ip | default('127.0.0.1') }}:{{ alb_haproxy_stats_port | default('8404') }}
     stats enable
     stats uri {{ alb_haproxy_stats_uri | default('/haproxy?stats') }}
+    stats realm {{ alb_haproxy_stats_realm_escaped }}
     stats refresh 10s
-{% if (alb_trusted_hosts_ips is defined and (alb_trusted_hosts_ips |length > 0) ) %}
+
+{% if (alb_trusted_hosts_ips is defined and (alb_trusted_hosts_ips | length > 0) ) %}
     acl network_allowed src 127.0.0.1 {{ alb_trusted_hosts_ips | join(' ') }}
     block if !network_allowed
 {% else %}
 # alb_trusted_hosts_ips empty
 {% endif %}
 
-{% if (alb_superuser_auth is defined and alb_superuser_auth[0] is defined) %}
-# alb_superuser_auth is defined
-{% for userandpassword in alb_superuser_auth %}
+{% if (alb_haproxy_stats_authcredentials is defined and (alb_haproxy_stats_authcredentials | length > 0) ) %}
+{% for userandpassword in alb_haproxy_stats_authcredentials %}
       stats auth    {{ userandpassword.username }}:{{ userandpassword.password }}
 {% endfor %}
 {% else %}
-# alb_superuser_auth is not defined
+# alb_haproxy_stats_authcredentials empty
 {% endif %}
