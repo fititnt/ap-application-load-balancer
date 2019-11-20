@@ -63,8 +63,8 @@
 - name: alb-init.yml
   include: alb-init.yml
   tags:
-  - alb
-  - alb-init
+    - alb
+    - alb-init
   when:
     - alb_manange_all is sameas true
     - alb_manange_apps is sameas true
@@ -72,8 +72,8 @@
 - name: Instalação de OpenResty, Lua Rest & Lua Resty AutoSSL (faz o HTTPS para os Apps)
   include: openresty/openresty-luarocks-lua-resty-auto-ssl-install.yml
   tags:
-  - alb
-  - alb-openresty
+    - alb
+    - alb-openresty
   when:
     - alb_manange_all is sameas true
     - alb_manange_openresty is sameas true
@@ -81,8 +81,8 @@
 - name: openresty/alb-openresty-after.yml
   include: openresty/alb-openresty-after.yml
   tags:
-  - alb
-  - alb-openresty-after
+    - alb
+    - alb-openresty
   when:
     - alb_manange_all is sameas true
     - alb_manange_openresty is sameas true
@@ -90,8 +90,8 @@
 - name: HAproxy
   include: haproxy/haproxy.yml
   tags:
-  - alb
-  - alb-haproxy
+    - alb
+    - alb-haproxy
   when:
     - alb_manange_all is sameas true
     - alb_manange_haproxy is sameas true
@@ -109,8 +109,8 @@
 - name: logrotate/logrotate.yml
   include: logrotate/logrotate.yml
   tags:
-  - alb
-  - alb-logrotate
+    - alb
+    - alb-logrotate
   when:
     - alb_manange_all is sameas true
     - alb_manange_logrotate is sameas true
@@ -119,9 +119,9 @@
 - name: ufw/main.yml
   include: ufw/main.yml
   tags:
-  - alb
-  - alb-ufw
-  - alb-firewall
+    - alb
+    - alb-ufw
+    - alb-firewall
   # when: alb_forceignore_ufw is defined and alb_forceignore_haproxy != true
   when:
     - alb_manange_all is sameas true
@@ -130,7 +130,7 @@
 - name: alb-final.yml
   include: alb-final.yml
   tags:
-  - alb
-  - alb-final
+    - alb
+    - alb-final
   when:
     - alb_manange_all is sameas true

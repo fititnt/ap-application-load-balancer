@@ -1,6 +1,7 @@
 # {{ ansible_managed }}
 # HOST:            {{ ansible_hostname }}
 # FILE:            /etc/haproxy/haproxy.cfg
+# TEMPLATE:        {{ role_path }}/templates/nlb-strategy/haproxy-minimal.cfg.j2
 #
 # HELP:            https://cbonte.github.io/haproxy-dconv/2.0/intro.html
 # HELP:            https://cbonte.github.io/haproxy-dconv/2.0/configuration.html
@@ -51,16 +52,18 @@ defaults
 	errorfile 504 /etc/haproxy/errors/504.http
 
 listen http-in
-    bind *:{{ alb_haproxy_httpport }}
+    bind {{ alb_haproxy_ip }}:{{ alb_haproxy_httpport }}
     server openresty_server1 {{ alb_openresty_ip }}:{{ alb_openresty_httpport }} maxconn 32
 
 listen https-in
     # 'mode tcp' is required if backend is doing the full HTTPS termination
     # @see https://serversforhackers.com/c/using-ssl-certificates-with-haproxy
     mode tcp
-    bind *:{{ alb_haproxy_httpsport }}
+    bind {{ alb_haproxy_ip }}:{{ alb_haproxy_httpsport }}
     server openresty_server1 {{ alb_openresty_ip }}:{{ alb_openresty_httpsport }} maxconn 32
 
-{% if (alb_haproxy_stats_enabled is defined and alb_haproxy_stats_enabled is sameas true) %}
+{% if (alb_haproxy_stats_safetoenable) %}
 {% include "partials/haproxy-stats.cfg.j2" %}
+{% else %}
+# Not including partials/partials/haproxy-stats.cfg.j2
 {% endif %}

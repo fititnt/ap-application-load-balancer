@@ -8,6 +8,9 @@ alb_version_lastrun: -1
 alb_trusted_hosts: "{{ alb_dmz + alb_bastion_hosts + alb_jump_boxes }}"
 alb_trusted_hosts_ips: "{{ alb_trusted_hosts | map(attribute='ip') | list }}"
 
+# This variable is used to calculate if we really can enable HAProxy Stats on this host
+alb_haproxy_stats_safetoenable: "{{ alb_haproxy_stats_enabled is defined and alb_haproxy_stats_enabled is sameas true }}"
+
 # This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
 alb_apps_facts:
   alb_apps: "{{ alb_apps | default(None) }}"
@@ -26,6 +29,21 @@ alb_devtools_facts:
     htop: yes
     multitail: yes
     net_tools: yes
+
+alb_haproxy_facts:
+  template: "{{ alb_haproxy_haproxy_template }}"
+  ip: "{{ alb_haproxy_ip }}"
+  httpport: "{{ alb_haproxy_httpport }}"
+  httpsport: "{{ alb_haproxy_httpsport }}"
+  stats_enabled: "{{ alb_haproxy_stats_enabled }}"
+  stats_safetoenable: "{{ alb_haproxy_stats_safetoenable }}"
+  stats_ip: "{{ alb_haproxy_stats_ip }}"
+  stats_port: "{{ alb_haproxy_stats_port }}"
+  stats_uri: "{{ alb_haproxy_stats_uri }}"
+  stats_realm: "{{ alb_haproxy_stats_realm }}"
+  openresty_ip: "{{ alb_openresty_ip }}"
+  openresty_httpport: "{{ alb_openresty_httpport }}"
+  openresty_httpsport: "{{ alb_openresty_httpsport }}"
 
 # This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
 alb_lastrun_facts:

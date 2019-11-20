@@ -1,4 +1,4 @@
-## nlb-strategy/partials/haproxy-stats.cfg.j2
+# TEMPLATE:        {{ role_path }}/templates/nlb-strategy/partials/partials/haproxy-stats.cfg.j2
 
 # TODO: improve security (fititnt, 2019-11-08 19:10 BRT)
 # @see https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#stats%20uri
@@ -8,16 +8,11 @@ frontend stats
     stats enable
     stats uri {{ alb_haproxy_stats_uri | default('/haproxy?stats') }}
     stats refresh 10s
-{% if (alb_superuser_ip is defined) %}
-# alb_superuser_ip is defined
-{% if (alb_superuser_ip[0] is defined) %}
-    acl network_allowed src 127.0.0.1 {{ alb_superuser_ip }}
-{% else %}
-    acl network_allowed src 127.0.0.1 {{ alb_superuser_ip | join(' ') }}
-{% endif %}
+{% if (alb_trusted_hosts_ips is defined and (alb_trusted_hosts_ips |length > 0) ) %}
+    acl network_allowed src 127.0.0.1 {{ alb_trusted_hosts_ips | join(' ') }}
     block if !network_allowed
 {% else %}
-# alb_superuser_ip is not defined
+# alb_trusted_hosts_ips empty
 {% endif %}
 
 {% if (alb_superuser_auth is defined and alb_superuser_auth[0] is defined) %}

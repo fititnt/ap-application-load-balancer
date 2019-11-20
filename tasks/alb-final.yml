@@ -12,6 +12,7 @@
     src: files/alb_lastrun.fact
     dest: /etc/ansible/facts.d/alb_lastrun.fact
     mode: 0755
+  changed_when: false
   when: (alb_manange_haproxy is sameas true) or (alb_manange_openresty is sameas true) or (alb_manange_ufw is sameas true) or (alb_manange_common is sameas true) or (alb_manange_devtools is sameas true) or (alb_manange_apps is sameas true) or (alb_manange_logrotate is sameas true) 
 
 # Moved to Apps

@@ -175,15 +175,31 @@ alb_apprule_automatichttp_httpsblock: |
 # No variables for ALB Component DevTools
 
 ### AP-ALB Component: HAProxy __________________________________________________
+# vim /etc/haproxy/haproxy.cfg
+alb_haproxy_ip: "*"
+alb_haproxy_httpport: 80
+alb_haproxy_httpsport: 443
+alb_haproxy_haproxy_template: "{{ role_path }}/templates/nlb-strategy/haproxy-minimal.cfg.j2"
+# Check alb_openresty_httpport. HAProxy also consider this variable
+# Check alb_openresty_httpsport. HAProxy also consider this variable
+
+# HAProxy Stats ----------------------------------------------------------------
 alb_haproxy_stats_enabled: no
-alb_haproxy_stats_ip: 0.0.0.0
+alb_haproxy_stats_ip: 0.0.0.0 # 0.0.0.0 means exposed for everyone. Use firewall!
 alb_haproxy_stats_port: 8404
 alb_haproxy_stats_uri: "/haproxy?stats"
-alb_haproxy_stats_realm: "{{ alb_name }}"
+alb_haproxy_stats_realm: "{{ alb_name }}/{{ inventory_hostname }}"
 
 ### AP-ALB Component: Logrotate ________________________________________________
 alb_logrotate_template_alb: "{{ role_path }}/templates/logrotate/alb.j2"
 alb_logrotate_template_alb_apps: "{{ role_path }}/templates/logrotate/alb_apps.j2"
+
+### AP-ALB Component: OpenResty ________________________________________________
+alb_openresty_ip: 127.0.0.1    # Use 0.0.0.0 if want OpenResty exposed (e.g. without HAproxy)
+alb_openresty_httpport: 8080   # Use 80 if want OpenResty exposed (e.g. without HAproxy)
+alb_openresty_httpsport: 4443  # Use 443 if want OpenResty exposed (e.g. without HAproxy)
+
+alb_openresty_pidfile: "/usr/local/openresty/nginx/logs/nginx.pid"
 
 ### AP-ALB Component: UFW  _____________________________________________________
 alb_ssh_port: 22
@@ -237,13 +253,6 @@ alb_ufw_to_ip__default: "any" # allow, deny, limit, reject
 # TODO: move these variables to other places of this file (fititnt, 2019-11-19 07:46)
 
 ## Internal use / Placeholder tags _____________________________________________
-alb_openresty_ip: 127.0.0.1
-# alb_openresty_ip: 0.0.0.0 ## Use this if want to expose openresty
-alb_openresty_httpport: 8080
-alb_openresty_httpsport: 4443
-alb_haproxy_httpport: 80
-alb_haproxy_httpsport: 443
-alb_haproxy_haproxy_template: "{{ role_path }}/templates/nlb-strategy/haproxy-minimal.cfg.j2"
 
 alb_forceignore_haproxy: false
 alb_forceignore_openresty: false
@@ -252,5 +261,3 @@ alb_forceignore_ufw: false
 alb_vars_saveondisk: yes
 
 
-# alb_openresty_pidfile: "/var/run/nginx.pid"
-alb_openresty_pidfile: "/usr/local/openresty/nginx/logs/nginx.pid"

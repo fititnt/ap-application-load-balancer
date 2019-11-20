@@ -37,3 +37,7 @@
     name: haproxy
     state: started
     enabled: yes
+
+- name: haproxy | facts
+  debug:
+    msg: "{{ alb_haproxy_facts }}"
