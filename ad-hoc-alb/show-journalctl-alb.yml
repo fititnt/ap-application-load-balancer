@@ -1,0 +1,46 @@
+---
+# FILE:            {{ role_path }}/ad-hoc-alb/show-alb-hosts-facts.yml
+# LICENSE:         Public Domain
+
+#    ansible-playbook roles/ap-application-load-balancer/ad-hoc-alb/show-journalctl-alb.yml -i hosts.yml
+#    ansible-playbook show-journalctl-alb.yml -i hosts.yml
+#    ssh root@host, then:
+#        sudo journalctl -n 20 -u openresty
+#        sudo journalctl -n 20 -u haproxy
+#        sudo journalctl -n 20 -u ufw
+
+
+- name: "ad-hoc-alb | show-journalctl-alb"
+  hosts: all
+  gather_facts: no
+  tasks:
+
+    - name: "ad-hoc-alb | journalctl -n 20 -u openresty"
+      shell: "journalctl -n 20 -u openresty"
+      become: "yes"
+      changed_when: false
+      register: ad_hoc_alb_journalctl_alb_openresty
+
+    - name: "ad-hoc-alb | journalctl -n 20 -u openresty | result"
+      debug: 
+        msg: "{{ ad_hoc_alb_journalctl_alb_openresty.stdout_lines }}"
+
+    - name: "ad-hoc-alb | journalctl -n 20 -u haproxy"
+      shell: "journalctl -n 20 -u haproxy"
+      become: "yes"
+      changed_when: false
+      register: ad_hoc_alb_journalctl_alb_haproxy
+
+    - name: "ad-hoc-alb | journalctl -n 20 -u haproxy | result"
+      debug: 
+        msg: "{{ ad_hoc_alb_journalctl_alb_haproxy.stdout_lines }}"
+
+    - name: "ad-hoc-alb | journalctl -n 20 -u ufw"
+      shell: "journalctl -n 20 -u ufw"
+      become: "yes"
+      changed_when: false
+      register: ad_hoc_alb_journalctl_alb_ufw
+
+    - name: "ad-hoc-alb | journalctl -n 20 -u ufw | result"
+      debug: 
+        msg: "{{ ad_hoc_alb_journalctl_alb_ufw.stdout_lines }}"

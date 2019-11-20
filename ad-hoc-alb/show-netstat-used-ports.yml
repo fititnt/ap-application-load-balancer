@@ -14,7 +14,7 @@
       shell: "netstat -ntulp"
       become: "yes"
       changed_when: false
-      register: ad_hoc_alb_ufw_status_verbose
+      register: ad_hoc_alb_netstat_ntulp_verbose
 
     - debug: 
-        msg: "{{ ad_hoc_alb_ufw_status_verbose.stdout_lines }}"
+        msg: "{{ ad_hoc_alb_netstat_ntulp_verbose.stdout_lines }}"

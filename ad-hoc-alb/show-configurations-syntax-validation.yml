@@ -1,0 +1,36 @@
+---
+# FILE:            {{ role_path }}/ad-hoc-alb/show-alb-hosts-facts.yml
+# LICENSE:         Public Domain
+
+#    ansible-playbook roles/ap-application-load-balancer/ad-hoc-alb/show-configurations-syntax-validation.yml -i hosts.yml
+#    ansible-playbook show-configurations-syntax-validation.yml -i hosts.yml
+#    ssh root@host, then:
+#        openresty -t
+#        /usr/sbin/haproxy -c -V -f /etc/haproxy/haproxy.cfg
+
+
+- name: "ad-hoc-alb | show-configurations-syntax-validation"
+  hosts: all
+  gather_facts: no
+  tasks:
+
+    - name: "ad-hoc-alb | openresty -t"
+      shell: "openresty -t"
+      become: "yes"
+      changed_when: false
+      register: ad_hoc_alb_configurations_syntax_validation_openresty
+
+    - name: "ad-hoc-alb | openresty -t | result"
+      debug: 
+        msg: "{{ ad_hoc_alb_configurations_syntax_validation_openresty.stderr_lines }}"
+
+    - name: "ad-hoc-alb | /usr/sbin/haproxy -c -V -f /etc/haproxy/haproxy.cfg"
+      shell: "/usr/sbin/haproxy -c -V -f /etc/haproxy/haproxy.cfg"
+      become: "yes"
+      changed_when: false
+      register: ad_hoc_alb_configurations_syntax_validation_haproxy
+
+
+    - name: "ad-hoc-alb | /usr/sbin/haproxy -c -V -f /etc/haproxy/haproxy.cfg | result"
+      debug: 
+        msg: "{{ ad_hoc_alb_configurations_syntax_validation_haproxy.stderr_lines }}"

@@ -53,5 +53,10 @@
     - alb_manange_haproxy is sameas true
     - alb_devtools_facts_deployed is changed
 
+# https://github.com/nicolargo/glances (version on master: Glances 3.1.0, default on Ubuntu 18 is a bit outdated)
+# sudo apt install glances
+# glances --version
+# Glances v2.11.1 with psutil v5.4.2
+
 # @TODO: consider ngxtop https://www.tecmint.com/ngxtop-monitor-nginx-log-files-in-real-time-in-linux/
 #        (fititnt, 2019-11-11 22:18 BRT)
