@@ -15,7 +15,6 @@ alb_manange_ufw: no
 
 ## Optionated (but NOT required) group of tasks.
 alb_manange_common: yes  # hostname, timezone (UTC) [See tasks/common/common.yml]
-alb_manange_devtools: no # net-tools, htop, hatop [tasks/devtools/devtools.yml]
 
 ## Sanity Check run at very beginning
 alb_manange_sanitycheck: yes
@@ -174,9 +173,6 @@ alb_apprule_automatichttp_httpsblock: |
 
 ### AP-ALB Component: Common ___________________________________________________
 # No variables for ALB Component Common
-
-### AP-ALB Component: DevTools _________________________________________________
-# No variables for ALB Component DevTools
 
 ### AP-ALB Component: HAProxy __________________________________________________
 # vim /etc/haproxy/haproxy.cfg

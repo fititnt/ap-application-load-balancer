@@ -1,4 +1,4 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.7.3-alpha
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.7.4-alpha
 AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
@@ -477,18 +477,14 @@ Check [tasks/common/common.yml](tasks/common/common.yml).
 
 ### DevTools
 
-- **To permanently enable management by ALB**
-  - `alb_manange_devtools: yes`
-- **To permanently disable management by ALB**
-  - `alb_manange_devtools: no`
-- **Check Mode ("Dry Run"): only test changes without applying**
-  - `--tags alb-devtools --check`
-  - Example: `ansible-playbook -i hosts main.yml --tags alb-devtools  --check`
+> Until ALB v0.7.3-alpha the DevTools was an ALB component. You can still
+install these features from here <https://github.com/fititnt/infrastructure-as-code-ad-hoc-ansible/blob/master/install/install-debug-tools.yml>
+or whatever you want on your hosts. This section is likely to be moved later
+(fititnt, 2019-11-23 05:35 BRT)
 
-This package is not enabled by default, and is not a requeriment. It's is just
-one optionated suggestion of software to debug.
+This documentation still explains how to use some debug tools in the specific
+context of ALB.
 
-Check [tasks/devtools/devtools.yml](tasks/devtools/devtools.yml).
 
 #### hatop
 > HAtop is only installed if HAproxy is enabled ( `alb_manange_haproxy: yes`),

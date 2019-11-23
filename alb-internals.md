@@ -15,7 +15,6 @@
 - [AP-ALB Component Internals](#ap-alb-component-internals)
     - [Apps](#apps)
     - [Common](#common)
-    - [DevTools](#devtools)
     - [HAProxy](#haproxy)
     - [Logrotate](#logrotate)
     - [OpenResty](#openresty)
@@ -202,10 +201,6 @@ _@TODO improve documentation of NLB Internals (fititnt, 2019-11-08 23:10 BRT)_
 ## Common
 
 - See [README.md#common](README.md#common)
-
-## DevTools
-
-- See [README.md#devtools](README.md#devtools)
 
 ## HAProxy
 

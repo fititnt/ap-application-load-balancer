@@ -38,15 +38,6 @@
     - alb_manange_all is sameas true
     - alb_manange_common is sameas true
 
-- name: "devtools/devtools.yml"
-  include: devtools/devtools.yml
-  tags:
-    - alb
-    - alb-devtools
-  when:
-    - alb_manange_all is sameas true
-    - alb_manange_devtools is sameas true
-
 ## NOTICE: this file is temporary (maybe permanent) disabled, see
 ##         https://github.com/fititnt/ap-application-load-balancer/issues/8#issuecomment-555401930
 ##         (fititnt, 2019-11-19 08:17 BRT)

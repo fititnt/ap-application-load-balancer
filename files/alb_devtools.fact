@@ -1,4 +1,0 @@
-#!/bin/bash
-cat <<EOF
-{{ alb_devtools_facts | to_json }}
-EOF
