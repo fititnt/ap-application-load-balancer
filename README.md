@@ -1,4 +1,4 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.7.4-beta
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.8.0-alpha
 AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
@@ -608,6 +608,11 @@ alb_openresty_httpsport: 443
 `GUI/lua-resty-auto-ssl` used with [OpenResty](#openresty) to allow Automatic
 HTTPS on-the-fly.
 
+These rules afect `GUI/lua-resty-auto-ssl`.
+
+```yaml
+alb_letsencrypt_default: "return true" # the default (last) LUA code if a domain should or not checket for Let's Encrypt Keys. Use "return false" to disable
+```
 See [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl).
 
 ### SanityCheck

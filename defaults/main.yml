@@ -91,8 +91,10 @@ alb_letsencrypt_allow_domain_customlua: |
   -- Note: Inside lua blocks (like this one) "--" is used for start comments
   --       and not "#"
 
-alb_letsencrypt_allow_domain_default: "return true"
+alb_letsencrypt_default: "return true" # the default (last) LUA code if a domain should or not checket for Let's Encrypt Keys. Use "return false" to disable
 # alb_letsencrypt_default: "return false"
+#alb_letsencrypt_allow_domain_default: "return true"
+## alb_letsencrypt_default: "return false"
 
 # alb_apps_serverblock_template is deprecated
 alb_apps_serverblock_template: '{{ role_path }}/templates/openresty/nginx/conf/vhosts/static-site.conf.j2'
@@ -186,6 +188,10 @@ alb_haproxy_stats_ip: 0.0.0.0 # 0.0.0.0 means exposed for everyone. Use firewall
 alb_haproxy_stats_port: 8404
 alb_haproxy_stats_uri: "/haproxy?stats"
 alb_haproxy_stats_realm: "{{ alb_name }}: {{ inventory_hostname }}"
+alb_haproxy_stats_trusted_hosts_only: true # true means not even ask credential from untrusted hosts
+alb_haproxy_stats_trusted_hosts_skip_auth_check: false # To be implemented (fititnt, 2019-11-23 11:36 BRT)
+
+# @TODO implement way to allow only ask auth in HAProxy Stats if from untrusted hosts (fititnt, 2019-11-23 11:42 BRT)
 
 ### AP-ALB Component: Logrotate ________________________________________________
 alb_logrotate_template_alb: "{{ role_path }}/templates/logrotate/alb.j2"

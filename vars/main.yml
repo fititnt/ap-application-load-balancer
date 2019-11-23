@@ -1,6 +1,6 @@
 ---
 # vars file for ap-application-load-balancer
-alb_version: "v0.7.4-beta"
+alb_version: "v0.8.0-alpha"
 alb_version_lastrun: -1
 
 ### ALB Internal Variables: Mixed usage ________________________________________
@@ -41,6 +41,8 @@ alb_haproxy_facts:
   httpsport: "{{ alb_haproxy_httpsport }}"
   stats_enabled: "{{ alb_haproxy_stats_enabled }}"
   stats_safetoenable: "{{ alb_haproxy_stats_safetoenable }}"
+  stats_trusted_hosts_only: "{{ alb_haproxy_stats_trusted_hosts_only }}"
+  stats_trusted_hosts_skip_auth_check: "{{ alb_haproxy_stats_trusted_hosts_skip_auth_check }}" # To be implemented (fititnt, 2019-11-23 11:36 BRT)
   stats_ip: "{{ alb_haproxy_stats_ip }}"
   stats_port: "{{ alb_haproxy_stats_port }}"
   stats_uri: "{{ alb_haproxy_stats_uri }}"
