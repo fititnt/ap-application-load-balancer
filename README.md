@@ -1,4 +1,4 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.7.4-alpha
+# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.7.4-beta
 AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
@@ -71,11 +71,6 @@ humanitarian or commercial projects from who help we on Etica.AI.
             - [proxy](#proxy)
             - [raw](#raw)
     - [Common](#common)
-    - [DevTools](#devtools)
-        - [hatop](#hatop)
-        - [htop](#htop)
-        - [multitail](#multitail)
-        - [netstat](#netstat)
     - [HAProxy](#haproxy)
         - [HAProxy stats page](#haproxy-stats-page)
         - [HAProxy TLS Termination](#haproxy-tls-termination)
@@ -259,7 +254,7 @@ for a overview is:
 
 ```yaml
 ### AP-ALB Components overview _________________________________________________
-# The defaults of v0.7.0+ will use: Apps, Common, HAProxy, Logrotate, OpenResty
+# The defaults of v0.7.4+ will use: Apps, HAProxy, Logrotate, OpenResty
 # You can enable/disable components. Or explicity enforce on your configuration
 alb_manange_all: yes
 alb_manange_haproxy: yes
@@ -267,14 +262,15 @@ alb_manange_openresty: yes
 alb_manange_ufw: no
 
 ## Optionated (but NOT required) group of tasks.
-alb_manange_common: yes  # hostname, timezone (UTC) [See tasks/common/common.yml]
-alb_manange_devtools: no # net-tools, htop, hatop [tasks/devtools/devtools.yml]
+alb_manange_common: no  # hostname, timezone (UTC) [See tasks/common/common.yml]
 
+## Sanity Check run at very beginning
 alb_manange_sanitycheck: yes
 
 ## Note: the next options is better leave it alone
 alb_manange_apps: "{{ alb_manange_openresty }}"
 alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
+
 ```
 
 ---
@@ -285,7 +281,7 @@ alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
   - _"AP-ALB Components: shared options"_ section
 - :information_source: [vars/main.yml](vars/main.yml)
   - Some components may use variables that are not on defaults, like
-    `alb_trusted_hosts: "{{ alb_dmz + alb_bastion_hosts + alb_jump_boxes }}"`.
+    `alb_trusted_hosts: "{{ alb_dmz + alb_bastion_hosts }}"`.
     This may be the second place to review for security issues on your context.
 
 **Shared options** are how we call variable conventions that could be used as
@@ -368,7 +364,7 @@ alb_jump_boxes:
 
 > Tip: `apps` requires [OpenResty](#openresty).
 
-- **To permanently enable management by ALB**
+- **To permanently enable management by ALB <sup>(default)</sup>**
   - `alb_manange_apps: yes`
     - `alb_manange_openresty: yes` <sup>(Charlie Foxtrot when not enabled)</sup>
 - **To permanently disable management by ALB**
@@ -465,69 +461,19 @@ See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
 
 - **To permanently enable management by ALB**
   - `alb_manange_common: yes`
-- **To permanently disable management by ALB**
+- **To permanently disable management by ALB <sup>(default)</sup>**
   - `alb_manange_common: no`
 - **Check Mode ("Dry Run"): only test changes without applying**
   - `--tags alb-common --check`
   - Example: `ansible-playbook -i hosts main.yml --tags alb-common  --check`
 
-This optionated package is enabled by default, but is not a requeriment.
+This optionated package is enabled by default and is not a requeriment.
 
 Check [tasks/common/common.yml](tasks/common/common.yml).
 
-### DevTools
-
-> Until ALB v0.7.3-alpha the DevTools was an ALB component. You can still
-install these features from here <https://github.com/fititnt/infrastructure-as-code-ad-hoc-ansible/blob/master/install/install-debug-tools.yml>
-or whatever you want on your hosts. This section is likely to be moved later
-(fititnt, 2019-11-23 05:35 BRT)
-
-This documentation still explains how to use some debug tools in the specific
-context of ALB.
-
-
-#### hatop
-> HAtop is only installed if HAproxy is enabled ( `alb_manange_haproxy: yes`),
-  e.g. only enabling devtools (`alb_manange_devtools: yes`) is not sufficient
-
-```bash
-hatop -s /run/haproxy/admin.sock
-```
-See <http://feurix.org/projects/hatop/>
-
-#### htop
-
-```bash
-htop
-```
-See <https://hisham.hm/htop/>.
-
-#### multitail
-
-```bash
-
-# This command will always work on a new installed ALB with OpenResty or Apps enabled
-multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log
-
-# This is how you watch logs only for an `app_uid: APPNAMEHERE`
-multitail -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/APPNAMEHERE/error.log
-
-# This is how you watch logs only for an `app_uid: APPNAMEHERE` and all other important logs of ALB
-multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/APPNAMEHERE/error.log
-```
-
-See <https://www.vanheusden.com/multitail/examples.php>.
-
-#### netstat
-
-```bash
-# Show open ports
-sudo netstat -ntulp
-```
-
 ### HAProxy
 
-- **To permanently enable management by ALB**
+- **To permanently enable management by ALB <sup>(default)</sup>**
   - `alb_manange_haproxy: yes`
 - **To permanently disable management by ALB**
   - `alb_manange_haproxy: no`
@@ -545,7 +491,65 @@ Please check [NLB Internals](nlb-internals.md) <sup>(working draft)</sup>.
 
 #### HAProxy stats page
 
-> _@TODO add quick guide on HAProxy stats page here (fititnt, 2019-11-11 02:01 BRT_
+- **To permanently enable management by ALB**
+  - `alb_haproxy_stats_enabled: yes`
+    - `alb_manange_haproxy: yes` <sup>(HAProxy Stats depends of HAProxy)</sup>
+- **To permanently disable management by ALB <sup>(default)</sup>**
+  - `alb_haproxy_stats_enabled: no`
+
+
+Please also check Check [defaults/main.yml](defaults/main.yml) section
+`# AP-ALB Component: HAProxy | HAProxy Stats`.
+
+Here a full example that will make you access HAProxy Status page from a host
+example.com at <http://example.com:8404/haproxy?stats> from very specific IPs
+and requiring user and passwords from `alb_auth_users`.
+
+```yaml
+alb_manange_haproxy: yes
+
+alb_haproxy_stats_enabled: yes
+alb_haproxy_stats_ip: 0.0.0.0 # 0.0.0.0 means exposed for everyone. Use firewall!
+alb_haproxy_stats_port: 8404
+alb_haproxy_stats_uri: "/haproxy?stats"
+alb_haproxy_stats_realm: "{{ alb_name }}: {{ inventory_hostname }}"
+
+# If informed, HAProxy Stats page will allow access from alb_trusted_hosts_ips:
+# (localhost + alb_dmz + alb_bastion_hosts) [Does not include alb_jump_boxes]
+alb_dmz:
+  - ip: 167.86.127.220
+    name: apps_server_apalbdemo
+  - ip: 167.86.127.225
+    name: db_server_apalbdemo
+alb_bastion_hosts:
+  - ip: 177.126.157.169
+    name: aguia-pescadora-delta.etica.ai
+
+# If informed, HAProxy Stats page will require require user and password from alb_auth_users
+alb_auth_users:
+  - username: Admin1
+    password: "plain-password"
+  - username: Admin2
+    password: "plain-password2"
+  - username: SuperUser2
+    password: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      62313365396662343061393464336163383764373764613633653634306231386433626436623361
+      6134333665353966363534333632666535333761666131620a663537646436643839616531643561
+      63396265333966386166373632626539326166353965363262633030333630313338646335303630
+      3438626666666137650a353638643435666633633964366338633066623234616432373231333331
+      6564
+
+
+# As ALB 0.7.4, without further customizations, if both alb_trusted_hosts_ips
+# and alb_auth_users are provided, even from these IPs you is required to
+# provide a password
+```
+
+> Security information: Even if you do not have [UFW](#ufw) enabled and forgot
+to setup your own firewall (or use one from your cloud privider) the default
+behavior of ALB stats page is still require the result of `alb_trusted_hosts_ips`
+(this result is defined on [vars/main.yml](vars/main.yml)).
 
 #### HAProxy TLS Termination
 
@@ -638,8 +642,6 @@ via human mistakes on ALB configurations.
 - **To temporarily only skips ALB/UFW tasks**
   - `--skip-tags alb-ufw`
   - Example: `ansible-playbook -i hosts main.yml --skip-tags alb-ufw`
-
-See also [Firewall Internals](firewall-internals.md) <sup>(working draft)</sup>.
 
 ```yaml
 

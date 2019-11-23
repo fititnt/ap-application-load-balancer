@@ -53,14 +53,58 @@ configuration only because is easier for who will deal on most cases. But from
 some types of DDoS to some more low level network load balancing definely
 HAproxy is better option.
 
+## DevTools
+
+> Until ALB v0.7.3-alpha the DevTools was an ALB component. You can still
+install these features from here <https://github.com/fititnt/infrastructure-as-code-ad-hoc-ansible/blob/master/install/install-debug-tools.yml>
+or whatever you want on your hosts. This section is likely to be moved later
+(fititnt, 2019-11-23 05:35 BRT)
+
+This documentation still explains how to use some debug tools in the specific
+context of ALB.
+
+
+#### hatop
+> HAtop is only installed if HAproxy is enabled ( `alb_manange_haproxy: yes`),
+  e.g. only enabling devtools (`alb_manange_devtools: yes`) is not sufficient
+
+```bash
+hatop -s /run/haproxy/admin.sock
+```
+See <http://feurix.org/projects/hatop/>
+
+#### htop
+
+```bash
+htop
+```
+See <https://hisham.hm/htop/>.
+
+#### multitail
+
+```bash
+
+# This command will always work on a new installed ALB with OpenResty or Apps enabled
+multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log
+
+# This is how you watch logs only for an `app_uid: APPNAMEHERE`
+multitail -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/APPNAMEHERE/error.log
+
+# This is how you watch logs only for an `app_uid: APPNAMEHERE` and all other important logs of ALB
+multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/APPNAMEHERE/error.log
+```
+
+See <https://www.vanheusden.com/multitail/examples.php>.
+
+#### netstat
+
+```bash
+# Show open ports
+sudo netstat -ntulp
+```
+
 <!--
 https://www.digitalocean.com/community/tutorials/how-to-upgrade-nginx-in-place-without-dropping-client-connections
--->
-
-<!--
-## IN CASE OF EMERGENGY IN PRODUCTION
-
-> IMPORTANT:
 -->
 
 ## Generic

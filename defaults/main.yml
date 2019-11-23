@@ -6,7 +6,7 @@ alb_hide_alb: yes
 alb_forcedebug: no
 
 ### AP-ALB Components overview _________________________________________________
-# The defaults of v0.7.0 will use: Apps, Common, HAProxy, Logrotate, OpenResty
+# The defaults of v0.7.4+ will use: Apps, HAProxy, Logrotate, OpenResty
 # You can enable/disable components. Or explicity enforce on your configuration
 alb_manange_all: yes
 alb_manange_haproxy: yes
@@ -14,7 +14,7 @@ alb_manange_openresty: yes
 alb_manange_ufw: no
 
 ## Optionated (but NOT required) group of tasks.
-alb_manange_common: yes  # hostname, timezone (UTC) [See tasks/common/common.yml]
+alb_manange_common: no  # hostname, timezone (UTC) [See tasks/common/common.yml]
 
 ## Sanity Check run at very beginning
 alb_manange_sanitycheck: yes
@@ -41,9 +41,6 @@ alb_auth_users: []
 #       63396265333966386166373632626539326166353965363262633030333630313338646335303630
 #       3438626666666137650a353638643435666633633964366338633066623234616432373231333331
 #       6564
-
-# alb_superuser_ip: null                 # deprecated
-# alb_superuser_autodiscoveripnull: yes  # deprecated
 
 ## @see https://en.wikipedia.org/wiki/DMZ_(computing)
 ## ALB/UFW will use alb_dmz to make all traffic FROM/TO to this machine free
@@ -183,7 +180,7 @@ alb_haproxy_haproxy_template: "{{ role_path }}/templates/nlb-strategy/haproxy-mi
 # Check alb_openresty_httpport. HAProxy also consider this variable
 # Check alb_openresty_httpsport. HAProxy also consider this variable
 
-# HAProxy Stats ----------------------------------------------------------------
+# AP-ALB Component: HAProxy | HAProxy Stats ------------------------------------
 alb_haproxy_stats_enabled: no
 alb_haproxy_stats_ip: 0.0.0.0 # 0.0.0.0 means exposed for everyone. Use firewall!
 alb_haproxy_stats_port: 8404
