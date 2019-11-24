@@ -58,16 +58,19 @@
   include: allow-dmz.yml
   when:
     - alb_ufw_facts_deployed is changed
+    - alb_ufw_autoapply_dmz is sameas true
 
 - name: ufw | allow-bastion-hosts.yml
   include: allow-bastion-hosts.yml
   when:
     - alb_ufw_facts_deployed is changed
+    - alb_ufw_autoapply_bastion_hosts is sameas true
 
 - name: ufw | allow-jump-boxes.yml
   include: allow-jump-boxes.yml
   when:
     - alb_ufw_facts_deployed is changed
+    - alb_ufw_autoapply_jump_boxes is sameas true
 
 - name: ufw | default-policies.yml
   include: default-policies.yml

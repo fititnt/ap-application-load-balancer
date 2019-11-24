@@ -73,8 +73,11 @@ alb_lastrun_facts:
 
   # This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
 alb_ufw_facts:
-  alb_ufw_rules: "{{ alb_ufw_rules | default(None) }}"
-  alb_ufw_rules_always: "{{ alb_ufw_rules_always | default(None) }}"
-  alb_dmz: "{{ alb_dmz | default(None) }}"
-  alb_bastion_hosts: "{{ alb_bastion_hosts | default(None) }}"
-  alb_jump_boxes: "{{ alb_jump_boxes | default(None) }}"
+  rules: "{{ alb_ufw_rules | default(None) }}"
+  rules_always: "{{ alb_ufw_rules_always | default(None) }}"
+  dmz: "{{ alb_dmz | default(None) }}"
+  bastion_hosts: "{{ alb_bastion_hosts | default(None) }}"
+  jump_boxes: "{{ alb_jump_boxes | default(None) }}"
+  autoapply_dmz: "{{ alb_ufw_autoapply_dmz | default(None) }}"
+  autoapply_bastion_hosts: "{{ alb_ufw_autoapply_bastion_hosts | default(None) }}"
+  autoapply_jump_boxes: "{{ alb_ufw_autoapply_jump_boxes | default(None) }}"

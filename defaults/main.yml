@@ -267,6 +267,10 @@ alb_ufw_state__default: enabled
 alb_ufw_rule__default: "allow" # allow, deny, limit, reject
 alb_ufw_to_ip__default: "any" # allow, deny, limit, reject
 
+alb_ufw_autoapply_dmz: yes           # no: ALB/UFW ignore alb_dmz: []
+alb_ufw_autoapply_bastion_hosts: yes # no: ALB/UFW ignore alb_bastion_hosts: []
+alb_ufw_autoapply_jump_boxes: yes    # no: ALB/UFW ignore alb_jump_boxes: []
+
 #### ======================================================================= ###
 # TODO: move these variables to other places of this file (fititnt, 2019-11-19 07:46)
 

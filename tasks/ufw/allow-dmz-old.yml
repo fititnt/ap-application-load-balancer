@@ -1,0 +1,27 @@
+---
+
+- name: "ufw | allow-dmz | prepare ips"
+  set_fact:
+    alb_dmz_allips: "{{ alb_dmz | map(attribute='ip') | list }}"
+
+- name: "ufw | allow-dmz: FROM {{ alb_dmz }}"
+  ufw:
+    rule: "{{ item.rule | default('allow') }}"
+    from: "{{ item.ip | default(item) }}"
+    to: "{{ item.ip }}"
+    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('DMZ FROM ' + item.name | default(ansible_loop.index0 | string)) }}"
+  loop: "{{ alb_dmz }}"
+  loop_control:
+    extended: yes
+  when: "alb_dmz is defined"
+
+- name: "ufw | allow-dmz: TO {{ alb_dmz }}"
+  ufw:
+    rule: "{{ item.rule | default('allow') }}"
+    dest: "{{ item.ip | default(item) }}"
+    delete: "{{ item.delete | default('no')}}"
+    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('DMZ TO ' + item.name | default(ansible_loop.index0 | string)) }}"
+  loop: "{{ alb_dmz }}"
+  loop_control:
+    extended: yes
+  when: "alb_dmz is defined"
