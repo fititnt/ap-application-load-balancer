@@ -16,7 +16,7 @@
     name: 'haproxy=2.0.*'
     state: 'present'
 
-- name: haproxy | /etc/haproxy/haproxy.cfg
+- name: "haproxy | /etc/haproxy/haproxy.cfg 2"
   template:
     # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
     src: "{{ alb_haproxy_haproxy_template }}"
