@@ -1,46 +1,105 @@
 ---
 
+- name: "ufw | allow-dmz | alb_dmz_withtargets copy"
+  set_fact:
+     alb_dmz_withtargets: "{{ alb_dmz }}"
+
+- name: "ufw | allow-dmz | alb_dmz_withtargets append targets"
+  set_fact:
+    alb_dmz_withtargets: "{{ alb_dmz_withtargets | combine({'targets': item}) }}"
+  with_items: "{{ alb_dmz }}"
+
+#- name: "ufw | allow-dmz | alb_dmz_withtargets append targets 2"
+#  set_fact:
+#    alb_dmz_withtargets2: "{{ (alb_dmz_withtargets2 | default({})) + (item | combine({'targets': item})) }}"
+#  with_items: "{{ alb_dmz }}"
+
 - debug:
     msg: "{{ alb_dmz }}"
 - debug:
-    msg: "{{ alb_dmz | list}}"
+    msg: "{{ alb_dmz_withtargets }}"
+#- debug:
+#    msg: "{{ alb_dmz_withtargets2 }}"
 
-- debug:
-    msg: "{{ alb_dmz + alb_dmz }}"
+# @TODO create targets field dinamicaly. Maybe with this reference https://serverfault.com/a/819752/175334 (fititnt, 2019-11-24 14:01 BRT)
 
-- name: "ufw | allow-dmz | prepare ips"
-  set_fact:
-    alb_dmz_allips: "{{ alb_dmz | map(attribute='ip') | list }}"
+## This file now expect a value like this
+# alb_dmz:
+#   - ip: 173.249.10.99
+#     name: aguia-pescadora-delta.etica.ai
+#     targets:
+#       - ip: 173.249.10.99
+#         name: aguia-pescadora-delta.etica.ai
+#       - ip: 167.86.127.220
+#         name: aguia-pescadora-echo.etica.ai
+#       - ip: 167.86.127.225
+#         name: aguia-pescadora-foxtrot.etica.ai
+#   - ip: 167.86.127.220
+#     name: aguia-pescadora-echo.etica.ai
+#     targets:
+#       - ip: 173.249.10.99
+#         name: aguia-pescadora-delta.etica.ai
+#       - ip: 167.86.127.220
+#         name: aguia-pescadora-echo.etica.ai
+#       - ip: 167.86.127.225
+#         name: aguia-pescadora-foxtrot.etica.ai
+#   - ip: 167.86.127.225
+#     name: aguia-pescadora-foxtrot.etica.ai
+#     targets:
+#       - ip: 173.249.10.99
+#         name: aguia-pescadora-delta.etica.ai
+#       - ip: 167.86.127.220
+#         name: aguia-pescadora-echo.etica.ai
+#       - ip: 167.86.127.225
+#         name: aguia-pescadora-foxtrot.etica.ai
 
-- name: "ufw | allow-dmz | alb_dmz2"
-  set_fact:
-    alb_dmz2: "{{ item | combine( { 'targets': item } ) }}"
-  with_items: "{{ alb_dmz }}"
+# - debug:
+#     msg: "{{ alb_dmz }}"
+# - debug:
+#     msg: "{{ alb_dmz | list}}"
 
-- debug:
-    msg: "{{ alb_dmz2 }}"  
+# - debug:
+#     msg: "{{ alb_dmz + alb_dmz }}"
 
-- name: "ufw | allow-dmz: FROM "
+# - name: "ufw | allow-dmz | prepare ips"
+#   set_fact:
+#     alb_dmz_allips: "{{ alb_dmz | map(attribute='ip') | list }}"
+
+# - name: "ufw | allow-dmz | alb_dmz2"
+#   set_fact:
+#     alb_dmz2: "{{ item | combine( { 'targets': item } ) }}"
+#   with_items: "{{ alb_dmz }}"
+
+# - debug:
+#     msg: "{{ alb_dmz2 }}"
+
+- name: "ufw | allow-dmz: allow"
   ufw:
-    rule: "{{ item[0].rule | default('allow') }}"
-    from: "{{ item[0].ip }}"
-    to: "{{ item[1].ip }}"
-    comment: "{{ alb_ufw_commentprefix }}{{ item[0].comment | default('DMZ FROM ' + item[0].name | default(item[0].ip)) }}"
+    rule: "allow"
+    from_ip: "{{ item.0.ip }}"
+    to_ip: "{{ item.1.ip }}"
+    comment: "{{ alb_ufw_commentprefix }}{{ 'DMZ ' + (item.0.name | default(item.0.ip)) }}"
   with_subelements:
-    alb_dmz
-    alb_dmz
-  #loop: "{{ alb_dmz }}"
-  #loop_control:
-  #  extended: yes
-  # when: "alb_dmz is defined"
+    - "{{ alb_dmz }}"
+    - targets
 
-- name: "ufw | allow-dmz: TO {{ alb_dmz }}"
-  ufw:
-    rule: "{{ item.rule | default('allow') }}"
-    dest: "{{ item.ip | default(item) }}"
-    delete: "{{ item.delete | default('no')}}"
-    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('DMZ TO ' + item.name | default(ansible_loop.index0 | string)) }}"
-  loop: "{{ alb_dmz }}"
-  loop_control:
-    extended: yes
-  when: "alb_dmz is defined"
+#- name: "ufw | allow-dmz: TO"
+#  ufw:
+#    rule: "allow"
+#    from_ip: "{{ item.1.ip }}"
+#    to_ip: "{{ item.0.ip }}"
+#    comment: "{{ alb_ufw_commentprefix }}{{ 'DMZ TO ' + (item.0.name | default(item.0.ip)) }}"
+#  with_subelements:
+#    - "{{ alb_dmz }}"
+#    - targets
+
+#- name: "ufw | allow-dmz: TO {{ alb_dmz }}"
+#  ufw:
+#    rule: "{{ item.rule | default('allow') }}"
+#    dest: "{{ item.ip | default(item) }}"
+#    delete: "{{ item.delete | default('no')}}"
+#    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('DMZ TO ' + item.name | default(ansible_loop.index0 | string)) }}"
+#  loop: "{{ alb_dmz }}"
+#  loop_control:
+#    extended: yes
+#  when: "alb_dmz is defined"
