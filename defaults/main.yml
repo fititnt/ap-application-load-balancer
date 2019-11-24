@@ -183,6 +183,20 @@ alb_haproxy_haproxy_template: "{{ role_path }}/templates/nlb-strategy/haproxy-st
 # Check alb_openresty_httpport. HAProxy also consider this variable
 # Check alb_openresty_httpsport. HAProxy also consider this variable
 
+
+nlb_raw_top: |
+    # Customize variable nlb_raw_end to add at the top of /etc/haproxy/haproxy.cfg
+
+## If variable nlb_raw_global is defined it will REPLACE the global at /etc/haproxy/haproxy.cfg
+# nlb_raw_global:
+
+## If variable nlb_raw_defaults is defined it will REPLACE the default at /etc/haproxy/haproxy.cfg
+# nlb_raw_defaults:
+
+nlb_raw_bottom: |
+    # Customize variable nlb_raw_end to add at the bottom of /etc/haproxy/haproxy.cfg
+
+
 # AP-ALB Component: HAProxy | HAProxy Stats ------------------------------------
 alb_haproxy_stats_enabled: no
 alb_haproxy_stats_ip: 0.0.0.0 # 0.0.0.0 means exposed for everyone. Use firewall!

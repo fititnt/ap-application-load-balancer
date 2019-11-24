@@ -21,6 +21,11 @@ alb_haproxy_stats_realm_escaped: "{{ alb_haproxy_stats_realm | regex_replace(' '
 # alb_haproxy_stats_realm: "{{ alb_haproxy_stats_realm | split(' ') | join('\ ') }}" # HAproxy requires escape " " with "\ "
 
 
+nlb_listen_all: "{{ }}"
+
+nlb_listen_openresty_safetoenable: yes
+nlb_listen_redis_safetoenable: yes
+
 ### ALB Internal Variables: Facts ______________________________________________
 
 # This result will be stored at /etc/ansible/facts.d/alb_ufw.fact

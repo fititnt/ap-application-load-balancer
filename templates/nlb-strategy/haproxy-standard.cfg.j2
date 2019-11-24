@@ -13,6 +13,11 @@
 # To use HATop, use
 # hatop -s /run/haproxy/admin.sock
 
+{{ nlb_raw_top }}
+
+## If variable nlb_raw_global is defined it will REPLACE the global at /etc/haproxy/haproxy.cfg
+{% if (nlb_raw_global is undefined) %}
+# nlb_raw_global is undefined
 global
 	log /dev/log	local0
 	log /dev/log	local1 notice
@@ -34,7 +39,15 @@ global
 	#  https://mozilla.github.io/server-side-tls/ssl-config-generator/?server=haproxy
 	ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:RSA+AESGCM:RSA+AES:!aNULL:!MD5:!DSS
 	ssl-default-bind-options no-sslv3
+{% else %}
+# nlb_raw_global is defined
+{{ nlb_raw_global }}
+{% endif %}
 
+
+## If variable nlb_raw_defaults is defined it will REPLACE the default at /etc/haproxy/haproxy.cfg
+{% if (nlb_raw_defaults is undefined) %}
+# nlb_raw_defaults is undefined
 defaults
 	log	global
 	mode	http
@@ -50,20 +63,28 @@ defaults
 	errorfile 502 /etc/haproxy/errors/502.http
 	errorfile 503 /etc/haproxy/errors/503.http
 	errorfile 504 /etc/haproxy/errors/504.http
+{% else %}
+# nlb_raw_defaults is defined
+{{ nlb_raw_defaults }}
+{% endif %}
 
-listen http-in
-    bind {{ alb_haproxy_ip }}:{{ alb_haproxy_httpport }}
-    server openresty_server1 {{ alb_openresty_ip }}:{{ alb_openresty_httpport }} maxconn 32
 
-listen https-in
-    # 'mode tcp' is required if backend is doing the full HTTPS termination
-    # @see https://serversforhackers.com/c/using-ssl-certificates-with-haproxy
-    mode tcp
-    bind {{ alb_haproxy_ip }}:{{ alb_haproxy_httpsport }}
-    server openresty_server1 {{ alb_openresty_ip }}:{{ alb_openresty_httpsport }} maxconn 32
+{% if (nlb_listen_openresty_safetoenable) %}
+{% include "partials/listen-openresty.cfg.j2" %}
+{% else %}
+# Not including partials/listen-openresty.cfg.j2
+{% endif %}
+
+{% if (nlb_listen_redis_safetoenable) %}
+{% include "partials/listen-redis.cfg.j2" %}
+{% else %}
+# Not including partials/listen-redis.cfg.j2
+{% endif %}
 
 {% if (alb_haproxy_stats_safetoenable) %}
 {% include "partials/haproxy-stats.cfg.j2" %}
 {% else %}
 # Not including partials/partials/haproxy-stats.cfg.j2
 {% endif %}
+
+{{ nlb_raw_bottom }}
