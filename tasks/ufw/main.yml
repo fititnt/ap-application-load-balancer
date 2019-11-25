@@ -1,6 +1,19 @@
 ---
 # tasks/ufw/main.yml
 
+- name: "ufw | allow-dmz | alb_dmz222"
+  set_fact:
+    # alb_dmz2: "{{ (alb_dmz2 | default({}) | list) + (item | combine({ 'targets': item }) | list) }}"
+    # alb_dmz2: "{{ (alb_dmz2 | default([])) + [(item | combine({ 'targets2': item }))] }}"
+    # alb_dmz2: "{{ (alb_dmz2 | default({})) + [(item | combine({ 'targets': item }))] }}"
+    alb_dmz2: "{{ (alb_dmz2 | default([])) + [(item | combine({ 'targets2': item }))] }}"
+    # alb_dmz2: "{{ (alb_dmz2 | default([])) + [(item.ip == item.ip) | ternary((item | combine({ 'targets2': item })), []) ] }}"
+  with_items: "{{ alb_dmz }}"
+
+- name: "alb_dmz2alb_dmz2"
+  debug:
+    msg: "{{ alb_dmz2 }}"
+
 - name: /etc/ansible/facts.d/alb_ufw.fact
   template:
     src: files/alb_ufw.fact
@@ -15,24 +28,24 @@
   changed_when: false
   register: ufw_status_verbose1
   when:
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: "ufw | ufw status verbose print (before)"
   debug: var=ufw_status_verbose1.stdout_lines
   when:
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: ufw | install-ufw.yml
   include: install-ufw.yml
   when:
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: ufw | ufw-reset.yml
   include: ufw-reset.yml
   when:
     - "alb_ufw_canreset is defined and alb_ufw_canreset is sameas true"
     - "alb_ufw_reset is defined and alb_ufw_canreset is sameas true"
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: "ufw | Rules alb_ufw_rules_always"
   include: rules.yml
@@ -42,7 +55,7 @@
     name_of_rules: "alb_ufw_rules_always"
   when:
     - "alb_ufw_rules_always is defined"
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: "ufw | Rules alb_ufw_rules"
   include: rules.yml
@@ -52,30 +65,30 @@
     name_of_rules: "alb_ufw_rules"
   when:
     - "alb_ufw_rules is defined"
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: ufw | allow-dmz.yml
   include: allow-dmz.yml
   when:
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
     - alb_ufw_autoapply_dmz is sameas true
 
 - name: ufw | allow-bastion-hosts.yml
   include: allow-bastion-hosts.yml
   when:
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
     - alb_ufw_autoapply_bastion_hosts is sameas true
 
 - name: ufw | allow-jump-boxes.yml
   include: allow-jump-boxes.yml
   when:
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
     - alb_ufw_autoapply_jump_boxes is sameas true
 
 - name: ufw | default-policies.yml
   include: default-policies.yml
   when:
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 ## @see https://github.com/ansible/ansible/issues/45446
 
@@ -87,7 +100,7 @@
     sysctl_set: yes
     reload: yes
   when:
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 # TASK [ap-application-load-balancer : Configure the kernel to keep connections alive when enabling the firewall] ********************
 #  [WARNING]: The value 1 (type int) in a string field was converted to '1' (type string). If this does not look like what you
@@ -103,7 +116,7 @@
   ufw:
     state: "enabled"
   when:
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 ## ufw status verbose  (after) ________________________________________________
 - name: "ufw | ufw status verbose (after)"
@@ -112,9 +125,9 @@
   changed_when: false
   register: ufw_status_verbose2
   when:
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: "ufw | ufw status verbose print (after)"
   debug: var=ufw_status_verbose2.stdout_lines
   when:
-    - alb_ufw_facts_deployed is changed
+    - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"

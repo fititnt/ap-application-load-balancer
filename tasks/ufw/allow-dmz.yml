@@ -1,21 +1,47 @@
 ---
 
-- name: "ufw | allow-dmz | alb_dmz_withtargets copy"
-  set_fact:
-     alb_dmz_withtargets: "{{ alb_dmz }}"
+#- name: "ufw | allow-dmz | alb_dmz_withtargets copy"
+#  set_fact:
+#     alb_dmz_withtargets: "{{ alb_dmz }}"
 
-- name: "ufw | allow-dmz | alb_dmz_withtargets append targets"
+- name: "ufw | allow-dmz | alb_dmz_withtargets based on alb_dmz (including duplicated)"
   set_fact:
-    alb_dmz_withtargets: "{{ alb_dmz_withtargets | combine({'targets': item}) }}"
+    # alb_dmz_withtargets: "{{ alb_dmz_withtargets | combine({'targets': item}) }}"
+    alb_dmz_withtargets: "{{ (alb_dmz_withtargets | default([])) + [(item | combine({ 'targets': alb_dmz }))] }}"
   with_items: "{{ alb_dmz }}"
+
+
+# - name: "ufw | allow-dmz | alb_dmz222"
+#   set_fact:
+#     # alb_dmz2: "{{ (alb_dmz2 | default({}) | list) + (item | combine({ 'targets': item }) | list) }}"
+#     # alb_dmz2: "{{ (alb_dmz2 | default([])) + [(item | combine({ 'targets2': item }))] }}"
+#     # alb_dmz2: "{{ (alb_dmz2 | default({})) + [(item | combine({ 'targets': item }))] }}"
+#     alb_dmz2: "{{ (alb_dmz2 | default([])) + [(item | combine({ 'targets2': item }))] }}"
+#     # alb_dmz2: "{{ (alb_dmz2 | default([])) + [(item.ip == item.ip) | ternary((item | combine({ 'targets2': item })), []) ] }}"
+#   with_items: "{{ alb_dmz }}"
+
+# - name: "ufw | allow-dmz | alb_dmz222"
+#   set_fact:
+#     # alb_dmz2: "{{ (alb_dmz2 | default({}) | list) + (item | combine({ 'targets': item }) | list) }}"
+#     alb_dmz2: "{{ [(alb_dmz2 | default({}))] + [(item | combine({ 'targets': item }))] }}"
+#     # alb_dmz2: "{{ (alb_dmz2 | default({})) + [(item | combine({ 'targets': item }))] }}"
+#   with_items: "{{ alb_dmz }}"
+
+# - name: "alb_dmz2alb_dmz2"
+#   debug:
+#     msg: "{{ alb_dmz2 }}"
+
+# - name: "aaaaaaa"
+#   debug:
+#     msg: "{{ alb_dmz[0].items() | list }}"
 
 #- name: "ufw | allow-dmz | alb_dmz_withtargets append targets 2"
 #  set_fact:
 #    alb_dmz_withtargets2: "{{ (alb_dmz_withtargets2 | default({})) + (item | combine({'targets': item})) }}"
 #  with_items: "{{ alb_dmz }}"
 
-- debug:
-    msg: "{{ alb_dmz }}"
+# - debug:
+#     msg: "{{ alb_dmz }}"
 - debug:
     msg: "{{ alb_dmz_withtargets }}"
 #- debug:
@@ -65,22 +91,14 @@
 #   set_fact:
 #     alb_dmz_allips: "{{ alb_dmz | map(attribute='ip') | list }}"
 
-# - name: "ufw | allow-dmz | alb_dmz2"
-#   set_fact:
-#     alb_dmz2: "{{ item | combine( { 'targets': item } ) }}"
-#   with_items: "{{ alb_dmz }}"
-
-# - debug:
-#     msg: "{{ alb_dmz2 }}"
-
-- name: "ufw | allow-dmz: allow"
+- name: "ufw | allow-dmz: allow alb_dmz_withtargets"
   ufw:
     rule: "allow"
     from_ip: "{{ item.0.ip }}"
     to_ip: "{{ item.1.ip }}"
     comment: "{{ alb_ufw_commentprefix }}{{ 'DMZ ' + (item.0.name | default(item.0.ip)) }}"
   with_subelements:
-    - "{{ alb_dmz }}"
+    - "{{ alb_dmz_withtargets }}"
     - targets
 
 #- name: "ufw | allow-dmz: TO"
