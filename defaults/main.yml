@@ -184,6 +184,9 @@ alb_haproxy_haproxy_template: "{{ role_path }}/templates/nlb/haproxy-standard.cf
 # Check alb_openresty_httpport. HAProxy also consider this variable
 # Check alb_openresty_httpsport. HAProxy also consider this variable
 
+nlb_defaults_timeout_connect: 5000
+nlb_defaults_timeout_client: 5000
+nlb_defaults_timeout_server: 5000
 
 nlb_raw_top: |
     # Customize variable nlb_raw_end to add at the top of /etc/haproxy/haproxy.cfg

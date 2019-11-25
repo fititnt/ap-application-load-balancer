@@ -13,6 +13,10 @@
 # To use HATop, use
 # hatop -s /run/haproxy/admin.sock
 
+# To Watch interative cli, use (thanks https://superuser.com/questions/1193917/how-to-view-haproxy-status-on-the-command-line-using-a-socket/1193918#1193918)
+# watch 'echo "show stat" | nc -U  /run/haproxy/admin.sock | cut -d "," -f 1,2,5-11,18,24,27,30,36,50,37,56,57,62 | column -s, -t'
+# echo "show stat" | nc -U /run/haproxy/admin.sock | grep "#" | tr ',' '\n' | nl
+
 {{ nlb_raw_top }}
 
 ## If variable nlb_raw_global is defined it will REPLACE the global at /etc/haproxy/haproxy.cfg
@@ -53,9 +57,9 @@ defaults
 	mode	http
 	option	httplog
 	option	dontlognull
-        timeout connect 5000
-        timeout client  50000
-        timeout server  50000
+        timeout connect {{ nlb_defaults_timeout_connect }}
+        timeout client  {{ nlb_defaults_timeout_client }}
+        timeout server  {{ nlb_defaults_timeout_server }}
 	errorfile 400 /etc/haproxy/errors/400.http
 	errorfile 403 /etc/haproxy/errors/403.http
 	errorfile 408 /etc/haproxy/errors/408.http

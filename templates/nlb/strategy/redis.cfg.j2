@@ -1,1 +1,32 @@
 # TEMPLATE:        /templates/nlb/strategy/redis.cfg.j2
+
+#
+# To watch for health check errors check:
+#     tail -f /var/log/haproxy.log
+# One common issue is relatet to timeouts: if the redis close too soon a connection
+# this WILL have issues when authentication is required
+
+frontend {{ nlb_redis.frontend.name }}
+{% if (nlb_redis.frontend.bind is defined and (nlb_redis.frontend.bind | length > 0) ) %}
+{% for item in nlb_redis.frontend.bind %}
+     bind {{ item }}
+{% endfor %}
+{% endif %}
+     default_backend {{ nlb_redis.frontend.default_backend }}
+backend {{ nlb_redis.backend.name }}
+     option tcp-check
+     timeout server {{ nlb_redis.backend.timeout_server }}
+     timeout client {{ nlb_redis.backend.timeout_client }}
+{% if (nlb_redis.backend.auth is defined and (nlb_redis.backend.auth | length > 0) ) %}
+     tcp-check send AUTH\ {{ nlb_redis.backend.auth }}\r\n
+     tcp-check expect string +OK
+{% endif %}
+     tcp-check send PING\r\n
+     tcp-check expect string +PONG
+     tcp-check send info\ replication\r\n
+     tcp-check expect string role:master
+     tcp-check send QUIT\r\n
+     tcp-check expect string +OK
+     server delta 173.249.10.99:6379 check inter 5s
+     server echo 167.86.127.220:6379 check inter 5s
+     server foxtrot 167.86.127.225:6379 check inter 5s
