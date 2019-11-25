@@ -84,7 +84,8 @@ humanitarian or commercial projects from who help we on Etica.AI.
         - [External documentation about UFW and Ansible](#external-documentation-about-ufw-and-ansible)
         - [Risk Mitigation related to firewall](#risk-mitigation-related-to-firewall)
             - [Prefer guides that assume security requirements for geo-distributed applications](#prefer-guides-that-assume-security-requirements-for-geo-distributed-applications)
-            - [Still use passwords for intra-cluster communications (We're looking at you, Redis)](#still-use-passwords-for-intra-cluster-communications-were-looking-at-you-redis)
+            - [Still use passwords for intra-cluster communications (We're looking at you, Redis, MongoDB...)](#still-use-passwords-for-intra-cluster-communications-were-looking-at-you-redis-mongodb)
+            - [Implement or not IPSec/OpenVPN](#implement-or-not-ipsecopenvpn)
 - [Advanced usage](#advanced-usage)
 - [FAQ](#faq)
 - [License](#license)
@@ -733,8 +734,26 @@ if you do not implement IPSec or OpenVPN, the averagen guide on how to configure
 the applications will very likely to still rely on autentication for the apps
 that need to talk with each other.
 
-##### Still use passwords for intra-cluster communications (We're looking at you, Redis)
+##### Still use passwords for intra-cluster communications (We're looking at you, Redis, MongoDB...)
+**TL;DR: if a software support autentication with AP-ALB you SHOULD implement
+this layer of defence even if and 80% of guides on internet teach how to use
+without.** This is not a strong requeriment if you is using AP-ALB inside
+the same region of cloud provider with support for private networking or you
+implement IPSec/OpenVPN, but even on this cases still better already have your
+services ready to expand and avoid human error with future misconfigurations.
 
+Some softwares in special (like Redis and MongoDB) tend to have friendly guides
+that will work securely (securely as _"from outside attacks, not from errors
+inside your network"_) without need of authentication. There are so many things
+that can go wrong that the overhead of performance the need of authentication
+and extra steps on your scripts are not plausible excuses.
+
+Even if the AP-ALB does not manange your service on another VPS, you may
+eventually want to use HAProxy to load balance a service that is not on
+localhost, but on that VPS. And the easyers ways to do this _are likely to
+go [charlie-foxtrot](https://en.wiktionary.org/wiki/clusterfuck)_.
+
+##### Implement or not IPSec/OpenVPN
 (...)
 
 ## Advanced usage
