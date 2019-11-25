@@ -70,13 +70,13 @@ defaults
 
 
 {% if (nlb_listen_openresty_safetoenable) %}
-{% include "partials/listen-openresty.cfg.j2" %}
+{% include "strategy/openresty.cfg.j2" %}
 {% else %}
 # Not including partials/listen-openresty.cfg.j2
 {% endif %}
 
 {% if (nlb_listen_redis_safetoenable) %}
-{% include "partials/listen-redis.cfg.j2" %}
+{% include "strategy/redis.cfg.j2" %}
 {% else %}
 # Not including partials/listen-redis.cfg.j2
 {% endif %}

@@ -1,95 +1,18 @@
 ---
 
-#- name: "ufw | allow-dmz | alb_dmz_withtargets copy"
-#  set_fact:
-#     alb_dmz_withtargets: "{{ alb_dmz }}"
+# @TODO: alb_dmz_withtargets still include redundant UFW rules that should be filtered out
+#        see https://jinja.palletsprojects.com/en/2.10.x/templates/#rejectattr
+#        (fititnt, 2019-11-25 12:10 BRT)
 
-- name: "ufw | allow-dmz | alb_dmz_withtargets based on alb_dmz (including duplicated)"
+- name: "ufw | allow-dmz | alb_dmz_withtargets based on alb_dmz (including duplicated, needs be fixed)"
   set_fact:
-    # alb_dmz_withtargets: "{{ alb_dmz_withtargets | combine({'targets': item}) }}"
     alb_dmz_withtargets: "{{ (alb_dmz_withtargets | default([])) + [(item | combine({ 'targets': alb_dmz }))] }}"
+    # alb_dmz_withtargets: "{{ (alb_dmz_withtargets | default([])) + [item | combine({ 'targets': (alb_dmz | rejectattr('ip', item.ip)) }) ] }}"
   with_items: "{{ alb_dmz }}"
 
-
-# - name: "ufw | allow-dmz | alb_dmz222"
-#   set_fact:
-#     # alb_dmz2: "{{ (alb_dmz2 | default({}) | list) + (item | combine({ 'targets': item }) | list) }}"
-#     # alb_dmz2: "{{ (alb_dmz2 | default([])) + [(item | combine({ 'targets2': item }))] }}"
-#     # alb_dmz2: "{{ (alb_dmz2 | default({})) + [(item | combine({ 'targets': item }))] }}"
-#     alb_dmz2: "{{ (alb_dmz2 | default([])) + [(item | combine({ 'targets2': item }))] }}"
-#     # alb_dmz2: "{{ (alb_dmz2 | default([])) + [(item.ip == item.ip) | ternary((item | combine({ 'targets2': item })), []) ] }}"
-#   with_items: "{{ alb_dmz }}"
-
-# - name: "ufw | allow-dmz | alb_dmz222"
-#   set_fact:
-#     # alb_dmz2: "{{ (alb_dmz2 | default({}) | list) + (item | combine({ 'targets': item }) | list) }}"
-#     alb_dmz2: "{{ [(alb_dmz2 | default({}))] + [(item | combine({ 'targets': item }))] }}"
-#     # alb_dmz2: "{{ (alb_dmz2 | default({})) + [(item | combine({ 'targets': item }))] }}"
-#   with_items: "{{ alb_dmz }}"
-
-# - name: "alb_dmz2alb_dmz2"
-#   debug:
-#     msg: "{{ alb_dmz2 }}"
-
-# - name: "aaaaaaa"
-#   debug:
-#     msg: "{{ alb_dmz[0].items() | list }}"
-
-#- name: "ufw | allow-dmz | alb_dmz_withtargets append targets 2"
-#  set_fact:
-#    alb_dmz_withtargets2: "{{ (alb_dmz_withtargets2 | default({})) + (item | combine({'targets': item})) }}"
-#  with_items: "{{ alb_dmz }}"
-
-# - debug:
-#     msg: "{{ alb_dmz }}"
-- debug:
+- name: "ufw | allow-dmz | alb_dmz_withtargets [print value]"
+  debug:
     msg: "{{ alb_dmz_withtargets }}"
-#- debug:
-#    msg: "{{ alb_dmz_withtargets2 }}"
-
-# @TODO create targets field dinamicaly. Maybe with this reference https://serverfault.com/a/819752/175334 (fititnt, 2019-11-24 14:01 BRT)
-
-## This file now expect a value like this
-# alb_dmz:
-#   - ip: 173.249.10.99
-#     name: aguia-pescadora-delta.etica.ai
-#     targets:
-#       - ip: 173.249.10.99
-#         name: aguia-pescadora-delta.etica.ai
-#       - ip: 167.86.127.220
-#         name: aguia-pescadora-echo.etica.ai
-#       - ip: 167.86.127.225
-#         name: aguia-pescadora-foxtrot.etica.ai
-#   - ip: 167.86.127.220
-#     name: aguia-pescadora-echo.etica.ai
-#     targets:
-#       - ip: 173.249.10.99
-#         name: aguia-pescadora-delta.etica.ai
-#       - ip: 167.86.127.220
-#         name: aguia-pescadora-echo.etica.ai
-#       - ip: 167.86.127.225
-#         name: aguia-pescadora-foxtrot.etica.ai
-#   - ip: 167.86.127.225
-#     name: aguia-pescadora-foxtrot.etica.ai
-#     targets:
-#       - ip: 173.249.10.99
-#         name: aguia-pescadora-delta.etica.ai
-#       - ip: 167.86.127.220
-#         name: aguia-pescadora-echo.etica.ai
-#       - ip: 167.86.127.225
-#         name: aguia-pescadora-foxtrot.etica.ai
-
-# - debug:
-#     msg: "{{ alb_dmz }}"
-# - debug:
-#     msg: "{{ alb_dmz | list}}"
-
-# - debug:
-#     msg: "{{ alb_dmz + alb_dmz }}"
-
-# - name: "ufw | allow-dmz | prepare ips"
-#   set_fact:
-#     alb_dmz_allips: "{{ alb_dmz | map(attribute='ip') | list }}"
 
 - name: "ufw | allow-dmz: allow alb_dmz_withtargets"
   ufw:
@@ -100,24 +23,3 @@
   with_subelements:
     - "{{ alb_dmz_withtargets }}"
     - targets
-
-#- name: "ufw | allow-dmz: TO"
-#  ufw:
-#    rule: "allow"
-#    from_ip: "{{ item.1.ip }}"
-#    to_ip: "{{ item.0.ip }}"
-#    comment: "{{ alb_ufw_commentprefix }}{{ 'DMZ TO ' + (item.0.name | default(item.0.ip)) }}"
-#  with_subelements:
-#    - "{{ alb_dmz }}"
-#    - targets
-
-#- name: "ufw | allow-dmz: TO {{ alb_dmz }}"
-#  ufw:
-#    rule: "{{ item.rule | default('allow') }}"
-#    dest: "{{ item.ip | default(item) }}"
-#    delete: "{{ item.delete | default('no')}}"
-#    comment: "{{ alb_ufw_commentprefix }}{{ item.comment | default('DMZ TO ' + item.name | default(ansible_loop.index0 | string)) }}"
-#  loop: "{{ alb_dmz }}"
-#  loop_control:
-#    extended: yes
-#  when: "alb_dmz is defined"

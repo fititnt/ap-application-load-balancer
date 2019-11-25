@@ -1,19 +1,6 @@
 ---
 # tasks/ufw/main.yml
 
-- name: "ufw | allow-dmz | alb_dmz222"
-  set_fact:
-    # alb_dmz2: "{{ (alb_dmz2 | default({}) | list) + (item | combine({ 'targets': item }) | list) }}"
-    # alb_dmz2: "{{ (alb_dmz2 | default([])) + [(item | combine({ 'targets2': item }))] }}"
-    # alb_dmz2: "{{ (alb_dmz2 | default({})) + [(item | combine({ 'targets': item }))] }}"
-    alb_dmz2: "{{ (alb_dmz2 | default([])) + [(item | combine({ 'targets2': item }))] }}"
-    # alb_dmz2: "{{ (alb_dmz2 | default([])) + [(item.ip == item.ip) | ternary((item | combine({ 'targets2': item })), []) ] }}"
-  with_items: "{{ alb_dmz }}"
-
-- name: "alb_dmz2alb_dmz2"
-  debug:
-    msg: "{{ alb_dmz2 }}"
-
 - name: /etc/ansible/facts.d/alb_ufw.fact
   template:
     src: files/alb_ufw.fact
