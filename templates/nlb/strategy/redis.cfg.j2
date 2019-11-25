@@ -27,6 +27,11 @@ backend {{ nlb_redis.backend.name }}
      tcp-check expect string role:master
      tcp-check send QUIT\r\n
      tcp-check expect string +OK
-     server delta 173.249.10.99:6379 check inter 5s
-     server echo 167.86.127.220:6379 check inter 5s
-     server foxtrot 167.86.127.225:6379 check inter 5s
+{% if (nlb_redis.backend.server is defined and (nlb_redis.backend.server | length > 0) ) %}
+{% for item in nlb_redis.backend.server %}
+     server {{ item }}
+{% endfor %}
+{% endif %}
+#     server delta 173.249.10.99:6379 check inter 5s
+#     server echo 167.86.127.220:6379 check inter 5s
+#     server foxtrot 167.86.127.225:6379 check inter 5s

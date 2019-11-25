@@ -1,0 +1,24 @@
+# TEMPLATE:        /templates/nlb/strategy/http.cfg.j2
+
+frontend {{ nlb_http.frontend.name }}
+    mode tcp
+    option tcplog
+{% if (nlb_http.frontend.bind is defined and (nlb_http.frontend.bind | length > 0) ) %}
+{% for item in nlb_http.frontend.bind %}
+     bind {{ item }}
+{% endfor %}
+{% endif %}
+     default_backend {{ nlb_http.frontend.default_backend }}
+
+
+backend {{ nlb_http.backend.name }}
+    mode tcp
+    option tcplog
+{% if (nlb_http.backend.server is defined and (nlb_http.backend.server | length > 0) ) %}
+{% for item in nlb_http.backend.server %}
+     server {{ item }}
+{% endfor %}
+{% endif %}
+#     server delta 173.249.10.99:6379 check inter 5s
+#     server echo 167.86.127.220:6379 check inter 5s
+#     server foxtrot 167.86.127.225:6379 check inter 5s

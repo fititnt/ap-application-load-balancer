@@ -73,10 +73,16 @@ defaults
 {% endif %}
 
 
+{% if (nlb_listen_http_safetoenable) %}
+{% include "strategy/http.cfg.j2" %}
+{% else %}
+# Not strategy/http.cfg.j2
+{% endif %}
+
 {% if (nlb_listen_openresty_safetoenable) %}
 {% include "strategy/openresty.cfg.j2" %}
 {% else %}
-# Not including partials/listen-openresty.cfg.j2
+# Not strategy/openresty.cfg.j2
 {% endif %}
 
 {% if (nlb_listen_redis_safetoenable) %}

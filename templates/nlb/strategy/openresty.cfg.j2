@@ -1,9 +1,9 @@
 # TEMPLATE:        /templates/nlb/strategy/openresty.cfg.j2
 
 # @TODO: implement some way to allow generic manipulation of the HAproxy Listen
-listen http-in
-    bind {{ alb_haproxy_ip }}:{{ alb_haproxy_httpport }}
-    server openresty_server1 {{ alb_openresty_ip }}:{{ alb_openresty_httpport }} maxconn 32
+#listen http-in
+#    bind {{ alb_haproxy_ip }}:{{ alb_haproxy_httpport }}
+#    server openresty_server1 {{ alb_openresty_ip }}:{{ alb_openresty_httpport }} maxconn 32
 
 listen https-in
     # 'mode tcp' is required if backend is doing the full HTTPS termination

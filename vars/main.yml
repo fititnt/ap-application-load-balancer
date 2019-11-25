@@ -25,6 +25,7 @@ nlb_listen_all: "{{ }}"
 
 nlb_listen_openresty_safetoenable: yes
 nlb_listen_redis_safetoenable: yes
+nlb_listen_http_safetoenable: yes
 
 ## https://www.haproxy.com/blog/the-four-essential-sections-of-an-haproxy-configuration/
 nlb_redis:
@@ -41,9 +42,25 @@ nlb_redis:
     timeout_server: 120s
     # TODO: change server to more flexible values (fititnt, 2019-11-25 13:06 BRT)
     server:
-      - server delta 173.249.10.99:6379 check inter 5s
-      - server echo 167.86.127.220:6379 check inter 5s
-      - server foxtrot 167.86.127.225:6379 check inter 5s
+      - delta 173.249.10.99:6379 check inter 5s
+      - echo 167.86.127.220:6379 check inter 5s
+      - foxtrot 167.86.127.225:6379 check inter 5s
+
+nlb_http:
+  frontend:
+    name: "frontend_http"
+    bind:
+      - "*:80"
+    default_backend: "backend_http"
+  backend:
+    name: "backend_http"
+    mode: "tcp"
+    balance: "roundrobin"
+    server:
+      - localhost 127.0.0.1:8080 check inter 5s
+      - delta 173.249.10.99:8080 check inter 5s
+      - echo 167.86.127.220:8080 check inter 5s
+      - foxtrot 167.86.127.225:8080 check inter 5s
 
 ### ALB Internal Variables: Facts ______________________________________________
 
