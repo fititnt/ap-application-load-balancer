@@ -82,11 +82,12 @@ humanitarian or commercial projects from who help we on Etica.AI.
     - [UFW](#ufw)
         - [Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)](#applying-only-firewall-rules-on-a-specific-server-ie-do-not-install-haproxy-openresty)
         - [External documentation about UFW and Ansible](#external-documentation-about-ufw-and-ansible)
-        - [Risk Mitigation related to firewall](#risk-mitigation-related-to-firewall)
-            - [Prefer guides that assume security requirements for geo-distributed applications](#prefer-guides-that-assume-security-requirements-for-geo-distributed-applications)
-            - [Still use passwords for intra-cluster communications (We're looking at you, Redis, MongoDB...)](#still-use-passwords-for-intra-cluster-communications-were-looking-at-you-redis-mongodb)
-            - [Implement or not IPSec/OpenVPN](#implement-or-not-ipsecopenvpn)
 - [Advanced usage](#advanced-usage)
+    - [ALB Internals](#alb-internals)
+    - [Risk mitigation](#risk-mitigation)
+        - [Still use passwords for intra-cluster communications (We're looking at you, Redis, MongoDB...)](#still-use-passwords-for-intra-cluster-communications-were-looking-at-you-redis-mongodb)
+        - [Should you use private networkig from my cloud provider? Should you implement IPSec/OpenVPN?](#should-you-use-private-networkig-from-my-cloud-provider-should-you-implement-ipsecopenvpn)
+        - [Prefer guides that assume security requirements for geo-distributed applications](#prefer-guides-that-assume-security-requirements-for-geo-distributed-applications)
 - [FAQ](#faq)
 - [License](#license)
 
@@ -703,38 +704,39 @@ alb_manange_ufw: yes
 - UFW Introduction: <https://help.ubuntu.com/community/UFW>
 - UFW Manual: <http://manpages.ubuntu.com/manpages/cosmic/en/man8/ufw.8.html>
 
-#### Risk Mitigation related to firewall
+## Advanced usage
+
+### ALB Internals
+
+See [ALB Internals](alb-internals.md) <sup>(working draft)</sup>.
+
+### Risk mitigation
 > _"Layered security, also known as layered defense, describes the practice of
 combining multiple mitigating security controls to protect resources and data."
 — [Layered security on Wikipedia](https://en.wikipedia.org/wiki/Layered_security)_
 
+<!--
 This section applies in special if you is using ALB/UFW component (or any custom
 solution based only on [IPTables firewall](http://ipset.netfilter.org/)) as a
 layer of defence **inside** your servers not meant to be exposed to the public
 internet instead of private networking.
+-->
 
-AP-ALB is designed to work with aceptable risks and be used on production even
-on **very cheap VPSs without enterprise features** (like private networking,
+AP-ALB, as one Infrastructure as Code way to implement a single or a clustered
+servers to work as Application Load Balancers, is designed to work with
+_aceptable risks_ without rely on some features that are not available on
+**very cheap VPSs without enterprise features** (like private networking,
 extra disks, snapshots) and **still relatively sysadmin (user) friendly** for
 what it is really doing. By extension, this also means it will work with mixed
 setups (e.g. some VPSs could be on expensive AWS, while others on other cloud
 providers, like Azure, or cheaper but very good ones, like Contabo).
 
-##### Prefer guides that assume security requirements for geo-distributed applications
-**Do not assume same level of security of private networking and same
-datacenter**: the averange guide on internet (in special the ones from cloud
-providers) will assume both cases and sometimes they are so resilient on this
-feature that will suggest no autentication at all for intra-cluster
-communication even when the underlines softwares allow and strongly encourage
-it's use.
+<!--
+This [Risk mitigation](#risk-mitigation) topic contain some informations that
+either could improve your setup if is getting more complex or 
+-->
 
-One generic protip here is, when in doubt with guides, check the same guides
-but with _"geo-distributed applications/replication"_ or _"multicloud"_. Even
-if you do not implement IPSec or OpenVPN, the averagen guide on how to configure
-the applications will very likely to still rely on autentication for the apps
-that need to talk with each other.
-
-##### Still use passwords for intra-cluster communications (We're looking at you, Redis, MongoDB...)
+#### Still use passwords for intra-cluster communications (We're looking at you, Redis, MongoDB...)
 **TL;DR: if a software support autentication with AP-ALB you SHOULD implement
 this layer of defence even if and 80% of guides on internet teach how to use
 without.** This is not a strong requeriment if you is using AP-ALB inside
@@ -753,12 +755,35 @@ eventually want to use HAProxy to load balance a service that is not on
 localhost, but on that VPS. And the easyers ways to do this _are likely to
 go [charlie-foxtrot](https://en.wiktionary.org/wiki/clusterfuck)_.
 
-##### Implement or not IPSec/OpenVPN
-(...)
+#### Should you use private networkig from my cloud provider? Should you implement IPSec/OpenVPN?
+**TL;DR: not required, but is a good idea if you can.**
 
-## Advanced usage
+If some of your hosts are on a cloud provider that you already have option to
+have extra firewalls or private networking inside the VPSs on that region, yes
+that's a good idea. You already paid, use it.
 
-- [ALB Internals](alb-internals.md)
+About implement IPSec/OpenVPN or equivalent to do Software-Defined Networking,
+it's up to you, but since it can be not trivial to implement, we try to not
+depent on this implementation. As `ALB v0.8.0-alpha` we do not have Components
+to automate creation of private network, but you could still use the
+[Shared options](#shared-options) or do the initial setup without Ansible
+automation.
+
+#### Prefer guides that assume security requirements for geo-distributed applications
+**TL;DR: This last topic on Risk mitigation is for where you can find relevant information.**
+
+**Do not assume same level of security of private networking and same
+datacenter**: the averange guide on internet (in special the ones from cloud
+providers) will assume both cases and sometimes they are so resilient on this
+feature that will suggest no autentication at all for intra-cluster
+communication even when the underlines softwares allow and strongly encourage
+it's use.
+
+One generic protip here is, when in doubt with guides, check the same guides
+but with _"geo-distributed applications/replication"_ or _"multicloud"_. Even
+if you do not implement IPSec or OpenVPN, the averagen guide on how to configure
+the applications will very likely to still rely on autentication for the apps
+that need to talk with each other.
 
 <!--
 
