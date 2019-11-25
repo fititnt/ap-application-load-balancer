@@ -83,8 +83,8 @@ humanitarian or commercial projects from who help we on Etica.AI.
         - [Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)](#applying-only-firewall-rules-on-a-specific-server-ie-do-not-install-haproxy-openresty)
         - [External documentation about UFW and Ansible](#external-documentation-about-ufw-and-ansible)
         - [Risk Mitigation related to firewall](#risk-mitigation-related-to-firewall)
-            - [Layered security](#layered-security)
-                - [Consider using password even inside DMZ](#consider-using-password-even-inside-dmz)
+            - [Prefer guides that assume security requirements for geo-distributed applications](#prefer-guides-that-assume-security-requirements-for-geo-distributed-applications)
+            - [Still use passwords for intra-cluster communications (We're looking at you, Redis)](#still-use-passwords-for-intra-cluster-communications-were-looking-at-you-redis)
 - [Advanced usage](#advanced-usage)
 - [FAQ](#faq)
 - [License](#license)
@@ -703,22 +703,37 @@ alb_manange_ufw: yes
 - UFW Manual: <http://manpages.ubuntu.com/manpages/cosmic/en/man8/ufw.8.html>
 
 #### Risk Mitigation related to firewall
-This section applies in special if you is using ALB/UFW component (or any custom
-solution based only on [IPTables firewall](http://ipset.netfilter.org/)) as a
-layer of defence inside your servers not meant to be exposed to the public
-internet.
-
-AP-ALB is designed to work with aceptable risks even on very cheap VPS
-providers. By extension, this also means it will work with mixed setups (e.g.
-some VPSs could be on expensive AWS Sao Paulo region, while others on other
-cloud providers, like Azure, or cheaper but very good ones, like Contabo).
-
-##### Layered security
 > _"Layered security, also known as layered defense, describes the practice of
 combining multiple mitigating security controls to protect resources and data."
 — [Layered security on Wikipedia](https://en.wikipedia.org/wiki/Layered_security)_
 
-###### Consider using password even inside DMZ
+This section applies in special if you is using ALB/UFW component (or any custom
+solution based only on [IPTables firewall](http://ipset.netfilter.org/)) as a
+layer of defence **inside** your servers not meant to be exposed to the public
+internet instead of private networking.
+
+AP-ALB is designed to work with aceptable risks and be used on production even
+on **very cheap VPSs without enterprise features** (like private networking,
+extra disks, snapshots) and **still relatively sysadmin (user) friendly** for
+what it is really doing. By extension, this also means it will work with mixed
+setups (e.g. some VPSs could be on expensive AWS, while others on other cloud
+providers, like Azure, or cheaper but very good ones, like Contabo).
+
+##### Prefer guides that assume security requirements for geo-distributed applications
+**Do not assume same level of security of private networking and same
+datacenter**: the averange guide on internet (in special the ones from cloud
+providers) will assume both cases and sometimes they are so resilient on this
+feature that will suggest no autentication at all for intra-cluster
+communication even when the underlines softwares allow and strongly encourage
+it's use.
+
+One generic protip here is, when in doubt with guides, check the same guides
+but with _"geo-distributed applications/replication"_ or _"multicloud"_. Even
+if you do not implement IPSec or OpenVPN, the averagen guide on how to configure
+the applications will very likely to still rely on autentication for the apps
+that need to talk with each other.
+
+##### Still use passwords for intra-cluster communications (We're looking at you, Redis)
 
 (...)
 
