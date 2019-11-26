@@ -91,7 +91,7 @@ multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log
 multitail -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/APPNAMEHERE/error.log
 
 # This is how you watch logs only for an `app_uid: APPNAMEHERE` and all other important logs of ALB
-multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/APPNAMEHERE/error.log
+multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/app/APPNAMEHERE/error.log
 ```
 
 See <https://www.vanheusden.com/multitail/examples.php>.

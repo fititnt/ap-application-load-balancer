@@ -10,7 +10,6 @@ frontend {{ nlb_http.frontend.name }}
 {% endif %}
      default_backend {{ nlb_http.frontend.default_backend }}
 
-
 backend {{ nlb_http.backend.name }}
     mode tcp
     option tcplog
