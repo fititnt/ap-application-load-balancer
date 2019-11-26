@@ -1,5 +1,9 @@
 ## alb-strategy/partials/add_headers.conf.j2
-add_header  X-Upstream  "Teste" always;
+{% set add_headers_full = (item.app_debug is defined and item.app_debug is sameas true) or (alb_forcedebug is defined and alb_forcedebug is sameas true) or (alb_default_app_forcedebug is defined and alb_default_app_forcedebug is sameas true) %}
+
+{% if (add_headers_full or alb_openresty_x_served_by_enabled) %}
+add_header X-Served-By $hostname;
+{% endif %}
 {% if (item.app_debug is defined and item.app_debug is sameas true) or (alb_forcedebug is defined and alb_forcedebug is sameas true) or (alb_default_app_forcedebug is defined and alb_default_app_forcedebug is sameas true) %}
 add_header  X-ALB-app_uid {{ item.app_uid }};
 add_header  X-ALB-app_alb_strategy {{ item.app_alb_strategy | default('undefined') }};

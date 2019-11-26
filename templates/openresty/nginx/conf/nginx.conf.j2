@@ -21,8 +21,6 @@ events {
 {{ alb_nginx_eventscontext_custom }}
 }
 
-
-
 http {
     include       mime.types;
     default_type  application/octet-stream;
@@ -169,6 +167,16 @@ http {
         }
         ssl_certificate /etc/ssl/resty-auto-ssl-fallback.crt;
         ssl_certificate_key /etc/ssl/resty-auto-ssl-fallback.key;
+
+{% if alb_openresty_stub_status|bool %}
+        # TODO: do better ACL here since HAProxy is also 127.0.0.1 (fititnt, 2019-11-26 19:56 BRT)
+        # https://www.keycdn.com/support/nginx-status
+        location {{ alb_openresty_stub_status_location }} {
+            stub_status on;
+            allow 127.0.0.1;
+            deny all;
+        }
+{% endif %}
 
         location / {
             root   html;

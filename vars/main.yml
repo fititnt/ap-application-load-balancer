@@ -10,6 +10,10 @@ alb_version_lastrun: -1
 alb_trusted_hosts: "{{ alb_dmz + alb_bastion_hosts }}"
 alb_trusted_hosts_ips: "{{ alb_trusted_hosts | map(attribute='ip') | list }}"
 
+alb_openresty_x_served_by_enabled: yes
+alb_openresty_stub_status: "{{ alb_forcedebug }}"
+alb_openresty_stub_status_location: "/openresty_status"
+
 ### ALB Internal Variables: Component HAProxy __________________________________
 
 # This variable is used to calculate if we really can enable HAProxy Stats on this host
