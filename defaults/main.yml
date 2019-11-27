@@ -107,6 +107,7 @@ alb_logs_method: "file"
 
 alb_logs_path: "/var/log/alb"
 
+
 ### AP-ALB Component: OpenResty ________________________________________________
 alb_nginxconf_template: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
 
@@ -139,6 +140,8 @@ alb_nginx_httpcontext_custom: |
 
 # If you are creating custom ALB Rules (e.g. OpenResty Server Blocks) you will
 # need to consider these rules.
+
+alb_openresty_http_lua_code_cache_disabled: false
 
 ## Uncoment next line to use acme staging (for test Let's Encrypt)
 # See https://letsencrypt.org/docs/staging-environment/

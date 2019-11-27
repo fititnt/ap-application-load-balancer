@@ -46,6 +46,10 @@ http {
 
     #gzip  on;
 
+{% if (alb_openresty_http_lua_code_cache_disabled|bool) %}
+    lua_code_cache off
+{% endif %}
+
     # The "auto_ssl" shared dict should be defined with enough storage space to
     # hold your certificate data. 1MB of storage holds certificates for
     # approximately 100 separate domains.
@@ -176,6 +180,7 @@ http {
         # https://www.keycdn.com/support/nginx-status
         location {{ alb_openresty_stub_status_location }} {
             stub_status on;
+            access_log off;
             allow 127.0.0.1;
             deny all;
         }
