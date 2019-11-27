@@ -403,13 +403,16 @@ you do not specify a `app_alb_strategy`. It can be specially useful to obtain
 SSL Certificates or already have some placeholder.
 
 If `app_debug: true` or `alb_forcedebug: yes` it can be used to give more
-information faster.
+information.
 
 ```yaml
     alb_apps:
 
       - app_uid: "hello-world"
         app_domain: "debug.example.org"
+        app_domain_extras:
+          - hello-world.example.com
+          - hello-world.*
         app_debug: true
         app_alb_strategy: "hello-world"
 ```

@@ -1,1 +1,15 @@
+{% if (alb_hide_alb|bool) %}
 <!DOCTYPE html><html><head><meta name="robots" content="noindex,nofollow"></head><body></body></html>
+{% else %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noindex,nofollow"></head>
+<body>
+{% if (alb_hide_alb|bool != true or alb_forcedebug|bool) %}
+<center><h1>{{ inventory_hostname }}</h1></center>
+<hr><center>{{ alb_name_service }}{% if (alb_expose_version|bool) %}/{{ alb_version }}{% endif %}</center>
+{% endif %}
+</body>
+</html>
+{% endif %}

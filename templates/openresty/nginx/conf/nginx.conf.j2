@@ -33,6 +33,9 @@ http {
                       '$status $body_bytes_sent "$http_referer" '
                       '"$http_user_agent" "$http_x_forwarded_for"';
 
+    # error_page  404              /404.html;
+    # error_page   500 502 503 504  /50x.html;
+
     access_log  {{ alb_logs_path }}/access.log  main;
 
     sendfile        on;

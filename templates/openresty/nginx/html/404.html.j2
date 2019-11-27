@@ -3,5 +3,8 @@
 <head><title>404 Not Found</title></head>
 <body>
 <center><h1>404 Not Found</h1></center>
+{% if (alb_hide_alb|bool != true) %}
+<hr><center>{{ alb_name_service }}{% if (alb_expose_version|bool) %}/{{ alb_version }}{% endif %}</center>
+{% endif %}
 </body>
 </html>

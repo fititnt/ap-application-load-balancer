@@ -2,7 +2,9 @@
 # FILE: {{ role_path }}/defaults/main.yml
 
 alb_name: "AP Application Load Balancer"
-alb_hide_alb: yes
+alb_hide_alb: yes       # This and 'alb_forcedebug: no' means try to hide even references to NGinx/OpenResty 
+alb_name_service: "alb" # If alb_hide_alb: no, thiw will replace nginx / openresty strings on some places
+alb_expose_version: no  # If alb_hide_alb: no, this will be displayed like "alb/1.2.3".
 alb_forcedebug: no
 alb_forceredeploy: no # Ignore already made changes base on facts from /etc/ansible/fact.d/alb*.fact
 

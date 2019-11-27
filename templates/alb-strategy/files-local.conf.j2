@@ -5,7 +5,7 @@
 server {
     # listen 443 ssl;
     listen {{ alb_openresty_ip}}:{{ alb_openresty_httpsport }} ssl;
-    server_name {{ item.app_domain | default(alb_default_app_domain) }};
+    server_name {{ item.app_domain | default(alb_default_app_domain) }}{% if ((item.app_domain_extras is defined) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
 
     error_log  /var/log/app/{{ item.app_uid }}/error.log;
     access_log  /var/log/app/{{ item.app_uid }}/access.log  main;
@@ -26,8 +26,7 @@ server {
 server {
     # listen 80;
     listen {{ alb_openresty_ip}}:{{ alb_openresty_httpport }};
-
-    server_name {{ item.app_domain | default(alb_default_app_domain) }};
+    server_name {{ item.app_domain | default(alb_default_app_domain) }}{% if ((item.app_domain_extras is defined) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
 
     error_log  /var/log/app/{{ item.app_uid }}/error.log;
     access_log  /var/log/app/{{ item.app_uid }}/access.log  main;
