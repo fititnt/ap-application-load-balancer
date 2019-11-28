@@ -38,6 +38,18 @@
 local consul = require('resty.consul')
 -- local consul = require('resty.auto-ssl.storage_adapters.consul')
 
+-- @TODO: remove this line after finished debugging the consul.lua
+-- http://lua-users.org/wiki/DataDumper
+-- local DataDumper = require("DataDumper")
+require 'DataDumper'
+require 'debughelpers'
+
+local function dump(value, varname)
+  --- print(DataDumper(...), "\n---")
+  -- ngx.log(ngx.ERR, DataDumper(value, varname, false, 2))
+  ngx.log(ngx.ERR, dumpvar(value, varname, false, 2))
+end
+
 -- @module storage_adapter_consul
 local _M = {}
 
@@ -172,9 +184,11 @@ function _M.get(self, key)
   local res_read_body, res_err = res:read_body()
   -- ngx.log(ngx.ERR, '_M.get ', type(res_read_body), ' ', type(res_err))
   -- ngx.log(ngx.ERR, '_M.get ', res_read_body, ' ', res_err)
-  ngx.log(ngx.ERR, '_M.get ', type(res), ' ', type(res_read_body), ' ', res.body)
-  local plpretty = require "pl.pretty"
-  plpretty.dump(res)
+  -- dump('oioioi', res)
+  dump(res)
+  -- dump(res, '_M.get res')
+  -- ngx.log(ngx.ERR, '_M.get: [type(res): ', type(res), '] ', type(res_read_body), ' ', res.body)
+  --- local plpretty = require "pl.pretty"
   -- ngx.log(ngx.ERR, '_M.get', cjson.encode(res_err), cjson.encode(res_err))
   -- ngx.log(ngx.ERR, cjson.encode(res))
 

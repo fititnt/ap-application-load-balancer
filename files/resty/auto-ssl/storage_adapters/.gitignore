@@ -1,1 +1,5 @@
 doc
+
+DataDumper.lua
+# ansible -m copy -a "src=./DataDumper.lua dest=/usr/local/share/lua/5.1/resty/auto-ssl/storage_adapters/DataDumper.lua" aguia-pescadora-delta.etica.ai,aguia-pescadora-echo.etica.ai,aguia-pescadora-foxtrot.etica.ai
+# ansible -m copy -a "src=./debughelpers.lua dest=/usr/local/share/lua/5.1/resty/auto-ssl/storage_adapters/debughelpers.lua" aguia-pescadora-delta.etica.ai,aguia-pescadora-echo.etica.ai,aguia-pescadora-foxtrot.etica.ai

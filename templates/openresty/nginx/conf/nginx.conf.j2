@@ -85,7 +85,7 @@ http {
       -- so this must be configured.
       auto_ssl:set("allow_domain", function(domain)
 
-        ngx.log(ngx.WARN, "allow_domain will try domain:", domain)
+        ngx.log(ngx.WARN, "allow_domain started. Will evaluate if should or not obtain certificates to ", domain)
 
         -- Fail first if domain seems to be an IP.
         -- @see https://github.com/GUI/lua-resty-auto-ssl/issues/26#issuecomment-366919522
