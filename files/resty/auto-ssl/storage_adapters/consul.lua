@@ -3,7 +3,11 @@
 ---
 -- Requisites:
 --   opm get hamishforbes/lua-resty-consul
---   luarocks install penlight # only for debug
+--
+-- @todo: implement expire. Different from Redis, Consul or will persist
+--        keys forever or will have a maximum TTL of 24h. (fititnt, 2019-11-28 19:17 BRT)
+--
+-- @todo: remove dump functions and keep login at at resonable way (fititnt, 2019-11-28 19:17 BRT)
 --
 -- How to test:
 -- Copy this file to /usr/local/share/lua/5.1/resty/auto-ssl/storage_adapters/consul.lua. With ansible would be:
@@ -30,28 +34,54 @@
 -- Definitely an openresty guide/ Hello world https://www.staticshin.com/programming/definitely-an-open-resty-guide/#hello_world
 -- Lua in 15 minutes http://tylerneylon.com/a/learn-lua/
 
--- Errors to solve
--- 2019/11/28 04:02:04 [error] 23249#23249: *1719 [lua] ssl_certificate.lua:134: get_cert_der(): auto-ssl: error fetching certificate from storage for hello-world.173.249.10.99.nip.io: bad argument #1 to '?' (string expected, got table
--- ), context: ssl_certificate_by_lua*, client: 173.249.10.99, server: 0.0.0.0:4443
--- 2019/11/28 19:10:13 [error] 8079#8079: [lua] init_master.lua:57: generate_config(): auto-ssl: failed to create tmp dir permissions: Executing command failed (exit code 1): chmod 777 /etc/resty-auto-ssl/tmp 2>&1
--- Output: chmod: changing permissions of '/etc/resty-auto-ssl/tmp': Operation not permitted
--- 2019/11/28 19:10:13 [error] 8079#8079: [lua] init_master.lua:67: generate_config(): auto-ssl: failed to create letsencrypt dir permissions: Executing command failed (exit code 1): chmod 777 /etc/resty-auto-ssl/letsencrypt 2>&1
--- Output: chmod: changing permissions of '/etc/resty-auto-ssl/letsencrypt': Operation not permitted
-
-
 -- Redis equivalent: local redis = require "resty.redis"
 local consul = require('resty.consul')
--- local consul = require('resty.auto-ssl.storage_adapters.consul')
 
--- @TODO: remove this line after finished debugging the consul.lua
--- http://lua-users.org/wiki/DataDumper
--- local DataDumper = require("DataDumper")
--- require 'DataDumper'
--- require 'debughelpers'
-require("resty.auto-ssl.storage_adapters.debughelpers")
+--------------------------------------------------------------------------------
+-- @todo remove this entire section after finish the heavy debugging
+--       of the consul adapter (fititnt, 2019-11-28 20:21 BRT)
 
 local dumpcache = {}
 
+---
+-- @author https://pastebin.com/A7JScXWk
+-- @param data Anything that need to be dumped
+-- @return string
+function dumpvar(data)
+  -- cache of tables already printed, to avoid infinite recursive loops
+  local tablecache = {}
+  local buffer = ""
+  local padder = "    "
+
+  local function _dumpvar(d, depth)
+      local t = type(d)
+      local str = tostring(d)
+      if (t == "table") then
+          if (tablecache[str]) then
+              -- table already dumped before, so we dont
+              -- dump it again, just mention it
+              buffer = buffer.."<"..str..">\n"
+          else
+              tablecache[str] = (tablecache[str] or 0) + 1
+              buffer = buffer.."("..str..") {\n"
+              for k, v in pairs(d) do
+                  buffer = buffer..string.rep(padder, depth+1).."["..k.."] => "
+                  _dumpvar(v, depth+1)
+              end
+              buffer = buffer..string.rep(padder, depth).."}\n"
+          end
+      elseif (t == "number") then
+          buffer = buffer.."("..t..") "..str.."\n"
+      else
+          buffer = buffer.."("..t..") \""..str.."\"\n"
+      end
+  end
+  _dumpvar(data, 0)
+  return buffer
+end
+
+---
+-- @author fititnt
 local function dump(value, cache_uid)
   --- print(DataDumper(...), "\n---")
   -- ngx.log(ngx.ERR, DataDumper(value, varname, false, 2))
@@ -68,6 +98,9 @@ end
 
 ngx.log(ngx.ERR, "\n\n\n\n\n\n\n\n\n\n---")
 dump({'started', os.date("!%Y-%m-%dT%TZ")})
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
 
 -- @module storage_adapter_consul
 local _M = {}
@@ -78,7 +111,8 @@ local _M = {}
 -- @return The key prefixed
 local function prefixed_key(self, key)
   if self.options["prefix"] then
-    return self.options["prefix"] .. ":" .. key
+    -- return self.options["prefix"] .. ":" .. key
+    return self.options["prefix"] .. "/" .. key
   else
     return key
   end
@@ -91,6 +125,10 @@ end
 -- @return  ????
 function _M.new(auto_ssl_instance)
   local options = auto_ssl_instance:get("consul") or {}
+
+  if not options["prefix"] then
+    options["prefix"] = "lua-resty-auto-ssl"
+  end
 
   if not options["host"] then
     options["host"] = "127.0.0.1"
@@ -207,17 +245,7 @@ function _M.get(self, key)
     value = res.body[0]['Value']
   end
 
-  -- local cjson = require "cjson"
-  -- local res_read_body, res_err = res:read_body()
-  -- ngx.log(ngx.ERR, '_M.get ', type(res_read_body), ' ', type(res_err))
-  -- ngx.log(ngx.ERR, '_M.get ', res_read_body, ' ', res_err)
-  -- dump('oioioi', res)
   dump({fn = '_M.get', key=key, res=res, err=err, value=value}, '_M.get')
-  -- dump(res, '_M.get res')
-  -- ngx.log(ngx.ERR, '_M.get: [type(res): ', type(res), '] ', type(res_read_body), ' ', res.body)
-  --- local plpretty = require "pl.pretty"
-  -- ngx.log(ngx.ERR, '_M.get', cjson.encode(res_err), cjson.encode(res_err))
-  -- ngx.log(ngx.ERR, cjson.encode(res))
 
   return value, err
 end
@@ -227,7 +255,7 @@ end
 -- @todo  There is a difference betwen connection:put (Redis) and from consul
 --        from the first parameter. This should be checked
 --
--- @todo  options param still not used
+-- @todo  options param still not used, but will leave it here for now (fititnt, 2019-11-28 20:15 BRT)
 --
 -- @param  self
 -- @param  key      The umprefixed key name
@@ -259,13 +287,7 @@ function _M.set(self, key, value, options)
   --   end
   -- end
 
-  -- local cjson = require "cjson"
-  -- ngx.log(ngx.ERR, '_M.set ', type(res), ' ', err)
   dump({fn = '_M.set', key=key, value=value, res=res, err=err}, '_M.set')
-  -- ngx.log(ngx.ERR, cjson.encode(res))
-  -- ngx.log(ngx.ERR, cjson.encode(err))
-
-  -- return ok, err
   return res, err
 end
 
@@ -320,13 +342,10 @@ function _M.keys_with_suffix(self, suffix)
     keys = unprefixed_keys
   end
 
-  -- local cjson = require "cjson"
-  -- ngx.log(ngx.ERR, '_M.keys_with_suffix ', type(keys), ' ', err)
-  -- ngx.log(ngx.ERR, cjson.encode(keys))
-  -- ngx.log(ngx.ERR, cjson.encode(err))
   dump({fn = '_M.keys_with_suffix', keys = keys, err = err}, '_M.keys_with_suffix')
 
   return keys, err
 end
+
 
 return _M
