@@ -1,8 +1,5 @@
 ---
-
-# FILE:            {{ role_path }}/tasks/openresty-luarocks-lua-resty-auto-ssl-install.yml
 # LICENSE:         Public Domain
-
 
 ## openresty? luarocks? lua-resty-auto-ssl? ____________________________________
 - name: "openresty | openresty? (Safe to ignore error first time!)"
@@ -58,6 +55,20 @@
     state: present
     update_cache: yes
   when: is_luarocks is failed
+
+## apt install -y luarocks _____________________________________________________
+
+# TODO: manage better if already installed
+#- name: "openresty | opm list | grep lua-resty-consul | wc -l?  (Safe to ignore error first time!)"
+#  shell: opm list | grep lua-resty-consul | wc -l
+#  register: is_lua_resty_consul
+#  changed_when: false
+#  ignore_errors: true
+
+- name: "openresty | opm get hamishforbes/lua-resty-consul"
+  shell: opm get hamishforbes/lua-resty-consul
+  when: 
+    - alb_use_consul|bool
 
 ## luarocks install lua-resty-auto-ssl _________________________________________
 # @see https://github.com/GUI/lua-resty-auto-ssl#installation
