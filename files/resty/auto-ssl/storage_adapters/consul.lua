@@ -3,6 +3,7 @@
 ---
 -- Requisites:
 --   opm get hamishforbes/lua-resty-consul
+--   luarocks install penlight # only for debug
 --
 -- How to test:
 -- Copy this file to /usr/local/share/lua/5.1/resty/auto-ssl/storage_adapters/consul.lua. With ansible would be:
@@ -28,6 +29,10 @@
 -- Lean lua in an Hour https://www.youtube.com/watch?v=S4eNl1rA1Ns
 -- Definitely an openresty guide/ Hello world https://www.staticshin.com/programming/definitely-an-open-resty-guide/#hello_world
 -- Lua in 15 minutes http://tylerneylon.com/a/learn-lua/
+
+-- Errors to solve
+-- 2019/11/28 04:02:04 [error] 23249#23249: *1719 [lua] ssl_certificate.lua:134: get_cert_der(): auto-ssl: error fetching certificate from storage for hello-world.173.249.10.99.nip.io: bad argument #1 to '?' (string expected, got table
+-- ), context: ssl_certificate_by_lua*, client: 173.249.10.99, server: 0.0.0.0:4443
 
 -- Redis equivalent: local redis = require "resty.redis"
 local consul = require('resty.consul')
@@ -80,6 +85,10 @@ function _M.new(auto_ssl_instance)
     options["ssl_verify"] = true
   end
 
+  local cjson = require "cjson"
+  ngx.log(ngx.ERR, '_M.new')
+  ngx.log(ngx.ERR, cjson.encode(options))
+
   return setmetatable({ options = options }, { __index = _M })
 end
 
@@ -93,7 +102,10 @@ function _M.get_connection(self)
   end
 
   connection = consul:new(self.options)
- 
+
+  local cjson = require "cjson"
+  ngx.log(ngx.ERR, '_M.get_connection')
+  ngx.log(ngx.ERR, cjson.encode(connection))
 
   -- NOTE: From https://github.com/hamishforbes/lua-resty-consul documentation:
   --      "port Defaults to 8500. Set to 0 if using a unix socket as host."
@@ -152,8 +164,19 @@ function _M.get(self, key)
   -- Redis use get, Consul use get_key
   local res, err = connection:get_key(prefixed_key(self, key))
   if res == ngx.null then
+    ngx.log(ngx.ERR, '_M.get connection error:', err)
     res = nil
   end
+
+  local cjson = require "cjson"
+  local res_read_body, res_err = res:read_body()
+  -- ngx.log(ngx.ERR, '_M.get ', type(res_read_body), ' ', type(res_err))
+  -- ngx.log(ngx.ERR, '_M.get ', res_read_body, ' ', res_err)
+  ngx.log(ngx.ERR, '_M.get ', type(res), ' ', type(res_read_body), ' ', res.body)
+  local plpretty = require "pl.pretty"
+  plpretty.dump(res)
+  -- ngx.log(ngx.ERR, '_M.get', cjson.encode(res_err), cjson.encode(res_err))
+  -- ngx.log(ngx.ERR, cjson.encode(res))
 
   return res, err
 end
@@ -195,6 +218,11 @@ function _M.set(self, key, value, options)
   --   end
   -- end
 
+  local cjson = require "cjson"
+  ngx.log(ngx.ERR, '_M.set ', type(res), ' ', err)
+  -- ngx.log(ngx.ERR, cjson.encode(res))
+  -- ngx.log(ngx.ERR, cjson.encode(err))
+
   -- return ok, err
   return res, err
 end
@@ -207,22 +235,34 @@ end
 function _M.delete(self, key)
   local connection, connection_err = self:get_connection()
   if connection_err then
+    ngx.log(ngx.EMERG, '_M.delete: ', connection_err)
     return false, connection_err
   end
+
+  local cjson = require "cjson"
+  -- ngx.log(ngx.ERR, '_M.delete: ', connection_err)
+  -- ngx.log(ngx.ERR, cjson.encode(connection_err))
 
   -- Redis use del, Consul uses delete_key
   return connection:delete_key(prefixed_key(self, key))
 end
 
 -- TODO: finish _M.keys_with_suffix (fititnt, 2019-27-23:01 BRT)
+--- Returns a stored Key Value from the Consul
+-- @param  self
+-- @param  suffix   The umprefixed key name
+-- @return keys     The keys
+-- @return err  On error returns an error message
 function _M.keys_with_suffix(self, suffix)
   local connection, connection_err = self:get_connection()
   if connection_err then
+    ngx.log(ngx.EMERG, '_M.keys_with_suffix: ', connection_err)
     return false, connection_err
   end
 
-  -- Redis use keys, ...
-  local keys, err = connection:keys(prefixed_key(self, "*" .. suffix))
+  -- Redis use keys, Consul uses list_keys
+  -- local keys, err = connection:keys(prefixed_key(self, "*" .. suffix))
+  local keys, err = connection:list_keys(prefixed_key(self, "*" .. suffix))
 
   if keys and self.options["prefix"] then
     local unprefixed_keys = {}
@@ -236,6 +276,11 @@ function _M.keys_with_suffix(self, suffix)
 
     keys = unprefixed_keys
   end
+
+  -- local cjson = require "cjson"
+  ngx.log(ngx.ERR, '_M.keys_with_suffix ', type(keys), ' ', err)
+  -- ngx.log(ngx.ERR, cjson.encode(keys))
+  -- ngx.log(ngx.ERR, cjson.encode(err))
 
   return keys, err
 end

@@ -8,7 +8,8 @@
 user  {{ alb_nginx_user }};
 worker_processes  auto;
 
-error_log  {{ alb_logs_path }}/error.log;
+# error_log  {{ alb_logs_path }}/error.log;
+error_log  {{ alb_logs_path }}/error.log warn;
 #error_log  logs/error.log  notice;
 #error_log  logs/error.log  info;
 
@@ -47,7 +48,7 @@ http {
     #gzip  on;
 
 {% if (alb_openresty_http_lua_code_cache_disabled|bool) %}
-    lua_code_cache off
+    lua_code_cache off;
 {% endif %}
 
     # The "auto_ssl" shared dict should be defined with enough storage space to
@@ -84,11 +85,19 @@ http {
       -- so this must be configured.
       auto_ssl:set("allow_domain", function(domain)
 
+        ngx.log(ngx.WARN, "allow_domain will try domain:", domain)
+
         -- Fail first if domain seems to be an IP.
         -- @see https://github.com/GUI/lua-resty-auto-ssl/issues/26#issuecomment-366919522
         if string.match(domain, "(%d+).(%d+).(%d+).(%d+)") or string.find(domain, ":", 1, true) then
-            ngx.log(ngx.ERR, "allow_domain do not allow HTTPS for IPs ", domain)
-            return false
+            -- These domains can be used for testing. Comment out this if to not allow even these ones
+            -- https://nip.io/
+            -- https://xip.io/
+            -- https://sslip.io/
+            if not (string.find(domain, "nip.io", 1, true) or string.find(domain, "xip.io", 1, true) or string.find(domain, "sslip.io", 1, true)) then
+                ngx.log(ngx.ERR, "allow_domain do not allow HTTPS for IPs ", domain)
+                return false
+            end
         end
 
 {{ alb_letsencrypt_allow_domain_customlua|default('') }}
