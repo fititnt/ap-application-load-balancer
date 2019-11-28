@@ -49,6 +49,7 @@ local consul = require('resty.consul')
 -- require 'DataDumper'
 -- require 'debughelpers'
 require("resty.auto-ssl.storage_adapters.debughelpers")
+
 local dumpcache = {}
 
 local function dump(value, cache_uid)
@@ -65,7 +66,7 @@ local function dump(value, cache_uid)
   end
 end
 
-
+ngx.log(ngx.ERR, "\n\n\n\n\n\n\n\n\n\n---")
 dump({'started', os.date("!%Y-%m-%dT%TZ")})
 
 -- @module storage_adapter_consul
@@ -189,15 +190,21 @@ end
 -- @return The value of saved key (if exists)
 function _M.get(self, key)
   local connection, connection_err = self:get_connection()
+  local value = nil
   if connection_err then
     return nil, connection_err
   end
 
   -- Redis use get, Consul use get_key
+  -- Redis 'res' is value or nil; Consul is a lua-resty-http response object
   local res, err = connection:get_key(prefixed_key(self, key))
-  if res == ngx.null then
-    ngx.log(ngx.ERR, 'storage_adapter.consul._M.get: connection error:', err)
-    res = nil
+  -- if res == ngx.null then
+  -- if res.status == 404 then
+  --  -- ngx.log(ngx.ERR, 'storage_adapter.consul._M.get: connection error:', err)
+  --  value = nil
+  --else
+  if res.status ~= 404 and res.body[0] ~= nil and res.body[0]['Value'] ~= null then
+    value = res.body[0]['Value']
   end
 
   -- local cjson = require "cjson"
@@ -205,14 +212,14 @@ function _M.get(self, key)
   -- ngx.log(ngx.ERR, '_M.get ', type(res_read_body), ' ', type(res_err))
   -- ngx.log(ngx.ERR, '_M.get ', res_read_body, ' ', res_err)
   -- dump('oioioi', res)
-  dump({fn = 'M.get', key=key, res=res}, '_M.get')
+  dump({fn = '_M.get', key=key, res=res, err=err, value=value}, '_M.get')
   -- dump(res, '_M.get res')
   -- ngx.log(ngx.ERR, '_M.get: [type(res): ', type(res), '] ', type(res_read_body), ' ', res.body)
   --- local plpretty = require "pl.pretty"
   -- ngx.log(ngx.ERR, '_M.get', cjson.encode(res_err), cjson.encode(res_err))
   -- ngx.log(ngx.ERR, cjson.encode(res))
 
-  return res, err
+  return value, err
 end
 
 --- Store a key-value on the Consul
@@ -254,7 +261,7 @@ function _M.set(self, key, value, options)
 
   -- local cjson = require "cjson"
   -- ngx.log(ngx.ERR, '_M.set ', type(res), ' ', err)
-  dump({fn = '_M.set', key = key, value = value, res = res, err = err}, '_M.set')
+  dump({fn = '_M.set', key=key, value=value, res=res, err=err}, '_M.set')
   -- ngx.log(ngx.ERR, cjson.encode(res))
   -- ngx.log(ngx.ERR, cjson.encode(err))
 
