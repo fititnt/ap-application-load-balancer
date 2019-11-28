@@ -77,6 +77,17 @@ alb_jump_boxes: []
 #  - ip: 192.0.2.10
 #    name: "my jumpbox server"
 
+## @see https://github.com/fititnt/ap-application-load-balancer/issues/26
+alb_acme_production: true
+alb_acme_rule_whitelist: [] # not implemented... yet
+alb_acme_rule_whitelist_file: '' # not implemented... yet
+alb_acme_rule_blacklist: [] # not implemented... yet
+alb_acme_rule_blacklist_file: '' # not implemented... yet
+alb_acme_rule_last: true
+
+# This value is infered from alb_acme_production. But you can customize yourself
+alb_acme_url: "{{ 'https://acme-v02.api.letsencrypt.org/directory' if alb_acme_production else 'https://acme-staging-v02.api.letsencrypt.org/directory' }}"
+
 ### AP-ALB Component: Apps _____________________________________________________
 
 alb_apps: []

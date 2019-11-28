@@ -72,12 +72,12 @@ http {
     init_by_lua_block {
       auto_ssl = (require "resty.auto-ssl").new()
 
-{% if (alb_use_consul|bool) %}
-      auto_ssl:set("storage_adapter", "resty.auto-ssl.storage_adapters.consul")
+{% if ((alb_acme_url is defined) and (alb_acme_url|length > 0)) %}
+      auto_ssl:set("ca", "{{ alb_acme_url }}")
 {% endif %}
 
-{% if alb_letsencrypt_acmeurl_custom is defined %}
-      auto_ssl:set("ca", "{{ alb_letsencrypt_acmeurl_custom }}")
+{% if (alb_use_consul|bool) %}
+      auto_ssl:set("storage_adapter", "resty.auto-ssl.storage_adapters.consul")
 {% endif %}
 
       -- Define a function to determine which SNI domains to automatically handle
@@ -102,8 +102,14 @@ http {
 
 {{ alb_letsencrypt_allow_domain_customlua|default('') }}
 
-        ngx.log(ngx.NOTICE, "allow_domain default {{ alb_letsencrypt_default|default('return true') }} to ", domain)
-        {{ alb_letsencrypt_default|default('return true') }}
+{% if alb_acme_rule_last|bool %}
+        ngx.log(ngx.INFO, "allow_domain default true (will try to get new certificate) to ", domain)
+        return true
+{% else %}
+        ngx.log(ngx.INFO, "allow_domain default false (will not even try get new cerficaite) to ", domain)
+        return false
+{% endif %}
+
       end)
 
       auto_ssl:init()
