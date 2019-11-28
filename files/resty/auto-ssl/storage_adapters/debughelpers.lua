@@ -28,6 +28,6 @@ function dumpvar(data)
             buffer = buffer.."("..t..") \""..str.."\"\n"
         end
     end
-    _dumpvar(data, 0)
-    return buffer
-  end
+  _dumpvar(data, 0)
+  return buffer
+end

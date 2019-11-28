@@ -33,6 +33,11 @@
 -- Errors to solve
 -- 2019/11/28 04:02:04 [error] 23249#23249: *1719 [lua] ssl_certificate.lua:134: get_cert_der(): auto-ssl: error fetching certificate from storage for hello-world.173.249.10.99.nip.io: bad argument #1 to '?' (string expected, got table
 -- ), context: ssl_certificate_by_lua*, client: 173.249.10.99, server: 0.0.0.0:4443
+-- 2019/11/28 19:10:13 [error] 8079#8079: [lua] init_master.lua:57: generate_config(): auto-ssl: failed to create tmp dir permissions: Executing command failed (exit code 1): chmod 777 /etc/resty-auto-ssl/tmp 2>&1
+-- Output: chmod: changing permissions of '/etc/resty-auto-ssl/tmp': Operation not permitted
+-- 2019/11/28 19:10:13 [error] 8079#8079: [lua] init_master.lua:67: generate_config(): auto-ssl: failed to create letsencrypt dir permissions: Executing command failed (exit code 1): chmod 777 /etc/resty-auto-ssl/letsencrypt 2>&1
+-- Output: chmod: changing permissions of '/etc/resty-auto-ssl/letsencrypt': Operation not permitted
+
 
 -- Redis equivalent: local redis = require "resty.redis"
 local consul = require('resty.consul')
@@ -41,14 +46,27 @@ local consul = require('resty.consul')
 -- @TODO: remove this line after finished debugging the consul.lua
 -- http://lua-users.org/wiki/DataDumper
 -- local DataDumper = require("DataDumper")
-require 'DataDumper'
-require 'debughelpers'
+-- require 'DataDumper'
+-- require 'debughelpers'
+require("resty.auto-ssl.storage_adapters.debughelpers")
+local dumpcache = {}
 
-local function dump(value, varname)
+local function dump(value, cache_uid)
   --- print(DataDumper(...), "\n---")
   -- ngx.log(ngx.ERR, DataDumper(value, varname, false, 2))
-  ngx.log(ngx.ERR, dumpvar(value, varname, false, 2))
+  if (cache_uid) then
+    -- ngx.log(ngx.ERR, 'debug dump function', cache_uid .. os.date("%Y%m%d%H%M"))
+    if (not dumpcache[cache_uid .. os.date("%Y%m%d%H%M")]) then
+      dumpcache[cache_uid .. os.date("%Y%m%d%H%M")] = 1
+      ngx.log(ngx.ERR, dumpvar(value))
+    end
+  else
+    ngx.log(ngx.ERR, dumpvar(value))
+  end
 end
+
+
+dump({'started', os.date("!%Y-%m-%dT%TZ")})
 
 -- @module storage_adapter_consul
 local _M = {}
@@ -97,9 +115,10 @@ function _M.new(auto_ssl_instance)
     options["ssl_verify"] = true
   end
 
-  local cjson = require "cjson"
-  ngx.log(ngx.ERR, '_M.new')
-  ngx.log(ngx.ERR, cjson.encode(options))
+  -- local cjson = require "cjson"
+  -- ngx.log(ngx.ERR, '_M.new')
+  -- ngx.log(ngx.ERR, cjson.encode(options))
+  dump({fn = '_M.new', options = options}, '_M.new')
 
   return setmetatable({ options = options }, { __index = _M })
 end
@@ -115,9 +134,10 @@ function _M.get_connection(self)
 
   connection = consul:new(self.options)
 
-  local cjson = require "cjson"
-  ngx.log(ngx.ERR, '_M.get_connection')
-  ngx.log(ngx.ERR, cjson.encode(connection))
+  -- local cjson = require "cjson"
+  -- ngx.log(ngx.ERR, '_M.get_connection')
+  -- ngx.log(ngx.ERR, cjson.encode(connection))
+  dump({fn = '_M.get_connection', connection = connection}, '_M.get_connection')
 
   -- NOTE: From https://github.com/hamishforbes/lua-resty-consul documentation:
   --      "port Defaults to 8500. Set to 0 if using a unix socket as host."
@@ -176,16 +196,16 @@ function _M.get(self, key)
   -- Redis use get, Consul use get_key
   local res, err = connection:get_key(prefixed_key(self, key))
   if res == ngx.null then
-    ngx.log(ngx.ERR, '_M.get connection error:', err)
+    ngx.log(ngx.ERR, 'storage_adapter.consul._M.get: connection error:', err)
     res = nil
   end
 
-  local cjson = require "cjson"
-  local res_read_body, res_err = res:read_body()
+  -- local cjson = require "cjson"
+  -- local res_read_body, res_err = res:read_body()
   -- ngx.log(ngx.ERR, '_M.get ', type(res_read_body), ' ', type(res_err))
   -- ngx.log(ngx.ERR, '_M.get ', res_read_body, ' ', res_err)
   -- dump('oioioi', res)
-  dump(res)
+  dump({fn = 'M.get', key=key, res=res}, '_M.get')
   -- dump(res, '_M.get res')
   -- ngx.log(ngx.ERR, '_M.get: [type(res): ', type(res), '] ', type(res_read_body), ' ', res.body)
   --- local plpretty = require "pl.pretty"
@@ -232,8 +252,9 @@ function _M.set(self, key, value, options)
   --   end
   -- end
 
-  local cjson = require "cjson"
-  ngx.log(ngx.ERR, '_M.set ', type(res), ' ', err)
+  -- local cjson = require "cjson"
+  -- ngx.log(ngx.ERR, '_M.set ', type(res), ' ', err)
+  dump({fn = '_M.set', key = key, value = value, res = res, err = err}, '_M.set')
   -- ngx.log(ngx.ERR, cjson.encode(res))
   -- ngx.log(ngx.ERR, cjson.encode(err))
 
@@ -249,11 +270,12 @@ end
 function _M.delete(self, key)
   local connection, connection_err = self:get_connection()
   if connection_err then
-    ngx.log(ngx.EMERG, '_M.delete: ', connection_err)
+    -- ngx.log(ngx.EMERG, '_M.delete: ', connection_err)
+    ngx.log(ngx.EMERG, 'storage_adapter.consul._M.delete: connection error:', err)
     return false, connection_err
   end
 
-  local cjson = require "cjson"
+  -- local cjson = require "cjson"
   -- ngx.log(ngx.ERR, '_M.delete: ', connection_err)
   -- ngx.log(ngx.ERR, cjson.encode(connection_err))
 
@@ -292,9 +314,10 @@ function _M.keys_with_suffix(self, suffix)
   end
 
   -- local cjson = require "cjson"
-  ngx.log(ngx.ERR, '_M.keys_with_suffix ', type(keys), ' ', err)
+  -- ngx.log(ngx.ERR, '_M.keys_with_suffix ', type(keys), ' ', err)
   -- ngx.log(ngx.ERR, cjson.encode(keys))
   -- ngx.log(ngx.ERR, cjson.encode(err))
+  dump({fn = '_M.keys_with_suffix', keys = keys, err = err}, '_M.keys_with_suffix')
 
   return keys, err
 end
