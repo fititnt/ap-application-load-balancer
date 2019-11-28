@@ -1,7 +1,12 @@
 -- License: Public Domain
 
+------- How to test:
+-- Copy this file to /usr/local/share/lua/5.1/resty/auto-ssl/storage_adapters/consul.lua. With ansible would be:
+--    ansible -m copy -a "src=./consul.lua dest=/usr/local/share/lua/5.1/resty/auto-ssl/storage_adapters/consul.lua" aguia-pescadora-delta.etica.ai,aguia-pescadora-echo.etica.ai,aguia-pescadora-foxtrot.etica.ai
+-- Them set the following on your OpenResty, at http context
+--    auto_ssl:set("storage_adapter", "resty.auto-ssl.storage_adapters.consul")
 
--- lua files/resty/auto-ssl/storage_adapters/consul.lua
+
 print ('teste 123')
 
 -- How to document Lua code:
@@ -65,7 +70,5 @@ end
 -- resty-auto-ssl file.lua only ------------------------------------------------
 function _M.setup_worker(self)
 end
-
-
 
 return _M

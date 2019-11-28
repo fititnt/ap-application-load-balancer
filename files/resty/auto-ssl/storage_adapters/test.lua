@@ -17,3 +17,4 @@ function solve (a,b,c)
               (-b - disc)/2*a
     end
 end
+

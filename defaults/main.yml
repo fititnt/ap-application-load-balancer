@@ -16,6 +16,8 @@ alb_manange_haproxy: yes
 alb_manange_openresty: yes
 alb_manange_ufw: no
 
+alb_use_consul: no
+
 ## Optionated (but NOT required) group of tasks.
 alb_manange_common: no  # hostname, timezone (UTC) [See tasks/common/common.yml]
 

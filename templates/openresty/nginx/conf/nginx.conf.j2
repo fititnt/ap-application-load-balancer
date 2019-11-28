@@ -71,6 +71,10 @@ http {
     init_by_lua_block {
       auto_ssl = (require "resty.auto-ssl").new()
 
+{% if (alb_use_consul|bool) %}
+      auto_ssl:set("storage_adapter", "resty.auto-ssl.storage_adapters.consul")
+{% endif %}
+
 {% if alb_letsencrypt_acmeurl_custom is defined %}
       auto_ssl:set("ca", "{{ alb_letsencrypt_acmeurl_custom }}")
 {% endif %}
