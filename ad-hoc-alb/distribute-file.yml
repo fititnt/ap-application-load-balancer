@@ -1,0 +1,71 @@
+---
+# FILE:            {{ role_path }}/ad-hoc-alb/distribute-file.yml
+# LICENSE:         Public Domain
+
+#    ansible-playbook roles/ap-application-load-balancer/ad-hoc-alb/distribute-file.yml -i site1.com,site2.com,site3.com -e "donor=donor.example.com path=/etc/hosts"
+#    ansible-playbook distribute-file.yml -i hosts.yml
+#    ansible all -a "sudo consul members" -i hosts.yml
+
+# ansible-playbook roles/ap-application-load-balancer/ad-hoc-alb/distribute-file.yml -i apd.etica.ai,ape.etica.ai -e "donor=ape.etica.ai path=/var/consul/serf/local.keyring"
+
+- name: "ad-hoc-alb | distribute-file.yml"
+  # hosts: "{{ targets | default('192.0.2.0') }}" # 192.0.2.0 is assigned as TEST-NET-1, documentation and examples
+  # hosts: "{{ targets }}"
+  hosts: all
+  gather_facts: no
+  vars:
+    donor: null
+    path: null
+    path_donor_internal: "{{ path_donor | default(path) }}"
+    path_targets_internal: "{{ path_targets | default(path) }}"
+  
+  pre_tasks:
+    # - debug:
+    #     msg: "donor {{ donor }}"
+    #   run_once: true
+    # - debug:
+    #     msg: "path {{ path }}"
+    #   run_once: true
+    # - debug:
+    #     msg: "path_donor {{ path_donor }}"
+    #   run_once: true
+    # - debug:
+    #     msg: "path_targets {{ path_targets }}"
+    #   run_once: true
+
+    - name: "ad-hoc-alb | distribute-file.yml | targets ? donor ? path? "
+      fail:
+        msg: "Please define 'targets', donor and common 'path' (or if different, use 'path_donor' and 'path_targets'"
+      when: 
+        - "donor is undefined or not (donor | length > 0)"
+        - "(path_donor is undefined or not (path_donor | length > 0)) or (path_targets is undefined or not (path_targets | length > 0))"
+  
+  tasks:
+    - name: "ad-hoc-alb | distribute-file.yml | get contets from Donor {{ donor }}, Donor Path {{ path_donor_internal }} to Path Targets {{ path_targets_internal }}"
+      slurp:
+        src: "{{ path_donor_internal }}"
+      delegate_to: "{{ donor }}"
+      run_once: true
+      register: file_donnor
+
+    - name:  "ad-hoc-alb | distribute-file.yml | file_donnor raw"
+      debug:
+        msg: "{{ file_donnor }}"
+      run_once: true
+      when:
+        # - "file_donnor.failed | bool"
+
+    - name:  "ad-hoc-alb | distribute-file.yml | file_donnor['content'] b64decode"
+      debug:
+        msg: "{{ file_donnor['content'] | b64decode }}"
+      run_once: true
+      when:
+        - "not (file_donnor.failed | bool)"
+      
+    - name: "ad-hoc-alb | distribute-file.yml | copy content from Donor to all targets (WITH BACKUP)"
+      copy:
+        content: "{{ file_donnor['content'] | b64decode }}"
+        dest: "{{ path_targets_internal }}"
+        backup: yes
+      when:
+        - "not (file_donnor.failed | bool)"
