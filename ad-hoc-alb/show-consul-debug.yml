@@ -1,0 +1,30 @@
+---
+# FILE:            {{ role_path }}/ad-hoc-alb/show-consul-debug.yml
+# LICENSE:         Public Domain
+
+#    ansible-playbook roles/ap-application-load-balancer/ad-hoc-alb/show-consul-debug.yml -i hosts.yml
+#    ansible-playbook show-consul-debug.yml -i hosts.yml
+#    ansible all -a "sudo consul members" -i hosts.yml
+
+- name: "ad-hoc-alb | consul debug"
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: "ad-hoc-alb | sudo consul members"
+      shell: "consul members"
+      become: yes
+      changed_when: false
+      register: ad_hoc_alb_consul_members
+
+    - debug: 
+        msg: "{{ ad_hoc_alb_consul_members.stdout_lines }}"
+
+    - name: "ad-hoc-alb | sudo consul keyring -list"
+      shell: "consul keyring -list"
+      become: yes
+      changed_when: false
+      register: ad_hoc_alb_consul_keyring_list
+
+    - debug: 
+        msg: "{{ ad_hoc_alb_consul_keyring_list.stdout_lines }}"
+
