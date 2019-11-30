@@ -70,6 +70,16 @@
   when: 
     - alb_use_consul|bool
 
+- name: openresty | MONKEYPATCH | resty/auto-ssl/storage_adapters/consul.lua (untill resty-auto-ssl include this storage driver)
+  template:
+    # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
+    src: "files/resty/auto-ssl/storage_adapters/consul.lua"
+    dest: /usr/local/share/lua/5.1/resty/auto-ssl/storage_adapters/consul.lua
+  when:
+    - "alb_use_consul is defined and alb_use_consul|bool"
+  notify:
+    - reload openresty
+
 ## luarocks install lua-resty-auto-ssl _________________________________________
 # @see https://github.com/GUI/lua-resty-auto-ssl#installation
 
