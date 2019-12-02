@@ -32,6 +32,8 @@
     mode: 0644
     backup: yes
   with_items: "{{ alb_apps }}"
+  vars:
+    - type_of_app: "app"
   when:
     - alb_apps is defined and alb_apps[0] is defined
     - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"

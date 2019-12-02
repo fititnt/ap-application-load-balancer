@@ -9,6 +9,8 @@
 - name: restart openresty
   service: name=openresty state=restarted
 
+# Know bug: if Openresty was restarted too soon, but did not released the :80
+# this will make haproxy reload fail
 - name: reload haproxy
   service: name=haproxy state=restarted
 

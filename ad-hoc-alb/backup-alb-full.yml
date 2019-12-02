@@ -2,7 +2,7 @@
 
 #    ansible-playbook ad-hoc-alb/backup/backup-alb-full.yml -i example.com,example.org
 
-- name: "ad-hoc-alb | uninstall | backup-alb-full.yml"
+- name: "ad-hoc-alb | backup-alb-full"
   hosts: all
   gather_facts: no
 
@@ -22,11 +22,11 @@
 
   vars_prompt:
     - name: agree
-      prompt: "DID YOU REALLY WANT APPLY backup-alb-full.yml: TO {{ ansible_play_hosts }}? (yes/no)"
+      prompt: "Apply backup-alb-full.yml to {{ ansible_play_hosts }}? (yes/no)"
       private: no
 
   pre_tasks:
-    - name: "ad-hoc-alb | uninstall | backup-alb-full.yml | agree?"
+    - name: "ad-hoc-alb | backup-alb-full.yml | agree?"
       fail:
         msg: "User did not explicitly agree, aborting"
       when: "agree != 'yes' and agree != 'y'"
@@ -38,18 +38,18 @@
         backup_destiny_mainfolder: "/var/backups/alb-root-{{ backup_datetime }}.tar.xz"
         backup_destiny_realfolders: "/var/backups/alb-real-{{ backup_datetime }}.tar.xz"
 
-    - name: "ad-hoc-alb | uninstall | backup-alb-full.yml | xz format require destiny already exist {{ backup_destiny_realfolders }}"
+    - name: "ad-hoc-alb | backup-alb-full.yml | xz format require destiny already exist {{ backup_destiny_realfolders }}"
       file:
         path: "{{ backup_destiny_realfolders }}"
         state: touch
 
-    - name: "ad-hoc-alb | uninstall | backup-alb-full.yml | create backup at {{ backup_destiny_realfolders }}"
+    - name: "ad-hoc-alb | backup-alb-full.yml | create backup at {{ backup_destiny_realfolders }}"
       archive:
         path: "{{ alb_paths_real }}"
         dest: "{{ backup_destiny_realfolders }}"
         format: xz
       register: backup_task_real
 
-    - name: "ad-hoc-alb | uninstall | backup-alb-full.yml | How to list the concents of the backup file:"
+    - name: "ad-hoc-alb | backup-alb-full.yml | How to list the concents of the backup file:"
       debug:
         msg: "tar -Jtvf {{ backup_destiny_realfolders }}"

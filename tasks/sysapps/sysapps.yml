@@ -32,6 +32,8 @@
     mode: 0644
     backup: yes
   with_items: "{{ alb_sysapps }}"
+  vars:
+    - type_of_app: "sysapp"
   when:
     - alb_sysapps is defined and alb_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
