@@ -105,6 +105,15 @@
   when:
     - alb_version_lastrun != alb_version
 
+- name: alb-init | mkdir /opt/alb/sysapps/
+  file:
+    path: /opt/alb/sysapps/
+    state: directory
+    mode: '0644'
+    owner: root
+  when:
+    - alb_version_lastrun != alb_version
+
 - name: alb-init | mkdir /opt/alb/info/
   file:
     path: /opt/alb/info/
@@ -123,9 +132,27 @@
   when:
     - alb_version_lastrun != alb_version
 
+- name: alb-init | mkdir /var/sysapp/
+  file:
+    path: /var/sysapp/
+    state: directory
+    mode: '0644'
+    owner: root
+  when:
+    - alb_version_lastrun != alb_version
+
 - name: alb-init | mkdir /var/log/app
   file:
     path: /var/log/app
+    state: directory
+    mode: '0644'
+    owner: root
+  when:
+    - alb_version_lastrun != alb_version
+
+- name: alb-init | mkdir /var/log/sysapp
+  file:
+    path: /var/log/sysapp
     state: directory
     mode: '0644'
     owner: root
@@ -163,6 +190,16 @@
   when:
     - alb_version_lastrun != alb_version
 
+- name: alb-init | ln -s /var/sysapp/ /opt/alb/sysapps-data
+  file:
+    src: /var/app/
+    dest: /opt/alb/sysapps-data
+    owner: root
+    state: link
+    # force: yes
+  when:
+    - alb_version_lastrun != alb_version
+
 - name: alb-init | ln -s /var/log/app/ /var/log/alb/apps
   file:
     src: /var/log/app/
@@ -173,10 +210,30 @@
   when:
     - alb_version_lastrun != alb_version
 
+- name: alb-init | ln -s /var/log/sysapp/ /var/log/alb/sysapps
+  file:
+    src: /var/log/sysapp/
+    dest: /var/log/alb/sysapps
+    owner: root
+    state: link
+    # force: yes
+  when:
+    - alb_version_lastrun != alb_version
+
 - name: alb-init | ln -s /var/log/app/ /opt/alb/apps-logs
   file:
     src: /var/log/app/
     dest: /opt/alb/apps-logs
+    owner: root
+    state: link
+    # force: yes
+  when:
+    - alb_version_lastrun != alb_version
+
+- name: alb-init | ln -s /var/log/sysapp/ /opt/alb/sysapps-logs
+  file:
+    src: /var/log/sysapp/
+    dest: /opt/alb/sysapps-logs
     owner: root
     state: link
     # force: yes

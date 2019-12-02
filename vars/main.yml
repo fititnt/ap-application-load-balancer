@@ -1,6 +1,6 @@
 ---
 # vars file for ap-application-load-balancer
-alb_version: "v0.8.0-alpha"
+alb_version: "v0.8.1-alpha"
 alb_version_lastrun: -1
 
 ### ALB Internal Variables: Mixed usage ________________________________________
@@ -68,9 +68,13 @@ nlb_http:
 
 ### ALB Internal Variables: Facts ______________________________________________
 
-# This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
+# This result will be stored at /etc/ansible/facts.d/alb_apps.fact
 alb_apps_facts:
   alb_apps: "{{ alb_apps | default(None) }}"
+
+# This result will be stored at /etc/ansible/facts.d/alb_sysapps.fact
+alb_sysapps_facts:
+  alb_apps: "{{ alb_sysapps | default(None) }}"
 
 # This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
 #alb_common_facts:

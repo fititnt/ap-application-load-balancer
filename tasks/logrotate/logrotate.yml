@@ -17,3 +17,12 @@
     group: root
     mode: '0644'
     backup: no
+
+- name: logrotate | /etc/logrotate.d/alb_sysapps
+  template:
+    src: "{{ alb_logrotate_template_alb_sysapps }}"
+    dest: /etc/logrotate.d/alb_sysapps
+    owner: root
+    group: root
+    mode: '0644'
+    backup: no

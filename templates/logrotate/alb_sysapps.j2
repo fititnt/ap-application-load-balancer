@@ -1,13 +1,13 @@
 # {{ ansible_managed }}
 #
-# FILE:             /etc/logrotate.d/alb_apps
+# FILE:             /etc/logrotate.d/alb_sysapps
 #
 # @see https://linux.die.net/man/8/logrotate
 # @see https://manpages.debian.org/jessie/logrotate/logrotate.8.en.html
 
 # IMPORTANT NOTE: this logrotate file still need testing (fititnt, 2019-11-07 22:04 BRT) 
 
-/var/log/app/*/access.log /var/log/app/*/error.log {
+/var/log/sysapp/*/access.log /var/log/sysapp/*/error.log {
     monthly
     rotate 36
     maxsize 10M

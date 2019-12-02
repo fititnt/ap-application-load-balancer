@@ -38,19 +38,10 @@
     - alb_manange_all is sameas true
     - alb_manange_common is sameas true
 
-## NOTICE: this file is temporary (maybe permanent) disabled, see
-##         https://github.com/fititnt/ap-application-load-balancer/issues/8#issuecomment-555401930
-##         (fititnt, 2019-11-19 08:17 BRT)
-#- name: alb-vars.yml (temporary file, will be replaced later)
-#  include: alb-vars.yml
-#  tags:
-#    - alb
-#    - alb-init
-#    - alb-vars
-#  when:
-#    - alb_manange_all is sameas true
-#    - alb_manange_apps is sameas true
-
+# TODO: implement a way to no implement apps and only sysapps based on what is
+#       is enabled at the moment inside the alb-init.yml. This actually is
+#       possible, but will need testing
+#       (fititnt, 2019-12-02 14:39 BRT)
 - name: alb-init.yml
   include: alb-init.yml
   tags:
@@ -58,7 +49,7 @@
     - alb-init
   when:
     - alb_manange_all is sameas true
-    - alb_manange_apps is sameas true
+    - (alb_manange_apps is sameas true) or (alb_manange_sysapps is sameas true)
 
 - name: Instalação de OpenResty, Lua Rest & Lua Resty AutoSSL (faz o HTTPS para os Apps)
   include: openresty/openresty-luarocks-lua-resty-auto-ssl-install.yml
@@ -87,6 +78,15 @@
     - alb_manange_all is sameas true
     - alb_manange_haproxy is sameas true
     - alb_forceignore_haproxy is defined and alb_forceignore_haproxy != true
+
+- name: ALB rule for each Sysapp
+  include: sysapps/sysapps.yml
+  tags:
+    - alb
+    - alb-sysapps
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_sysapps is sameas true
 
 - name: ALB rule for each App
   include: apps/apps.yml

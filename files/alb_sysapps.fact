@@ -1,0 +1,4 @@
+#!/bin/bash
+cat <<EOF
+{{ alb_sysapps_facts | to_json }}
+EOF

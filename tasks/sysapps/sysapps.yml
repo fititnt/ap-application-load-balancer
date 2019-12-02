@@ -1,0 +1,73 @@
+---
+
+# FILE:            {{ role_path }}/tasks/sysapps.yml
+# LICENSE:         Public Domain
+
+## NGinx Server Blocks (e.g. ~Apache Virtual Hosts)
+#- name: "NGinx Server Blocks (e.g. ~Apache Virtual Hosts)"
+#  template:
+#    src: "{{ item.vhost_template|default(alb_sysapps_serverblock_template) }}"
+#    dest: "/usr/local/openresty/nginx/conf/sites-enabled/{{ item.domain }}.conf"
+#    owner: root
+#    group: "root"
+#    mode: 0644
+#    backup: yes
+#  with_items: "{{ alb_sysapps }}"
+#  notify: reload openresty
+
+- name: /etc/ansible/facts.d/alb_sysapps.fact
+  template:
+    src: files/alb_sysapps.fact
+    dest: /etc/ansible/facts.d/alb_sysapps.fact
+    mode: 0755
+  register: alb_sysapps_facts_deployed
+
+- name: "sysapps | ALB App Rules"
+  template:
+    # src: "{{ item.vhost_template|default(alb_sysapps_serverblock_template) }}"
+    src: "{{ role_path }}/templates/alb-strategy/{{ item.app_alb_strategy | default(alb_default_app_alb_strategy) }}.conf.j2"
+    dest: "/opt/alb/sysapps/{{ item.app_uid }}.conf"
+    owner: root
+    group: "root"
+    mode: 0644
+    backup: yes
+  with_items: "{{ alb_sysapps }}"
+  when:
+    - alb_sysapps is defined and alb_sysapps[0] is defined
+    - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+  notify: reload openresty
+
+- name: sysapps | mkdir /var/log/sysapp/[app_uid]
+  file:
+    path: /var/log/sysapp/{{ item.app_uid }}
+    state: directory
+    mode: '0644'
+    owner: root
+  with_items: "{{ alb_sysapps }}"
+  when:
+    - alb_sysapps is defined and alb_sysapps[0] is defined
+    - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+
+- name: sysapps | mkdir /var/log/sysapp/[app_uid]/access.log
+  file:
+    path: /var/log/sysapp/{{ item.app_uid }}/access.log
+    state: touch
+    mode: '0644'
+    owner: www-data
+    group: www-data
+  with_items: "{{ alb_sysapps }}"
+  when:
+    - alb_sysapps is defined and alb_sysapps[0] is defined
+    - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+
+- name: sysapps | mkdir /var/log/sysapp/[app_uid]/error.log
+  file:
+    path: /var/log/sysapp/{{ item.app_uid }}/error.log
+    state: touch
+    mode: '0644'
+    owner: www-data
+    group: www-data
+  with_items: "{{ alb_sysapps }}"
+  when:
+    - alb_sysapps is defined and alb_sysapps[0] is defined
+    - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"

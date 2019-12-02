@@ -27,6 +27,7 @@ alb_manange_sanitycheck: yes
 
 ## Note: the next options is better leave it alone
 alb_manange_apps: "{{ alb_manange_openresty }}"
+alb_manange_sysapps: "{{ alb_manange_apps }}"
 alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
 
 ### AP-ALB Components: shared options __________________________________________
@@ -235,6 +236,7 @@ alb_haproxy_stats_trusted_hosts_skip_auth_check: false # To be implemented (fiti
 ### AP-ALB Component: Logrotate ________________________________________________
 alb_logrotate_template_alb: "{{ role_path }}/templates/logrotate/alb.j2"
 alb_logrotate_template_alb_apps: "{{ role_path }}/templates/logrotate/alb_apps.j2"
+alb_logrotate_template_alb_sysapps: "{{ role_path }}/templates/logrotate/alb_sysapps.j2"
 
 ### AP-ALB Component: OpenResty ________________________________________________
 alb_openresty_ip: 127.0.0.1    # Use 0.0.0.0 if want OpenResty exposed (e.g. without HAproxy)

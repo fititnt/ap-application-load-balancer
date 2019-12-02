@@ -80,6 +80,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
         - [Run OpenResty without HAProxy](#run-openresty-without-haproxy)
         - [lua-resty-auto-ssl](#lua-resty-auto-ssl)
     - [SanityCheck](#sanitycheck)
+    - [Sysapps](#sysapps)
     - [UFW](#ufw)
         - [Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)](#applying-only-firewall-rules-on-a-specific-server-ie-do-not-install-haproxy-openresty)
         - [External documentation about UFW and Ansible](#external-documentation-about-ufw-and-ansible)
@@ -634,15 +635,11 @@ alb_openresty_httpsport: 443
 
 #### lua-resty-auto-ssl
 
-`GUI/lua-resty-auto-ssl` used with [OpenResty](#openresty) to allow Automatic
+[GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl) used with
+[OpenResty](#openresty) to allow Automatic
 HTTPS on-the-fly.
 
-These rules afect `GUI/lua-resty-auto-ssl`.
-
-```yaml
-alb_letsencrypt_default: "return true" # the default (last) LUA code if a domain should or not checket for Let's Encrypt Keys. Use "return false" to disable
-```
-See [GUI/lua-resty-auto-ssl](https://github.com/GUI/lua-resty-auto-ssl).
+See [Shared Option: ACME](#acme) to see rules that affect this implementation.
 
 ### SanityCheck
 - **To permanently enable management by ALB (default)**
@@ -654,6 +651,32 @@ This ALB component (enabled by default) will run at very start of a play and
 try to do some very basic sanity checks that have a tendency to cause a
 node or a [entire cluster to enter on a non-operational state](https://en.wiktionary.org/wiki/clusterfuck)
 via human mistakes on ALB configurations.
+
+### Sysapps
+> This feature still a draft (fititnt, 2019-12-02 14:25 BRT)
+
+`Sysapps` implement near the same options than [Apps](#apps), but their focus
+is namespace apps that are not intended for end user usage. The adantages
+of this is apply default access control for all sysapps and also when running
+very large deployment you could choose run only the Apps or the Sysapps rules.
+
+```yaml
+    alb_sysapps:
+      - app_uid: "consul"
+        app_domain: "consul.{{ ansible_default_ipv4.address }}.nip.io"
+        app_domain_extras:
+          - consul.*
+        app_alb_strategy: "proxy"
+        app_forcehttps: no
+        app_alb_proxy: "http://127.0.0.1:8500"
+
+      - app_uid: "haproxy"
+        app_domain: "haproxy.{{ ansible_default_ipv4.address }}.nip.io"
+        app_domain_extras:
+          - haproxy.*
+        app_alb_strategy: "proxy"
+        app_alb_proxy: "http://127.0.0.1:{{ alb_haproxy_stats_port }}"
+```
 
 ### UFW
 > _To avoid acidental use, this feature is not enabled by default (and will
