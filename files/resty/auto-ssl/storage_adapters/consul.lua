@@ -1,41 +1,7 @@
--- License: Public Domain
-
 ---
 -- Requisites:
 --   opm get hamishforbes/lua-resty-consul
---
--- @todo: implement expire. Different from Redis, Consul or will persist
---        keys forever or will have a maximum TTL of 24h. (fititnt, 2019-11-28 19:17 BRT)
---
--- @todo: remove dump functions and keep login at at resonable way (fititnt, 2019-11-28 19:17 BRT)
---
--- How to test:
--- Copy this file to /usr/local/share/lua/5.1/resty/auto-ssl/storage_adapters/consul.lua. With ansible would be:
---    ansible -m copy -a "src=./consul.lua dest=/usr/local/share/lua/5.1/resty/auto-ssl/storage_adapters/consul.lua" aguia-pescadora-delta.etica.ai,aguia-pescadora-echo.etica.ai,aguia-pescadora-foxtrot.etica.ai
---    ansible -m copy -a "src=/alligo/code/fititnt/lua-resty-auto-ssl/lib/resty/auto-ssl/storage_adapters/consul.lua dest=/usr/local/share/lua/5.1/resty/auto-ssl/storage_adapters/consul.lua" aguia-pescadora-delta.etica.ai,aguia-pescadora-echo.etica.ai,aguia-pescadora-foxtrot.etica.ai
--- Them set the following on your OpenResty, at http context
---    auto_ssl:set("storage_adapter", "resty.auto-ssl.storage_adapters.consul")
---
--- How to document Lua code:
---   - https://stevedonovan.github.io/ldoc/manual/doc.md.html
---   - https://keplerproject.github.io/luadoc/manual.html
---   - http://lua-users.org/wiki/LuaStyleGuide
---   - http://sputnik.freewisdom.org/en/Coding_Standard
---
--- Using ldoc (https://github.com/stevedonovan/LDoc); the lua-doc from keplerproject says it is obsolete (https://github.com/keplerproject/luadoc)
---    sudo apt install lua-ldoc
--- Then validate documentation with
---    ldoc consul.lua
 
--- I think the path would be /usr/local/share/lua/5.1/resty/auto-ssl/storage_adapters/consul.lua
--- to work with resty/auto-ssl
--- And then use this as reference https://github.com/GUI/lua-resty-auto-ssl/blob/master/lib/resty/auto-ssl/storage_adapters/redis.lua
-
--- Lean lua in an Hour https://www.youtube.com/watch?v=S4eNl1rA1Ns
--- Definitely an openresty guide/ Hello world https://www.staticshin.com/programming/definitely-an-open-resty-guide/#hello_world
--- Lua in 15 minutes http://tylerneylon.com/a/learn-lua/
-
--- Redis equivalent: local redis = require "resty.redis"
 local consul = require('resty.consul')
 
 --------------------------------------------------------------------------------
@@ -102,7 +68,6 @@ dump({'started', os.date("!%Y-%m-%dT%TZ")})
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-
 -- @module storage_adapter_consul
 local _M = {}
 
@@ -155,9 +120,6 @@ function _M.new(auto_ssl_instance)
     options["ssl_verify"] = true
   end
 
-  -- local cjson = require "cjson"
-  -- ngx.log(ngx.ERR, '_M.new')
-  -- ngx.log(ngx.ERR, cjson.encode(options))
   dump({fn = '_M.new', options = options}, '_M.new')
 
   return setmetatable({ options = options }, { __index = _M })
@@ -174,46 +136,7 @@ function _M.get_connection(self)
 
   connection = consul:new(self.options)
 
-  -- local cjson = require "cjson"
-  -- ngx.log(ngx.ERR, '_M.get_connection')
-  -- ngx.log(ngx.ERR, cjson.encode(connection))
   dump({fn = '_M.get_connection', connection = connection}, '_M.get_connection')
-
-  -- NOTE: From https://github.com/hamishforbes/lua-resty-consul documentation:
-  --      "port Defaults to 8500. Set to 0 if using a unix socket as host."
-  --      redis.lua validate the connection at start, but resty.consul seems
-  --      to validate only on the first request. I will leave this note
-  --      here for now (fititnt, 2019-11-27 23:41 BRT)
-
-  -- local ok, err
-  -- local connect_options = self.options["connect_options"] or {}
-  -- if self.options["socket"] then
-  --   ok, err = connection:connect(self.options["socket"], connect_options)
-  -- else
-  --   ok, err = connection:connect(self.options["host"], self.options["port"], connect_options)
-  -- end
-  -- if not ok then
-  --   return false, err
-  -- end
-
-  -- if self.options["auth"] then
-  --   ok, err = connection:auth(self.options["auth"])
-  --   if not ok then
-  --     return false, err
-  --   end
-  -- end
-
-  -- if self.options["db"] then
-  --   ok, err = connection:select(self.options["db"])
-  --   if not ok then
-  --     return false, err
-  --   end
-  -- end
-
-  -- if not res then
-  --     ngx.log(ngx.ERR, err)
-  --     return
-  -- end
 
   ngx.ctx.auto_ssl_consul_connection = connection
   return connection
@@ -237,15 +160,11 @@ function _M.get(self, key)
   -- Redis use get, Consul use get_key
   -- Redis 'res' is value or nil; Consul is a lua-resty-http response object
   local res, err = connection:get_key(prefixed_key(self, key))
-  -- if res == ngx.null then
-  -- if res.status == 404 then
-  --  -- ngx.log(ngx.ERR, 'storage_adapter.consul._M.get: connection error:', err)
-  --  value = nil
-  --else
+
   if res.status ~= 404 and res.body[1] ~= nil and res.body[1]['Value'] ~= nil then
     value = res.body[1]['Value']
   else
-    dump({fn = '_M.get fail', res.body[1]['Value']})
+    dump({fn = '_M.get fail', res})
   end
 
   dump({fn = '_M.get', key=key, res=res, err=err, value=value}, '_M.get')
@@ -254,12 +173,6 @@ function _M.get(self, key)
 end
 
 --- Store a key-value on the Consul
---
--- @todo  There is a difference betwen connection:put (Redis) and from consul
---        from the first parameter. This should be checked
---
--- @todo  options param still not used, but will leave it here for now (fititnt, 2019-11-28 20:15 BRT)
---
 -- @param  self
 -- @param  key      The umprefixed key name
 -- @param  value    The values
@@ -269,29 +182,38 @@ end
 -- @return err  On error returns an error message
 function _M.set(self, key, value, options)
   local connection, connection_err = self:get_connection()
+  local ok = false
+
   if connection_err then
     return false, connection_err
   end
 
   key = prefixed_key(self, key)
 
-  -- Redis use set, Consul use put_key:
-  -- local ok, err = connection:put_key(key, value)
   local res, err = connection:put_key(key, value)
 
-  -- Know issue: not implemented way to expire key at this moment.
-  -- The following was from redis.lua
-  -- if ok then
-  --   if options and options["exptime"] then
-  --     local _, expire_err = connection:expire(key, options["exptime"])
-  --     if expire_err then
-  --       ngx.log(ngx.ERR, "auto-ssl: failed to set expire: ", expire_err)
-  --     end
-  --   end
-  -- end
+  if res.status == 200 then
+    ok = true
 
-  dump({fn = '_M.set', key=key, value=value, res=res, err=err}, '_M.set')
-  return res, err
+    -- This expire strategy is based on file.lua and not on redis.lua and
+    -- at the moment is not using Consul native way to expire keys. Since the
+    -- version resty.consul v0.3.2 does not implement Expire, even if is
+    -- possible to do with more RAW HTTP methods, we initialy will the ngx.timer
+    -- Not ideal, but it works for and functional MVP (fititnt, 2019-11-30 22:14 BRT)
+    if options and options["exptime"] then
+      ngx.timer.at(options["exptime"], function()
+        local _, delete_err = _M.delete(self, key)
+        if delete_err then
+          ngx.log(ngx.ERR, "auto-ss.lstorage_adapter.consul._M.delete: failed to remove the key from Consul after the expiretime ", delete_err)
+        else
+          dump({fn = '_M.set', _=_, delete_err=delete_err, 'ngx.timer worked!'})
+        end
+      end)
+    end
+  end
+
+  dump({fn = '_M.set', ok=ok, key=key, value=value, options=options, res=res, err=err}, '_M.set')
+  return ok, err
 end
 
 --- Delete a value from Consul based on the unprefixed key
@@ -303,7 +225,7 @@ function _M.delete(self, key)
   local connection, connection_err = self:get_connection()
   if connection_err then
     -- ngx.log(ngx.EMERG, '_M.delete: ', connection_err)
-    ngx.log(ngx.EMERG, 'storage_adapter.consul._M.delete: connection error:', err)
+    ngx.log(ngx.EMERG, 'storage_adapter.consul._M.delete: connection error:', connection_err)
     return false, connection_err
   end
 
@@ -328,8 +250,6 @@ function _M.keys_with_suffix(self, suffix)
     return false, connection_err
   end
 
-  -- Redis use keys, Consul uses list_keys
-  -- local keys, err = connection:keys(prefixed_key(self, "*" .. suffix))
   local keys, err = connection:list_keys(prefixed_key(self, "*" .. suffix))
 
   if keys and self.options["prefix"] then

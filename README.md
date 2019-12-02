@@ -60,6 +60,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
     - [Quickstart on how to hotfix/debug production servers](#quickstart-on-how-to-hotfixdebug-production-servers)
 - [ALB components](#alb-components)
     - [Shared options](#shared-options)
+        - [ACME](#acme)
         - [Autentication Credentials](#autentication-credentials)
         - [Bastion Hosts](#bastion-hosts)
         - [DMZ (DeMilitarized Zone)](#dmz-demilitarized-zone)
@@ -292,6 +293,25 @@ alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
 **Shared options** are how we call variable conventions that could be used as
 default option to improve more specific ALB Components or your own custom
 implementation.
+
+#### ACME
+
+These options are re-used by components that manange Automatic Certificate
+Management Environment (ACME). See [ACME on Wikipedia](https://en.wikipedia.org/wiki/Automated_Certificate_Management_Environment)
+and [RFC 8555](https://tools.ietf.org/html/rfc8555).
+
+```yaml
+alb_acme_production: true
+alb_acme_rule_whitelist: []
+alb_acme_rule_whitelist_file: '' # not implemented... yet
+alb_acme_rule_blacklist: []      # not implemented... yet
+alb_acme_rule_blacklist_file: '' # not implemented... yet
+alb_acme_rule_last: true
+
+# This value is infered from alb_acme_production. But you can customize yourself
+alb_acme_url: "{{ 'https://acme-v02.api.letsencrypt.org/directory' if alb_acme_production else 'https://acme-staging-v02.api.letsencrypt.org/directory' }}"
+```
+
 
 #### Autentication Credentials
 

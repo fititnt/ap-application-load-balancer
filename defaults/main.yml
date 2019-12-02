@@ -80,9 +80,9 @@ alb_jump_boxes: []
 
 ## @see https://github.com/fititnt/ap-application-load-balancer/issues/26
 alb_acme_production: true
-alb_acme_rule_whitelist: [] # not implemented... yet
+alb_acme_rule_whitelist: []
 alb_acme_rule_whitelist_file: '' # not implemented... yet
-alb_acme_rule_blacklist: [] # not implemented... yet
+alb_acme_rule_blacklist: []      # not implemented... yet
 alb_acme_rule_blacklist_file: '' # not implemented... yet
 alb_acme_rule_last: true
 
