@@ -22,7 +22,7 @@
     mode: 0755
   register: alb_sysapps_facts_deployed
 
-- name: "sysapps | ALB App Rules"
+- name: "sysapps | ALB Sysapp Rules"
   template:
     # src: "{{ item.vhost_template|default(alb_sysapps_serverblock_template) }}"
     src: "{{ role_path }}/templates/alb-strategy/{{ item.app_alb_strategy | default(alb_default_app_alb_strategy) }}.conf.j2"

@@ -192,7 +192,7 @@
 
 - name: alb-init | ln -s /var/sysapp/ /opt/alb/sysapps-data
   file:
-    src: /var/app/
+    src: /var/sysapps/
     dest: /opt/alb/sysapps-data
     owner: root
     state: link
