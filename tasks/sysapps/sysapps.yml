@@ -3,6 +3,8 @@
 # FILE:            {{ role_path }}/tasks/sysapps.yml
 # LICENSE:         Public Domain
 
+# ansible-playbook -i hosts.yml infra-alb.yml --tags="alb-sysapps" --extra-vars "alb_forceredeploy=yes"
+
 ## NGinx Server Blocks (e.g. ~Apache Virtual Hosts)
 #- name: "NGinx Server Blocks (e.g. ~Apache Virtual Hosts)"
 #  template:
@@ -22,6 +24,22 @@
     mode: 0755
   register: alb_sysapps_facts_deployed
 
+
+- name: " sysapps | /opt/alb/sysapps/.htaccess"
+  htpasswd:
+    path: /opt/alb/sysapps/.htaccess
+    name: "{{ item.username }}"
+    password: "{{ item.password }}"
+    state: "{{ item.state | default('present') }}"
+    owner: root
+    group: www-data
+    mode: 0640
+  with_items: "{{ alb_sysapps_htpassword }}"
+  when:
+    - alb_sysapps is defined and alb_sysapps[0] is defined
+    - alb_sysapps_htpassword is defined and alb_sysapps_htpassword[0] is defined
+    - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+
 - name: "sysapps | ALB Sysapp Rules"
   template:
     # src: "{{ item.vhost_template|default(alb_sysapps_serverblock_template) }}"
@@ -33,7 +51,10 @@
     backup: yes
   with_items: "{{ alb_sysapps }}"
   vars:
-    - type_of_app: "sysapp"
+    type_of_app: "sysapp"
+    basic_auth_enabled: "{{ item.app_auth_basic_enabled | default(alb_sysapps__app_auth_basic_enabled) }}"
+    auth_basic: '"{{ item.app_auth_basic | default(alb_sysapps__app_auth_basic) }}"'
+    auth_basic_user_file: '"{{ item.app_auth_basic_user_file | default(alb_sysapps__app_auth_basic_user_file) }}"'
   when:
     - alb_sysapps is defined and alb_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"

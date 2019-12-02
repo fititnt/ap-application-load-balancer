@@ -1,0 +1,6 @@
+## See https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-http-basic-authentication/
+## TODO consider implement 2FA https://github.com/cloudflare/nginx-google-oauth
+{% if (basic_auth_enabled|bool) %}
+auth_basic {{ auth_basic }};
+auth_basic_user_file {{ auth_basic_user_file }};
+{% endif %}

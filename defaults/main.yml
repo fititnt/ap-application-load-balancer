@@ -91,9 +91,19 @@ alb_acme_rule_last: true
 # This value is infered from alb_acme_production. But you can customize yourself
 alb_acme_url: "{{ 'https://acme-v02.api.letsencrypt.org/directory' if alb_acme_production else 'https://acme-staging-v02.api.letsencrypt.org/directory' }}"
 
+### AP-ALB Component: Sysapps __________________________________________________
+
+alb_sysapps__app_auth_basic: "Internal Access Area"
+alb_sysapps__app_auth_basic_user_file: "/opt/alb/sysapps/.htaccess"
+alb_sysapps__app_auth_basic_enabled: true
+
 ### AP-ALB Component: Apps _____________________________________________________
 
 alb_apps: []
+
+alb_apps__app_auth_basic_enabled: false
+alb_apps__app_auth_basic: "Private {{ item.app_uid }} Area"
+alb_apps__app_auth_basic_user_file: "/opt/alb/apps/{{ item.app_uid }}.htpasswd"
 
 alb_letsencrypt_allow_domain_whitelist:
 #  - example.org

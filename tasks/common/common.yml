@@ -51,10 +51,10 @@
   file:
     path: /etc/ansible/facts.d/
     state: directory
-    owner: root
-    group: root
-    mode: 0755
-    recurse: true
+    #owner: root
+    #group: root
+    #mode: 0755
+    #recurse: true
 
 #- name: common | sudo apt-get install software-properties-common
 #  apt:

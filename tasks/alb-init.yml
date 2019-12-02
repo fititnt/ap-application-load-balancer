@@ -291,3 +291,16 @@
     force: yes
   when:
     - alb_version_lastrun != alb_version
+
+- name: "alb-init | install python3-pip"
+  package:
+    name: "python3-pip"
+    state: present
+  when:
+    - alb_version_lastrun != alb_version
+
+- name: "alb-init | pip3 install passlib"
+  pip:
+    name: passlib
+  when:
+    - alb_version_lastrun != alb_version

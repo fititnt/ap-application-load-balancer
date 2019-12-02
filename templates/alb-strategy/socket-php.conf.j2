@@ -17,6 +17,7 @@ server {
     {{ alb_apprule_automatichttps_httpsblock | indent(4) }}
 
     {% filter indent(width=4) %}{% include "partials/add_headers.conf.j2" %}{% endfilter %}
+    {% filter indent(width=4) %}{% include "partials/basic_auth.conf.j2" %}{% endfilter %}
 
     ## @see # https://docs.min.io/docs/setup-nginx-proxy-with-minio.html
     # To allow special characters in headers
@@ -56,6 +57,7 @@ server {
     location = /robots.txt  { access_log off; log_not_found off; }
 
     {% filter indent(width=4) %}{% include "partials/add_headers.conf.j2" %}{% endfilter %}
+    {% filter indent(width=4) %}{% include "partials/basic_auth.conf.j2" %}{% endfilter %}
 
 {% if (item.app_forcehttps is defined and item.app_forcehttps is sameas true) or (item.app_forcehttps is undefined and alb_default_app_forcehttps is sameas true) %}
     ## item.app_forcehttps: true

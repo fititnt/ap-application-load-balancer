@@ -333,6 +333,9 @@ alb_auth_users:
     password: "plain-password"
   - username: Admin2
     password: "plain-password2"
+  - username: "old-user-that-should-be-removed"
+    password: "anotheranotherpass"
+    state: absent
   - username: SuperUser2
     password: !vault |
       $ANSIBLE_VAULT;1.1;AES256
@@ -664,7 +667,11 @@ very large deployment you could choose run only the Apps or the Sysapps rules.
 
     # alb_sysapps_default not implemented yet
     alb_sysapps_default:
-      - app_forcehttps: no
+      app_forcehttps: no
+      app_basicauth_file: "/opt/alb/sysapps/.htaccess"
+
+    # If defined, will create /opt/alb/sysapps/.htaccess just once
+    alb_sysapps_htpassword : "{{ alb_auth_users }}"
 
     alb_sysapps:
       - app_uid: "consul"
