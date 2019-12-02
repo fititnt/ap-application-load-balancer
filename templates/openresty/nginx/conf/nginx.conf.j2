@@ -87,25 +87,32 @@ http {
 
         ngx.log(ngx.WARN, "allow_domain started. Will evaluate if should or not obtain certificates to ", domain)
 
+{% if ((alb_acme_rule_ips_allowed is defined) and (alb_acme_rule_ips_allowed|bool == false)) %}
+        if string.match(domain, "^(%d+).(%d+).(%d+).(%d+)$") or string.find(domain, ":", 1, true) then
+          ngx.log(ngx.INFO, "allow_domain dont allow IP domains", domain)
+          return false
+        end
+{% else %}
+        -- alb_acme_rule_ips_allowed rule not applied
+{% endif %}
+
 {% if ((alb_acme_rule_whitelist is defined) and (alb_acme_rule_whitelist|length > 0)) %}
         if ngx.re.match(domain, "^({{ alb_acme_rule_whitelist | join('|') }})$", "ijo") then
           ngx.log(ngx.INFO, "allow_domain whitelisted domain ", domain)
           return true
         end
+{% else %}
+        -- alb_acme_rule_whitelist rule not applied
 {% endif %}
 
-        -- Fail first if domain seems to be an IP.
-        -- @see https://github.com/GUI/lua-resty-auto-ssl/issues/26#issuecomment-366919522
-        if string.match(domain, "(%d+).(%d+).(%d+).(%d+)") or string.find(domain, ":", 1, true) then
-            -- These domains can be used for testing. Comment out this if to not allow even these ones
-            -- https://nip.io/
-            -- https://xip.io/
-            -- https://sslip.io/
-            if not (string.find(domain, "nip.io", 1, true) or string.find(domain, "xip.io", 1, true) or string.find(domain, "sslip.io", 1, true)) then
-                ngx.log(ngx.ERR, "allow_domain do not allow HTTPS for IPs ", domain)
-                return false
-            end
+{% if ((alb_acme_rule_blacklist is defined) and (alb_acme_rule_blacklist|length > 0)) %}
+        if ngx.re.match(domain, "^({{ alb_acme_rule_blacklist | join('|') }})$", "ijo") then
+          ngx.log(ngx.INFO, "allow_domain blacklisted domain ", domain)
+          return false
         end
+{% else %}
+        -- alb_acme_rule_blacklist rule not applied
+{% endif %}
 
 {{ alb_letsencrypt_allow_domain_customlua|default('') }}
 

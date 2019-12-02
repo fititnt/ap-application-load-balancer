@@ -84,6 +84,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
         - [Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)](#applying-only-firewall-rules-on-a-specific-server-ie-do-not-install-haproxy-openresty)
         - [External documentation about UFW and Ansible](#external-documentation-about-ufw-and-ansible)
 - [Advanced usage](#advanced-usage)
+    - [Lua](#lua)
     - [ALB Internals](#alb-internals)
     - [Risk mitigation](#risk-mitigation)
         - [Still use passwords for intra-cluster communications (We're looking at you, Redis, MongoDB...)](#still-use-passwords-for-intra-cluster-communications-were-looking-at-you-redis-mongodb)
@@ -728,6 +729,20 @@ alb_manange_ufw: yes
 - UFW Manual: <http://manpages.ubuntu.com/manpages/cosmic/en/man8/ufw.8.html>
 
 ## Advanced usage
+
+### Lua
+
+Lua is fantastic language! Is actually easier to lean Lua and implement some
+advanced rules than push Apache/Nginx configurations too much.
+
+- Learn Lua in 15 Minutes (text): http://tylerneylon.com/a/learn-lua/
+- Learn Lua in an Hour (video): https://www.youtube.com/watch?v=S4eNl1rA1Ns
+- Lua 5.1 short
+reference: <http://lua-users.org/files/wiki_insecure/users/thomasl/luarefv51.pdf>
+- Lua Online compiler: <https://repl.it/languages/lua>
+
+Tip: you very likely will use Lua 5.1, because is the supported version of
+LuaJIT (it means is faster and with more support).
 
 ### ALB Internals
 
