@@ -94,7 +94,7 @@ multitail -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/APPN
 multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log -ci green /var/log/app/APPNAMEHERE/access.log -ci red -I /var/log/app/APPNAMEHERE/error.log
 
 # This is for a sysapp, replace SYSAPPNAMEHERE
-multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log -ci green /var/log/app/SYSAPPNAMEHERE/access.log -ci red -I /var/log/app/SYSAPPNAMEHERE/error.log
+multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log -ci green /var/log/sysapp/SYSAPPNAMEHERE/access.log -ci red -I /var/log/sysapp/SYSAPPNAMEHERE/error.log
 ```
 
 See <https://www.vanheusden.com/multitail/examples.php>.

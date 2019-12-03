@@ -1,5 +1,5 @@
-# Águia Pescadora Application Load Balancer (_"AP-ALB"_) - v0.8.1-alpha
-AP-ALP is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
+# AP Application Load Balancer - v0.8.1-alpha
+AP-ALB is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
 providers** (e.g. [Alibaba](https://www.alibabacloud.com/product/server-load-balancer),
@@ -52,6 +52,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
             - [What about one-click rollback feature?](#what-about-one-click-rollback-feature)
         - [Decoupled subcomponents when makes sense](#decoupled-subcomponents-when-makes-sense)
     - [ALB Non-Goals](#alb-non-goals)
+        - [Do not enforce specific Virtual Private Network implementation](#do-not-enforce-specific-virtual-private-network-implementation)
         - [Custom end user graphical interface or no need of sudo to deploy proxy rules](#custom-end-user-graphical-interface-or-no-need-of-sudo-to-deploy-proxy-rules)
             - [Potential alternatives](#potential-alternatives)
 - [Quickstart Guide](#quickstart-guide)
@@ -185,6 +186,21 @@ See [ALB components](#alb-components).
 > **non-goal** (plural non-goals)
 > A potential goal or requirement which is explicitly excluded from the scope of a project.
 > [wiktionary for non-goal](https://en.wiktionary.org/wiki/non-goal)
+
+#### Do not enforce specific Virtual Private Network implementation
+One of the main goals of AP-ALB is be able to run on very cheap providers.
+Another goal is work smooth with hosts across different providers. Both cases
+when running AP-ALB in clustered mode could be done only with firewall, but tend
+to be less complex just implement some underlining VPN across the nodes.
+
+There are several ways to implement VPN, but as for AP-ALB, **our objective is
+just make it work fine with private IPs and give at least one playbook example
+with any VPN solution**. So its a Non-goal enforce (or even strong suggest) any
+specific underlining VPN solution.
+
+If your implemencation makes sense using VPNs, choose one underline
+implementation that is aligned with your skillset and concerns with type of
+survilance of the specific project you are working on to deploy AP-ALB.
 
 #### Custom end user graphical interface or no need of sudo to deploy proxy rules
 One of the big features of Load Balancers of big cloud providers is that they
