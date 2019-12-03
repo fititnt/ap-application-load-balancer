@@ -2,9 +2,11 @@
 
 # FILE:            {{ role_path }}/tasks/alb-init.yml
 # LICENSE:         Public Domain
-#
-# alb-init tasks runs before other software is installed on the system
-# @see https://github.com/fititnt/ap-application-load-balancer/blob/master/alb-internals.md
+
+# Note: both /opt/alb/apps/ and /opt/alb/sysapps/ need +x permissions on full
+#       path because of .htaccess. Same should happen with default HTML content
+#       Use this to see full tree permissions
+#            namei -m /opt/alb/sysapps/.htaccess
 
 - name: alb-init | mkdir -p /etc/ansible/facts.d/
   file:
@@ -33,7 +35,8 @@
     create_home: no
     shell: /usr/sbin/nologin
     group: alb
-    groups: www-data
+    groups: "{{ alb_nginx_user }}"
+    # groups: www-data
   when:
     - alb_version_lastrun != alb_version
 # TODO: check on new installations www-data user already exist and this command would not fail (fititnt, 2019-11-07 21:11 BRT)
@@ -43,8 +46,9 @@
   file:
     path: /opt/alb/
     state: directory
-    mode: '0644'
+    mode: '0611'
     owner: root
+    group: root
   when:
     - alb_version_lastrun != alb_version
 
@@ -53,7 +57,18 @@
     path: /var/alb/
     state: directory
     mode: '0644'
+    owner: alb
+    group: alb
+  when:
+    - alb_version_lastrun != alb_version
+
+- name: alb-init | mkdir /var/alb-backups
+  file:
+    path: /var/alb-backups/
+    state: directory
+    mode: '0700'
     owner: root
+    group: root
   when:
     - alb_version_lastrun != alb_version
 
@@ -71,8 +86,8 @@
     path: /var/log/alb/access.log
     state: touch
     mode: '0644'
-    owner: www-data
-    group: www-data
+    owner: "{{ alb_nginx_user }}"
+    group: "{{ alb_nginx_user }}"
   when:
     - alb_version_lastrun != alb_version
 
@@ -81,8 +96,8 @@
     path: /var/log/alb/error.log
     state: touch
     mode: '0644'
-    owner: www-data
-    group: www-data
+    owner: "{{ alb_nginx_user }}"
+    group: "{{ alb_nginx_user }}"
   when:
     - alb_version_lastrun != alb_version
 
@@ -91,8 +106,8 @@
     path: /var/log/alb/letsencrypt.log
     state: touch
     mode: '0644'
-    owner: www-data
-    group: www-data
+    owner: "{{ alb_nginx_user }}"
+    group: "{{ alb_nginx_user }}"
   when:
     - alb_version_lastrun != alb_version
 
@@ -100,7 +115,7 @@
   file:
     path: /opt/alb/apps/
     state: directory
-    mode: '0644'
+    mode: '0655'
     owner: root
   when:
     - alb_version_lastrun != alb_version
@@ -109,7 +124,7 @@
   file:
     path: /opt/alb/sysapps/
     state: directory
-    mode: '0644'
+    mode: '0655'
     owner: root
   when:
     - alb_version_lastrun != alb_version
@@ -118,7 +133,7 @@
   file:
     path: /opt/alb/info/
     state: directory
-    mode: '0644'
+    mode: '0655'
     owner: root
   when:
     - alb_version_lastrun != alb_version
@@ -127,7 +142,7 @@
   file:
     path: /var/app/
     state: directory
-    mode: '0644'
+    mode: '0655'
     owner: root
   when:
     - alb_version_lastrun != alb_version
@@ -164,6 +179,16 @@
   file:
     src: /var/alb/
     dest: /opt/alb/alb-data
+    owner: root
+    state: link
+    # force: yes
+  when:
+    - alb_version_lastrun != alb_version
+
+- name: alb-init | ln -s /var/alb-backups/ /opt/alb/backups
+  file:
+    src: /var/alb-backups/
+    dest: /opt/alb/backups
     owner: root
     state: link
     # force: yes

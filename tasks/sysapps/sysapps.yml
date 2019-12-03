@@ -24,7 +24,6 @@
     mode: 0755
   register: alb_sysapps_facts_deployed
 
-
 - name: " sysapps | /opt/alb/sysapps/.htaccess"
   htpasswd:
     path: /opt/alb/sysapps/.htaccess
@@ -32,9 +31,10 @@
     password: "{{ item.password }}"
     state: "{{ item.state | default('present') }}"
     owner: root
-    group: www-data
-    mode: 0640
+    group: "{{ alb_nginx_user }}"
+    mode: 0650
   with_items: "{{ alb_sysapps_htpassword }}"
+  no_log: true
   when:
     - alb_sysapps is defined and alb_sysapps[0] is defined
     - alb_sysapps_htpassword is defined and alb_sysapps_htpassword[0] is defined
@@ -46,7 +46,7 @@
     src: "{{ role_path }}/templates/alb-strategy/{{ item.app_alb_strategy | default(alb_default_app_alb_strategy) }}.conf.j2"
     dest: "/opt/alb/sysapps/{{ item.app_uid }}.conf"
     owner: root
-    group: "root"
+    group: "{{ alb_nginx_user }}"
     mode: 0644
     backup: yes
   with_items: "{{ alb_sysapps }}"
@@ -66,6 +66,7 @@
     state: directory
     mode: '0644'
     owner: root
+    group: "{{ alb_nginx_user }}"
   with_items: "{{ alb_sysapps }}"
   when:
     - alb_sysapps is defined and alb_sysapps[0] is defined
@@ -76,8 +77,8 @@
     path: /var/log/sysapp/{{ item.app_uid }}/access.log
     state: touch
     mode: '0644'
-    owner: www-data
-    group: www-data
+    owner: "{{ alb_nginx_user }}"
+    group: "{{ alb_nginx_user }}"
   with_items: "{{ alb_sysapps }}"
   when:
     - alb_sysapps is defined and alb_sysapps[0] is defined
@@ -88,8 +89,8 @@
     path: /var/log/sysapp/{{ item.app_uid }}/error.log
     state: touch
     mode: '0644'
-    owner: www-data
-    group: www-data
+    owner: "{{ alb_nginx_user }}"
+    group: "{{ alb_nginx_user }}"
   with_items: "{{ alb_sysapps }}"
   when:
     - alb_sysapps is defined and alb_sysapps[0] is defined
