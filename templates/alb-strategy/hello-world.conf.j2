@@ -1,11 +1,11 @@
 # {{ ansible_managed }}
-# FILE:             /opt/alb/apps/{{ item.app_uid }}.conf
+# FILE:             /opt/alb/{{ type_of_app }}s/{{ item.app_uid }}.conf
 # ALB-STRATEGY:     hello-world
 
 server {
     # listen 443 ssl;
     listen {{ alb_openresty_ip}}:{{ alb_openresty_httpsport }} ssl;
-    server_name {{ item.app_domain | default(alb_default_app_domain) }}{% if ((item.app_domain_extras is defined) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
+    server_name {{ item.app_domain | default(alb_default_app_domain) }}{% if ((item.app_domain_extras is defined and item.app_domain_extras) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
 
     error_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/error.log;
     access_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/access.log  main;
@@ -18,12 +18,22 @@ server {
     {% filter indent(width=4) %}{% include "partials/add_headers.conf.j2" %}{% endfilter %}
     {% filter indent(width=4) %}{% include "partials/basic_auth.conf.j2" %}{% endfilter %}
 
+    # charset_types 'application/json';
+    # default_type 'application/json';
+    charset_types application/json;
+    default_type application/json;
+
     location / {
         # MIME type determined by default_type:
-        default_type 'text/plain';
+        # default_type 'text/plain';
+        # default_type 'application/json';
+        # ngx.header.content_type = "application/json; charset=utf-8"
 
         content_by_lua_block {
-            ngx.say('Hello, world, {{ item.app_uid }}!')
+            # ngx.status = ngx.HTTP_OK
+            # ngx.header.content_type = "application/json; charset=utf-8"
+            ngx.say('{"msg": "Hello, world, {{ item.app_uid }}!"}')
+            # ngx.say(cjson.encode({ status = true }))
         }
     }
 }
@@ -31,7 +41,7 @@ server {
 server {
     # listen 80;
     listen {{ alb_openresty_ip}}:{{ alb_openresty_httpport }};
-    server_name {{ item.app_domain | default(alb_default_app_domain) }}{% if ((item.app_domain_extras is defined) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
+    server_name {{ item.app_domain | default(alb_default_app_domain) }}{% if ((item.app_domain_extras is defined and item.app_domain_extras) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
 
     error_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/error.log;
     access_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/access.log  main;

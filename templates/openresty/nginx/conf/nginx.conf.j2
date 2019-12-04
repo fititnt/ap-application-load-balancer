@@ -22,6 +22,10 @@ events {
 {{ alb_nginx_eventscontext_custom }}
 }
 
+# TODO: implement health check on default server, see
+#       https://github.com/nginxinc/kubernetes-ingress/issues/90
+#       (fititnt, 2019-12-04 00:52 BRT)
+
 http {
     include       mime.types;
     default_type  application/octet-stream;

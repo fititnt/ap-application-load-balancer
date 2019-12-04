@@ -1,0 +1,32 @@
+---
+
+
+- name: /etc/ansible/facts.d/alb_openresty.fact
+  template:
+    src: files/alb_openresty.fact
+    dest: /etc/ansible/facts.d/alb_openresty.fact
+    mode: 0755
+  register: alb_openresty_facts_deployed
+
+- name: Instalação de OpenResty, Lua Rest & Lua Resty AutoSSL (faz o HTTPS para os Apps)
+  include: openresty-luarocks-lua-resty-auto-ssl-install.yml
+  when:
+    - "(alb_openresty_facts_deployed is changed) or (alb_forceredeploy|bool)"
+
+#  tags:
+#    - alb
+#    - alb-openresty
+#  when:
+#    - alb_manange_all is sameas true
+#    - alb_manange_openresty is sameas true
+
+- name: openresty/alb-openresty-after.yml
+  include: alb-openresty-after.yml
+  when:
+    - "(alb_openresty_facts_deployed is changed) or (alb_forceredeploy|bool)"
+#  tags:
+#    - alb
+#    - alb-openresty
+#  when:
+#    - alb_manange_all is sameas true
+#    - alb_manange_openresty is sameas true

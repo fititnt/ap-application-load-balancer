@@ -51,8 +51,8 @@
     - alb_manange_all is sameas true
     - (alb_manange_apps is sameas true) or (alb_manange_sysapps is sameas true)
 
-- name: Instalação de OpenResty, Lua Rest & Lua Resty AutoSSL (faz o HTTPS para os Apps)
-  include: openresty/openresty-luarocks-lua-resty-auto-ssl-install.yml
+- name: OpenResty
+  include: openresty/main.yml
   tags:
     - alb
     - alb-openresty
@@ -60,14 +60,23 @@
     - alb_manange_all is sameas true
     - alb_manange_openresty is sameas true
 
-- name: openresty/alb-openresty-after.yml
-  include: openresty/alb-openresty-after.yml
-  tags:
-    - alb
-    - alb-openresty
-  when:
-    - alb_manange_all is sameas true
-    - alb_manange_openresty is sameas true
+# - name: Instalação de OpenResty, Lua Rest & Lua Resty AutoSSL (faz o HTTPS para os Apps)
+#   include: openresty/openresty-luarocks-lua-resty-auto-ssl-install.yml
+#   tags:
+#     - alb
+#     - alb-openresty
+#   when:
+#     - alb_manange_all is sameas true
+#     - alb_manange_openresty is sameas true
+
+# - name: openresty/alb-openresty-after.yml
+#   include: openresty/alb-openresty-after.yml
+#   tags:
+#     - alb
+#     - alb-openresty
+#   when:
+#     - alb_manange_all is sameas true
+#     - alb_manange_openresty is sameas true
 
 - name: HAproxy
   include: haproxy/haproxy.yml
@@ -77,7 +86,7 @@
   when:
     - alb_manange_all is sameas true
     - alb_manange_haproxy is sameas true
-    - alb_forceignore_haproxy is defined and alb_forceignore_haproxy != true
+    # - alb_forceignore_haproxy is defined and alb_forceignore_haproxy is sameas true
 
 - name: ALB rule for each Sysapp
   include: sysapps/sysapps.yml
