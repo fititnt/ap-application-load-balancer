@@ -26,6 +26,11 @@ events {
 #       https://github.com/nginxinc/kubernetes-ingress/issues/90
 #       (fititnt, 2019-12-04 00:52 BRT)
 
+# TODO: implement proxy protocol with send-proxy
+#       https://docs.nginx.com/nginx/admin-guide/load-balancer/using-proxy-protocol/
+#       https://www.haproxy.com/blog/preserve-source-ip-address-despite-reverse-proxies/
+#       (fititnt, 2019-12-04 16:25 BRT)
+
 http {
     include       mime.types;
     default_type  application/octet-stream;

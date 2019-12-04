@@ -62,6 +62,12 @@ humanitarian or commercial projects from who help we on Etica.AI.
 - [ALB components](#alb-components)
     - [Shared options](#shared-options)
         - [ACME](#acme)
+        - [app_* variables](#app_-variables)
+            - [app_uid](#app_uid)
+            - [app_domain](#app_domain)
+            - [app_domain_extras](#app_domain_extras)
+            - [app_alb_strategy](#app_alb_strategy)
+            - [app_alb_proxy](#app_alb_proxy)
         - [Autentication Credentials](#autentication-credentials)
         - [Bastion Hosts](#bastion-hosts)
         - [DMZ (DeMilitarized Zone)](#dmz-demilitarized-zone)
@@ -329,6 +335,33 @@ alb_acme_rule_last: true
 # This value is infered from alb_acme_production. But you can customize yourself
 alb_acme_url: "{{ 'https://acme-v02.api.letsencrypt.org/directory' if alb_acme_production else 'https://acme-staging-v02.api.letsencrypt.org/directory' }}"
 ```
+#### app_* variables
+
+Variables prefixed with `app_' are used by [Apps](#apps) and [Sysapps](#sysapps)
+and have some extra customization via [ALB Strategies](#alb-strategies).
+
+These are key elements that form a single dictonary (think _object_) for the
+`alb_apps` (list) and `alb_sysapps` (list).
+
+##### app_uid
+- Required: **always**
+- Default: **no default**
+- Values: `[a-zA-Z0-9\-\_]`
+  - Use: Letters (lower and UPPERCASE), Numbers, Underline, Hyphen
+  - Not so safe, but not blocked: UNICODE, UTF-8 characters (requires you system to support)
+  - Strongly: blank spaces, control character (NUL \0, LF \n, etc)
+
+`app_uid` is...
+
+##### app_domain
+
+##### app_domain_extras
+
+##### app_alb_strategy
+
+...
+##### app_alb_proxy
+
 
 
 #### Autentication Credentials

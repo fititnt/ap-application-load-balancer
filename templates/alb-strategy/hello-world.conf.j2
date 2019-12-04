@@ -18,24 +18,31 @@ server {
     {% filter indent(width=4) %}{% include "partials/add_headers.conf.j2" %}{% endfilter %}
     {% filter indent(width=4) %}{% include "partials/basic_auth.conf.j2" %}{% endfilter %}
 
-    # charset_types 'application/json';
-    # default_type 'application/json';
     charset_types application/json;
     default_type application/json;
 
-    location / {
-        # MIME type determined by default_type:
-        # default_type 'text/plain';
-        # default_type 'application/json';
-        # ngx.header.content_type = "application/json; charset=utf-8"
-
-        content_by_lua_block {
-            # ngx.status = ngx.HTTP_OK
-            # ngx.header.content_type = "application/json; charset=utf-8"
-            ngx.say('{"msg": "Hello, world, {{ item.app_uid }}!"}')
-            # ngx.say(cjson.encode({ status = true }))
-        }
+    location = /ping {
+        access_log off;
+        return 200 "pong\n";
     }
+
+    location /status {
+        stub_status;
+        allow all;
+    }
+
+    location = / {
+         content_by_lua_block {
+            local cjson = require "cjson"
+            --- local h, err = ngx.req.get_headers()
+            ngx.status = ngx.HTTP_OK
+            ngx.say(cjson.encode({
+                msg = "Hello, {{ item.app_uid }}",
+                --- request = h,
+                status = 200
+            }))
+         }
+     }
 }
 
 server {
@@ -61,14 +68,31 @@ server {
 {% else %}
 #### HTTPS redirect not enforced, allow HTTP block serve content - START
 
-    location / {
-        # MIME type determined by default_type:
-        default_type 'text/plain';
+    charset_types application/json;
+    default_type application/json;
 
-        content_by_lua_block {
-            ngx.say('Hello, world, {{ item.app_uid }}!')
-        }
+    location = /ping {
+        access_log off;
+        return 200 "pong\n";
     }
+
+    location /status {
+        stub_status;
+        allow all;
+    }
+
+    location = / {
+         content_by_lua_block {
+            local cjson = require "cjson"
+            --- local h, err = ngx.req.get_headers()
+            ngx.status = ngx.HTTP_OK
+            ngx.say(cjson.encode({
+                msg = "Hello, {{ item.app_uid }}",
+                --- request = h,
+                status = 200
+            }))
+         }
+     }
 
 #### HTTPS redirect not enforced, allow HTTP block serve content - END
 {% endif %}
