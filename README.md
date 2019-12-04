@@ -64,10 +64,19 @@ humanitarian or commercial projects from who help we on Etica.AI.
         - [ACME](#acme)
         - [app_* variables](#app_-variables)
             - [app_uid](#app_uid)
+            - [app_type](#app_type)
             - [app_domain](#app_domain)
             - [app_domain_extras](#app_domain_extras)
-            - [app_alb_strategy](#app_alb_strategy)
-            - [app_alb_proxy](#app_alb_proxy)
+            - [app_debug](#app_debug)
+            - [app__proxy_*](#app__proxy_)
+                - [app__proxy_defaults](#app__proxy_defaults)
+                - [app__proxy_location](#app__proxy_location)
+                - [app__proxy_params](#app__proxy_params)
+                - [app__proxy_proxy_pass](#app__proxy_proxy_pass)
+                - [app__proxy_raw](#app__proxy_raw)
+            - [app_* deprecated](#app_-deprecated)
+                - [app_alb_proxy](#app_alb_proxy)
+                - [app_alb_strategy](#app_alb_strategy)
         - [Autentication Credentials](#autentication-credentials)
         - [Bastion Hosts](#bastion-hosts)
         - [DMZ (DeMilitarized Zone)](#dmz-demilitarized-zone)
@@ -337,32 +346,179 @@ alb_acme_url: "{{ 'https://acme-v02.api.letsencrypt.org/directory' if alb_acme_p
 ```
 #### app_* variables
 
-Variables prefixed with `app_' are used by [Apps](#apps) and [Sysapps](#sysapps)
+> Note: as v0.8.x, this section still maybe not reflex all implementation, but
+> as here as a plan of action (fititnt, 2019-12-04 17:27 BRT)
+
+Variables prefixed with `app_` are used by [Apps](#apps) and [Sysapps](#sysapps)
 and have some extra customization via [ALB Strategies](#alb-strategies).
 
-These are key elements that form a single dictonary (think _object_) for the
-`alb_apps` (list) and `alb_sysapps` (list).
+These are key elements that form a single dictionary (think _object_) for the
+`alb_apps` (list of dictionaries) and `alb_sysapps` (list of dictionaries).
 
 ##### app_uid
-- Required: **always**
-- Default: **no default**
-- Values: `[a-zA-Z0-9\-\_]`
-  - Use: Letters (lower and UPPERCASE), Numbers, Underline, Hyphen
-  - Not so safe, but not blocked: UNICODE, UTF-8 characters (requires you system to support)
-  - Strongly: blank spaces, control character (NUL \0, LF \n, etc)
+- **Required**: _always_
+- **Default**: _no default_
+- **Type of Value**: `String`, `[a-zA-Z0-9\-\_]`
+  - Safe to use: _Letters (lower and UPPERCASE), Numbers, Underline, Hyphen_
+  - Not safe so safe to use (but not blocked): _`:`, `;`, UTF-8 characters (requires you system to support)_
+  - Definely not use: _blank spaces, `/`, `\`, control character (NUL \0, LF \n, ...)_
+- **About uniqueness**:
+  - **Should be unique per node** (but `alb_apps` and `alb_sysapps` can reuse same app_id)
+  - **Is recommended to reuse 'app_id` on different nodes that are same
+    application**
+    - Example 1: Active-Active HA load balancing
+    - Example 2: Active-Passive HA load balancing
+  -  Note: Is not strongly required be unique per cluster of nodes, even if are very
+     different applications or version of applications (think production vs
+     staging)
+- **Examples of Value**: `hello-world`, `hello_world`
 
-`app_uid` is...
+Internaly, AP-ALB use `app_uid` common name for configutation files (like
+`/opt/alb/apps/{{ app_uid }}.conf`), default logs directory, default data
+diretory, internal aliases for which load balance and more.
+
+##### app_type
+- **Required**: _always_
+- **Default**: _no default_
+- **Type of Value**: `String`
+  - Should be one [ALB Strategies](#alb-strategies)
+  - Can be a custom value defined by the user
+- **Examples of Value**: `files-local`, `hello-world`, `proxy`, `raw`
+
+This option define what base OpenResty/NGinx template will be used as base for
+process all other variables.
+
+Note: for sake of simplicity, when using `raw` or your own custom strategy type,
+next variables marked just as `**Required**: _yes_` may not be be required, but
+often are.
 
 ##### app_domain
+- **Required**: _yes_
+- **Default**: _Default value is user configurable, based on `app_uid`_
+- **Type of Value**: `String`, `Regex String`
+  - Check [NGinx/Server Names for advanced options](http://nginx.org/en/docs/http/server_names.html)
+- **Examples of Value**: `hello-world.example.org`, `hello-world.*`, `"hello-world.{{ ansible_default_ipv4.address }}.nip.io"`
+
+Most `app_type` expect at least one main domain so the the AP-ALB will know what
+to do when a request comes in.
 
 ##### app_domain_extras
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: **list of** `String`, `Regex String`
+- **Examples of Value**:
+> ```yaml
+> # Empty list
+> app_domain_extras: []
+> # Please avoid using 'app_domain_extras: ' without defined itens and ': []' at the end
+> ```
+> ```yaml
+> # List with 3 extra domains
+> app_domain_extras:
+>   - "hello-world.example.org"
+>   - "hello-world.*"
+>   - "hello-world.{{ ansible_default_ipv4.address }}.nip.io"
+> ```
+- **Advanced documentation**
+  - Check [NGinx/Server Names for advanced options](http://nginx.org/en/docs/http/server_names.html)
 
-##### app_alb_strategy
+Use this to add extra domains to [app_domain](#app_domain).
 
-...
-##### app_alb_proxy
+##### app_debug
+- **Required**: _no_
+- **Default**: `alb_forcedebug`<sup>(If defined)</sup>, `alb_default_app_forcedebug`<sup>(If defined)</sup>
+- **Type of Value**: _Boolean_
+- **Examples of Value**: `yes`, `true`, `no`, `false`
 
+Mark one app in special to show more information, useful for debug. The
+information depends on the [app_type](#app_type) implementation.
 
+##### app__proxy_*
+
+###### app__proxy_defaults
+- **app_type**: `proxy`
+- **Default**: true
+
+`app__proxy_defaults` enable defaults inside the main proxy location block, like
+these ones:
+```
+location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    # ...
+}
+```
+
+Disable if you is having issues or what to make full customization with
+`app__proxy_raw`. If you are OK with the defaults, use `app__proxy_params`
+to just append new values
+
+###### app__proxy_location
+- **app_type**: `proxy`
+- **Required**: _no_
+- **Default**: `/`
+- **Type of Value**: _String_
+- **Examples of Value**: `/`, `= /`, `~ \.php`
+- **Advanced documentation**
+  - http://nginx.org/en/docs/http/ngx_http_core_module.html#location
+
+###### app__proxy_params
+- **app_type**: `proxy`
+- **Required**: _no_
+- **Default**: _no default_, `alb_default_app__proxy_params`<sup>(If defined)</sup>
+- **Examples of Value**:
+> ```yaml
+> alb_apps:
+>   # Laravel example https://laravel.com/docs/deployment
+>   - app_uid: "laravel-site"
+>   - app_domain: ".example.com"
+>   - app_type: "proxy"
+>   - app__proxy_location: "~ \.php$"
+>   - app__proxy_proxy_pass: "unix:/var/run/php/php7.4-fpm.sock"
+>   - app__proxy_params:
+>     - fastcgi_index: "index.php"
+>     - fastcgi_param: "SCRIPT_FILENAME $realpath_root$fastcgi_script_name"
+>     - include: "fastcgi_params"
+> ```
+
+###### app__proxy_proxy_pass
+- **app_type**: `proxy`
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _String_
+- **Examples of Value**: `http://127.0.0.1:8080`,
+- **Advanced documentation**
+  - https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
+
+###### app__proxy_raw
+<!--
+- **app_type**: `proxy`
+- **Required**: _no_
+- **Type of Value**: list of* Key-Value strings
+- **Examples of Value**:
+> ```yaml
+> # Empty list
+> app_domain_extras: []
+> # Please avoid using 'app_domain_extras: ' without defined itens and ': []' at the end
+> ```
+> ```yaml
+> # List with 3 extra domains
+> app_domain_extras:
+>   - "hello-world.example.org"
+>   - "hello-world.*"
+>   - "hello-world.{{ ansible_default_ipv4.address }}.nip.io"
+> ```
+-->
+
+##### app_* deprecated
+
+> @TODO: document
+
+###### app_alb_proxy
+Deprecated. Use [app__proxy_proxy_pass](#app__proxy_proxy_pass).
+
+###### app_alb_strategy
+Deprecated. Use [app_type](#app_type).
 
 #### Autentication Credentials
 
