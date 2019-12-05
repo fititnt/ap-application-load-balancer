@@ -69,6 +69,8 @@ humanitarian or commercial projects from who help we on Etica.AI.
                 - [app_domain](#app_domain)
                 - [app_domain_extras](#app_domain_extras)
                 - [app_debug](#app_debug)
+                - [app_raw_alb](#app_raw_alb)
+                - [app_hosts_alb](#app_hosts_alb)
                 - [app_tags](#app_tags)
                 - [app__proxy_defaults](#app__proxy_defaults)
                 - [app__proxy_location](#app__proxy_location)
@@ -82,14 +84,16 @@ humanitarian or commercial projects from who help we on Etica.AI.
             - [Deprecated app_* variables](#deprecated-app_-variables)
                 - [app_alb_proxy](#app_alb_proxy)
                 - [app_raw_conf](#app_raw_conf)
+                - [No default value for app_alb_strategy](#no-default-value-for-app_alb_strategy)
         - [Autentication Credentials](#autentication-credentials)
         - [Bastion Hosts](#bastion-hosts)
         - [DMZ (DeMilitarized Zone)](#dmz-demilitarized-zone)
         - [Jump Server](#jump-server)
     - [Apps](#apps)
         - [ALB Strategies](#alb-strategies)
-            - [hello-world](#hello-world)
             - [files-local](#files-local)
+            - [hello-world](#hello-world)
+            - [minimal](#minimal)
             - [proxy](#proxy)
             - [raw](#raw)
     - [Common](#common)
@@ -427,7 +431,7 @@ to do when a request comes in.
 ###### app_domain_extras
 - **Required**: _no_
 - **Default**: _no default_
-- **Type of Value**: **list of** `String`, `Regex String`
+- **Type of Value**: list of `String`, `Regex String`
 - **Examples of Value**:
 > ```yaml
 > # Empty list
@@ -454,6 +458,27 @@ Use this to add extra domains to [app_domain](#app_domain).
 
 Mark one app in special to show more information, useful for debug. The
 information depends on the [app_type](#app_type) implementation.
+
+###### app_raw_alb
+See <https://yaml-multiline.info>
+
+###### app_hosts_alb
+- **Required**: _no_
+- **Default**: _all hosts_
+- **Type of Value**: list of `String` equivalent to `{{ inventory_hostname_short }}`
+- **Examples of Value**:
+> ```yaml
+> app_hosts_alb:
+>   - "ap_delta"
+>   - "ap_echo"
+> ```
+
+This option is one alternative to not use Ansible Host vars or Ansible Group
+Vars to define what Application run where. So you could have only one `alb_apps`
+`alb_sysapps` for the entire cluster (or more than one cluster if using more
+than one datacenter).
+
+> @TODO: implement this feature (fititnt, 2019-12-04 22:43 BRT)
 
 ###### app_tags
 - **Required**: _no_
@@ -599,6 +624,17 @@ Deprecated. Use [app__proxy_proxy_pass](#app__proxy_proxy_pass).
 
 Deprecated. Use [app__raw_conf_string](#app__raw_conf_string).
 
+###### No default value for app_alb_strategy
+Before AP-ALB v.0.8.x alb_apps[n]app_alb_strategy has default value of
+ `hello-word` (and before that,  `files-local`).
+
+Now, value of app_alb_strategy is ommited, the alp_apps / alb_sysapps will be
+ignored by OpenResty.
+
+The reason for this is allow on future have apps that can exist only for other
+reasons (for example, for NLB/HAProxy, or for Backup tasks). This also means
+that a same app group could have variables reused for different strategies
+
 #### Autentication Credentials
 
 - :information_source: `password` fields are expected to have plaintext when
@@ -705,11 +741,24 @@ AP-ALB automate the work for you will be very familiar.
 
 **For full list of ALB Strategies, look at [templates/alb-strategy](templates/alb-strategy)**
 
+##### files-local
+Strategy to serve static files from the same server where the ALB is located.
+
+```yaml
+    alb_apps:
+
+      - app_uid: "static-files"
+        app_domain: "assets.example.org"
+        app_root: "/var/www/html"
+        app_forcehttps: yes
+        app_alb_strategy: "files-local"
+```
+See [templates/alb-strategy/files-local.conf.j2](templates/alb-strategy/files-local.conf.j2).
+
 ##### hello-world
 
-The `hello-world` replaced [files-local](#files-local) strategy as default if
-you do not specify a `app_alb_strategy`. It can be specially useful to obtain
-SSL Certificates or already have some placeholder.
+Hello world is a simple strategy to test one App/Sysapp. It can be specially
+useful to obtain SSL Certificates or already have some placeholder.
 
 If `app_debug: true` or `alb_forcedebug: yes` it can be used to give more
 information.
@@ -728,19 +777,41 @@ information.
 
 See [templates/alb-strategy/hello-world.conf.j2](templates/alb-strategy/hello-world.conf.j2).
 
-##### files-local
-Strategy to serve static files from the same server where the ALB is located.
+##### minimal
+
+Hello world is a simple strategy to test one App/Sysapp. It can be specially
+useful to obtain SSL Certificates or already have some placeholder.
+
+If `app_debug: true` or `alb_forcedebug: yes` it can be used to give more
+information.
 
 ```yaml
     alb_apps:
-
-      - app_uid: "static-files"
-        app_domain: "assets.example.org"
-        app_root: "/var/www/html"
-        app_forcehttps: yes
-        app_alb_strategy: "files-local"
+      - app_uid: "hello-world-minimal"
+        app_domain: "hello-world-minimal.{{ ansible_default_ipv4.address }}.nip.io"
+        app_alb_strategy: "minimal"
+        app_raw_alb: >
+          location = /status {
+              stub_status;
+              allow all;
+          }
+          location = /ping {
+              access_log off;
+              return 200 "pong\n";
+          }
+          location / {
+              content_by_lua_block {
+                 local cjson = require "cjson"
+                 ngx.status = ngx.HTTP_OK
+                 ngx.say(cjson.encode({
+                     msg = "Hello, hello-world-minimal",
+                     status = 200
+                 }))
+              }
+          }
 ```
-See [templates/alb-strategy/files-local.conf.j2](templates/alb-strategy/files-local.conf.j2).
+
+See [templates/alb-strategy/hello-world.conf.j2](templates/alb-strategy/minimal.conf.j2).
 
 ##### proxy
 Use ALB as reverse proxy.
