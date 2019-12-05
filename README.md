@@ -62,21 +62,26 @@ humanitarian or commercial projects from who help we on Etica.AI.
 - [ALB components](#alb-components)
     - [Shared options](#shared-options)
         - [ACME](#acme)
-        - [app_* variables](#app_-variables)
-            - [app_uid](#app_uid)
-            - [app_type](#app_type)
-            - [app_domain](#app_domain)
-            - [app_domain_extras](#app_domain_extras)
-            - [app_debug](#app_debug)
-            - [app__proxy_*](#app__proxy_)
+        - [Applications/Sysapplications variables](#applicationssysapplications-variables)
+            - [app_*](#app_)
+                - [app_uid](#app_uid)
+                - [app_state](#app_state)
+                - [app_domain](#app_domain)
+                - [app_domain_extras](#app_domain_extras)
+                - [app_debug](#app_debug)
+                - [app_tags](#app_tags)
                 - [app__proxy_defaults](#app__proxy_defaults)
                 - [app__proxy_location](#app__proxy_location)
                 - [app__proxy_params](#app__proxy_params)
                 - [app__proxy_proxy_pass](#app__proxy_proxy_pass)
-                - [app__proxy_raw](#app__proxy_raw)
-            - [app_* deprecated](#app_-deprecated)
-                - [app_alb_proxy](#app_alb_proxy)
+            - [app_*_strategy](#app__strategy)
                 - [app_alb_strategy](#app_alb_strategy)
+                - [app_backup_strategy](#app_backup_strategy)
+                - [app_ha_strategy](#app_ha_strategy)
+                - [app_nlb_strategy](#app_nlb_strategy)
+            - [Deprecated app_* variables](#deprecated-app_-variables)
+                - [app_alb_proxy](#app_alb_proxy)
+                - [app_raw_conf](#app_raw_conf)
         - [Autentication Credentials](#autentication-credentials)
         - [Bastion Hosts](#bastion-hosts)
         - [DMZ (DeMilitarized Zone)](#dmz-demilitarized-zone)
@@ -344,10 +349,8 @@ alb_acme_rule_last: true
 # This value is infered from alb_acme_production. But you can customize yourself
 alb_acme_url: "{{ 'https://acme-v02.api.letsencrypt.org/directory' if alb_acme_production else 'https://acme-staging-v02.api.letsencrypt.org/directory' }}"
 ```
-#### app_* variables
 
-> Note: as v0.8.x, this section still maybe not reflex all implementation, but
-> as here as a plan of action (fititnt, 2019-12-04 17:27 BRT)
+#### Applications/Sysapplications variables
 
 Variables prefixed with `app_` are used by [Apps](#apps) and [Sysapps](#sysapps)
 and have some extra customization via [ALB Strategies](#alb-strategies).
@@ -355,7 +358,28 @@ and have some extra customization via [ALB Strategies](#alb-strategies).
 These are key elements that form a single dictionary (think _object_) for the
 `alb_apps` (list of dictionaries) and `alb_sysapps` (list of dictionaries).
 
-##### app_uid
+**Quick example:**
+
+```yaml
+    alb_apps:
+
+      - app_uid: "static-files"
+        app_domain: "assets.example.org"
+        app_root: "/var/www/html"
+        app_alb_strategy: "files-local"
+
+      - app_uid: "minio"
+        app_domain: "minio.example.org"
+        app_alb_proxy: "http://localhost:9091"
+        app_alb_strategy: "proxy"
+```
+
+##### app_*
+
+> Note: as v0.8.x, this section still maybe not reflex all implementation, but
+> as here as a plan of action (fititnt, 2019-12-04 17:27 BRT)
+
+###### app_uid
 - **Required**: _always_
 - **Default**: _no default_
 - **Type of Value**: `String`, `[a-zA-Z0-9\-\_]`
@@ -377,22 +401,20 @@ Internaly, AP-ALB use `app_uid` common name for configutation files (like
 `/opt/alb/apps/{{ app_uid }}.conf`), default logs directory, default data
 diretory, internal aliases for which load balance and more.
 
-##### app_type
-- **Required**: _always_
-- **Default**: _no default_
-- **Type of Value**: `String`
-  - Should be one [ALB Strategies](#alb-strategies)
-  - Can be a custom value defined by the user
-- **Examples of Value**: `files-local`, `hello-world`, `proxy`, `raw`
+###### app_state
+- **Required**: _no (implicit value)_
+- **Default**: "present"
+- **Examples of Value**: `present`, `absent`
 
-This option define what base OpenResty/NGinx template will be used as base for
-process all other variables.
+`app_state` defaults to `present`, so you did not need to define. If you want
+remove one app, it's configurations rules, log files, etc, you should at least
+once re-run one time with the same `app_uid` and `app_state: absent` for each
+node. After this, you can remove referentes to the old app/sysapp.
 
-Note: for sake of simplicity, when using `raw` or your own custom strategy type,
-next variables marked just as `**Required**: _yes_` may not be be required, but
-often are.
+Note: implementators **should not** automaticaly remove backups based only on
+this configutation.
 
-##### app_domain
+###### app_domain
 - **Required**: _yes_
 - **Default**: _Default value is user configurable, based on `app_uid`_
 - **Type of Value**: `String`, `Regex String`
@@ -402,7 +424,7 @@ often are.
 Most `app_type` expect at least one main domain so the the AP-ALB will know what
 to do when a request comes in.
 
-##### app_domain_extras
+###### app_domain_extras
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**: **list of** `String`, `Regex String`
@@ -424,7 +446,7 @@ to do when a request comes in.
 
 Use this to add extra domains to [app_domain](#app_domain).
 
-##### app_debug
+###### app_debug
 - **Required**: _no_
 - **Default**: `alb_forcedebug`<sup>(If defined)</sup>, `alb_default_app_forcedebug`<sup>(If defined)</sup>
 - **Type of Value**: _Boolean_
@@ -433,7 +455,26 @@ Use this to add extra domains to [app_domain](#app_domain).
 Mark one app in special to show more information, useful for debug. The
 information depends on the [app_type](#app_type) implementation.
 
-##### app__proxy_*
+###### app_tags
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: list of `String`
+- **Examples of Value**: 
+
+> ```yaml
+> # Empty app_tags
+> app_domain_extras: []
+> # Please avoid using 'app_tags: ' without defined itens and ': []' at the end
+> ```
+> ```yaml
+> # List with 3 extra domains
+> app_tags:
+>   - "my-tag-1"
+>   - "another-tag"
+>   - "{{ ansible_default_ipv4.address }}"
+> ```
+
+<!--  ###### app__proxy_* -->
 
 ###### app__proxy_defaults
 - **app_type**: `proxy`
@@ -490,8 +531,38 @@ to just append new values
 - **Advanced documentation**
   - https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
 
-###### app__proxy_raw
+##### app_*_strategy
+
+###### app_alb_strategy
+- **Required**: _always_ (or will be ignored by OpenResty)
+- **Default**: _no default_
+- **Type of Value**: `String` or _undefined_ or _null_
+  - Should be one [ALB Strategies](#alb-strategies)
+  - Can be a custom value defined by the user
+- **Examples of Value**: `files-local`, `hello-world`, `proxy`, `raw`, `null`
+
+This option define what base OpenResty/NGinx template will be used as base for
+process all other variables.
+
 <!--
+
+Note: for sake of simplicity, when using `raw` or your own custom strategy type,
+next variables marked just as `**Required**: _yes_` may not be be required, but
+often are.
+
+-->
+
+###### app_backup_strategy
+> As version v0.8.1-alpha, this app_backup_strategy still not implemented.
+
+###### app_ha_strategy
+> As version v0.8.1-alpha, this app_ha_strategy still not implemented.
+
+###### app_nlb_strategy
+> As version v0.8.1-alpha, this app_nlb_strategy still not implemented.
+
+<!--
+ ###### app__proxy_raw
 - **app_type**: `proxy`
 - **Required**: _no_
 - **Type of Value**: list of* Key-Value strings
@@ -510,15 +581,23 @@ to just append new values
 > ```
 -->
 
-##### app_* deprecated
+<!--
+  ##### app__raw_*
+  ###### app__raw_conf_file
+  ###### app__raw_conf_string
+-->
 
-> @TODO: document
+##### Deprecated app_* variables
 
 ###### app_alb_proxy
+> @TODO: consider implementing app_alb_proxy renaming (fititnt, 2019-12-04 21:43 BRT)
+
 Deprecated. Use [app__proxy_proxy_pass](#app__proxy_proxy_pass).
 
-###### app_alb_strategy
-Deprecated. Use [app_type](#app_type).
+###### app_raw_conf
+> @TODO: consider implementing app_raw_conf renaming (fititnt, 2019-12-04 21:43 BRT)
+
+Deprecated. Use [app__raw_conf_string](#app__raw_conf_string).
 
 #### Autentication Credentials
 
