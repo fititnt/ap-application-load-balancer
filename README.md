@@ -72,21 +72,21 @@ humanitarian or commercial projects from who help we on Etica.AI.
                 - [app_forcehttps](#app_forcehttps)
                 - [app_index](#app_index)
                 - [app_root](#app_root)
-                - [app_raw_alb](#app_raw_alb)
-                - [app_raw_alb_file](#app_raw_alb_file)
-                - [app_hosts_alb](#app_hosts_alb)
                 - [app_tags](#app_tags)
-                - [app__proxy_defaults](#app__proxy_defaults)
-                - [app__proxy_location](#app__proxy_location)
-                - [app__proxy_params](#app__proxy_params)
-                - [app__proxy_proxy_pass](#app__proxy_proxy_pass)
             - [app_*_strategy](#app__strategy)
                 - [app_alb_strategy](#app_alb_strategy)
                 - [app_backup_strategy](#app_backup_strategy)
                 - [app_ha_strategy](#app_ha_strategy)
                 - [app_nlb_strategy](#app_nlb_strategy)
-            - [Deprecated app_* variables](#deprecated-app_-variables)
+            - [app_alb_*](#app_alb_)
+                - [app_alb_hosts](#app_alb_hosts)
                 - [app_alb_proxy](#app_alb_proxy)
+                - [app_alb_proxy_defaults](#app_alb_proxy_defaults)
+                - [app_alb_proxy_location](#app_alb_proxy_location)
+                - [app_alb_proxy_params](#app_alb_proxy_params)
+                - [app_alb_raw](#app_alb_raw)
+                - [app_alb_raw_file](#app_alb_raw_file)
+            - [Deprecated app_* variables](#deprecated-app_-variables)
                 - [app_raw_conf](#app_raw_conf)
                 - [No default value for app_alb_strategy](#no-default-value-for-app_alb_strategy)
         - [Autentication Credentials](#autentication-credentials)
@@ -471,6 +471,13 @@ information depends on the [app_type](#app_type) implementation.
 
 If true, acessing HTTP port will redirect 301 to the `app_domain`.
 
+This option is one alternative to not use Ansible Host vars or Ansible Group
+Vars to define what Application run where. So you could have only one `alb_apps`
+`alb_sysapps` for the entire cluster (or more than one cluster if using more
+than one datacenter).
+
+> @TODO: implement this feature (fititnt, 2019-12-04 22:43 BRT)
+
 ###### app_index
 - **Required**: _no_
 - **Default**: _no default_, `alb_default_app_index`<sup>(If defined)</sup>
@@ -478,7 +485,6 @@ If true, acessing HTTP port will redirect 301 to the `app_domain`.
 - **Examples of Value**: `index.html index.php`
 - **Advanced documentation**
   - <https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/>
-
 
 ###### app_root
 - **Required**: _no_
@@ -488,91 +494,6 @@ If true, acessing HTTP port will redirect 301 to the `app_domain`.
 - **Advanced documentation**
   - <https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/#root>
 
-
-###### app_raw_alb
-- **Required**: _no_
-- **Default**: _no default_
-- **Type of Value**: _String_ (Path to a Jinja2 template file)
-- **Examples of Value**:
-```yaml
-    alb_apps:
-      - app_uid: "hello-world-minimal"
-        app_domain: "hello-world-minimal.{{ ansible_default_ipv4.address }}.nip.io"
-        app_alb_strategy: "minimal"
-        app_raw_alb_file: "templates/example_app_raw_alb_file.conf.j2"
-        app_raw_alb: >
-          charset_types application/json;
-          default_type application/json;
-
-          location = /status {
-              stub_status;
-              allow all;
-          }
-          location = /ping {
-              access_log off;
-              return 200 "pong\n";
-          }
-          location = / {
-              content_by_lua_block {
-                 local cjson = require "cjson"
-                 ngx.status = ngx.HTTP_OK
-                 ngx.say(cjson.encode({
-                     msg = "Hello, hello-world-minimal! (from app_raw_alb)",
-                     status = 200
-                 }))
-              }
-          }
-```
-See <https://yaml-multiline.info> if having issues with identation.
-
-You can use [app_raw_alb_file](#app_raw_alb_file) as alternative.
-
-###### app_raw_alb_file
-- **Required**: _no_
-- **Default**: _no default_
-- **Type of Value**: _String_ (Path to a Jinja2 template file)
-- **Examples of Value**: `templates/example_app_raw_alb_file.conf.j2`
-
-Example of `templates/example_app_raw_alb_file.conf.j2` content:
-
-```
-# File: github.com/fititnt/ansible-linux-ha-cluster/templates/example_app_raw_alb_file.conf.j2
-# This file is just one example of using app_raw_alb_file instead of
-# app_raw_alb template string
-
-# With app_raw_alb you can't use item.app_uid variable, for example, but here
-# you can
-
-location / {
-    content_by_lua_block {
-       local cjson = require "cjson"
-       ngx.status = ngx.HTTP_OK
-       ngx.say(cjson.encode({
-           msg = "Hello, {{ item.app_uid }}! (from app_raw_alb_file)",
-           status = 200
-       }))
-    }
-}
-```
-
-
-###### app_hosts_alb
-- **Required**: _no_
-- **Default**: _all hosts_
-- **Type of Value**: list of `String` equivalent to `{{ inventory_hostname_short }}`
-- **Examples of Value**:
-> ```yaml
-> app_hosts_alb:
->   - "ap_delta"
->   - "ap_echo"
-> ```
-
-This option is one alternative to not use Ansible Host vars or Ansible Group
-Vars to define what Application run where. So you could have only one `alb_apps`
-`alb_sysapps` for the entire cluster (or more than one cluster if using more
-than one datacenter).
-
-> @TODO: implement this feature (fititnt, 2019-12-04 22:43 BRT)
 
 ###### app_tags
 - **Required**: _no_
@@ -594,61 +515,6 @@ than one datacenter).
 > ```
 
 <!--  ###### app__proxy_* -->
-
-###### app__proxy_defaults
-- **app_type**: `proxy`
-- **Default**: true
-
-`app__proxy_defaults` enable defaults inside the main proxy location block, like
-these ones:
-```
-location / {
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    # ...
-}
-```
-
-Disable if you is having issues or what to make full customization with
-`app__proxy_raw`. If you are OK with the defaults, use `app__proxy_params`
-to just append new values
-
-###### app__proxy_location
-- **app_type**: `proxy`
-- **Required**: _no_
-- **Default**: `/`
-- **Type of Value**: _String_
-- **Examples of Value**: `/`, `= /`, `~ \.php`
-- **Advanced documentation**
-  - http://nginx.org/en/docs/http/ngx_http_core_module.html#location
-
-###### app__proxy_params
-- **app_type**: `proxy`
-- **Required**: _no_
-- **Default**: _no default_, `alb_default_app__proxy_params`<sup>(If defined)</sup>
-- **Examples of Value**:
-> ```yaml
-> alb_apps:
->   # Laravel example https://laravel.com/docs/deployment
->   - app_uid: "laravel-site"
->   - app_domain: ".example.com"
->   - app_type: "proxy"
->   - app__proxy_location: "~ \.php$"
->   - app__proxy_proxy_pass: "unix:/var/run/php/php7.4-fpm.sock"
->   - app__proxy_params:
->     - fastcgi_index: "index.php"
->     - fastcgi_param: "SCRIPT_FILENAME $realpath_root$fastcgi_script_name"
->     - include: "fastcgi_params"
-> ```
-
-###### app__proxy_proxy_pass
-- **app_type**: `proxy`
-- **Required**: _no_
-- **Default**: _no default_
-- **Type of Value**: _String_
-- **Examples of Value**: `http://127.0.0.1:8080`,
-- **Advanced documentation**
-  - https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
 
 ##### app_*_strategy
 
@@ -706,16 +572,148 @@ often are.
   ###### app__raw_conf_string
 -->
 
-##### Deprecated app_* variables
+##### app_alb_*
+
+###### app_alb_hosts
+- **Required**: _no_
+- **Default**: _all hosts_
+- **Type of Value**: list of `String` equivalent to `{{ inventory_hostname_short }}`
+- **Examples of Value**:
+> ```yaml
+> app_alb_hosts:
+>   - "ap_delta"
+>   - "ap_echo"
+> ```
+
+> @TODO consider implement this planned (but not fully usable) feature as
+> additional alternative to Ansible Inventory (fititnt, 2019-12-05 19:17 BRT)
 
 ###### app_alb_proxy
-> @TODO: consider implementing app_alb_proxy renaming (fititnt, 2019-12-04 21:43 BRT)
+- **app_alb_strategy**: `proxy`
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _String_
+- **Examples of Value**: `http://127.0.0.1:8080`,
+- **Advanced documentation**
+  - https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
 
-Deprecated. Use [app__proxy_proxy_pass](#app__proxy_proxy_pass).
+###### app_alb_proxy_defaults
+- **app_type**: `proxy`
+- **Default**: true
+
+`app_alb_proxy_defaults` enable defaults inside the main proxy location block, like
+these ones:
+```
+location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    # ...
+}
+```
+
+Disable if you is having issues or what to make full customization with
+`app_alb_proxy_raw`. If you are OK with the defaults, use `app_alb_proxy_params`
+to just append new values
+
+###### app_alb_proxy_location
+- **app_alb_strategy**: `proxy`
+- **Required**: _no_
+- **Default**: `/`
+- **Type of Value**: _String_
+- **Examples of Value**: `/`, `= /`, `~ \.php`
+- **Advanced documentation**
+  - http://nginx.org/en/docs/http/ngx_http_core_module.html#location
+
+###### app_alb_proxy_params
+- **app_alb_strategy**: `proxy`
+- **Required**: _no_
+- **Default**: _no default_, `alb_default_app_alb_proxy_params`<sup>(If defined)</sup>
+- **Examples of Value**:
+> ```yaml
+> alb_apps:
+>   # Laravel example https://laravel.com/docs/deployment
+>   - app_uid: "laravel-site"
+>   - app_domain: ".example.com"
+>   - app_alb_strategy: "proxy"
+>   - app_alb_proxy_location: "~ \.php$"
+>   - app_alb_proxy: "unix:/var/run/php/php7.4-fpm.sock"
+>   - app_alb_proxy_params:
+>     - fastcgi_index: "index.php"
+>     - fastcgi_param: "SCRIPT_FILENAME $realpath_root$fastcgi_script_name"
+>     - include: "fastcgi_params"
+> ```
+
+###### app_alb_raw
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _String_ (Path to a Jinja2 template file)
+- **Examples of Value**:
+```yaml
+    alb_apps:
+      - app_uid: "hello-world-minimal"
+        app_domain: "hello-world-minimal.{{ ansible_default_ipv4.address }}.nip.io"
+        app_alb_strategy: "minimal"
+        app_alb_raw_file: "templates/example_app_alb_raw_file.conf.j2"
+        app_alb_raw: >
+          charset_types application/json;
+          default_type application/json;
+
+          location = /status {
+              stub_status;
+              allow all;
+          }
+          location = /ping {
+              access_log off;
+              return 200 "pong\n";
+          }
+          location = / {
+              content_by_lua_block {
+                 local cjson = require "cjson"
+                 ngx.status = ngx.HTTP_OK
+                 ngx.say(cjson.encode({
+                     msg = "Hello, hello-world-minimal! (from app_alb_raw)",
+                     status = 200
+                 }))
+              }
+          }
+```
+See <https://yaml-multiline.info> if having issues with identation.
+
+You can use [app_alb_raw_file](#app_alb_raw_file) as alternative.
+
+###### app_alb_raw_file
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _String_ (Path to a Jinja2 template file)
+- **Examples of Value**: `templates/example_app_alb_raw_file.conf.j2`
+
+Example of `templates/example_app_alb_raw.conf.j2` content:
+
+```
+# File: github.com/fititnt/ansible-linux-ha-cluster/templates/example_app_alb_rawfile.conf.j2
+# This file is just one example of using app_alb_raw_file instead of
+# app_alb_raw template string
+
+# With app_alb_raw you can't use item.app_uid variable, for example, but here
+# you can
+
+location / {
+    content_by_lua_block {
+       local cjson = require "cjson"
+       ngx.status = ngx.HTTP_OK
+       ngx.say(cjson.encode({
+           msg = "Hello, {{ item.app_uid }}! (from app_alb_raw_file)",
+           status = 200
+       }))
+    }
+}
+```
+
+##### Deprecated app_* variables
 
 ###### app_raw_conf
 Deprecated. Please use [app_raw_alb](#app_raw_alb) and/or
-[app_raw_alb_file](#app_raw_alb_file)
+[app_alb_raw_file](#app_alb_raw_file)
 
 ###### No default value for app_alb_strategy
 Before AP-ALB v.0.8.x alb_apps[n]app_alb_strategy has default value of
@@ -875,8 +873,8 @@ See [templates/alb-strategy/hello-world.conf.j2](templates/alb-strategy/hello-wo
 The `app_alb_strategy: minimal` is not as raw as the [raw](#raw), but is the
 last step before what is given by [files-local](#files-local) or
 [proxy](#proxy). Some applications could require so much fine tunning that is
-just simpler to give access to you implement [app_raw_alb](#app_raw_alb) and/or
-[app_raw_alb_file](#app_raw_alb_file), **BUT** all other configurations, like
+just simpler to give access to you implement [app_alb_raw](#app_alb_raw) and/or
+[app_alb_raw_file](#app_alb_raw_file), **BUT** all other configurations, like
 paths to load balancer, logs, Automatic HTTPS, etc be handled for you.
 
 ```yaml
@@ -884,8 +882,8 @@ paths to load balancer, logs, Automatic HTTPS, etc be handled for you.
       - app_uid: "hello-world-minimal"
         app_domain: "hello-world-minimal.{{ ansible_default_ipv4.address }}.nip.io"
         app_alb_strategy: "minimal"
-        app_raw_alb_file: "templates/example_app_raw_alb_file.conf.j2"
-        app_raw_alb: >
+        app_alb_raw_file: "templates/example_app_alb_raw_file.conf.j2"
+        app_alb_raw: >
           charset_types application/json;
           default_type application/json;
 
@@ -902,7 +900,7 @@ paths to load balancer, logs, Automatic HTTPS, etc be handled for you.
                  local cjson = require "cjson"
                  ngx.status = ngx.HTTP_OK
                  ngx.say(cjson.encode({
-                     msg = "Hello, hello-world-minimal! (from app_raw_alb)",
+                     msg = "Hello, hello-world-minimal! (from app_alb_raw)",
                      status = 200
                  }))
               }
@@ -927,7 +925,7 @@ See [templates/alb-strategy/proxy.conf.j2](templates/alb-strategy/proxy.conf.j2)
 
 ##### raw
 `raw` strategy is similar to [minimal](#minimal), but you have full control
-using [app_raw_alb](#app_raw_alb) and/or [app_raw_alb_file](#app_raw_alb_file).
+using [app_alb_raw](#app_alb_raw) and/or [app_alb_raw_file](#app_alb_raw_file).
 
 This strategy can be specially useful on upgrades of AP-ALB where new
 configurations could break some old functionality and you have no time to make
