@@ -7,8 +7,13 @@ server {
     listen {{ alb_openresty_ip }}:{{ alb_openresty_httpsport }} ssl;
     server_name {{ item.app_domain }}{% if ((item.app_domain_extras is defined and item.app_domain_extras) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
 
+    # TODO: implement configurable error log,
+    #       @see https://docs.nginx.com/nginx/admin-guide/monitoring/logging/
+    #       (fititnt, 2019-12-05:02:56 BRT)
     error_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/error.log;
     access_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/access.log  main;
+
+    {% if (item.app_root is defined and item.app_root) %}root "{{ item.app_root }}"{% endif %}
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
@@ -17,6 +22,8 @@ server {
 
     {% filter indent(width=4) %}{% include "partials/add_headers.conf.j2" %}{% endfilter %}
     {% filter indent(width=4) %}{% include "partials/basic_auth.conf.j2" %}{% endfilter %}
+    {% filter indent(width=4) %}{% include "partials/ping_pong.conf.j2" %}{% endfilter %}
+    {% filter indent(width=4) %}{% include "partials/health_check.conf.j2" %}{% endfilter %}
 
     {% block app_raw_https %}# No app_raw_https{% endblock %}
 
@@ -30,11 +37,15 @@ server {
     error_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/error.log;
     access_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/access.log  main;
 
+    {% if (item.app_root is defined and item.app_root) %}root "{{ item.app_root }}"{% endif %}
+
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
 
     {% filter indent(width=4) %}{% include "partials/add_headers.conf.j2" %}{% endfilter %}
     {% filter indent(width=4) %}{% include "partials/basic_auth.conf.j2" %}{% endfilter %}
+    {% filter indent(width=4) %}{% include "partials/ping_pong.conf.j2" %}{% endfilter %}
+    {% filter indent(width=4) %}{% include "partials/health_check.conf.j2" %}{% endfilter %}
 
 {% if (item.app_forcehttps is defined and item.app_forcehttps is sameas true) or (item.app_forcehttps is undefined and alb_default_app_forcehttps is sameas true) %}
     ## item.app_forcehttps: true

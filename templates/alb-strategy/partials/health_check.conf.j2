@@ -1,0 +1,17 @@
+## alb-strategy/partials/pingpong.conf.j2
+# TODO: melhorar customização (fititnt, 2019-12-05 03:45 BRT)
+{% set healthcheck_enabled = (item.app_healthcheck is defined and item.app_pingpong) or (item.app_debug is defined and item.app_debug is sameas true) or (alb_forcedebug is defined and alb_forcedebug is sameas true) or (alb_default_app_forcedebug is defined and alb_default_app_forcedebug is sameas true) %}
+{% if healthcheck_enabled %}
+location = /health-check {
+    #charset_types application/json;
+    #default_type application/json;
+    access_log off;
+    return 200 "OK {{ item.app_uid }} {{ inventory_hostname }}\n";
+}
+location = /health-check-{{ item.app_uid }} {
+    #charset_types application/json;
+    #default_type application/json;
+    access_log off;
+    return 200 "OK {{ item.app_uid }} {{ inventory_hostname }}\n";
+}
+{% endif %}

@@ -69,6 +69,9 @@ humanitarian or commercial projects from who help we on Etica.AI.
                 - [app_domain](#app_domain)
                 - [app_domain_extras](#app_domain_extras)
                 - [app_debug](#app_debug)
+                - [app_forcehttps](#app_forcehttps)
+                - [app_index](#app_index)
+                - [app_root](#app_root)
                 - [app_raw_alb](#app_raw_alb)
                 - [app_raw_alb_file](#app_raw_alb_file)
                 - [app_hosts_alb](#app_hosts_alb)
@@ -460,6 +463,32 @@ Use this to add extra domains to [app_domain](#app_domain).
 Mark one app in special to show more information, useful for debug. The
 information depends on the [app_type](#app_type) implementation.
 
+###### app_forcehttps
+- **Required**: _no_
+- **Default**: `false`, `alb_default_app_forcehttps`<sup>(If defined)</sup>
+- **Type of Value**: _Boolean_
+- **Examples of Value**: `yes`, `true`, `no`, `false`
+
+If true, acessing HTTP port will redirect 301 to the `app_domain`.
+
+###### app_index
+- **Required**: _no_
+- **Default**: _no default_, `alb_default_app_index`<sup>(If defined)</sup>
+- **Type of Value**: _String_ (name of files separed by spaces)
+- **Examples of Value**: `index.html index.php`
+- **Advanced documentation**
+  - <https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/>
+
+
+###### app_root
+- **Required**: _no_
+- **Default**: _no default_, `alb_default_app_root`<sup>(If defined)</sup>
+- **Type of Value**: _String_ (folder path)
+- **Examples of Value**: `/var/html/www/`
+- **Advanced documentation**
+  - <https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/#root>
+
+
 ###### app_raw_alb
 - **Required**: _no_
 - **Default**: _no default_
@@ -470,6 +499,7 @@ information depends on the [app_type](#app_type) implementation.
       - app_uid: "hello-world-minimal"
         app_domain: "hello-world-minimal.{{ ansible_default_ipv4.address }}.nip.io"
         app_alb_strategy: "minimal"
+        app_raw_alb_file: "templates/example_app_raw_alb_file.conf.j2"
         app_raw_alb: >
           charset_types application/json;
           default_type application/json;
@@ -495,7 +525,7 @@ information depends on the [app_type](#app_type) implementation.
 ```
 See <https://yaml-multiline.info> if having issues with identation.
 
-You can use [app_raw_alb_file](#app_raw_alb_file) as alternative
+You can use [app_raw_alb_file](#app_raw_alb_file) as alternative.
 
 ###### app_raw_alb_file
 - **Required**: _no_
@@ -684,9 +714,8 @@ often are.
 Deprecated. Use [app__proxy_proxy_pass](#app__proxy_proxy_pass).
 
 ###### app_raw_conf
-> @TODO: consider implementing app_raw_conf renaming (fititnt, 2019-12-04 21:43 BRT)
-
-Deprecated. Use [app__raw_conf_string](#app__raw_conf_string).
+Deprecated. Please use [app_raw_alb](#app_raw_alb) and/or
+[app_raw_alb_file](#app_raw_alb_file)
 
 ###### No default value for app_alb_strategy
 Before AP-ALB v.0.8.x alb_apps[n]app_alb_strategy has default value of
@@ -843,11 +872,12 @@ See [templates/alb-strategy/hello-world.conf.j2](templates/alb-strategy/hello-wo
 
 ##### minimal
 
-Hello world is a simple strategy to test one App/Sysapp. It can be specially
-useful to obtain SSL Certificates or already have some placeholder.
-
-If `app_debug: true` or `alb_forcedebug: yes` it can be used to give more
-information.
+The `app_alb_strategy: minimal` is not as raw as the [raw](#raw), but is the
+last step before what is given by [files-local](#files-local) or
+[proxy](#proxy). Some applications could require so much fine tunning that is
+just simpler to give access to you implement [app_raw_alb](#app_raw_alb) and/or
+[app_raw_alb_file](#app_raw_alb_file), **BUT** all other configurations, like
+paths to load balancer, logs, Automatic HTTPS, etc be handled for you.
 
 ```yaml
     alb_apps:
@@ -896,22 +926,12 @@ Use ALB as reverse proxy.
 See [templates/alb-strategy/proxy.conf.j2](templates/alb-strategy/proxy.conf.j2).
 
 ##### raw
-Use a raw string to create an OpenResty configuration file.
+`raw` strategy is similar to [minimal](#minimal), but you have full control
+using [app_raw_alb](#app_raw_alb) and/or [app_raw_alb_file](#app_raw_alb_file).
 
-```yaml
-    alb_apps:
-
-      - app_uid: "myrawconfiguration"
-        app_alb_strategy: "raw"
-        app_raw_conf: |
-          #
-          # Th content of app_raw_conf variable will be saved on the file
-          # /usr/local/openresty/nginx/conf/sites-enabled/myrawconfiguration.conf
-          #
-
-```
-
-See [templates/alb-strategy/raw.conf.j2](templates/alb-strategy/raw.conf.j2).
+This strategy can be specially useful on upgrades of AP-ALB where new
+configurations could break some old functionality and you have no time to make
+the new upgrades for some specific app.
 
 ### Common
 

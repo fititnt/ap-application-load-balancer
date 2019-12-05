@@ -1,85 +1,12 @@
-# {{ ansible_managed }}
-# FILE:             /opt/alb/{{ type_of_app }}s/{{ item.app_uid }}.conf
-# ALB-STRATEGY:     hello-world
+{% extends "minimal.conf.j2" %}
+{% block app_alb_strategy_name %}{{ super() }},hello-world{% endblock %}
 
-server {
-    # listen 443 ssl;
-    listen {{ alb_openresty_ip}}:{{ alb_openresty_httpsport }} ssl;
-    server_name {{ item.app_domain | default(alb_default_app_domain) }}{% if ((item.app_domain_extras is defined and item.app_domain_extras) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
-
-    error_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/error.log;
-    access_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/access.log  main;
-
-    location = /favicon.ico { access_log off; log_not_found off; }
-    location = /robots.txt  { access_log off; log_not_found off; }
-
-    {{ alb_apprule_automatichttps_httpsblock | indent(4) }}
-
-    {% filter indent(width=4) %}{% include "partials/add_headers.conf.j2" %}{% endfilter %}
-    {% filter indent(width=4) %}{% include "partials/basic_auth.conf.j2" %}{% endfilter %}
+{% block app_raw_https %}
+{{ super() }}
+# hello-world | block app_raw_https
 
     charset_types application/json;
     default_type application/json;
-
-    location = /ping {
-        access_log off;
-        return 200 "pong\n";
-    }
-
-    location /status {
-        stub_status;
-        allow all;
-    }
-
-    location = / {
-         content_by_lua_block {
-            local cjson = require "cjson"
-            --- local h, err = ngx.req.get_headers()
-            ngx.status = ngx.HTTP_OK
-            ngx.say(cjson.encode({
-                msg = "Hello, {{ item.app_uid }}",
-                --- request = h,
-                status = 200
-            }))
-         }
-     }
-}
-
-server {
-    # listen 80;
-    listen {{ alb_openresty_ip}}:{{ alb_openresty_httpport }};
-    server_name {{ item.app_domain | default(alb_default_app_domain) }}{% if ((item.app_domain_extras is defined and item.app_domain_extras) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
-
-    error_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/error.log;
-    access_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/access.log  main;
-
-    location = /favicon.ico { access_log off; log_not_found off; }
-    location = /robots.txt  { access_log off; log_not_found off; }
-
-    {% filter indent(width=4) %}{% include "partials/add_headers.conf.j2" %}{% endfilter %}
-    {% filter indent(width=4) %}{% include "partials/basic_auth.conf.j2" %}{% endfilter %}
-
-{% if (item.app_forcehttps is defined and item.app_forcehttps is sameas true) or (item.app_forcehttps is undefined and alb_default_app_forcehttps is sameas true) %}
-    ## item.app_forcehttps: true
-    ## redirect 301 except for Let's Encrypt HTTPS check.
-    location / {
-        return 301 https://{{ item.app_domain | default(alb_default_app_domain) }}$request_uri;
-    }
-{% else %}
-#### HTTPS redirect not enforced, allow HTTP block serve content - START
-
-    charset_types application/json;
-    default_type application/json;
-
-    location = /ping {
-        access_log off;
-        return 200 "pong\n";
-    }
-
-    location /status {
-        stub_status;
-        allow all;
-    }
 
     location = / {
          content_by_lua_block {
@@ -94,8 +21,23 @@ server {
          }
      }
 
-#### HTTPS redirect not enforced, allow HTTP block serve content - END
-{% endif %}
+{% endblock app_raw_https %}
 
-    {{ alb_apprule_automatichttp_httpsblock | indent(4) }}
-}
+{% block app_raw_http %}
+{{ super() }}
+# hello-world | block app_raw_http
+
+    location = / {
+         content_by_lua_block {
+            local cjson = require "cjson"
+            --- local h, err = ngx.req.get_headers()
+            ngx.status = ngx.HTTP_OK
+            ngx.say(cjson.encode({
+                msg = "Hello, {{ item.app_uid }}",
+                --- request = h,
+                status = 200
+            }))
+         }
+     }
+
+{% endblock app_raw_http %}

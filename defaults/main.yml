@@ -141,6 +141,8 @@ alb_nginxconf_template: "{{ role_path }}/templates/openresty/nginx/conf/nginx.co
 # and not a very customized nginx.conf, you can customize with these variables
 
 alb_nginx_user: "www-data"
+alb_nginx_worker_processes: "auto"
+alb_nginx_error_log_level: "warn" # Possible values: warn, error, crit, alert, emerg
 
 # See {{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2
 alb_nginx_maincontext_custom: |

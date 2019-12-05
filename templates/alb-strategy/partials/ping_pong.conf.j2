@@ -1,0 +1,9 @@
+## alb-strategy/partials/pingpong.conf.j2
+# TODO: melhorar customização (fititnt, 2019-12-05 03:45 BRT)
+{% set ping_pong_enabled = (item.app_pingpong is defined and item.app_pingpong) or (item.app_debug is defined and item.app_debug is sameas true) or (alb_forcedebug is defined and alb_forcedebug is sameas true) or (alb_default_app_forcedebug is defined and alb_default_app_forcedebug is sameas true) %}
+{% if ping_pong_enabled %}
+location = /ping {
+    access_log off;
+    return 200 "pong\n";
+}
+{% endif %}
