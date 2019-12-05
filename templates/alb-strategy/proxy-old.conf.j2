@@ -1,0 +1,94 @@
+# {{ ansible_managed }}
+# FILE:             /opt/alb/{{ type_of_app }}s/{{ item.app_uid }}.conf
+# ALB-STRATEGY:     proxy
+
+server {
+    # listen 443 ssl;
+    listen {{ alb_openresty_ip}}:{{ alb_openresty_httpsport }} ssl;
+    server_name {{ item.app_domain | default(alb_default_app_domain) }}{% if ((item.app_domain_extras is defined and item.app_domain_extras) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
+
+    error_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/error.log;
+    access_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/access.log  main;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    {{ alb_apprule_automatichttps_httpsblock | indent(4) }}
+
+    {% filter indent(width=4) %}{% include "partials/add_headers.conf.j2" %}{% endfilter %}
+    {% filter indent(width=4) %}{% include "partials/basic_auth.conf.j2" %}{% endfilter %}
+
+    ## @see # https://docs.min.io/docs/setup-nginx-proxy-with-minio.html
+    # To allow special characters in headers
+    ignore_invalid_headers off;
+    # Allow any size file to be uploaded.  
+    # Set to a value such as 1000m; to restrict file size to a specific value
+    client_max_body_size 0;
+    # To disable buffering
+
+    location / {
+        proxy_ignore_client_abort on;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+
+        proxy_pass   {{ item.app_alb_proxy }};
+        # health_check uri=/minio/health/ready;
+        # healt check é apenas NGinx Plus? Humm
+        # health_check uri=/some/path;
+        # health_check interval=10 fails=3 passes=2;
+    }
+}
+
+server {
+    # listen 80;
+    listen {{ alb_openresty_ip}}:{{ alb_openresty_httpport }};
+    server_name {{ item.app_domain | default(alb_default_app_domain) }}{% if ((item.app_domain_extras is defined and item.app_domain_extras) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
+
+    error_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/error.log;
+    access_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/access.log  main;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    {% filter indent(width=4) %}{% include "partials/add_headers.conf.j2" %}{% endfilter %}
+    {% filter indent(width=4) %}{% include "partials/basic_auth.conf.j2" %}{% endfilter %}
+
+{% if (item.app_forcehttps is defined and item.app_forcehttps is sameas true) or (item.app_forcehttps is undefined and alb_default_app_forcehttps is sameas true) %}
+    ## item.app_forcehttps: true
+    ## redirect 301 except for Let's Encrypt HTTPS check.
+    location / {
+        return 301 https://{{ item.app_domain | default(alb_default_app_domain) }}$request_uri;
+    }
+{% else %}
+#### HTTPS redirect not enforced, allow HTTP block serve content - START
+
+    ## @see # https://docs.min.io/docs/setup-nginx-proxy-with-minio.html
+    # To allow special characters in headers
+    ignore_invalid_headers off;
+    # Allow any size file to be uploaded.  
+    # Set to a value such as 1000m; to restrict file size to a specific value
+    client_max_body_size 0;
+    # To disable buffering
+
+    location / {
+        proxy_ignore_client_abort on;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass   {{ item.app_alb_proxy }};
+        # health_check uri=/minio/health/ready;
+        # healt check é apenas NGinx Plus? Humm
+        # health_check uri=/some/path;
+        # health_check interval=10 fails=3 passes=2;
+    }
+
+#### HTTPS redirect not enforced, allow HTTP block serve content - END
+{% endif %}
+
+    # TODO: testar configuração a seguir aqui, e permitir que ele faça o resto
+
+    # NOTA: curl -I http://site.com/.well-known/acme-challenge/aaaa
+    #       rem redirecionado para httpS em vez de exibir o acme challange
+
+
+    {{ alb_apprule_automatichttp_httpsblock | indent(4) }}
+}

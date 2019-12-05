@@ -70,6 +70,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
                 - [app_domain_extras](#app_domain_extras)
                 - [app_debug](#app_debug)
                 - [app_raw_alb](#app_raw_alb)
+                - [app_raw_alb_file](#app_raw_alb_file)
                 - [app_hosts_alb](#app_hosts_alb)
                 - [app_tags](#app_tags)
                 - [app__proxy_defaults](#app__proxy_defaults)
@@ -460,7 +461,70 @@ Mark one app in special to show more information, useful for debug. The
 information depends on the [app_type](#app_type) implementation.
 
 ###### app_raw_alb
-See <https://yaml-multiline.info>
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _String_ (Path to a Jinja2 template file)
+- **Examples of Value**:
+```yaml
+    alb_apps:
+      - app_uid: "hello-world-minimal"
+        app_domain: "hello-world-minimal.{{ ansible_default_ipv4.address }}.nip.io"
+        app_alb_strategy: "minimal"
+        app_raw_alb: >
+          charset_types application/json;
+          default_type application/json;
+
+          location = /status {
+              stub_status;
+              allow all;
+          }
+          location = /ping {
+              access_log off;
+              return 200 "pong\n";
+          }
+          location = / {
+              content_by_lua_block {
+                 local cjson = require "cjson"
+                 ngx.status = ngx.HTTP_OK
+                 ngx.say(cjson.encode({
+                     msg = "Hello, hello-world-minimal! (from app_raw_alb)",
+                     status = 200
+                 }))
+              }
+          }
+```
+See <https://yaml-multiline.info> if having issues with identation.
+
+You can use [app_raw_alb_file](#app_raw_alb_file) as alternative
+
+###### app_raw_alb_file
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _String_ (Path to a Jinja2 template file)
+- **Examples of Value**: `templates/example_app_raw_alb_file.conf.j2`
+
+Example of `templates/example_app_raw_alb_file.conf.j2` content:
+
+```
+# File: github.com/fititnt/ansible-linux-ha-cluster/templates/example_app_raw_alb_file.conf.j2
+# This file is just one example of using app_raw_alb_file instead of
+# app_raw_alb template string
+
+# With app_raw_alb you can't use item.app_uid variable, for example, but here
+# you can
+
+location / {
+    content_by_lua_block {
+       local cjson = require "cjson"
+       ngx.status = ngx.HTTP_OK
+       ngx.say(cjson.encode({
+           msg = "Hello, {{ item.app_uid }}! (from app_raw_alb_file)",
+           status = 200
+       }))
+    }
+}
+```
+
 
 ###### app_hosts_alb
 - **Required**: _no_
@@ -790,7 +854,11 @@ information.
       - app_uid: "hello-world-minimal"
         app_domain: "hello-world-minimal.{{ ansible_default_ipv4.address }}.nip.io"
         app_alb_strategy: "minimal"
+        app_raw_alb_file: "templates/example_app_raw_alb_file.conf.j2"
         app_raw_alb: >
+          charset_types application/json;
+          default_type application/json;
+
           location = /status {
               stub_status;
               allow all;
@@ -799,12 +867,12 @@ information.
               access_log off;
               return 200 "pong\n";
           }
-          location / {
+          location = / {
               content_by_lua_block {
                  local cjson = require "cjson"
                  ngx.status = ngx.HTTP_OK
                  ngx.say(cjson.encode({
-                     msg = "Hello, hello-world-minimal",
+                     msg = "Hello, hello-world-minimal! (from app_raw_alb)",
                      status = 200
                  }))
               }
