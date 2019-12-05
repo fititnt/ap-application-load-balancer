@@ -126,16 +126,18 @@ alb_letsencrypt_default: "return true" # the default (last) LUA code if a domain
 ## alb_letsencrypt_default: "return false"
 
 # alb_apps_serverblock_template is deprecated
-alb_apps_serverblock_template: '{{ role_path }}/templates/openresty/nginx/conf/vhosts/static-site.conf.j2'
+# alb_apps_serverblock_template: '{{ role_path }}/templates/openresty/nginx/conf/vhosts/static-site.conf.j2'
 
 # Note: at this moment, only "file" implemented. But later "syslog" could be one option
 alb_logs_method: "file"
 
 alb_logs_path: "/var/log/alb"
 
-
 ### AP-ALB Component: OpenResty ________________________________________________
-alb_nginxconf_template: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
+alb_nginx_conf_file: "{{ role_path }}/templates/alb/nginx.conf.j2"
+# alb_nginxconf_template: "{{ role_path }}/templates/alb/nginx/nginx.conf.j2"
+alb_nginx_html_folder: "{{ role_path }}/templates/html/"
+alb_nginx_alb_stragies_folder:  "{{ role_path }}/templates/alb/strategy/"
 
 # If you use "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
 # and not a very customized nginx.conf, you can customize with these variables

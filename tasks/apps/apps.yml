@@ -25,7 +25,7 @@
 - name: "Apps | ALB App Rules"
   template:
     # src: "{{ item.vhost_template|default(alb_apps_serverblock_template) }}"
-    src: "{{ role_path }}/templates/alb-strategy/{{ item.app_alb_strategy | default(alb_default_app_alb_strategy) }}.conf.j2"
+    src: "{{ alb_nginx_alb_stragies_folder }}/{{ item.app_alb_strategy }}.conf.j2"
     dest: "/opt/alb/apps/{{ item.app_uid }}.conf"
     owner: root
     group: "{{ alb_nginx_user }}"

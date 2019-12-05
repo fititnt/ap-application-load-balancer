@@ -2,8 +2,8 @@
 # FILE:             /opt/alb/{{ type_of_app }}s/{{ item.app_uid }}.conf
 # ALB-STRATEGY:     {% block app_alb_strategy_name %}_base{% endblock %}
 
+# HTTPS block
 server {
-    # listen 443 ssl;
     listen {{ alb_openresty_ip }}:{{ alb_openresty_httpsport }} ssl;
     server_name {{ item.app_domain }}{% if ((item.app_domain_extras is defined and item.app_domain_extras) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
 
@@ -20,6 +20,7 @@ server {
 
     {{ alb_apprule_automatichttps_httpsblock | indent(4) }}
 
+    {# @TODO on future, look for alternatives to be able make flexible where the partials, so users could replace specific partials, and we could move it to role_path/templates/alb/partials and not role_path/templates/alb/strategies/partials (fititnt, 2019-12-05 20:20 BRT) #}
     {% filter indent(width=4) %}{% include "partials/add_headers.conf.j2" %}{% endfilter %}
     {% filter indent(width=4) %}{% include "partials/basic_auth.conf.j2" %}{% endfilter %}
     {% filter indent(width=4) %}{% include "partials/ping_pong.conf.j2" %}{% endfilter %}
@@ -29,8 +30,8 @@ server {
 
 }
 
+# HTTP block
 server {
-    # listen 80;
     listen {{ alb_openresty_ip}}:{{ alb_openresty_httpport }};
     server_name {{ item.app_domain }}{% if ((item.app_domain_extras is defined and item.app_domain_extras) and (item.app_domain_extras | length > 0)) %} {{ item.app_domain_extras | join (' ') }}{% endif %};
 
@@ -42,6 +43,7 @@ server {
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
 
+    {# @TODO on future, look for alternatives to be able make flexible where the partials, so users could replace specific partials, and we could move it to role_path/templates/alb/partials and not role_path/templates/alb/strategies/partials (fititnt, 2019-12-05 20:20 BRT) #}
     {% filter indent(width=4) %}{% include "partials/add_headers.conf.j2" %}{% endfilter %}
     {% filter indent(width=4) %}{% include "partials/basic_auth.conf.j2" %}{% endfilter %}
     {% filter indent(width=4) %}{% include "partials/ping_pong.conf.j2" %}{% endfilter %}
