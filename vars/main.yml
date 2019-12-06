@@ -1,6 +1,6 @@
 ---
 # vars file for ap-application-load-balancer
-alb_version: "v0.8.2-alpha2"
+alb_version: "v0.8.3-alpha"
 alb_version_lastrun: -1
 
 ### ALB Internal Variables: Mixed usage ________________________________________

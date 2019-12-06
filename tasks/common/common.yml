@@ -31,13 +31,19 @@
 #    mode: 0755
 #  register: alb_common_facts_deployed
 
-- name: "common | [Ansible likes aptitude over apt-get] sudo apt-get install aptitude"
+- name: "common (Debian/Ubuntu) | sudo apt install -y aptitude"
   apt:
     name: aptitude
     state: present
-  # when: 'aptitude' not in ansible_facts
+  when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
 
-- name: "common | [Padronize the hostname] sudo hostnamectl set-hostname {{ inventory_hostname }}"
+- name: "common (CentOS/RHEL) | sudo dnf install -y epel-release"
+  dnf:
+    name: epel-release
+    state: present
+  when: "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
+
+- name: "common | hostname = inventory_hostname"
   hostname:
     name: "{{ inventory_hostname }}"
   when: inventory_hostname_short != ansible_hostname

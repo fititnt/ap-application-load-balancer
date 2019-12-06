@@ -3,6 +3,17 @@
 # FILE:            {{ role_path }}/tasks/main.yml
 # LICENSE:         Public Domain
 
+## AP-ALB adaptations to support RHEL/CentOS family #34
+##   - https://github.com/fititnt/ap-application-load-balancer/issues/34
+##   - https://linuxize.com/post/how-to-install-python-on-centos-8/
+##   - https://www.linuxschoolonline.com/how-to-use-ansible-even-it-the-target-host-does-not-have-python-installed/
+##   - https://medium.com/@somakdas/simple-ansible-paybook-without-python-installed-in-target-machines-1df423004da5
+##   - https://ansible-tips-and-tricks.readthedocs.io/en/latest/ansible/commands/#when-all-else-fails
+
+# ansible -m raw -s -a "sudo dnf install python3 -y" aguia-pescadora-delta.etica.ai
+
+# OpenResty https://openresty.org/en/linux-packages.html
+
 - name: "ALB version {{ alb_version }}"
   debug: 
     msg: "{{ alb_version }}"
