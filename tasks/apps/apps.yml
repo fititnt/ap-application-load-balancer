@@ -3,17 +3,10 @@
 # FILE:            {{ role_path }}/tasks/apps.yml
 # LICENSE:         Public Domain
 
-## NGinx Server Blocks (e.g. ~Apache Virtual Hosts)
-#- name: "NGinx Server Blocks (e.g. ~Apache Virtual Hosts)"
-#  template:
-#    src: "{{ item.vhost_template|default(alb_apps_serverblock_template) }}"
-#    dest: "/usr/local/openresty/nginx/conf/sites-enabled/{{ item.domain }}.conf"
-#    owner: root
-#    group: "root"
-#    mode: 0644
-#    backup: yes
-#  with_items: "{{ alb_apps }}"
-#  notify: reload openresty
+# To force run this task file, you can use
+#    ansible-playbook --tags="alb-apps" --extra-vars "alb_forceredeploy=yes" -i hosts my_playbook.yml
+# To run only one app_use
+#    ansible-playbook --tags="alb-apps" --extra-vars "alb_forceredeploy=yes only_app_uid=my_app_uid" -i hosts my_playbook.yml
 
 - name: /etc/ansible/facts.d/alb_apps.fact
   template:
@@ -38,9 +31,21 @@
     auth_basic: '"{{ item.app_auth_basic | default(alb_apps__app_auth_basic) }}"'
     auth_basic_user_file: '"{{ item.app_auth_basic_user_file | default(alb_apps__app_auth_basic_user_file) }}"'
   when:
+    - item.app_alb_strategy is defined
     - alb_apps is defined and alb_apps[0] is defined
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
     - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
   notify: reload openresty
+
+- name: "Apps | app_hook_after"
+  include_tasks: "{{ item.app_hook_after }}"
+  with_items: "{{ alb_apps }}"
+  when:
+    #- item.app_alb_strategy is defined
+    - (item.app_hook_after is defined and item.app_hook_after)
+    - alb_apps is defined and alb_apps[0] is defined
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
+    - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: Apps | mkdir /var/log/app/[app_uid]
   file:
@@ -52,6 +57,7 @@
   with_items: "{{ alb_apps }}"
   when:
     - alb_apps is defined and alb_apps[0] is defined
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
     - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: Apps | mkdir /var/log/app/[app_uid]/access.log
@@ -64,6 +70,7 @@
   with_items: "{{ alb_apps }}"
   when:
     - alb_apps is defined and alb_apps[0] is defined
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
     - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: Apps | mkdir /var/log/app/[app_uid]/error.log
@@ -76,4 +83,5 @@
   with_items: "{{ alb_apps }}"
   when:
     - alb_apps is defined and alb_apps[0] is defined
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
     - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"

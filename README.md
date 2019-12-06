@@ -70,6 +70,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
                 - [app_domain_extras](#app_domain_extras)
                 - [app_debug](#app_debug)
                 - [app_forcehttps](#app_forcehttps)
+                - [app_hook_after](#app_hook_after)
                 - [app_index](#app_index)
                 - [app_root](#app_root)
                 - [app_tags](#app_tags)
@@ -484,6 +485,14 @@ Vars to define what Application run where. So you could have only one `alb_apps`
 than one datacenter).
 
 > @TODO: implement this feature (fititnt, 2019-12-04 22:43 BRT)
+
+###### app_hook_after
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _String_ (path to a single Ansible Tasks file to execute)
+- **Examples of Value**: `{{ playbook_dir }}/hooks/app-static-html.yml`, `{{ role_path }}/ad-hoc-alb/hooks/debug.yml`, `{{ role_path }}/ad-hoc-alb/hooks/hello.yml`
+
+You can execute custom tasks specific to one app after deloyed.
 
 ###### app_index
 - **Required**: _no_

@@ -1,0 +1,7 @@
+---
+
+# Check https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
+
+- name: "ad-hoc-alb | hooks | debug-full.yml ansible_facts"
+  debug:
+    msg: "{{ ansible_facts }}"

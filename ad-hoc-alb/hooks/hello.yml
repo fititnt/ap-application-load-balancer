@@ -1,0 +1,19 @@
+---
+
+# Check https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
+
+- name: "ad-hoc-alb | hooks | hello.yml"
+  debug:
+    msg: "Hello! This is just a sample of hook!"
+
+- name: "ad-hoc-alb | hooks | This is your inventory_dir"
+  debug:
+    msg: "{{ inventory_dir }}"
+  when:
+    - inventory_dir is defined
+
+- name: "ad-hoc-alb | hooks | This is your inventory_file"
+  debug:
+    msg: "{{ inventory_dir }}"
+  when:
+    - inventory_file is defined

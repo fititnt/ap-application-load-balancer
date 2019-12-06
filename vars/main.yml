@@ -14,6 +14,11 @@ alb_openresty_x_served_by_enabled: yes
 alb_openresty_stub_status: "{{ alb_forcedebug }}"
 alb_openresty_stub_status_location: "/openresty_status"
 
+# alb_healthcheck_token: MySemiSecretToAllowRemoteChecking
+alb_healthcheck_prefix: "alb-health-check"
+# If user define a alb_healthcheck_token, we wil not enforce IPs
+alb_healthcheck_public: "{{ alb_healthcheck_token is defined and alb_healthcheck_token }}"
+
 ### ALB Internal Variables: Component HAProxy __________________________________
 
 # This variable is used to calculate if we really can enable HAProxy Stats on this host
