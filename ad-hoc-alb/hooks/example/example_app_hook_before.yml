@@ -1,0 +1,14 @@
+---
+
+# Check https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
+
+- name: "ad-hoc-alb | hooks | examples | example_app_hook_before.yml | set_fact"
+  set_fact:
+    some_useful_facts:
+      item_active: "{{ item_active | default('item_active not defined') }}"
+      item: "{{ item | default('item not defined') }}"
+      result_apps_rules: "{{ result_apps_rules | default('result_apps_rules not defined') }}"
+
+- name: "ad-hoc-alb | hooks | examples | example_app_hook_before.yml"
+  debug:
+    msg: "{{ some_useful_facts }}"

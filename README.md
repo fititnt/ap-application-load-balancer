@@ -71,6 +71,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
                 - [app_debug](#app_debug)
                 - [app_forcehttps](#app_forcehttps)
                 - [app_hook_after](#app_hook_after)
+                - [app_hook_before](#app_hook_before)
                 - [app_index](#app_index)
                 - [app_root](#app_root)
                 - [app_tags](#app_tags)
@@ -490,9 +491,18 @@ than one datacenter).
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**: _String_ (path to a single Ansible Tasks file to execute)
-- **Examples of Value**: `{{ playbook_dir }}/hooks/app-static-html.yml`, `{{ role_path }}/ad-hoc-alb/hooks/debug.yml`, `{{ role_path }}/ad-hoc-alb/hooks/hello.yml`
+- **Examples of Value**: `{{ playbook_dir }}/hooks/app-static-html.yml`, `{{ role_path }}/ad-hoc-alb/hooks/debug.yml`, `{{ role_path }}/ad-hoc-alb/hooks/example/example_app_hook_after.yml`
 
-You can execute custom tasks specific to one app after deloyed.
+You can execute custom tasks specific to one app after deployed.
+
+###### app_hook_before
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _String_ (path to a single Ansible Tasks file to execute)
+- **Examples of Value**: `{{ playbook_dir }}/hooks/app-static-html.yml`, `{{ role_path }}/ad-hoc-alb/hooks/debug.yml`, `{{ role_path }}/ad-hoc-alb/hooks/example/example_app_hook_before.yml`
+
+
+You can execute custom tasks specific to one app after deployed.
 
 ###### app_index
 - **Required**: _no_

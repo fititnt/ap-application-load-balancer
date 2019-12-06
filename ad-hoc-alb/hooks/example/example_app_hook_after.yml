@@ -1,0 +1,26 @@
+---
+
+# Check https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
+
+- name: "ad-hoc-alb | hooks | examples | example_app_hook_after.yml | set_fact"
+  set_fact:
+    some_useful_facts:
+      item_active: "{{ item_active | default('item_active not defined') }}"
+      item: "{{ item | default('item not defined') }}"
+      result_apps_rules: "{{ result_apps_rules | default('result_apps_rules not defined') }}"
+
+- name: "ad-hoc-alb | hooks | examples | example_app_hook_after.yml"
+  debug:
+    msg: "{{ some_useful_facts }}"
+
+# This routine filter out ONLY the item_active result form the result_apps_rules result_apps_rules.results and sets to item_last
+- name: "ad-hoc-alb | hooks | examples | example_app_hook_after.yml | set_fact (filter only the exact same item from the last ALB App Rules)"
+  set_fact:
+    item_last: "{{ item }}"
+  with_items: "{{ result_apps_rules.results }}"
+  when:
+    - "item.item.app_uid == item_active.app_uid"
+
+- name: "ad-hoc-alb | hooks | examples | example_app_hook_after.yml"
+  debug:
+    msg: "{{ item_last }}"
