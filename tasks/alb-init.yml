@@ -42,7 +42,7 @@
 # TODO: check on new installations www-data user already exist and this command would not fail (fititnt, 2019-11-07 21:11 BRT)
 
 ## Let's create all directories that would not be created by OpenResty or HAproxy
-- name: alb-init | mkdir /opt/alb/
+- name: "alb-init | mkdir /opt/alb/ | Base directory for ALB, with symlinks for other important places"
   file:
     path: /opt/alb/
     state: directory
@@ -52,19 +52,61 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: alb-init | mkdir /var/alb/
+- name: "alb-init | mkdir /var/opt/alb/ | Base path for variable data on run time (temporary, cache, backups...)"
   file:
-    path: /var/alb/
+    # path: /var/alb/
+    path: /var/opt/alb/
     state: directory
-    mode: '0644'
-    owner: alb
-    group: alb
+    mode: '0611'
+    owner: root
+    group: root
   when:
     - alb_version_lastrun != alb_version
 
-- name: alb-init | mkdir /var/alb-backups
+- name: "alb-init | mkdir /var/opt/alb/alb-cache/"
   file:
-    path: /var/alb-backups/
+    path: /var/opt/alb/alb-cache/
+    state: directory
+    mode: '0700'
+    owner: root
+    group: root
+  when:
+    - alb_version_lastrun != alb_version
+
+- name: "alb-init | mkdir /var/opt/alb/alb-tmp/"
+  file:
+    path: /var/opt/alb/alb-tmp/
+    state: directory
+    mode: '0700'
+    owner: root
+    group: root
+  when:
+    - alb_version_lastrun != alb_version
+
+- name: "alb-init | mkdir /var/opt/alb/alb-backups/"
+  file:
+    # path: /var/alb-backups/
+    path: /var/opt/alb/alb-backups/
+    state: directory
+    mode: '0700'
+    owner: root
+    group: root
+  when:
+    - alb_version_lastrun != alb_version
+
+- name: "alb-init | mkdir /var/opt/alb/apps-backups/"
+  file:
+    path: /var/opt/alb/apps-backups/
+    state: directory
+    mode: '0700'
+    owner: root
+    group: root
+  when:
+    - alb_version_lastrun != alb_version
+
+- name: "alb-init | mkdir /var/opt/alb/sysapps-backups/"
+  file:
+    path: /var/opt/alb/sysapps-backups/
     state: directory
     mode: '0700'
     owner: root
@@ -138,23 +180,32 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: alb-init | mkdir /var/app/
+- name: alb-init | mkdir /opt/alb/bin/
   file:
-    path: /var/app/
+    path: /opt/alb/bin/
     state: directory
     mode: '0655'
     owner: root
   when:
     - alb_version_lastrun != alb_version
 
-- name: alb-init | mkdir /var/sysapp/
-  file:
-    path: /var/sysapp/
-    state: directory
-    mode: '0644'
-    owner: root
-  when:
-    - alb_version_lastrun != alb_version
+#- name: alb-init | mkdir /var/app/
+#  file:
+#    path: /var/app/
+#    state: directory
+#    mode: '0655'
+#    owner: root
+#  when:
+#    - alb_version_lastrun != alb_version
+
+#- name: alb-init | mkdir /var/sysapp/
+#  file:
+#    path: /var/sysapp/
+#    state: directory
+#    mode: '0644'
+#    owner: root
+#  when:
+#    - alb_version_lastrun != alb_version
 
 - name: alb-init | mkdir /var/log/app
   file:
@@ -175,20 +226,60 @@
     - alb_version_lastrun != alb_version
 
 # Syntactic sugar symbolic links
-- name: alb-init | ln -s /var/alb/ /opt/alb/alb-data
+#- name: alb-init | ln -s /var/alb/ /opt/alb/alb-data
+#  file:
+#    src: /var/alb/
+#    dest: /opt/alb/alb-data
+#    owner: root
+#    state: link
+#    # force: yes
+#  when:
+#    - alb_version_lastrun != alb_version
+
+- name: "alb-init | ln -s /var/opt/alb/alb-cache/ /opt/alb/alb-cache"
   file:
-    src: /var/alb/
-    dest: /opt/alb/alb-data
+    src: /var/opt/alb/alb-cache/
+    dest: /opt/alb/alb-cache
     owner: root
     state: link
     # force: yes
   when:
     - alb_version_lastrun != alb_version
 
-- name: alb-init | ln -s /var/alb-backups/ /opt/alb/backups
+- name: "alb-init | ln -s /var/opt/alb/alb-backups/ /opt/alb/alb-backups"
   file:
-    src: /var/alb-backups/
-    dest: /opt/alb/backups
+    src: /var/opt/alb/alb-backups/
+    dest: /opt/alb/alb-backups
+    owner: root
+    state: link
+    # force: yes
+  when:
+    - alb_version_lastrun != alb_version
+
+- name: "alb-init | ln -s /var/opt/alb/alb-tmp/ /opt/alb/alb-tmp"
+  file:
+    src: /var/opt/alb/alb-tmp/
+    dest: /opt/alb/alb-tmp
+    owner: root
+    state: link
+    # force: yes
+  when:
+    - alb_version_lastrun != alb_version
+
+- name: "alb-init | ln -s /var/opt/alb/apps-backups/ /opt/alb/apps-backups"
+  file:
+    src: /var/opt/alb/apps-backups/
+    dest: /opt/alb/apps-backups
+    owner: root
+    state: link
+    # force: yes
+  when:
+    - alb_version_lastrun != alb_version
+
+- name: "alb-init | ln -s /var/opt/alb/sysapps-backups/ /opt/alb/sysapps-backups"
+  file:
+    src: /var/opt/alb/sysapps-backups/
+    dest: /opt/alb/apps-backups
     owner: root
     state: link
     # force: yes
@@ -205,25 +296,25 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: alb-init | ln -s /var/app/ /opt/alb/apps-data
-  file:
-    src: /var/app/
-    dest: /opt/alb/apps-data
-    owner: root
-    state: link
-    # force: yes
-  when:
-    - alb_version_lastrun != alb_version
+#- name: alb-init | ln -s /var/app/ /opt/alb/apps-data
+#  file:
+#    src: /var/app/
+#    dest: /opt/alb/apps-data
+#    owner: root
+#    state: link
+#    # force: yes
+#  when:
+#    - alb_version_lastrun != alb_version
 
-- name: alb-init | ln -s /var/sysapp/ /opt/alb/sysapps-data
-  file:
-    src: /var/sysapp/
-    dest: /opt/alb/sysapps-data
-    owner: root
-    state: link
-    # force: yes
-  when:
-    - alb_version_lastrun != alb_version
+#- name: alb-init | ln -s /var/sysapp/ /opt/alb/sysapps-data
+#  file:
+#    src: /var/sysapp/
+#    dest: /opt/alb/sysapps-data
+#    owner: root
+#    state: link
+#    # force: yes
+#  when:
+#    - alb_version_lastrun != alb_version
 
 - name: alb-init | ln -s /var/log/app/ /var/log/alb/apps
   file:

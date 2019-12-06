@@ -4,6 +4,7 @@
 
 - [Águia Pescadora Application Load Balancer Internals](#águia-pescadora-application-load-balancer-internals)
 - [Overview](#overview)
+    - [Review to follow the Filesystem Hierarchy Standard 3.0](#review-to-follow-the-filesystem-hierarchy-standard-30)
     - [ALB Internals](#alb-internals)
         - [Directory structures](#directory-structures)
             - [Internal usage of ALB](#internal-usage-of-alb)
@@ -27,6 +28,64 @@
 
 # Overview
 
+## Review to follow the Filesystem Hierarchy Standard 3.0
+
+> _TODO: take time and review the full lastest **Filesystem Hierarchy Standard**
+> and, if need, make some small adaptations to AP-ALB structure. See 
+> <https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard> and 
+> <https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf>
+> (fititnt, 2019-12-05 21:41 BRT)_
+
+Things that we could implement from <https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf>
+that are not implemented yet on [Directory structures](#directory-structures).
+
+- `/opt/alb/`
+  - **3.13. /opt : Add-on application software**
+    - _"3.13.1. Purpose"_
+    - _"/opt is reserved for the installation of add-on application software packages."_
+    - _"A package to be installed in /opt must locate its static files in a separate /opt/< package > or /
+    opt/< provider > directory tree, where < package > is a name that describes the software package
+    and < provider > is the provider's LANANA registered name."_
+      - I did not know that even `/opt` had some way to register a namespace,
+        and was just not simply _free to everyone_
+      - Humm, so ACTUALLY is possible to register application name at
+       http://www.lanana.org/lsbreg/instructions.html if we _really_ interested?
+        - Neither `alb` or `nlb` where registered at
+          <http://www.lanana.org/lsbreg/providers/providers.txt> :)
+          - Humm, actually the bugtrack is quite slow and did not processed
+            requests even from namespaces like MongoDB, <https://lsbbugs.linuxfoundation.org/buglist.cgi?query_format=specific&order=relevance+desc&bug_status=__open__&product=&content=%2Fopt%2F+namespace+assignment>
+          - But as I see, one reason is because is running by volunteers and
+            also they really require the "email be a permanent one" from the
+            organization (like contact@etica.ai) and not (rocha@ieee.org),
+            see <https://lsbbugs.linuxfoundation.org/show_bug.cgi?id=4263>
+       - Here the git repository https://github.com/LinuxStandardBase/lanana
+    - 3.13.2
+      - _"**No other package files may exist outside the /opt, /var/opt, and
+      /etc/opt** hierarchies except for those package files that must reside in
+      specific locations within the filesystem tree in order to function
+      properly. For example, device lock files must be placed in /var/lock and
+      devices must be located in /dev."_
+        - **Note to self: if we eventually have host-specific variables and
+          whant not use /etc/ansible/facts.d/ the /etc/opt/alb/ could be
+          one standard place**
+- `/var/opt`
+  - **5.12. /var/opt : Variable data for /opt**
+    - _"Variable data of the packages in /opt must be installed in /var/opt/< subdir >, where < subdir >
+    is the name of the subtree in /opt where the static data from an add-on software package is stored, except
+    where superseded by another file in /etc. No structure is imposed on the internal arrangement of /var/
+    opt/<subdir>"_
+    - _"Rationale Refer to the rationale for /opt"_
+- `/var/cache/alb/`?
+  - **FHS 3.0 5.5. /var/cache : Application cache data**
+    - _"/var/cache is intended for cached data from applications. Such data is locally generated as a result of
+    time-consuming I/O or calculation. The application must be able to regenerate or restore the data. Unlike
+    /var/spool, the cached files can be deleted without data loss. The data must remain valid between
+    invocations of the application and rebooting the system."_
+    - _"Files located under /var/cache may be expired in an application specific manner, by the system
+    administrator, or both. The application must always be able to recover from manual deletion of these files
+    (generally because of a disk space shortage). No other requirements are made on the data format of the
+    cache "_
+
 ## ALB Internals
 
 > Tip: at [NLB Internals](#nlb-internals) there is additional features that
@@ -43,16 +102,29 @@ ones you are likely to be interested.
 Think the folder `/opt/alb/` as one [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar).
 for all other folders and files that are important.
 
-- **ALB configuration files**:
+- **ALB configuration directories and files**:
   - `/opt/alb/`
     - **`/opt/alb/alb.conf`** -> `/usr/local/openresty/nginx/conf/nginx.conf`
     - **`/opt/alb/nlb.cfg`** -> `/etc/haproxy/haproxy.cfg`
-    - `/opt/alb/alb-data/` -> `/var/alb/`
-    - `/opt/alb/alb-logs/` -> `/var/log/alb/`
     - `/opt/alb/apps/` _(Store OpenResty/NGinx rule for each app as **`/opt/alb/apps/{{ app_id }}.conf`**)_
-    - `/opt/alb/info/` _(Planed, not fully implemented)_
-    - `/opt/alb/apps-data/` -> `/var/app/`
+    - `/opt/alb/sysapps/` _(Store OpenResty/NGinx rule for each Sysapp as **`/opt/alb/sysapps/{{ app_id }}.conf`**)_
+    - <strike>`/opt/alb/alb-data/` -> `/var/alb/`</strike><sup>(deprecated as v0.8.2)</sup>
+    - `/opt/alb/alb-cache` -> `/var/opt/alb/alb-cache/`
+    - `/opt/alb/alb-backups` -> `/var/opt/alb/alb-backups`
+    - `/opt/alb/alb-logs/` -> `/var/log/alb/`
+    - `/opt/alb/apps-backups` -> `/var/opt/alb/apps-backups/`
+    - <strike>`/opt/alb/apps-data/` -> `/var/app/`</strike><sup>(deprecated as v0.8.2)</sup>
     - `/opt/alb/apps-logs/` -> `/var/log/app/`
+    - `/opt/alb/bin/` _(Planed, not fully implemented)_
+      - Maybe in future releases this will have links to ansible facts, like
+        - `/opt/alb/bin/alb_apps` -> `/etc/ansible/facts.d/alb_apps.fact`
+        - ... so when executing `alb_apps` in one host someone would know a JSON
+          representation of the state of the node.
+        - Today a user have to use `/etc/ansible/facts.d/alb_ufw.fact | jq`
+    - `/opt/alb/info/` _(Planed, not fully implemented)_
+    - `/opt/alb/sysapps-backups` -> `/var/opt/alb/sysapps-backups/`
+    - <strike>`/opt/alb/sysapps-data/` -> `/var/sysapp/`</strike><sup>(deprecated as v0.8.2)</sup>
+    - `/opt/alb/sysapps-logs/` -> `/var/log/sysapp/`
     - `/opt/alb/haproxy/` -> `/etc/haproxy/`
     - `/opt/alb/nginx/` -> `/usr/local/openresty/nginx/`
     - `/opt/alb/letsencrypt/` -> `/etc/resty-auto-ssl/letsencrypt/`
@@ -61,8 +133,16 @@ for all other folders and files that are important.
   - `/var/log/alb/error.log`
   - `/var/log/alb/letsencrypt.log`
   - `/var/log/alb/apps/` -> `/var/log/app/`
-- **Data created on Runtime by ALB** _(Planed, not fully implemented)_
-  - `/var/alb/`
+- **Data created on Runtime by ALB or via hooks** _(Planed, not fully implemented)_
+  - <strike>/var/alb/</strike> (this was not well aligned with Filesystem Hierarchy Standard 3.0)
+  - `/var/opt/alb/`
+    - `/var/opt/alb/alb-backups/`
+    - `/var/opt/alb/apps-backups/`
+      - `/var/opt/alb/apps-backups/{{ app_id }}/` <sup>(Should be created on demand)</sup>
+    - `/var/opt/alb/sysapps-backups/`
+      - `/var/opt/alb/sysapps-backups/{{ app_id }}/` <sup>(Should be created on demand)</sup>
+    - `/var/opt/alb/alb-cache/`
+    - `/var/opt/alb/alb-tmp/`
 
 #### Usage of Apps
 
