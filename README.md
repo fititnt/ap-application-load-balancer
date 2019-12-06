@@ -1,4 +1,4 @@
-# AP Application Load Balancer - v0.8.1-alpha
+# AP Application Load Balancer - v0.8.2-alpha
 AP-ALB is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud
@@ -73,6 +73,13 @@ humanitarian or commercial projects from who help we on Etica.AI.
                 - [app_index](#app_index)
                 - [app_root](#app_root)
                 - [app_tags](#app_tags)
+            - [app_data_*](#app_data_)
+                - [app_data_directories](#app_data_directories)
+                - [app_data_files](#app_data_files)
+                - [app_data_hook_export_after](#app_data_hook_export_after)
+                - [app_data_hook_export_before](#app_data_hook_export_before)
+                - [app_data_hook_import_after](#app_data_hook_import_after)
+                - [app_data_hook_import_before](#app_data_hook_import_before)
             - [app_*_strategy](#app__strategy)
                 - [app_alb_strategy](#app_alb_strategy)
                 - [app_backup_strategy](#app_backup_strategy)
@@ -514,7 +521,72 @@ than one datacenter).
 >   - "{{ ansible_default_ipv4.address }}"
 > ```
 
-<!--  ###### app__proxy_* -->
+##### app_data_*
+
+`app_data_*` are one way to document specific applications that you care about
+make backups, or export/import from one node to another. The typical scenario
+is you document, at App/Sysapp level, what a different AP-ALB node should have
+to be fully operational.
+
+As AP-ALB v0.8.2, this Role alone does not implement the full logistics of how
+to make the import/export/backup but you are encoraged to use these variables
+as one way to document or reuse future implementations.
+
+Also keep in mind that even if AP-ALB implement these features, is likely that
+you would still need configure external services to store backups, since the
+priority here would be sincronize 2 nodes that, for example, do not have a
+shared (and often sloooow) filesystem.
+
+<!--
+- k3s backup/restore procedure [question] #218 https://github.com/rancher/k3s/issues/218
+- k3s Backup/restore of master #661 https://github.com/rancher/k3s/issues/661
+- https://stackoverflow.com/questions/25675314/how-to-backup-sqlite-database
+-->
+
+###### app_data_directories
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _list of Strings_ (list of absolute paths of directories on the node)
+- **Examples of Value**:
+> ```yaml
+> app_data_directories:
+>   - "/var/www/myapp"
+> ```
+
+###### app_data_files
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _list of Strings_ (list of absolute paths of directories on the node)
+- **Examples of Value**:
+> ```yaml
+> app_data_files:
+>   - "/var/lib/rancher/k3s/server/node-token"
+>   - "/var/lib/rancher/k3s/server/db/state.db.bak"
+> ```
+
+###### app_data_hook_export_after
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**:  _String_ (Path to a Ansible Tasks file)
+- **Examples of Value**: `"{{ playbook_dir }}/delete-temporary-files.yml"`
+
+###### app_data_hook_export_before
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**:  _String_ (Path to a Ansible Tasks file)
+- **Examples of Value**: `"{{ playbook_dir }}/database-dump-to-file.yml"`
+
+###### app_data_hook_import_after
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**:  _String_ (Path to a Ansible Tasks file)
+- **Examples of Value**: `"{{ playbook_dir }}/populate-database-from-database-dump.yml"`
+
+###### app_data_hook_import_before
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**:  _String_ (Path to a Ansible Tasks file)
+- **Examples of Value**: `"{{ playbook_dir }}/install-requeriments-for-this-app-if-already-not-exist.yml"`
 
 ##### app_*_strategy
 
