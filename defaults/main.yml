@@ -142,7 +142,10 @@ alb_nginx_alb_stragies_folder:  "{{ role_path }}/templates/alb/strategy/"
 # If you use "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
 # and not a very customized nginx.conf, you can customize with these variables
 
-alb_nginx_user: "www-data"
+# Note: if you use a user different from "alb", make sure it already exist
+#       before initialize AP-ALB first time.
+alb_nginx_user: "alb"
+# alb_nginx_user: "www-data"
 alb_nginx_worker_processes: "auto"
 alb_nginx_error_log_level: "warn" # Possible values: warn, error, crit, alert, emerg
 

@@ -37,9 +37,11 @@
     state: present
   when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
 
-- name: "common (CentOS/RHEL) | sudo dnf install -y epel-release"
+- name: "common (CentOS/RHEL) | sudo dnf install -y epel-release yum-utils"
   dnf:
-    name: epel-release
+    name:
+      - epel-release
+      - yum-utils
     state: present
   when: "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
 

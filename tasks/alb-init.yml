@@ -40,6 +40,7 @@
   when:
     - alb_version_lastrun != alb_version
 # TODO: check on new installations www-data user already exist and this command would not fail (fititnt, 2019-11-07 21:11 BRT)
+# NOTE: yes, it fails on CentOS and new installations first time, before OpenResty (fititnt, 2019-12-06 06:09)
 
 ## Let's create all directories that would not be created by OpenResty or HAproxy
 - name: "alb-init | mkdir /opt/alb/ | Base directory for ALB, with symlinks for other important places"
