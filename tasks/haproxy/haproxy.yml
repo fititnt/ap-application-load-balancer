@@ -13,13 +13,17 @@
   apt_repository:
     repo: ppa:vbernat/haproxy-2.0
     update_cache: yes
-  when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+  when:
+   - "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+   - "alb_manange_haproxy_repository is defined and alb_manange_haproxy_repository|bool"
 
 - name: 'haproxy (Debian/Ubuntu) | apt-get install haproxy=2.0.\*'
   apt:
     name: 'haproxy=2.0.*'
     state: 'present'
-  when: "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+  when:
+    - "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+    - "alb_manange_haproxy_install is defined and alb_manange_haproxy_install|bool"
 
 # - name: "haproxy (CentOS/RHEL) | Install HAProxy"
 #   dnf:
@@ -42,16 +46,20 @@
     state: latest
   when:
     - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
+    - "alb_manange_haproxy_install is defined and alb_manange_haproxy_install|bool"
 
-- name: Ensure HAProxy is installed.
+- name: "haproxy (CentOS/RHEL) | Ensure HAProxy is installed"
   package: name=haproxy state=present
   when:
     - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
+    - "alb_manange_haproxy_install is defined and alb_manange_haproxy_install|bool"
 
 # Os comandos anteriores não esta instalando haproxy, mesmo ele ja existindo (1.8, não repo externo)
-- shell: "sudo dnf install haproxy -y"
+- name: "haproxy (CentOS/RHEL) | HOTFIX, sudo dnf install haproxy -y (TODO: remove this shell command) "
+  shell: "sudo dnf install haproxy -y"
   when:
     - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
+    - "alb_manange_haproxy_install is defined and alb_manange_haproxy_install|bool"
 
 # Tive que logar diretamente e rodar 
 #    sudo dnf install haproxy -y

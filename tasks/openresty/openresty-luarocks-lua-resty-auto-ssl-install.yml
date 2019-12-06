@@ -30,16 +30,18 @@
   when:
     - is_openresty is failed
     - "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+    - "alb_manange_openresty_repository is defined and alb_manange_openresty_repository|bool"
 
-- name: "openresty (Debian/Ubuntu) | openresty: apt-key add"
+- name: "openresty (Debian/Ubuntu) | OpenResty apt-key"
   apt_key:
     url: https://openresty.org/package/pubkey.gpg 
     state: present
   when:
     - is_openresty is failed
     - "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+    - "alb_manange_openresty_repository is defined and alb_manange_openresty_repository|bool"
 
-- name: "openresty (Debian/Ubuntu) | openresty: add-apt-repository (...)"
+- name: "openresty (Debian/Ubuntu) | OpenResty Repository"
   apt_repository:
     repo: 'deb http://openresty.org/package/ubuntu bionic main' 
     state: present
@@ -48,18 +50,19 @@
   when:
     - is_openresty is failed
     - "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+    - "alb_manange_openresty_repository is defined and alb_manange_openresty_repository|bool"
 
-- name: "openresty (CentOS/RHEL) | OpenResty CentOS repo"
+- name: "openresty (CentOS/RHEL) | OpenResty Repository"
   yum_repository:
     name: "openresty"
     description: "OpenResty CentOS repo"
-    baseurl: 'deb http://openresty.org/package/ubuntu bionic main' 
+    baseurl: 'https://openresty.org/package/centos/openresty.repo'
     state: present
     enabled: yes
-    filename: openresty
   when:
     - is_openresty is failed
     - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
+    - "alb_manange_openresty_repository is defined and alb_manange_openresty_repository|bool"
 
 - name: "openresty (Debian/Ubuntu) | Install OpenResty"
   apt:
@@ -91,7 +94,7 @@
     - is_luarocks is failed
     - "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
 
-- name: "openresty (CentOS/RHEL) | Install OpenResty"
+- name: "openresty (CentOS/RHEL) | luarocks: dnf install -y luarocks"
   dnf:
     name: "luarocks"
     state: present

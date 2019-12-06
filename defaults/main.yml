@@ -30,6 +30,15 @@ alb_manange_apps: "{{ alb_manange_openresty }}"
 alb_manange_sysapps: "{{ alb_manange_apps }}"
 alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
 
+##AP-ALB custom repositories ---------------------------------------------------
+# These options only are used if you have `alb_manange_NameOfComponent: yes`
+alb_manange_haproxy_install: yes
+alb_manange_haproxy_repository: yes
+alb_manange_ufw_install: yes
+alb_manange_ufw_repository: yes
+# alb_manange_openresty_install: yes    # We require manange OpenResty, this is not optional
+# alb_manange_openresty_repository: yes # We require manange OpenResty, this is not optional
+
 ### AP-ALB Components: shared options __________________________________________
 # Some variables are used on more than one ALB component by default for avoiding
 # some repetitive work (...) 

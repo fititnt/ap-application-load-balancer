@@ -1,6 +1,11 @@
 ---
 # tasks/ufw/main.yml
 
+# To run this playbook alone, you can use this strategy:
+#     ansible-playbook --tags="alb-haproxy" playbook.yml -i hosts
+# To run this playbook alone, but ignore cached facts (like a semi-broken deploy), add alb_forceredeploy=yes:
+#     ansible-playbook --tags="alb-ufw" --extra-vars "alb_forceredeploy=yes" playbook.yml -i hosts
+
 - name: /etc/ansible/facts.d/alb_ufw.fact
   template:
     src: files/alb_ufw.fact
@@ -13,6 +18,7 @@
   shell: "ufw status verbose"
   become: "yes"
   changed_when: false
+  ignore_errors: true
   register: ufw_status_verbose1
   when:
     - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
@@ -20,11 +26,13 @@
 - name: "ufw | ufw status verbose print (before)"
   debug: var=ufw_status_verbose1.stdout_lines
   when:
+    - "ufw_status_verbose1 is not failed"
     - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: ufw | install-ufw.yml
   include: install-ufw.yml
   when:
+    - "ufw_status_verbose1 is failed"
     - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: ufw | ufw-reset.yml

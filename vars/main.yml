@@ -127,7 +127,6 @@ alb_lastrun_facts:
     alb_manange_apps: "{{ alb_manange_sanitycheck | default(None) }}"
     alb_manange_logrotate: "{{ alb_manange_sanitycheck | default(None) }}"
 
-
   # This result will be stored at /etc/ansible/facts.d/alb_ufw.fact
 alb_ufw_facts:
   rules: "{{ alb_ufw_rules | default(None) }}"
@@ -138,3 +137,7 @@ alb_ufw_facts:
   autoapply_dmz: "{{ alb_ufw_autoapply_dmz | default(None) }}"
   autoapply_bastion_hosts: "{{ alb_ufw_autoapply_bastion_hosts | default(None) }}"
   autoapply_jump_boxes: "{{ alb_ufw_autoapply_jump_boxes | default(None) }}"
+
+## Other/Temporary _____________________________________________________________
+alb_manange_openresty_install: yes    # We require manange OpenResty, this is not optional
+alb_manange_openresty_repository: yes # We require manange OpenResty, this is not optional
