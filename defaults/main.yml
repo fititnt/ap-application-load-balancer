@@ -19,6 +19,7 @@ alb_manange_ufw: no
 
 alb_use_consul: no
 
+alb_manange_bootstrap: yes
 ## Optionated (but NOT required) group of tasks.
 alb_manange_common: no  # hostname, timezone (UTC) [See tasks/common/common.yml]
 

@@ -2,7 +2,10 @@
 # FILE:            {{ role_path }}/tasks/haproxy/haproxy.yml
 # LICENSE:         Public Domain
 
-# ansible-playbook -i hosts.yml infra-alb.yml --tags="alb-haproxy"
+# TODO: make choosable via variables the HAProxy version and the
+#       repository, see https://haproxy.debian.net.
+
+# ansible-playbook -i hosts.yml infra-alb.yml --tags="alb-haproxy" "alb_forceredeploy=yes"
 # /usr/sbin/haproxy -c -V -f /etc/haproxy/haproxy.cfg
 
 # TODO: fix issue with at very first time HAProxy is not started after installation (fititnt, 2019-11-04 20:40 BRT)

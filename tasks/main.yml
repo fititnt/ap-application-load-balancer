@@ -18,13 +18,22 @@
   debug: 
     msg: "{{ alb_version }}"
 
-- name: "alb_trusted_hosts"
-  debug: 
-    msg: "{{ alb_trusted_hosts }}"
+#- name: "alb_trusted_hosts"
+#  debug: 
+#    msg: "{{ alb_trusted_hosts }}"
 
-- name: "alb_trusted_hosts_ips"
-  debug: 
-    msg: "{{ alb_trusted_hosts_ips }}"
+#- name: "alb_trusted_hosts_ips"
+#  debug: 
+#    msg: "{{ alb_trusted_hosts_ips }}"
+
+- name: "bootstrap/main.yml"
+  include: bootstrap/main.yml
+  tags:
+    - alb
+    - alb-bootstrap
+  when:
+    - alb_manange_all is sameas true
+    - alb_manange_bootstrap is sameas true
 
 - name: check the version of last run on /etc/ansible/facts.d/alb_lastrun.fact
   set_fact:

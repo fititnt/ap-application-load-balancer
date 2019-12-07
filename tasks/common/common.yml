@@ -31,6 +31,14 @@
 #    mode: 0755
 #  register: alb_common_facts_deployed
 
+# > AP-ALB v0.8.x adaptations to support RHEL/CentOS 8 family and design changes to allow flexibility even for non-tested OSs #34
+#  - Variables via type of OS 
+#    - https://docs.ansible.com/ansible/latest/modules/include_vars_module.html
+#    - https://ansible-tips-and-tricks.readthedocs.io/en/latest/os-dependent-tasks/variables/
+#  - ansible_pkg_mgr strategy, see
+#    - https://ansible-tips-and-tricks.readthedocs.io/en/latest/os-dependent-tasks/installing_packages/
+#    - https://github.com/openstack/openstack-ansible-galera_server/blob/master/tasks/galera_install.yml
+
 - name: "common (Debian/Ubuntu) | sudo apt install -y aptitude"
   apt:
     name: aptitude

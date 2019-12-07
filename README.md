@@ -109,6 +109,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
             - [minimal](#minimal)
             - [proxy](#proxy)
             - [raw](#raw)
+    - [Bootstrap](#bootstrap)
     - [Common](#common)
     - [HAProxy](#haproxy)
         - [HAProxy stats page](#haproxy-stats-page)
@@ -1021,6 +1022,48 @@ using [app_alb_raw](#app_alb_raw) and/or [app_alb_raw_file](#app_alb_raw_file).
 This strategy can be specially useful on upgrades of AP-ALB where new
 configurations could break some old functionality and you have no time to make
 the new upgrades for some specific app.
+
+### Bootstrap
+- **To permanently enable management by ALB<sup>(default)</sup>**
+  - `alb_manange_bootstrap: yes`
+- **To permanently disable management by ALB**
+  - `alb_manange_bootstrap: no`
+- **Check Mode ("Dry Run"): only test changes without applying**
+
+This ALB group of tasks have 3 responsabilities:
+
+1. If a node does not even have python installed, if you run with
+  `gather_facts: no`, it will do a dirty raw checking and, if need, will install
+  python for you. Then it will abort the play and ask you to allow
+  `gather_facts` because of other modules will require.
+2. (independent of `alb_manange_*` ) Based on your operational system
+  boostrap mode will install some generic packages that you very likely would
+  want
+    - This step may make some checks, like if you by acident tried to run
+      against one server that already is running some application on port :80
+      or :443 and it was not created by AP-ALB. **Then it will abort the
+      process**.
+      - Think, for example, if running this agains one WHM server, ISPConfig,
+        some Kubernetes cluster, etc. It will abort and require you add
+        undocumented variables to force the boostraping continue
+      - Think that one functionalities of AP-ALB is export or import
+        applications from other hosting services
+    - _TODO: add details later (fititnt, 2019-12-07 00:05 BRT)_
+3. (based on `alb_manange_*: yes` and `alb_manange_*_repository: yes`) it
+  based on what ALB components will be managed on other group of tasks, and
+  if you operational system does not seems to have ideal repository to get
+  the HAProxy/OpenResty, etc, it will add new repositories to your system.
+4. (based on `alb_manange_*: yes`) if the ALB Components are enabled require
+  the full directory structure (think folders for OpenResty/Apps/SysApps
+  configurations and access logs) this step will create all directory structure
+  of AP-ALB.
+  - Note: this step may also do actions on server boostraped by older versions
+    of AP-ALB.
+5. Then, if it will mark you server as bootstraped. By default it will not try
+  to do any of these tasks again at least until AP-ALB Role was upgraded.
+
+
+Check [tasks/bootstrap/main.yml](tasks/bootstrap/main.yml).
 
 ### Common
 

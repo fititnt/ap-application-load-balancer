@@ -1,0 +1,13 @@
+---
+
+# FILE:            {{ role_path }}/tasks/common/common.yml
+# LICENSE:         Public Domain
+
+- name: "bootstrap | hello"
+  debug:
+    msg: "{{ ansible_facts }}"
+
+- name: "bootstrap | hello"
+  fail:
+    msg: "{{ ansible_facts }}"
+  when: true
