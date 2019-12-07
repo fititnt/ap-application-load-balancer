@@ -1,13 +1,52 @@
 ---
 
-# FILE:            {{ role_path }}/tasks/common/common.yml
+# FILE:            {{ role_path }}/tasks/bootstrap/main.yml
 # LICENSE:         Public Domain
 
-- name: "bootstrap | hello"
-  debug:
-    msg: "{{ ansible_facts }}"
+# Delta: Ubuntu 18.04 LTS
+# ssh root@aguia-pescadora-delta.etica.ai
 
-- name: "bootstrap | hello"
-  fail:
-    msg: "{{ ansible_facts }}"
-  when: true
+# Echo: Debian 10
+# ssh root@aguia-pescadora-echo.etica.ai
+
+# Foxtrot: CentOS 8
+# ssh root@aguia-pescadora-foxtrot.etica.ai
+
+# Golf: CentOS 7
+# ssh root@aguia-pescadora-golf.etica.ai
+
+# Anortosito: FreeBSD 12
+# ssh root@rocha-anortosito.vps.fititnt.org
+
+# Basalto: OpenSUSE 15.1
+# ssh root@rocha-basalto.vps.fititnt.org
+
+# > AP-ALB v0.8.x adaptations to support RHEL/CentOS 8 family and design changes to allow flexibility even for non-tested OSs #34
+#  - Variables via type of OS 
+#    - https://docs.ansible.com/ansible/latest/modules/include_vars_module.html
+#    - https://ansible-tips-and-tricks.readthedocs.io/en/latest/os-dependent-tasks/variables/
+#  - ansible_pkg_mgr strategy, see
+#    - https://ansible-tips-and-tricks.readthedocs.io/en/latest/os-dependent-tasks/installing_packages/
+#    - https://github.com/openstack/openstack-ansible-galera_server/blob/master/tasks/galera_install.yml
+
+# - name: "bootstrap | ansible_facts"
+#   debug:
+#     msg: "{{ ansible_facts | default ('none') }}"
+
+#- name: "bootstrap | should detect if have python?"
+#  debug:
+#    msg: "{{ ((ansible_facts is not defined) or (ansible_facts.ansible_all_ipv4_addresses is not defined)) }}"
+
+- name: "really-minimal-dependencies/main.yml"
+  include: really-minimal-dependencies/main.yml
+  when:
+    - ((ansible_facts is not defined) or (ansible_facts.ansible_all_ipv4_addresses is not defined))
+
+# - name: "bootstrap | ansible_python_interpreter"
+#   debug:
+#     msg: "{{ ansible_python_interpreter | default ('none') }}"
+
+# - name: "bootstrap | hello"
+#   fail:
+#     msg: "{{ ansible_facts }}"
+#   when: true

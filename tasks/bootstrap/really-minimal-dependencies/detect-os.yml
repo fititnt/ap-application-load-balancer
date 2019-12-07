@@ -1,0 +1,12 @@
+---
+
+
+- name: "bootstrap | really-minimal-dependencies | detect-os.yml | cat /etc/os-release"
+  raw: cat /etc/*release
+  ignore_errors: true
+  changed_when: false
+  register: bootstrap_os_release
+
+- name: "bootstrap | really-minimal-dependencies | detect-os.yml | bootstrap_os_release"
+  debug:
+    msg: "{{ bootstrap_os_release }}"

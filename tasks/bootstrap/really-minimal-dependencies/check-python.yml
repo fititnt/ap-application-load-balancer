@@ -1,0 +1,28 @@
+---
+
+#- name: "bootstrap | really-minimal-dependencies | not even python?"
+#  debug:
+#    msg: "{{ ansible_facts }}"
+
+- name: "bootstrap | really-minimal-dependencies | check-python.yml| python --version"
+  raw: python --version
+  ignore_errors: true
+  changed_when: false
+  register: bootstrap_python_version
+
+- name: "bootstrap_python_version"
+  debug:
+    msg: "{{ bootstrap_python_version }}"
+
+- name: "bootstrap | really-minimal-dependencies | check-python.yml | python3 --version"
+  raw: python3 --version
+  ignore_errors: true
+  changed_when: false
+  register: bootstrap_python3_version
+
+- name: "bootstrap | really-minimal-dependencies | check-python.yml | bootstrap_python3_version"
+  debug:
+    msg: "{{ bootstrap_python3_version }}"
+
+- set_fact:
+    bootstrap_python_not_installed: "{{ (bootstrap_python_version.failed|bool and bootstrap_python3_version.failed|bool) }}"

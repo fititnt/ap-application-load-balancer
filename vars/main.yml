@@ -141,3 +141,5 @@ alb_ufw_facts:
 ## Other/Temporary _____________________________________________________________
 alb_manange_openresty_install: yes    # We require manange OpenResty, this is not optional
 alb_manange_openresty_repository: yes # We require manange OpenResty, this is not optional
+
+alb_boostrap_caninstallpython: yes

@@ -1,0 +1,22 @@
+---
+
+# This script should test if the target host does not even have python or
+# minimal enviroment for ansible run
+
+
+# Return bootstrap_python_not_installed
+- name: "check-python.yml"
+  include: check-python.yml
+
+- name: "detect-os.yml"
+  include: detect-os.yml
+  when: 
+    - bootstrap_python_not_installed is defined and bootstrap_python_not_installed|bool
+
+- debug:
+    msg: "{{ inventory_hostname }} requires python: {{ bootstrap_python_not_installed }}"
+
+- name: "install-python.yml"
+  include: install-python.yml
+  when:
+    - bootstrap_python_not_installed is defined and bootstrap_python_not_installed|bool
