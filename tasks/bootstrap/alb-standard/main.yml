@@ -1,0 +1,8 @@
+---
+
+# FILE:            {{ role_path }}/tasks/bootstrap/alb-standard/main.yml
+# LICENSE:         Public Domain
+
+- name: "bootstrap | alb-standard | main.yml"
+  debug:
+    msg: "TODO: implement me"

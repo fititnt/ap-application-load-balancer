@@ -14,9 +14,11 @@
 
 # Golf: CentOS 7
 # ssh root@aguia-pescadora-golf.etica.ai
+#     ansible_python_interpreter: /usr/bin/python
 
 # Anortosito: FreeBSD 12
 # ssh root@rocha-anortosito.vps.fititnt.org
+#    ansible_python_interpreter: /usr/local/bin/python3
 
 # Basalto: OpenSUSE 15.1
 # ssh root@rocha-basalto.vps.fititnt.org
@@ -29,18 +31,40 @@
 #    - https://ansible-tips-and-tricks.readthedocs.io/en/latest/os-dependent-tasks/installing_packages/
 #    - https://github.com/openstack/openstack-ansible-galera_server/blob/master/tasks/galera_install.yml
 
-# - name: "bootstrap | ansible_facts"
-#   debug:
-#     msg: "{{ ansible_facts | default ('none') }}"
+#  - name: "bootstrap | ansible_facts"
+#    debug:
+#      msg: "{{ ansible_facts | default ('none') }}"
+
+#  - name: "bootstrap | ansible_facts"
+#    debug:
+#      msg: "{{ ansible_facts.ansible_all_ipv4_addresses | default ('none') }}"
 
 #- name: "bootstrap | should detect if have python?"
 #  debug:
-#    msg: "{{ ((ansible_facts is not defined) or (ansible_facts.ansible_all_ipv4_addresses is not defined)) }}"
+#    msg: "{{ ansible_facts }}"
 
+#- name: "bootstrap | should detect if have python?"
+#  debug:
+#    msg: "{{ not ((ansible_facts is not defined) and (ansible_facts.ansible_all_ipv4_addresses is not defined)) }}"
+
+# If lots of variables are not defined, this is likely to not even have python installed and running with 'gather_facts: false'
 - name: "really-minimal-dependencies/main.yml"
   include: really-minimal-dependencies/main.yml
   when:
-    - ((ansible_facts is not defined) or (ansible_facts.ansible_all_ipv4_addresses is not defined))
+    - ansible_hostname is not defined
+    - ansible_facts is not defined
+
+- name: "basic-tools/main.yml"
+  include: basic-tools/main.yml
+
+- name: "basic-tools/main.yml"
+  include: basic-tools/main.yml
+
+- name: "alb-minimal/main.yml"
+  include: alb-minimal/main.yml
+
+- name: "alb-standard/main.yml"
+  include: alb-standard/main.yml
 
 # - name: "bootstrap | ansible_python_interpreter"
 #   debug:

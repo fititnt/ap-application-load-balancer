@@ -1,0 +1,41 @@
+---
+
+# FILE:            {{ role_path }}/tasks/bootstrap/basic-tools/main.yml
+# LICENSE:         Public Domain
+
+- name: "bootstrap | basic-tools | main.yml"
+  debug:
+    msg: "TODO: implement me"
+
+- name: "bootstrap | basic-tools | main.yml | debug"
+  debug:
+    msg: 
+     #- ansible_os_family: "{{ ansible_os_family | default('none') }}"
+     - ansible_distribution: "{{ ansible_distribution | default('none') }}"
+     #- ansible_distribution_version: "{{ ansible_distribution_version | default('none') }}"
+     #- ansible_distribution_major_version: "{{ ansible_distribution_major_version | default('none') }}"
+     - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+     - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+     - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+     - "{{ ansible_distribution | lower }}.yml"
+     - "{{ ansible_os_family | lower }}.yml"
+
+- name: "bootstrap | basic-tools | main.yml | specific"
+  include: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+    - "unknow.yml"
+
+# - name: example
+#   include_vars: "{{ item }}"
+#   with_first_found:
+#     - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+#     - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+#     - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+#     - "{{ ansible_distribution | lower }}.yml"
+#     - "{{ ansible_os_family | lower }}.yml"
+#   tags:
+#     - always

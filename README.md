@@ -110,6 +110,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
             - [proxy](#proxy)
             - [raw](#raw)
     - [Bootstrap](#bootstrap)
+        - [Bootstrap Python installation](#bootstrap-python-installation)
     - [Common](#common)
     - [HAProxy](#haproxy)
         - [HAProxy stats page](#haproxy-stats-page)
@@ -1029,6 +1030,8 @@ the new upgrades for some specific app.
 - **To permanently disable management by ALB**
   - `alb_manange_bootstrap: no`
 - **Check Mode ("Dry Run"): only test changes without applying**
+  - `--tags alb-bootstrap --check`
+    - Example: `ansible-playbook -i hosts main.yml --tags alb-bootstrap --check`
 
 This ALB group of tasks have 3 responsabilities:
 
@@ -1062,8 +1065,40 @@ This ALB group of tasks have 3 responsabilities:
 5. Then, if it will mark you server as bootstraped. By default it will not try
   to do any of these tasks again at least until AP-ALB Role was upgraded.
 
+#### Bootstrap Python installation
+- **Tested Operational Systems**:
+  - CentOS 7, CentOS 8
+  - Debian: 10 
+  - FreeBSD 12
+  - Ubuntu: 18.04
 
-Check [tasks/bootstrap/main.yml](tasks/bootstrap/main.yml).
+Ansible requires Python (better if is Python3) and for very new hosts, you may
+get this error message: "the module failed to execute correctly you probably
+need to set the interpreter".
+
+If you run AP-ALB and the boostrap part detect the host don't have python, (tip:
+you may need `gather_facts: false` at least one time) the boostrap will try
+apply try [raw – Executes a low-down and dirty
+command](https://docs.ansible.com/ansible/latest/modules/raw_module.html) and
+do this for you. Then the next time you run (can be with `gather_facts: true`)
+it will try continue the boostraping.
+
+```yaml
+# File: my-playbook-without-gather-facts.yml
+# Execute using:
+#   ansible-playbook my-playbook-without-gather-facts.yml
+#   ansible-playbook my-playbook-without-gather-facts.yml -e="alb_boostrap_caninstallpython=true"
+
+- name: "ansible-linux-ha-cluster: bootstrap.yml"
+  hosts: all
+  remote_user: root
+  gather_facts: false
+  vars:
+    alb_boostrap_caninstallpython: true
+
+  roles:
+    - ap-application-load-balancer
+```
 
 ### Common
 
@@ -1086,13 +1121,13 @@ Check [tasks/common/common.yml](tasks/common/common.yml).
 - **To permanently disable management by ALB**
   - `alb_manange_haproxy: no`
 - **Check Mode ("Dry Run"): only test changes without applying**
-  - `--tags alb-openresty --check`
+  - `--tags alb-haproxy --check`
   - Example: `ansible-playbook -i hosts main.yml --tags alb-haproxy --check`
 - **To temporarily only execute ALB/HAProxy tasks**
   - `--tags alb-ufw`
   - Example: `ansible-playbook -i hosts main.yml --tags alb-haproxy`
 - **To temporarily only skips ALB/HAProxy tasks**
-  - `--skip-tags alb-openresty`
+  - `--skip-tags alb-haproxy`
   - Example: `ansible-playbook -i hosts main.yml --skip-tags alb-haproxy`
 
 Please check [NLB Internals](nlb-internals.md) <sup>(working draft)</sup>.
