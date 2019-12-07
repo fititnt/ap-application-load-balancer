@@ -52,17 +52,41 @@
     - "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
     - "alb_manange_openresty_repository is defined and alb_manange_openresty_repository|bool"
 
-- name: "openresty (CentOS/RHEL) | OpenResty Repository"
+# TODO: remove this task when https://openresty.org/en/linux-packages.html already
+#       have repository for CentOS/RHEL 8 (fititnt, 2019-12-06 20:04)
+- name: "openresty (CentOS/RHEL) | OpenResty Repository (force use CentOS/RHEL 7 Untill OpenResty officialy release support for 8)"
   yum_repository:
     name: "openresty"
-    description: "OpenResty CentOS repo"
-    baseurl: 'https://openresty.org/package/centos/openresty.repo'
+    description: "Official OpenResty Open Source Repository for CentOS"
+    # baseurl: 'https://openresty.org/package/centos/$releasever/$basearch' # This original line
+    baseurl: 'https://openresty.org/package/centos/7/$basearch'
+    skip_if_unavailable: false
+    gpgcheck: true
+    repo_gpgcheck: false
+    gpgkey: 'https://openresty.org/package/pubkey.gpg'
     state: present
-    enabled: yes
+    enabled: true
   when:
     - is_openresty is failed
     - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
     - "alb_manange_openresty_repository is defined and alb_manange_openresty_repository|bool"
+
+- debug:
+    msg: "{{ ansible_distribution_major_version }}"
+
+# TODO: remove this task when https://openresty.org/en/linux-packages.html already
+#       have repository for CentOS/RHEL 8 (fititnt, 2019-12-06 20:04)
+# - name: "openresty (CentOS/RHEL) | MONKEYPATCH | OpenResty Repository (force use CentOS/RHEL 7 Untill OpenResty officialy release support for 8)"
+#   shell: sed -i '/RANDFILE/s/^/#/g' /etc/yum.repos.d/openresty.repo
+#   # replace:
+#   #   path: /etc/yum.repos.d/openresty.repo
+#   #   regexp: '(\$releasever)'
+#   #   replace: '7'
+#   when:
+#     - is_openresty is failed
+#     - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
+#     - "alb_manange_openresty_repository is defined and alb_manange_openresty_repository|bool"
+#     - "ansible_distribution_major_version == ''"
 
 - name: "openresty (Debian/Ubuntu) | Install OpenResty"
   apt:
@@ -93,6 +117,14 @@
   when:
     - is_luarocks is failed
     - "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+
+- name: "openresty (CentOS/RHEL) | luarocks: dnf install -y openresty-opm"
+  dnf:
+    name: "openresty-opm"
+    state: present
+  when:
+    - is_openresty is failed
+    - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
 
 - name: "openresty (CentOS/RHEL) | luarocks: dnf install -y luarocks"
   dnf:
