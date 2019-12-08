@@ -2,13 +2,6 @@
 # FILE:            {{ role_path }}/vars/main.yml
 # LICENSE:         Public Domain
 # DESCRIPTION:     This file {{ role_path }}/vars/main.yml always is loaded.
-#
-#                  Other files on this directory are loaded in order of
-#                  specificity based on ansible_distribution,
-#                  ansible_distribution_major_version & ansible_os_family, like:
-#                    - ubuntu-18.yml
-#                    - ubuntu.yml
-#                    - untested_os_family.yml
 
 alb_version: "v0.8.3-alpha"
 alb_version_lastrun: -1

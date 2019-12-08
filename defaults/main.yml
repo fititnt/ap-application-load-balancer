@@ -2,12 +2,19 @@
 # FILE: {{ role_path }}/defaults/main.yml
 
 alb_name: "AP Application Load Balancer"
-alb_hide_alb: yes           # This and 'alb_forcedebug: no' means try to hide even references to NGinx/OpenResty
 alb_name_service: "alb"     # If alb_hide_alb: no, thiw will replace nginx / openresty strings on some places
 alb_name_datacenter: "dc1"  # Datacenter identifier of a group of active nodes
+
+# ALB/Boostrap/alb-standard can both set up each node hostname and timezone
+# based on variables or hardcoded values. Set to empty "" or false not change
+alb_node_hostname: "{{ inventory_hostname }}"
+alb_node_timezone: "UTC"
+
+alb_hide_alb: yes           # This and 'alb_forcedebug: no' means try to hide even references to NGinx/OpenResty
 alb_expose_version: no      # If alb_hide_alb: no, this will be displayed like "alb/1.2.3".
 alb_forcedebug: no
 alb_forceredeploy: no # Ignore already made changes base on facts from /etc/ansible/fact.d/alb*.fact
+
 
 ### AP-ALB Components overview _________________________________________________
 # The defaults of v0.7.4+ will use: Apps, HAProxy, Logrotate, OpenResty
@@ -17,11 +24,7 @@ alb_manange_haproxy: yes
 alb_manange_openresty: yes
 alb_manange_ufw: no
 
-alb_use_consul: no
-
 alb_manange_bootstrap: yes
-## Optionated (but NOT required) group of tasks.
-alb_manange_common: no  # hostname, timezone (UTC) [See tasks/common/common.yml]
 
 ## Sanity Check run at very beginning
 alb_manange_sanitycheck: yes
@@ -30,6 +33,9 @@ alb_manange_sanitycheck: yes
 alb_manange_apps: "{{ alb_manange_openresty }}"
 alb_manange_sysapps: "{{ alb_manange_apps }}"
 alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
+
+# undocummented:
+alb_use_consul: no
 
 ##AP-ALB custom repositories ---------------------------------------------------
 # These options only are used if you have `alb_manange_NameOfComponent: yes`

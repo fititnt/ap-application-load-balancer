@@ -4,7 +4,8 @@ galaxy_info:
   company: Etica.AI
   license: Unlicense
   # Ansible 2.8 because we use Extended Loop control https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#extended-loop-variables
-  min_ansible_version: 2.8
+  # Ansible 2.9 just because we use hostname 'use' option https://docs.ansible.com/ansible/latest/modules/hostname_module.html
+  min_ansible_version: 2.9
   platforms:
 
     # Options we have on Contabo, as 2019-12-06, would be:

@@ -7,9 +7,15 @@
 #                            'Linux Mint', 'SteamOS', 'Devuan', 'Kali', 'Cumulus Linux'],
 
 alb_internal_bootstrap_basic_tools:
+  - name: aptitude
+    state: present
   - name: net-tools
     state: present
 
 alb_internal_bootstrap_extra_tools:
   - name: nmap
     state: present
+
+
+# https://docs.ansible.com/ansible/latest/modules/hostname_module.html
+alb_internal_bootstrap_alb_standard_hostname_use: 'debian'

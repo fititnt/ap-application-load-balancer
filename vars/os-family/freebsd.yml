@@ -8,8 +8,9 @@
 
 # BSD users: read https://docs.ansible.com/ansible/latest/user_guide/intro_bsd.html
 
-
-#alb_internal_bootstrap_basic_tools:
+alb_internal_bootstrap_basic_tools:
+  - name: rsync
+    state: present
 #  - net-tools # FreeBSD 12 seems to already ship with netstat
 
 alb_internal_bootstrap_extra_tools:

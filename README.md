@@ -111,7 +111,6 @@ humanitarian or commercial projects from who help we on Etica.AI.
             - [raw](#raw)
     - [Bootstrap](#bootstrap)
         - [Bootstrap Python installation](#bootstrap-python-installation)
-    - [Common](#common)
     - [HAProxy](#haproxy)
         - [HAProxy stats page](#haproxy-stats-page)
         - [HAProxy TLS Termination](#haproxy-tls-termination)
@@ -302,7 +301,7 @@ See [debugging-quickstart.md](debugging-quickstart.md).
 [HAProxy](#haproxy) <sup>(recommended suggestion, but optional; installed by default)</sup>.
   - Note that some ALB Components actually **are** designed to run fine even
     without [ALB Apps](#apps) / [OpenResty](#openresty) / [HAProxy](#haproxy).
-    - Notable example is [UFW](#ufw) and common case would be a database server.
+    - Notable example is [UFW](#ufw) and bootstrap case would be a database server.
 - The next important ALB Component is [UFW](#ufw)
 <sup>(situational recommended suggestion; NOT enabled by default to mitigate
 CharlieFoxtrots)</sup>. Consider enable when:
@@ -323,9 +322,6 @@ alb_manange_all: yes
 alb_manange_haproxy: yes
 alb_manange_openresty: yes
 alb_manange_ufw: no
-
-## Optionated (but NOT required) group of tasks.
-alb_manange_common: no  # hostname, timezone (UTC) [See tasks/common/common.yml]
 
 ## Sanity Check run at very beginning
 alb_manange_sanitycheck: yes
@@ -1099,20 +1095,6 @@ it will try continue the boostraping.
   roles:
     - ap-application-load-balancer
 ```
-
-### Common
-
-- **To permanently enable management by ALB**
-  - `alb_manange_common: yes`
-- **To permanently disable management by ALB <sup>(default)</sup>**
-  - `alb_manange_common: no`
-- **Check Mode ("Dry Run"): only test changes without applying**
-  - `--tags alb-common --check`
-  - Example: `ansible-playbook -i hosts main.yml --tags alb-common  --check`
-
-This optionated package is enabled by default and is not a requeriment.
-
-Check [tasks/common/common.yml](tasks/common/common.yml).
 
 ### HAProxy
 

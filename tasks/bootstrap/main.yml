@@ -35,6 +35,14 @@
     - ansible_hostname is not defined
     - ansible_facts is not defined
 
+- name: "bootstrap | Warn user if is running in unknown"
+  fail:
+    msg: "{{ alb_internal_boostrap_unknown }}"
+  tags:
+    - always
+  when:
+    - alb_internal_boostrap_unknown is defined
+
 - name: "repositories-common-sense/main.yml"
   include: repositories-common-sense/main.yml
 

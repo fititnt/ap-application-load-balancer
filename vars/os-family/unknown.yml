@@ -1,14 +1,20 @@
 ---
----
 # FILE:            {{ role_path }}/vars/os-family/unknown.yml
 # LICENSE:         Public Domain
 #
 # This var files will be loaded when running on a Unknow system or a know system
 # but without gather_facts enabled
 
+# This message will abort early if the Role is running without facts enabled
+# only a very small part of ALB/Bootstrap will be able to run
 alb_internal_alert_critical_all: >
   Critical error! Even if running on a well know operational system, you did not
   have gather_facts true by acident, bad configuration, or special case to
   allow ALB install python on your target node
 
   Please enable gather_facts.
+
+# This message will abort ALB/Bootstrap at the very ealy checks
+alb_internal_boostrap_unknown: >
+  This node, even if ALB/Bootstrap could install Python for you with dirty RAW
+  commands, should run again with gather_facts enabled.

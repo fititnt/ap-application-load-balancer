@@ -10,6 +10,8 @@
 alb_internal_bootstrap_basic_tools:
   - name: net-tools
     state: present
+  - name: yum-utils
+    state: present
 
 alb_internal_bootstrap_extra_tools:
   - name: nmap

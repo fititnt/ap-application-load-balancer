@@ -28,11 +28,13 @@
     - alb
     - always
 
+
+## Variable loading based on node Operational System ___________________________
 - name: "ALB | OS Family variables"
   include_vars: "{{ item }}"
   with_first_found:
     - "{{ (alb_vars_osfamily is defined) | ternary(alb_vars_osfamily,'name-of-a-file-that-does-not-exist.yml') }}"
-    - "os-family/{{ ansible_os_family | lower }}.yml"
+    - "os-family/{{ ansible_os_family | default('undefined') | lower }}.yml"
     - "os-family/{{ (ansible_os_family is defined) | ternary('untested','unknown') }}.yml"
   tags:
     - alb
@@ -42,7 +44,7 @@
   include_vars: "{{ item }}"
   with_first_found:
     - "{{ (alb_vars_distribution is defined) | ternary(alb_vars_distribution, 'name-of-a-file-that-does-not-exist.yml') }}"
-    - "os-family/distribution/{{ ansible_distribution | lower }}.yml"
+    - "os-family/distribution/{{ ansible_distribution | default('undefined') | lower }}.yml"
     - "os-family/distribution/no-os-family-customization.yml"
   tags:
     - alb
@@ -52,92 +54,13 @@
   include_vars: "{{ item }}"
   with_first_found:
     - "{{ (alb_vars_distribution_version is defined) | ternary(alb_vars_distribution_version, 'name-of-a-file-that-does-not-exist.yml') }}"
-    - "os-family/distribution/version/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "os-family/distribution/version/{{ ansible_distribution | default('undefined') | lower }}-{{ ansible_distribution_major_version | default('undefined') | lower }}.yml"
     - "os-family/distribution/version/no-distribution-customization.yml"
   tags:
     - alb
     - always
 
-- fail:
-    msg: "testing"
-  tags:
-    - alb
-    - always
-
-- name: "ALB | Alert"
-  fail:
-    msg: "{{ alb_internal_alert_all }}"
-  tags:
-    - always
-  when:
-    - alb_internal_alert_all is defined
-
-- name: "ALB | OS Family variables"
-  include_vars: "{{ item }}"
-  with_first_found:
-    - "os-family/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
-    - "os-family/{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
-    - "os-family/{{ ansible_distribution | lower }}.yml"
-    - "os-family/{{ ansible_os_family | lower }}.yml"
-    - "os-family/{{ ansible_os_family | lower }}.yml"
-    - "os-family/{{ (ansible_os_family is defined) | ternary('untested_os_family','unknown') }}.yml"
-  tags:
-    - alb
-    - always
-
-# - name: "ALB Info"
-#   debug: 
-#     msg:
-#       __alb_varsfile: "{{ __alb_varsfile | default('error(?)') }}"
-#   tags:
-#     #- never
-#     - debug
-
-- fail:
-    msg: "testing"
-
-# - name: "ALB Info"
-#   debug: 
-#     msg:
-#       alb_version: "{{ alb_version }}"
-#       ansible_os_family: "{{ ansible_os_family | default('undefined') }}"
-#       ansible_distribution: "{{ ansible_distribution | default('none') }}"
-#       ansible_distribution_major_version: "{{ ansible_distribution_major_version | default('none') }}"
-#   tags:
-#     - never
-#     - debug
-#     - alb-debug
-
-# - name: "ALB | Load variables based on host system (debug)"
-#   debug:
-#     msg: 
-#      #- ansible_os_family: "{{ ansible_os_family | default('none') }}"
-#      - ansible_distribution: "{{ ansible_distribution | default('none') }}"
-#      #- ansible_distribution_version: "{{ ansible_distribution_version | default('none') }}"
-#      #- ansible_distribution_major_version: "{{ ansible_distribution_major_version | default('none') }}"
-#      - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
-#      - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
-#      - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
-#      - "{{ ansible_distribution | lower }}.yml"
-#      - "{{ ansible_os_family | lower }}.yml"
-
-
-- name: "ALB | Load variables based on host system | print"
-  debug:
-    msg: "{{ alb_internal_loadevarsfile }}"
-  tags:
-    - alb
-    - alb-bootstrap
-  when:
-    - alb_internal_loadevarsfile is defined
-
-#- name: "alb_trusted_hosts"
-#  debug: 
-#    msg: "{{ alb_trusted_hosts }}"
-
-#- name: "alb_trusted_hosts_ips"
-#  debug: 
-#    msg: "{{ alb_trusted_hosts_ips }}"
+## Run each ALB subcomponent ___________________________________________________
 
 - name: "bootstrap/main.yml"
   include: bootstrap/main.yml
@@ -148,10 +71,19 @@
     - alb_manange_all is sameas true
     - alb_manange_bootstrap is sameas true
 
+- name: "ALB | Abort if running in Unknow state"
+  fail:
+    msg: "{{ alb_internal_alert_critical_all }}"
+  tags:
+    - always
+  when:
+    - alb_internal_alert_critical_all is defined
+
 - name: check the version of last run on /etc/ansible/facts.d/alb_lastrun.fact
   set_fact:
     alb_version_lastrun: "{{ ansible_facts['ansible_local']['alb_lastrun']['alb_version'] }}"
   when: ansible_facts['ansible_local'] is defined and ansible_facts['ansible_local']['alb_lastrun'] is defined and ansible_facts['ansible_local']['alb_lastrun']['alb_version'] is defined
+
 
 - name: "sanitycheck/main.yml"
   include: sanitycheck/main.yml
@@ -162,14 +94,8 @@
     - alb_manange_all is sameas true
     - alb_manange_sanitycheck is sameas true
 
-- name: "common/common.yml"
-  include: common/common.yml
-  tags:
-    - alb
-    - alb-common
-  when:
-    - alb_manange_all is sameas true
-    - alb_manange_common is sameas true
+- fail:
+    msg: "testing"
 
 # TODO: implement a way to no implement apps and only sysapps based on what is
 #       is enabled at the moment inside the alb-init.yml. This actually is
@@ -192,24 +118,6 @@
   when:
     - alb_manange_all is sameas true
     - alb_manange_openresty is sameas true
-
-# - name: Instalação de OpenResty, Lua Rest & Lua Resty AutoSSL (faz o HTTPS para os Apps)
-#   include: openresty/openresty-luarocks-lua-resty-auto-ssl-install.yml
-#   tags:
-#     - alb
-#     - alb-openresty
-#   when:
-#     - alb_manange_all is sameas true
-#     - alb_manange_openresty is sameas true
-
-# - name: openresty/alb-openresty-after.yml
-#   include: openresty/alb-openresty-after.yml
-#   tags:
-#     - alb
-#     - alb-openresty
-#   when:
-#     - alb_manange_all is sameas true
-#     - alb_manange_openresty is sameas true
 
 - name: HAproxy
   include: haproxy/haproxy.yml
