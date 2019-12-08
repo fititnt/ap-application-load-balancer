@@ -1,0 +1,10 @@
+---
+# FILE:            {{ role_path }}/tasks/bootstrap/alb-standard/date-and-time.yml
+# LICENSE:         Public Domain
+
+- name: "bootstrap | alb-standard | date-and-time.yml: timezone"
+  timezone:
+    name: UTC
+  when:
+    - (alb_node_timezone is defined) and (alb_node_timezone | length > 2)
+    - ansible_facts['date_time']['tz'] != alb_node_timezone

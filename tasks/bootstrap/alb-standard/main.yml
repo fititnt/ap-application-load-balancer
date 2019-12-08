@@ -3,8 +3,15 @@
 # FILE:            {{ role_path }}/tasks/bootstrap/alb-standard/main.yml
 # LICENSE:         Public Domain
 
-- name: "host-changes.yml"
-  include: host-changes.yml
+# hosts.yml may confict with user hosts.yml inventory, so full path here
+- name: "hosts.yml"
+  include: "{{ role_path }}/tasks/bootstrap/alb-standard/hosts.yml"
+
+- name: "date-and-time.yml"
+  include: date-and-time.yml
+
+- name: "user-groups.yml"
+  include: user-groups.yml
 
 - name: "filesystem-structure.yml"
   include: filesystem-structure.yml

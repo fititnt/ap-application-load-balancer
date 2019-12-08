@@ -1,0 +1,25 @@
+---
+# FILE:            {{ role_path }}/tasks/bootstrap/alb-standard/user-groups.yml
+# LICENSE:         Public Domain
+
+- name: "bootstrap | alb-standard | user-groups: alb group"
+  group:
+    name: alb
+    state: present
+  when:
+    - alb_version_lastrun != alb_version
+
+# Note: the system user albd is not fully used yet on all supported
+#       OSs (fititnt, 2019-12-08 08:50 BRT)
+- name: "bootstrap | alb-standard | user-groups: system user albd"
+  user:
+    name: albd
+    comment: "System user for ALB (Application Load Balancer)"
+    system: yes
+    create_home: no
+    shell: /usr/sbin/nologin
+    group: alb
+    groups: "{{ alb_nginx_user }}"
+    # groups: www-data
+  when:
+    - alb_version_lastrun != alb_version

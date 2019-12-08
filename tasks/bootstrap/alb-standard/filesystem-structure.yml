@@ -1,6 +1,6 @@
 ---
 
-# FILE:            {{ role_path }}/tasks/alb-init.yml
+# FILE:            {{ role_path }}/tasks/bootstrap/alb-standard/filesystem-structure.yml
 # LICENSE:         Public Domain
 
 # Note: both /opt/alb/apps/ and /opt/alb/sysapps/ need +x permissions on full
@@ -8,7 +8,7 @@
 #       Use this to see full tree permissions
 #            namei -m /opt/alb/sysapps/.htaccess
 
-- name: bootstrap | alb-standard | mkdir -p /etc/ansible/facts.d/
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir -p /etc/ansible/facts.d/"
   file:
     path: /etc/ansible/facts.d/
     state: directory
@@ -20,14 +20,14 @@
     - alb_version_lastrun != alb_version
 
 # Example group command from Ansible Playbooks
-- name: bootstrap | alb-standard | Create group alb if already does not exist
+- name: "bootstrap | alb-standard | filesystem-structure: Create group alb if already does not exist"
   group:
     name: alb
     state: present
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | Create system user alb
+- name: "bootstrap | alb-standard | filesystem-structure: Create system user alb"
   user:
     name: alb
     comment: "System user for ALB (Application Load Balancer)"
@@ -43,7 +43,7 @@
 # NOTE: yes, it fails on CentOS and new installations first time, before OpenResty (fititnt, 2019-12-06 06:09)
 
 ## Let's create all directories that would not be created by OpenResty or HAproxy
-- name: "bootstrap | alb-standard | mkdir /opt/alb/ | Base directory for ALB, with symlinks for other important places"
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/ | Base directory for ALB, with symlinks for other important places"
   file:
     path: /opt/alb/
     state: directory
@@ -53,7 +53,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | mkdir /var/opt/alb/ | Base path for variable data on run time (temporary, cache, backups...)"
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/opt/alb/ | Base path for variable data on run time (temporary, cache, backups...)"
   file:
     # path: /var/alb/
     path: /var/opt/alb/
@@ -64,7 +64,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | mkdir /var/opt/alb/alb-cache/"
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/opt/alb/alb-cache/"
   file:
     path: /var/opt/alb/alb-cache/
     state: directory
@@ -74,7 +74,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | mkdir /var/opt/alb/alb-tmp/"
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/opt/alb/alb-tmp/"
   file:
     path: /var/opt/alb/alb-tmp/
     state: directory
@@ -84,7 +84,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | mkdir /var/opt/alb/alb-backups/"
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/opt/alb/alb-backups/"
   file:
     # path: /var/alb-backups/
     path: /var/opt/alb/alb-backups/
@@ -95,7 +95,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | mkdir /var/opt/alb/apps-backups/"
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/opt/alb/apps-backups/"
   file:
     path: /var/opt/alb/apps-backups/
     state: directory
@@ -105,7 +105,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | mkdir /var/opt/alb/sysapps-backups/"
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/opt/alb/sysapps-backups/"
   file:
     path: /var/opt/alb/sysapps-backups/
     state: directory
@@ -115,7 +115,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | mkdir /var/log/alb/
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/log/alb/"
   file:
     path: /var/log/alb/
     state: directory
@@ -124,7 +124,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | touch /var/log/alb/access.log
+- name: "bootstrap | alb-standard | filesystem-structure: touch /var/log/alb/access.log"
   file:
     path: /var/log/alb/access.log
     state: touch
@@ -134,7 +134,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | touch /var/log/alb/error.log
+- name: "bootstrap | alb-standard | filesystem-structure:  touch /var/log/alb/error.log"
   file:
     path: /var/log/alb/error.log
     state: touch
@@ -144,7 +144,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | touch /var/log/alb/letsencrypt.log
+- name: "bootstrap | alb-standard | filesystem-structure: touch /var/log/alb/letsencrypt.log"
   file:
     path: /var/log/alb/letsencrypt.log
     state: touch
@@ -154,7 +154,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | mkdir /opt/alb/apps/
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/apps/"
   file:
     path: /opt/alb/apps/
     state: directory
@@ -163,7 +163,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | mkdir /opt/alb/sysapps/
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/sysapps/"
   file:
     path: /opt/alb/sysapps/
     state: directory
@@ -172,7 +172,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | mkdir /opt/alb/info/
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/info/"
   file:
     path: /opt/alb/info/
     state: directory
@@ -181,7 +181,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | mkdir /opt/alb/bin/
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/bin/"
   file:
     path: /opt/alb/bin/
     state: directory
@@ -190,7 +190,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-#- name: bootstrap | alb-standard | mkdir /var/app/
+#- name: "bootstrap | alb-standard | filesystem-structure:  mkdir /var/app/"
 #  file:
 #    path: /var/app/
 #    state: directory
@@ -199,7 +199,7 @@
 #  when:
 #    - alb_version_lastrun != alb_version
 
-#- name: bootstrap | alb-standard | mkdir /var/sysapp/
+#- name: "bootstrap | alb-standard | filesystem-structure:  mkdir /var/sysapp/"
 #  file:
 #    path: /var/sysapp/
 #    state: directory
@@ -208,7 +208,7 @@
 #  when:
 #    - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | mkdir /var/log/app
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/log/app"
   file:
     path: /var/log/app
     state: directory
@@ -217,7 +217,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | mkdir /var/log/sysapp
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/log/sysapp"
   file:
     path: /var/log/sysapp
     state: directory
@@ -227,7 +227,7 @@
     - alb_version_lastrun != alb_version
 
 # Syntactic sugar symbolic links
-#- name: bootstrap | alb-standard | ln -s /var/alb/ /opt/alb/alb-data
+#- name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/alb/ /opt/alb/alb-data"
 #  file:
 #    src: /var/alb/
 #    dest: /opt/alb/alb-data
@@ -237,7 +237,7 @@
 #  when:
 #    - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | ln -s /var/opt/alb/alb-cache/ /opt/alb/alb-cache"
+- name: "bootstrap | alb-standard | filesystem-structure: ln -s /var/opt/alb/alb-cache/ /opt/alb/alb-cache"
   file:
     src: /var/opt/alb/alb-cache/
     dest: /opt/alb/alb-cache
@@ -247,7 +247,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | ln -s /var/opt/alb/alb-backups/ /opt/alb/alb-backups"
+- name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/opt/alb/alb-backups/ /opt/alb/alb-backups"
   file:
     src: /var/opt/alb/alb-backups/
     dest: /opt/alb/alb-backups
@@ -257,7 +257,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | ln -s /var/opt/alb/alb-tmp/ /opt/alb/alb-tmp"
+- name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/opt/alb/alb-tmp/ /opt/alb/alb-tmp"
   file:
     src: /var/opt/alb/alb-tmp/
     dest: /opt/alb/alb-tmp
@@ -267,7 +267,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | ln -s /var/opt/alb/apps-backups/ /opt/alb/apps-backups"
+- name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/opt/alb/apps-backups/ /opt/alb/apps-backups"
   file:
     src: /var/opt/alb/apps-backups/
     dest: /opt/alb/apps-backups
@@ -277,7 +277,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | ln -s /var/opt/alb/sysapps-backups/ /opt/alb/sysapps-backups"
+- name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/opt/alb/sysapps-backups/ /opt/alb/sysapps-backups"
   file:
     src: /var/opt/alb/sysapps-backups/
     dest: /opt/alb/apps-backups
@@ -287,7 +287,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | ln -s /var/log/alb/ /opt/alb/alb-logs
+- name: "bootstrap | alb-standard | filesystem-structure: ln -s /var/log/alb/ /opt/alb/alb-logs"
   file:
     src: /var/log/alb/
     dest: /opt/alb/alb-logs
@@ -297,7 +297,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-#- name: bootstrap | alb-standard | ln -s /var/app/ /opt/alb/apps-data
+#- name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/app/ /opt/alb/apps-data"
 #  file:
 #    src: /var/app/
 #    dest: /opt/alb/apps-data
@@ -307,7 +307,7 @@
 #  when:
 #    - alb_version_lastrun != alb_version
 
-#- name: bootstrap | alb-standard | ln -s /var/sysapp/ /opt/alb/sysapps-data
+#- name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/sysapp/ /opt/alb/sysapps-data"
 #  file:
 #    src: /var/sysapp/
 #    dest: /opt/alb/sysapps-data
@@ -317,7 +317,7 @@
 #  when:
 #    - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | ln -s /var/log/app/ /var/log/alb/apps
+- name: "bootstrap | alb-standard | filesystem-structure: ln -s /var/log/app/ /var/log/alb/apps"
   file:
     src: /var/log/app/
     dest: /var/log/alb/apps
@@ -327,7 +327,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | ln -s /var/log/sysapp/ /var/log/alb/sysapps
+- name: "bootstrap | alb-standard | filesystem-structure: ln -s /var/log/sysapp/ /var/log/alb/sysapps"
   file:
     src: /var/log/sysapp/
     dest: /var/log/alb/sysapps
@@ -337,7 +337,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | ln -s /var/log/app/ /opt/alb/apps-logs
+- name: "bootstrap | alb-standard | filesystem-structure: ln -s /var/log/app/ /opt/alb/apps-logs"
   file:
     src: /var/log/app/
     dest: /opt/alb/apps-logs
@@ -347,7 +347,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | ln -s /var/log/sysapp/ /opt/alb/sysapps-logs
+- name: "bootstrap | alb-standard | filesystem-structure: ln -s /var/log/sysapp/ /opt/alb/sysapps-logs"
   file:
     src: /var/log/sysapp/
     dest: /opt/alb/sysapps-logs
@@ -358,7 +358,7 @@
     - alb_version_lastrun != alb_version
 
 # The next links have force: yes because are likely to not exist on first installation
-- name: bootstrap | alb-standard | ln -s /etc/haproxy/ /opt/alb/haproxy
+- name: "bootstrap | alb-standard | filesystem-structure: ln -s /etc/haproxy/ /opt/alb/haproxy"
   file:
     src: /etc/haproxy/
     dest: /opt/alb/haproxy
@@ -368,7 +368,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | ln -s /usr/local/openresty/nginx/ /opt/alb/nginx
+- name: "bootstrap | alb-standard | filesystem-structure: ln -s /usr/local/openresty/nginx/ /opt/alb/nginx"
   file:
     src: /usr/local/openresty/nginx/
     dest: /opt/alb/nginx
@@ -378,7 +378,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | ln -s /etc/resty-auto-ssl/letsencrypt/ /opt/alb/letsencrypt
+- name: "bootstrap | alb-standard | filesystem-structure: ln -s /etc/resty-auto-ssl/letsencrypt/ /opt/alb/letsencrypt"
   file:
     src: /etc/resty-auto-ssl/letsencrypt/
     dest: /opt/alb/letsencrypt
@@ -389,7 +389,7 @@
     - alb_version_lastrun != alb_version
 
 # alb.conf is a syntax sugar to real nginx.conf
-- name: bootstrap | alb-standard | ln -s /usr/local/openresty/nginx/conf/nginx.conf /opt/alb/alb.conf
+- name: "bootstrap | alb-standard | filesystem-structure: ln -s /usr/local/openresty/nginx/conf/nginx.conf /opt/alb/alb.conf"
   file:
     src: /usr/local/openresty/nginx/conf/nginx.conf
     dest: /opt/alb/alb.conf
@@ -399,7 +399,7 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: bootstrap | alb-standard | ln -s /etc/haproxy/haproxy.cfg /opt/alb/nlb.cfg
+- name: "bootstrap | alb-standard | filesystem-structure: ln -s /etc/haproxy/haproxy.cfg /opt/alb/nlb.cfg"
   file:
     src: /etc/haproxy/haproxy.cfg
     dest: /opt/alb/nlb.cfg
@@ -409,14 +409,14 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | install python3-pip"
+- name: "bootstrap | alb-standard | filesystem-structure: install python3-pip"
   package:
     name: "python3-pip"
     state: present
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | pip3 install passlib"
+- name: "bootstrap | alb-standard | filesystem-structure: pip3 install passlib"
   pip:
     name: passlib
   when:
