@@ -28,15 +28,38 @@
     - alb
     - always
 
-- name: "ALB | Load variables based on host system"
+- name: "ALB | OS Family variables"
   include_vars: "{{ item }}"
   with_first_found:
-    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
-    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
-    - "{{ ansible_distribution | lower }}.yml"
-    - "{{ ansible_os_family | lower }}.yml"
-    - "{{ ansible_os_family | lower }}.yml"
-    - "{{ (ansible_os_family is defined) | ternary('untested_os_family','unknown') }}.yml"
+    - "{{ (alb_vars_osfamily is defined) | ternary(alb_vars_osfamily,'name-of-a-file-that-does-not-exist.yml') }}"
+    - "os-family/{{ ansible_os_family | lower }}.yml"
+    - "os-family/{{ (ansible_os_family is defined) | ternary('untested','unknown') }}.yml"
+  tags:
+    - alb
+    - always
+
+- name: "ALB | Distribution variables (may override OS Family variables, if exist)"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ (alb_vars_distribution is defined) | ternary(alb_vars_distribution, 'name-of-a-file-that-does-not-exist.yml') }}"
+    - "os-family/distribution/{{ ansible_distribution | lower }}.yml"
+    - "os-family/distribution/no-os-family-customization.yml"
+  tags:
+    - alb
+    - always
+
+- name: "ALB | Specific version distribution variables (may override OS Family and Distribution variables, if exist)"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ (alb_vars_distribution_version is defined) | ternary(alb_vars_distribution_version, 'name-of-a-file-that-does-not-exist.yml') }}"
+    - "os-family/distribution/version/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "os-family/distribution/version/no-distribution-customization.yml"
+  tags:
+    - alb
+    - always
+
+- fail:
+    msg: "testing"
   tags:
     - alb
     - always
@@ -48,6 +71,19 @@
     - always
   when:
     - alb_internal_alert_all is defined
+
+- name: "ALB | OS Family variables"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "os-family/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "os-family/{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "os-family/{{ ansible_distribution | lower }}.yml"
+    - "os-family/{{ ansible_os_family | lower }}.yml"
+    - "os-family/{{ ansible_os_family | lower }}.yml"
+    - "os-family/{{ (ansible_os_family is defined) | ternary('untested_os_family','unknown') }}.yml"
+  tags:
+    - alb
+    - always
 
 # - name: "ALB Info"
 #   debug: 

@@ -1,4 +1,8 @@
 ---
+---
+# FILE:            {{ role_path }}/vars/os-family/unknown.yml
+# LICENSE:         Public Domain
+#
 # This var files will be loaded when running on a Unknow system or a know system
 # but without gather_facts enabled
 

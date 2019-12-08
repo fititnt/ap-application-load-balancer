@@ -1,10 +1,8 @@
 ---
-# FILE:            {{ role_path }}/vars/freebsd.yml
+# FILE:            {{ role_path }}/vars/os-family/freebsd.yml
 # LICENSE:         Public Domain
-# DESCRIPTION:     The file {{ role_path }}/vars/main.yml always is loaded.
-#                  The file freebsd.yml is loaded in these cases:
-#                    - FreeBSD distribution, any release
-#                    - Distributions based on FreeBSD without a dedicated yml
+#
+# DESCRIPTION:     This file is loaded by default for at least these OSs:
 #                  It means it act as fall back for at least:
 #                  'FreeBSD': ['FreeBSD', 'TrueOS'],
 

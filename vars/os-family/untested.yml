@@ -1,14 +1,11 @@
 ---
-# FILE:            {{ role_path }}/vars/untested_os_family.yml
+# FILE:            {{ role_path }}/vars/os-family/untested.yml
 # LICENSE:         Public Domain
-# DESCRIPTION:     The file {{ role_path }}/vars/main.yml always is loaded.
-#                  Other files on this directory are loaded in order of
-#                  specificity based on ansible_distribution,
-#                  ansible_distribution_major_version & ansible_os_family, like:
-#                    - ubuntu-18.yml
-#                    - ubuntu.yml
-#                    - untested_os_family.yml
-
+#
+# DESCRIPTION:     This file is loaded only when the OS family of a host is
+#                  not found at /vars/os-family/, but it not a failed run
+#                  that will load the unknown.yml.
+#
 # From Ansible source code at https://github.com/ansible/ansible/blob/devel/lib/ansible/module_utils/facts/system/distribution.py#L466
 # on 2019-12-08 we have this map
 # ```python

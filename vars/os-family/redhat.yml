@@ -1,11 +1,8 @@
 ---
-# FILE:            {{ role_path }}/vars/redhat.yml
+# FILE:            {{ role_path }}/vars/os-family/redhat.yml
 # LICENSE:         Public Domain
-# DESCRIPTION:     The file {{ role_path }}/vars/main.yml always is loaded.
-#                  The file redhat.yml is loaded in these cases:
-#                    - RedHat distribution, any release
-#                    - Distributions based on RedHat without a dedicated yml
-#                  It means it act as fall back for at least:
+#
+# DESCRIPTION:     This file is loaded by default for at least these OSs:
 #                  {'RedHat': ['RedHat', 'Fedora', 'CentOS', 'Scientific', 'SLC',
 #                             'Ascendos', 'CloudLinux', 'PSBM', 'OracleLinux', 'OVS',
 #                             'OEL', 'Amazon', 'Virtuozzo', 'XenServer', 'Alibaba'],
