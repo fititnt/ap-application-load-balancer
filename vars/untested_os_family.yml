@@ -1,0 +1,16 @@
+---
+
+alb_internal_alert_all: >
+  untested_os_family | message here
+
+alb_internal_alert_haproxy: >
+  untested_os_family | ALB/HAproxy not tested on Unknow operational system host
+
+alb_internal_alert_logrotate: >
+  untested_os_family | ALB/Logrotate not tested on Unknow operational system host 
+
+alb_internal_alert_openresty: >
+  untested_os_family | ALB/OpenResty not tested on Unknow operational system host 
+
+alb_internal_alert_ufw: >
+  untested_os_family | ALB/UFW not tested on Unknow operational system host 
