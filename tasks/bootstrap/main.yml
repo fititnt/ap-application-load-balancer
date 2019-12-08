@@ -23,31 +23,12 @@
 # Basalto: OpenSUSE 15.1
 # ssh root@rocha-basalto.vps.fititnt.org
 
-# > AP-ALB v0.8.x adaptations to support RHEL/CentOS 8 family and design changes to allow flexibility even for non-tested OSs #34
-#  - Variables via type of OS 
-#    - https://docs.ansible.com/ansible/latest/modules/include_vars_module.html
-#    - https://ansible-tips-and-tricks.readthedocs.io/en/latest/os-dependent-tasks/variables/
-#  - ansible_pkg_mgr strategy, see
-#    - https://ansible-tips-and-tricks.readthedocs.io/en/latest/os-dependent-tasks/installing_packages/
-#    - https://github.com/openstack/openstack-ansible-galera_server/blob/master/tasks/galera_install.yml
+- name: "very-early-abort-checks/main.yml"
+  include: very-early-abort-checks/main.yml
+  when:
+    - alb_boostrap_ignore_very_early_abort_checks is not defined or alb_boostrap_ignore_very_early_abort_checks|bool is false
+    # TODO: ignorar isto quando um nó já tiver sido instalado antes
 
-#  - name: "bootstrap | ansible_facts"
-#    debug:
-#      msg: "{{ ansible_facts | default ('none') }}"
-
-#  - name: "bootstrap | ansible_facts"
-#    debug:
-#      msg: "{{ ansible_facts.ansible_all_ipv4_addresses | default ('none') }}"
-
-#- name: "bootstrap | should detect if have python?"
-#  debug:
-#    msg: "{{ ansible_facts }}"
-
-#- name: "bootstrap | should detect if have python?"
-#  debug:
-#    msg: "{{ not ((ansible_facts is not defined) and (ansible_facts.ansible_all_ipv4_addresses is not defined)) }}"
-
-# If lots of variables are not defined, this is likely to not even have python installed and running with 'gather_facts: false'
 - name: "really-minimal-dependencies/main.yml"
   include: really-minimal-dependencies/main.yml
   when:
@@ -63,6 +44,9 @@
 - name: "alb-minimal/main.yml"
   include: alb-minimal/main.yml
 
+- name: "3rd-party-repositories/main.yml"
+  include: 3rd-party-repositories/main.yml
+
 - name: "alb-standard/main.yml"
   include: alb-standard/main.yml
 
@@ -74,3 +58,7 @@
 #   fail:
 #     msg: "{{ ansible_facts }}"
 #   when: true
+
+## Nao se for WHM
+# https://www.liquidweb.com/kb/how-to-check-the-version-of-cpanel-whm/
+#  cat /usr/local/cpanel/version

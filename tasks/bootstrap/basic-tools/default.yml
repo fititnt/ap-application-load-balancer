@@ -1,0 +1,15 @@
+---
+- name: "bootstrap | basic-tools | default.yml block"
+  block:
+    - name: "bootstrap | basic-tools | default.yml: net-tools"
+      package:
+        name: net-tools
+        state: present
+  rescue:
+    - fail:
+        msg: 'Generic setup for this host failed'
+
+# ok: [rocha_basalto]
+# fatal: [rocha_anortosito]: FAILED! => {"changed": false, "msg": "failed to install net-tools: ", "stderr": "pkg: No packages available to install matching 'net-tools' have been found in the repositories\n", "stderr_lines": ["pkg: No packages available to install matching 'net-tools' have been found in the repositories"]}
+# changed: [ap_foxtrot]
+# changed: [ap_golf]

@@ -1,0 +1,27 @@
+---
+
+
+- name: "bootstrap | very-early-abort-checks | main.yml block"
+  block:
+    - name: "bootstrap | very-early-abort-checks | main.yml: CPanel?"
+      raw: cat /usr/local/cpanel/version
+      register: bootstrap_checks_cpanel
+      changed_when: false
+    - name: "bootstrap | very-early-abort-checks | main.yml: Port 80?"
+      raw: netstat -tulpn | grep ':22'
+      register: bootstrap_checks_port80
+      changed_when: false
+    #- name: "bootstrap | really-minimal-dependencies |  debug"
+    #  debug:
+    #    msg: "{{ bootstrap_checks_cpanel }}, {{ bootstrap_checks_cpanel.failed }}, {{ bootstrap_checks_port80 }}"
+  ignore_errors: yes
+  always:
+    - name: "Abort if CPanel detected"
+      fail:
+       msg: 
+         error: "This host may already running some service. Please use alb_boostrap_ignore_very_early_abort_checks as true ignore"
+         cpanel: "{{ (not bootstrap_checks_cpanel.failed) }}"
+         port_80_used: "{{ (not bootstrap_checks_port80.failed) }}"
+      when: 
+       - (not bootstrap_checks_cpanel.failed) or (not bootstrap_checks_port80.failed)
+

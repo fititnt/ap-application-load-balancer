@@ -1,13 +1,13 @@
 ---
 
-# FILE:            {{ role_path }}/tasks/bootstrap/basic-tools/main.yml
+# FILE:            {{ role_path }}/tasks/bootstrap/3rd-party-repositories/main.yml
 # LICENSE:         Public Domain
 
-- name: "bootstrap | basic-tools | main.yml"
+- name: "bootstrap | 3rd-party-repositories | main.yml"
   debug:
     msg: "TODO: implement me"
 
-# - name: "bootstrap | basic-tools | main.yml | debug"
+# - name: "bootstrap | 3rd-party-repositories | main.yml | debug"
 #   debug:
 #     msg: 
 #      #- ansible_os_family: "{{ ansible_os_family | default('none') }}"
@@ -20,11 +20,11 @@
 #      - "{{ ansible_distribution | lower }}.yml"
 #      - "{{ ansible_os_family | lower }}.yml"
 
-- name: "bootstrap | basic-tools | main.yml | specific"
+- name: "bootstrap | 3rd-party-repositories | main.yml | specific"
   include: "{{ item }}"
   with_first_found:
     - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
     - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
     - "{{ ansible_distribution | lower }}.yml"
     - "{{ ansible_os_family | lower }}.yml"
-    - "default.yml"
+    - "unknow.yml"
