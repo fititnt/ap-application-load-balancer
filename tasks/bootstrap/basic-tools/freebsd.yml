@@ -1,5 +1,0 @@
----
-
-- name: "bootstrap | basic-tools | freebsd.yml"
-  debug:
-    msg: "FreeBSD does not need extra packages / have conflict with default.yml"

@@ -1,6 +1,0 @@
----
-
-- name: "bootstrap | basic-tools | debian.yml: aptitude"
-  apt:
-    name: aptitude
-    state: present

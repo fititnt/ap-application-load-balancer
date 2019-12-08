@@ -17,3 +17,7 @@ alb_internal_bootstrap_basic_tools:
 alb_internal_bootstrap_extra_tools:
   - name: nmap
     state: present
+
+alb_internal_bootstrap_repositories_common_sense:
+  - name: epel-release
+    state: present

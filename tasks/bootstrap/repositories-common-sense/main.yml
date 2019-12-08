@@ -1,14 +1,14 @@
 ---
 
-# FILE:            {{ role_path }}/tasks/bootstrap/basic-tools/main.yml
+# FILE:            {{ role_path }}/tasks/bootstrap/repositories-common-sense/main.yml
 # LICENSE:         Public Domain
 # SEE:             https://docs.ansible.com/ansible/latest/modules/package_module.html
 
 # TODO: consider optimize this loop when all itens have same state to not use loop (fititnt, 2019-12-08 02:06 BRT)
-- name: "bootstrap | basic-tools | main.yml"
+- name: "bootstrap | repositories-common-sense | main.yml"
   package:
     name: "{{ item.name }}"
     state: "{{ item.state }}"
-  with_items: "{{ alb_internal_bootstrap_basic_tools }}"
+  with_items: "{{ alb_internal_bootstrap_repositories_common_sense }}"
   when:
-    - alb_internal_bootstrap_basic_tools is defined
+    - alb_internal_bootstrap_repositories_common_sense is defined

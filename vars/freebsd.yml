@@ -18,6 +18,9 @@ alb_internal_bootstrap_extra_tools:
   - name: nmap
     state: present
 
+# OpenResty https://openresty.org/en/installation.html
+# alb_internal_bootstrap_repositories_from_source:
+
 ## ALB/Components not implemented ______________________________________________
 alb_internal_alert_critical_ufw: >
   FreeBSD | Critical error! You are trying test native ALB/UFW FreeBSD-like

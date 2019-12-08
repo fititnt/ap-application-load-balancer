@@ -26,7 +26,7 @@
 - name: "very-early-abort-checks/main.yml"
   include: very-early-abort-checks/main.yml
   when:
-    - alb_boostrap_ignore_very_early_abort_checks is not defined or alb_boostrap_ignore_very_early_abort_checks|bool is false
+    - alb_boostrap_ignore_very_early_abort_checks is not defined or alb_boostrap_ignore_very_early_abort_checks|bool is sameas false
     # TODO: ignorar isto quando um nó já tiver sido instalado antes
 
 - name: "really-minimal-dependencies/main.yml"
@@ -34,6 +34,15 @@
   when:
     - ansible_hostname is not defined
     - ansible_facts is not defined
+
+- name: "repositories-common-sense/main.yml"
+  include: repositories-common-sense/main.yml
+
+- name: "repositories-3rd-party/main.yml"
+  include: repositories-3rd-party/main.yml
+
+- name: "repositories-from-sources/main.yml"
+  include: repositories-from-sources/main.yml
 
 - name: "basic-tools/main.yml"
   include: basic-tools/main.yml
@@ -44,8 +53,6 @@
 - name: "alb-minimal/main.yml"
   include: alb-minimal/main.yml
 
-- name: "3rd-party-repositories/main.yml"
-  include: 3rd-party-repositories/main.yml
 
 - name: "alb-standard/main.yml"
   include: alb-standard/main.yml

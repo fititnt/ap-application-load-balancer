@@ -1,5 +1,0 @@
----
-- name: "bootstrap | basic-tools | redhat.yml: net-tools"
-  apt:
-    name: net-tools
-    state: present
