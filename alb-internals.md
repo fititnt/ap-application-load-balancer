@@ -162,50 +162,6 @@ Tip: `/var/www/SomeFolder` and `/home/SomeUser/SomeFolder` are common pattens
 of folders for your apps. The use of `/var/app/{{ app_uid }}/` is mostly to
 avoid conflicts with existend content, and is not a requirement at all.
 
-<!--
-
-@NOTE This part is commented out, explanation here
-       https://github.com/fititnt/ap-application-load-balancer/issues/8#issuecomment-555401930
-       (fititnt, 2019-11-19 07:32 BRT)
-
-  #### Shared usage for third party tools
-
-Some variables when present on a play of a playbook using ALB will create or
-update contents of specific files on each server. **Consider this list as
-suggestion, not as one strong enforcement, and that most of these options will
-not automatically be considered if not enabled for other tools**, in special the
-ones that could be useful for Firewalls. 
-
-Some considerations:
-- `alb_vars_saveondisk: no` will enforce not store the suggested variables on
-  these documented paths.
-  - **Use this option if you are concerned with vunerable applications that
-    could leak sensive data**.
-- Since you is already using Ansible if want to reuse these data on other tools
-  consider that can be simple use the ALBs variables as information.
-  - It can be easier do this can change other applications to watch for changes
-    on these files.
-
-  ##### `alb_ips_remoteadmins`
-- File: `/opt/alb/remoteadmins`
-
-  ##### `alb_ips_dmz`
-- File: `/opt/alb/dmz`
-
-  ##### `alb_ips_whitelist`
-- File: `/var/alb/ips_whitelist.txt`
-
-  ##### `alb_ips_blacklist`
-- File: `/var/alb/ips_blacklist.txt`
-
-  ##### `alb_domains_whitelist`
-- File: `/var/alb/domains_whitelist.txt`
-
-  ##### `alb_domains_blacklist`
-- File: `/var/alb/domains_blacklist.txt`
-
--->
-
 ### System users
 
 - `www-data`

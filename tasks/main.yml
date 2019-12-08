@@ -97,22 +97,9 @@
     - alb_manange_all is sameas true
     - alb_manange_sanitycheck is sameas true
 
-- fail:
-    msg: "testing"
-
-# alb-init is now part of bootstrap/alb-standard
-# # TODO: implement a way to no implement apps and only sysapps based on what is
-# #       is enabled at the moment inside the alb-init.yml. This actually is
-# #       possible, but will need testing
-# #       (fititnt, 2019-12-02 14:39 BRT)
-# - name: alb-init.yml
-#   include: alb-init.yml
-#   tags:
-#     - alb
-#     - alb-init
-#   when:
-#     - alb_manange_all is sameas true
-#     - (alb_manange_apps is sameas true) or (alb_manange_sysapps is sameas true)
+# TODO: remove this check very soon after the testing with all the OSs (fititnt, 2019-12-08 11:14 BRT)
+#- fail:
+#    msg: "testing"
 
 - name: OpenResty
   include: openresty/main.yml
@@ -131,7 +118,6 @@
   when:
     - alb_manange_all is sameas true
     - alb_manange_haproxy is sameas true
-    # - alb_forceignore_haproxy is defined and alb_forceignore_haproxy is sameas true
 
 - name: ALB rule for each Sysapp
   include: sysapps/sysapps.yml
@@ -160,22 +146,24 @@
     - alb_manange_all is sameas true
     - alb_manange_logrotate is sameas true
 
-# ansible-playbook -i hosts myplaybook.yml --tags "alb-ufw"
 - name: ufw/main.yml
   include: ufw/main.yml
   tags:
     - alb
     - alb-ufw
     - alb-firewall
-  # when: alb_forceignore_ufw is defined and alb_forceignore_haproxy != true
   when:
     - alb_manange_all is sameas true
     - alb_manange_ufw is sameas true
 
-- name: alb-final.yml
-  include: alb-final.yml
+## Goodbye _____________________________________________________________________
+
+- name: "/etc/ansible/facts.d/alb_lastrun.fact (Only alb_manange_sanitycheck: yes /  alb_manange_sanitycheck: yes will not deploy this fact)"
+  template:
+    src: files/alb_lastrun.fact
+    dest: /etc/ansible/facts.d/alb_lastrun.fact
+    mode: 0755
+  changed_when: false
   tags:
-    - alb
-    - alb-final
-  when:
-    - alb_manange_all is sameas true
+    - always
+  when: (alb_manange_haproxy is sameas true) or (alb_manange_openresty is sameas true) or (alb_manange_ufw is sameas true) or (alb_manange_common is sameas true) or (alb_manange_apps is sameas true) or (alb_manange_logrotate is sameas true) 
