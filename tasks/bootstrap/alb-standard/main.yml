@@ -3,28 +3,8 @@
 # FILE:            {{ role_path }}/tasks/bootstrap/alb-standard/main.yml
 # LICENSE:         Public Domain
 
-- name: "bootstrap | alb-standard | main.yml: hostname"
-  hostname:
-    name: "{{ alb_node_hostname }}"
-    use: "{{ alb_internal_bootstrap_alb_standard_hostname_use | default(omit) }}"
-  when:
-    - (alb_node_hostname is defined) and (alb_node_hostname | length > 2)
+- name: "host-changes.yml"
+  include: host-changes.yml
 
-# TASK [ap-application-load-balancer : bootstrap | alb-standard | main.yml: hostname] ************************************************************************************************************************************************
-# changed: [ap_golf]
-# changed: [ap_delta]
-# fatal: [ap_echo]: FAILED! => {"changed": false, "msg": "Command failed rc=1, out=, err=Could not set property: Invalid hostname 'ap_echo'\n"}
-# changed: [ap_foxtrot]
-# changed: [rocha_anortosito]
-# fatal: [rocha_basalto]: FAILED! => {"changed": false, "msg": "hostname module cannot be used on platform Linux (Opensuse-leap)"}
-
-- name: "bootstrap | alb-standard | main.yml: timezone"
-  timezone:
-    name: UTC
-  when:
-    - (alb_node_timezone is defined) and (alb_node_timezone | length > 2)
-    - ansible_facts['date_time']['tz'] != alb_node_timezone
-
-- name: "bootstrap | alb-standard | main.yml"
-  debug:
-    msg: "TODO: implement me"
+- name: "filesystem-structure.yml"
+  include: filesystem-structure.yml

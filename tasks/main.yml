@@ -79,11 +79,14 @@
   when:
     - alb_internal_alert_critical_all is defined
 
-- name: check the version of last run on /etc/ansible/facts.d/alb_lastrun.fact
+- name: "ALB: check the version of last run on /etc/ansible/facts.d/alb_lastrun.fact (main)"
   set_fact:
     alb_version_lastrun: "{{ ansible_facts['ansible_local']['alb_lastrun']['alb_version'] }}"
-  when: ansible_facts['ansible_local'] is defined and ansible_facts['ansible_local']['alb_lastrun'] is defined and ansible_facts['ansible_local']['alb_lastrun']['alb_version'] is defined
-
+  tags:
+    - always
+  when:
+    - ansible_facts['ansible_local'] is defined and ansible_facts['ansible_local']['alb_lastrun'] is defined and ansible_facts['ansible_local']['alb_lastrun']['alb_version'] is defined
+    - alb_version_lastrun|int != -1
 
 - name: "sanitycheck/main.yml"
   include: sanitycheck/main.yml
@@ -97,18 +100,19 @@
 - fail:
     msg: "testing"
 
-# TODO: implement a way to no implement apps and only sysapps based on what is
-#       is enabled at the moment inside the alb-init.yml. This actually is
-#       possible, but will need testing
-#       (fititnt, 2019-12-02 14:39 BRT)
-- name: alb-init.yml
-  include: alb-init.yml
-  tags:
-    - alb
-    - alb-init
-  when:
-    - alb_manange_all is sameas true
-    - (alb_manange_apps is sameas true) or (alb_manange_sysapps is sameas true)
+# alb-init is now part of bootstrap/alb-standard
+# # TODO: implement a way to no implement apps and only sysapps based on what is
+# #       is enabled at the moment inside the alb-init.yml. This actually is
+# #       possible, but will need testing
+# #       (fititnt, 2019-12-02 14:39 BRT)
+# - name: alb-init.yml
+#   include: alb-init.yml
+#   tags:
+#     - alb
+#     - alb-init
+#   when:
+#     - alb_manange_all is sameas true
+#     - (alb_manange_apps is sameas true) or (alb_manange_sysapps is sameas true)
 
 - name: OpenResty
   include: openresty/main.yml

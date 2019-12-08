@@ -1,0 +1,14 @@
+---
+# FILE:            {{ role_path }}/vars/os-family/distribution/cloudlinux.yml
+# LICENSE:         Public Domain
+#
+# SEE:              https://cloudlinux.zendesk.com/hc/en-us/articles/115004560769-How-do-I-use-3rd-party-RPM-repositories-without-facing-conflicts
+
+# NOTE: CloudLinux can work fine with EPEL, but oficially they recommend
+#       "protect" the cloudlinux-base repository. Since I do not have test
+#       servers (just production servers) I will temporary just overryde
+#       default RedHat variable to empty array instead of automate this
+#       configuration. (fititnt, 2019-12-08 07:46 BRT)
+
+alb_internal_bootstrap_repositories_common_sense_packages: []
+alb_internal_bootstrap_ansible_control_node_packages: []

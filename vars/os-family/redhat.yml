@@ -17,6 +17,14 @@ alb_internal_bootstrap_extra_tools:
   - name: nmap
     state: present
 
-alb_internal_bootstrap_repositories_common_sense:
+alb_internal_bootstrap_repositories_common_sense_packages:
   - name: epel-release
     state: present
+
+# ALB/Bootstrap/AnsibleContolNode: is NOT installed by default.
+# requires: `alb_bootstrap_ansible_control_node: yes` explicit
+alb_internal_bootstrap_ansible_control_node_packages:
+  - name: epel-release
+    state: present
+  - name: ansible
+    state: latest

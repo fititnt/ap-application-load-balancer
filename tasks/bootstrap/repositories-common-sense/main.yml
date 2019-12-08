@@ -9,6 +9,6 @@
   package:
     name: "{{ item.name }}"
     state: "{{ item.state }}"
-  with_items: "{{ alb_internal_bootstrap_repositories_common_sense }}"
+  with_items: "{{ alb_internal_bootstrap_repositories_common_sense_packages }}"
   when:
-    - alb_internal_bootstrap_repositories_common_sense is defined
+    - alb_internal_bootstrap_repositories_common_sense_packages is defined

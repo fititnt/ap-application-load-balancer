@@ -9,6 +9,8 @@
 alb_internal_bootstrap_basic_tools:
   - name: aptitude
     state: present
+  - name: rsync
+    state: present
   - name: net-tools
     state: present
 
@@ -16,6 +18,14 @@ alb_internal_bootstrap_extra_tools:
   - name: nmap
     state: present
 
+# ALB/Bootstrap/AnsibleContolNode: is NOT installed by default.
+# requires: `alb_bootstrap_ansible_control_node: yes` explicit
+alb_internal_bootstrap_ansible_control_node_apt_repository:
+  - repo: "ppa:ansible/ansible"
+    state: present
+alb_internal_bootstrap_ansible_control_node_packages:
+  - name: ansible
+    state: latest
 
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 alb_internal_bootstrap_alb_standard_hostname_use: 'debian'

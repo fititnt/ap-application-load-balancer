@@ -23,6 +23,10 @@
 # Basalto: OpenSUSE 15.1
 # ssh root@rocha-basalto.vps.fititnt.org
 
+
+## *VERY* Basic Bootstraping, start ____________________________________________
+# This part is mean to works with RAW SSH commands
+
 - name: "very-early-abort-checks/main.yml"
   include: very-early-abort-checks/main.yml
   when:
@@ -42,6 +46,19 @@
     - always
   when:
     - alb_internal_boostrap_unknown is defined
+#
+## *VERY* Basic Bootstraping, end ______________________________________________
+
+- name: "bootstrap | check last run version"
+  set_fact:
+    alb_version_lastrun: "{{ ansible_facts['ansible_local']['alb_lastrun']['alb_version'] }}"
+  tags:
+    - always
+  when:
+    - ansible_facts['ansible_local'] is defined and ansible_facts['ansible_local']['alb_lastrun'] is defined and ansible_facts['ansible_local']['alb_lastrun']['alb_version'] is defined
+    - alb_version_lastrun|int != -1
+
+## Bootstraping, now with Python and Facts _____________________________________
 
 - name: "repositories-common-sense/main.yml"
   include: repositories-common-sense/main.yml
@@ -61,19 +78,10 @@
 - name: "alb-minimal/main.yml"
   include: alb-minimal/main.yml
 
-
 - name: "alb-standard/main.yml"
   include: alb-standard/main.yml
 
-# - name: "bootstrap | ansible_python_interpreter"
-#   debug:
-#     msg: "{{ ansible_python_interpreter | default ('none') }}"
-
-# - name: "bootstrap | hello"
-#   fail:
-#     msg: "{{ ansible_facts }}"
-#   when: true
-
-## Nao se for WHM
-# https://www.liquidweb.com/kb/how-to-check-the-version-of-cpanel-whm/
-#  cat /usr/local/cpanel/version
+- name: "ansible-control-node/main.yml"
+  include: ansible-control-node/main.yml
+  when:
+    - alb_bootstrap_ansible_control_node is defined and alb_bootstrap_ansible_control_node|bool

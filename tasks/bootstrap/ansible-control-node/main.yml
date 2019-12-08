@@ -1,0 +1,33 @@
+---
+
+# FILE:            {{ role_path }}/tasks/bootstrap/ansible-control-node/main.yml
+# LICENSE:         Public Domain
+#
+# SEE:             https://docs.ansible.com/ansible/latest/modules/package_module.html
+# SEE:             https://docs.ansible.com/ansible/latest/modules/apt_repository_module.html
+
+# NOTE: bootstrap/ansible-control-node is just a draft and for now is just
+#       installing Ansible based on repositories and install commands from
+#       {{ role_path }}/vars/os-family/*. This may be improved on future,
+#       like adding some awareness about other nodes
+
+- name: "bootstrap | ansible-control-node | apt_repository"
+  apt_repository:
+    repo: "{{ item.repo }}"
+    state: "{{ item.state | default('present') }}"
+    filename: "{{ item.filename | default(omit) }}"
+    codename: "{{ item.codename | default(omit) }}"
+    mode: "{{ item.mode | default(omit) }}"
+    update_cache: "{{ item.update_cache | default(omit) }}"
+    validate_certs: "{{ item.validate_certs | default(omit) }}"
+  with_items: "{{ alb_internal_bootstrap_ansible_control_node_apt_repository }}"
+  when:
+    - alb_internal_bootstrap_ansible_control_node_apt_repository is defined
+
+- name: "bootstrap | ansible-control-node | packages"
+  package:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items: "{{ alb_internal_bootstrap_ansible_control_node_packages }}"
+  when:
+    - alb_internal_bootstrap_ansible_control_node_packages is defined
