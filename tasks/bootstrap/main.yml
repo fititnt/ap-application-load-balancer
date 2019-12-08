@@ -38,8 +38,8 @@
 - name: "basic-tools/main.yml"
   include: basic-tools/main.yml
 
-- name: "basic-tools/main.yml"
-  include: basic-tools/main.yml
+- name: "extra-tools/main.yml"
+  include: extra-tools/main.yml
 
 - name: "alb-minimal/main.yml"
   include: alb-minimal/main.yml

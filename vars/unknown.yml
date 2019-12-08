@@ -2,7 +2,7 @@
 # This var files will be loaded when running on a Unknow system or a know system
 # but without gather_facts enabled
 
-alb_internal_alert_all: >
+alb_internal_alert_critical_all: >
   Critical error! Even if running on a well know operational system, you did not
   have gather_facts true by acident, bad configuration, or special case to
   allow ALB install python on your target node

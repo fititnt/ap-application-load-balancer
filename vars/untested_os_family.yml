@@ -1,16 +1,53 @@
 ---
+# FILE:            {{ role_path }}/vars/untested_os_family.yml
+# LICENSE:         Public Domain
+# DESCRIPTION:     The file {{ role_path }}/vars/main.yml always is loaded.
+#                  Other files on this directory are loaded in order of
+#                  specificity based on ansible_distribution,
+#                  ansible_distribution_major_version & ansible_os_family, like:
+#                    - ubuntu-18.yml
+#                    - ubuntu.yml
+#                    - untested_os_family.yml
 
-alb_internal_alert_all: >
+# From Ansible source code at https://github.com/ansible/ansible/blob/devel/lib/ansible/module_utils/facts/system/distribution.py#L466
+# on 2019-12-08 we have this map
+# ```python
+# OS_FAMILY_MAP = {'RedHat': ['RedHat', 'Fedora', 'CentOS', 'Scientific', 'SLC',
+#                             'Ascendos', 'CloudLinux', 'PSBM', 'OracleLinux', 'OVS',
+#                             'OEL', 'Amazon', 'Virtuozzo', 'XenServer', 'Alibaba'],
+#                   'Debian': ['Debian', 'Ubuntu', 'Raspbian', 'Neon', 'KDE neon',
+#                             'Linux Mint', 'SteamOS', 'Devuan', 'Kali', 'Cumulus Linux'],
+#                   'Suse': ['SuSE', 'SLES', 'SLED', 'openSUSE', 'openSUSE Tumbleweed',
+#                           'SLES_SAP', 'SUSE_LINUX', 'openSUSE Leap'],
+#                   'Archlinux': ['Archlinux', 'Antergos', 'Manjaro'],
+#                   'Mandrake': ['Mandrake', 'Mandriva'],
+#                   'Solaris': ['Solaris', 'Nexenta', 'OmniOS', 'OpenIndiana', 'SmartOS'],
+#                   'Slackware': ['Slackware'],
+#                   'Altlinux': ['Altlinux'],
+#                   'SGML': ['SGML'],
+#                   'Gentoo': ['Gentoo', 'Funtoo'],
+#                   'Alpine': ['Alpine'],
+#                   'AIX': ['AIX'],
+#                   'HP-UX': ['HPUX'],
+#                   'Darwin': ['MacOSX'],
+#                   'FreeBSD': ['FreeBSD', 'TrueOS'],
+#                   'ClearLinux': ['Clear Linux OS', 'Clear Linux Mix']}
+# ```
+# Note, actually  more systems are detected than these ones (the
+# distribution.py mention OpenBSD for example)
+
+alb_internal_alert_critical_all: >
   untested_os_family | message here
 
-alb_internal_alert_haproxy: >
+alb_internal_alert_critical_haproxy: >
   untested_os_family | ALB/HAproxy not tested on Unknow operational system host
 
-alb_internal_alert_logrotate: >
+alb_internal_alert_critical_logrotate: >
   untested_os_family | ALB/Logrotate not tested on Unknow operational system host 
 
-alb_internal_alert_openresty: >
+alb_internal_alert_critical_openresty: >
   untested_os_family | ALB/OpenResty not tested on Unknow operational system host 
 
-alb_internal_alert_ufw: >
+alb_internal_alert_critical_ufw: >
   untested_os_family | ALB/UFW not tested on Unknow operational system host 
+
