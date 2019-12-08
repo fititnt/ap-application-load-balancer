@@ -3,26 +3,89 @@
 # FILE:            {{ role_path }}/tasks/main.yml
 # LICENSE:         Public Domain
 
-## AP-ALB adaptations to support RHEL/CentOS family #34
+## AP-ALB v0.8.x adaptations to support RHEL/CentOS 8 family and design changes to allow flexibility even for non-tested OSs #34
 ##   - https://github.com/fititnt/ap-application-load-balancer/issues/34
 ##   - https://linuxize.com/post/how-to-install-python-on-centos-8/
 ##   - https://www.linuxschoolonline.com/how-to-use-ansible-even-it-the-target-host-does-not-have-python-installed/
 ##   - https://medium.com/@somakdas/simple-ansible-paybook-without-python-installed-in-target-machines-1df423004da5
 ##   - https://ansible-tips-and-tricks.readthedocs.io/en/latest/ansible/commands/#when-all-else-fails
 
+# About tags https://docs.ansible.com/ansible/latest/user_guide/playbooks_tags.html
+
 # ansible -m raw -s -a "sudo dnf install python3 -y" aguia-pescadora-delta.etica.ai
 
 # OpenResty https://openresty.org/en/linux-packages.html
 
-- name: "ALB info"
+- name: "ALB Info"
   debug: 
     msg:
       alb_version: "{{ alb_version }}"
-      ansible_os_family: "{{ ansible_os_family | default('none') }}"
-      ansible_distribution: "{{ ansible_distribution | default('none') }}"
-      ansible_distribution_major_version: "{{ ansible_distribution_major_version | default('none') }}"
+      node:
+        os: "{{ ansible_os_family | default('undefined') | lower }}"
+        dist: "{{ ansible_distribution | default('undefined') | lower }}"
+        dist_major_ver: "{{ ansible_distribution_major_version | default('undefined') | lower }}"
   tags:
     - alb
+    - always
+
+- name: "ALB | Load variables based on host system"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+    - "unknown.yml"
+  tags:
+    - alb
+    - always
+
+# - name: "ALB Info"
+#   debug: 
+#     msg:
+#       __alb_varsfile: "{{ __alb_varsfile | default('error(?)') }}"
+#   tags:
+#     #- never
+#     - debug
+
+# - fail:
+#     msg: "testing"
+
+# - name: "ALB Info"
+#   debug: 
+#     msg:
+#       alb_version: "{{ alb_version }}"
+#       ansible_os_family: "{{ ansible_os_family | default('undefined') }}"
+#       ansible_distribution: "{{ ansible_distribution | default('none') }}"
+#       ansible_distribution_major_version: "{{ ansible_distribution_major_version | default('none') }}"
+#   tags:
+#     - never
+#     - debug
+#     - alb-debug
+
+# - name: "ALB | Load variables based on host system (debug)"
+#   debug:
+#     msg: 
+#      #- ansible_os_family: "{{ ansible_os_family | default('none') }}"
+#      - ansible_distribution: "{{ ansible_distribution | default('none') }}"
+#      #- ansible_distribution_version: "{{ ansible_distribution_version | default('none') }}"
+#      #- ansible_distribution_major_version: "{{ ansible_distribution_major_version | default('none') }}"
+#      - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+#      - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+#      - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+#      - "{{ ansible_distribution | lower }}.yml"
+#      - "{{ ansible_os_family | lower }}.yml"
+
+
+- name: "ALB | Load variables based on host system | print"
+  debug:
+    msg: "{{ alb_internal_loadevarsfile }}"
+  tags:
+    - alb
+    - alb-bootstrap
+  when:
+    - alb_internal_loadevarsfile is defined
+
 
 #- name: "alb_trusted_hosts"
 #  debug: 
