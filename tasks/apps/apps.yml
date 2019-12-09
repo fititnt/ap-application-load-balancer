@@ -32,7 +32,7 @@
     # src: "{{ item.vhost_template|default(alb_apps_serverblock_template) }}"
     src: "{{ alb_nginx_alb_stragies_folder }}/{{ item.app_alb_strategy }}.conf.j2"
     dest: "/opt/alb/apps/{{ item.app_uid }}.conf"
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     group: "{{ alb_nginx_user }}"
     mode: 0644
     backup: yes

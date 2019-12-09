@@ -1,4 +1,4 @@
-# AP Application Load Balancer - v0.8.3-alpha
+# AP Application Load Balancer - v0.8.4-alpha
 AP-ALB is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
 via [Ansible Role](https://docs.ansible.com/) to automate creation and maintance of
 with features common on expensive _Application Load Balancer_ of some cloud

@@ -29,40 +29,40 @@
   template:
     src: "{{ alb_nginx_html_folder }}index.html.j2"
     dest: /usr/local/openresty/nginx/html/index.html
-    owner: root
-    group: root
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
     mode: '0644'
 
 - name: openresty | /usr/local/openresty/nginx/html/favicon.ico
   template:
     src: "{{ alb_nginx_html_folder }}favicon.ico"
     dest: /usr/local/openresty/nginx/html/favicon.ico
-    owner: root
-    group: root
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
     mode: '0644'
 
 - name: openresty | /usr/local/openresty/nginx/html/robots.txt
   template:
     src: "{{ alb_nginx_html_folder }}robots.txt"
     dest: /usr/local/openresty/nginx/html/robots.txt
-    owner: root
-    group: root
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
     mode: '0644'
 
 - name: openresty | /usr/local/openresty/nginx/html/404.html
   template:
     src: "{{ alb_nginx_html_folder }}404.html.j2"
     dest: /usr/local/openresty/nginx/html/404.html
-    owner: root
-    group: root
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
     mode: '0644'
 
 - name: openresty | /usr/local/openresty/nginx/html/50x.html
   template:
     src: "{{ alb_nginx_html_folder }}50x.html.j2"
     dest: /usr/local/openresty/nginx/html/50x.html
-    owner: root
-    group: root
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
     mode: '0644'
 
 - name: openresty | /usr/local/openresty/nginx/conf/nginx.conf
@@ -70,8 +70,8 @@
     # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
     src: "{{ alb_nginx_conf_file }}"
     dest: /usr/local/openresty/nginx/conf/nginx.conf
-    owner: root
-    group: root
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
     mode: '0644'
     backup: yes
   notify:

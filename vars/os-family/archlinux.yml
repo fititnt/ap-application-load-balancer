@@ -1,10 +1,9 @@
 ---
-# FILE:            {{ role_path }}/vars/os-family/suse.yml
+# FILE:            {{ role_path }}/vars/os-family/archlinux.yml
 # LICENSE:         Public Domain
 #
 # DESCRIPTION:     This file is loaded by default for at least these OSs:
-#                  'Suse': ['SuSE', 'SLES', 'SLED', 'openSUSE', 'openSUSE Tumbleweed',
-#                          'SLES_SAP', 'SUSE_LINUX', 'openSUSE Leap'],
+#                  'Archlinux': ['Archlinux', 'Antergos', 'Manjaro'],
 
 alb_internal_root_user: 'root'
 alb_internal_root_group: 'root'

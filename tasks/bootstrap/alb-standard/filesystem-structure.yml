@@ -16,8 +16,6 @@
     #group: root
     #mode: 0755
     #recurse: true
-  when:
-    - alb_version_lastrun != alb_version
 
 ## Let's create all directories that would not be created by OpenResty or HAproxy
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/ | Base directory for ALB, with symlinks for other important places"
@@ -25,11 +23,9 @@
     path: /opt/alb/
     state: directory
     mode: '0611'
-    owner: root
-    group: root
-  
-  when:
-    - alb_version_lastrun != alb_version
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+  become: yes
 
 # TASK [ap-application-load-balancer : bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/ | Base directory for ALB, with symlinks for other important places] **********************************************************
 # ok: [ap_delta]
@@ -45,30 +41,24 @@
     path: /var/opt/alb/
     state: directory
     mode: '0611'
-    owner: root
-    group: root
-  when:
-    - alb_version_lastrun != alb_version
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
 
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/opt/alb/alb-cache/"
   file:
     path: /var/opt/alb/alb-cache/
     state: directory
     mode: '0700'
-    owner: root
-    group: root
-  when:
-    - alb_version_lastrun != alb_version
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
 
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/opt/alb/alb-tmp/"
   file:
     path: /var/opt/alb/alb-tmp/
     state: directory
     mode: '0700'
-    owner: root
-    group: root
-  when:
-    - alb_version_lastrun != alb_version
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
 
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/opt/alb/alb-backups/"
   file:
@@ -76,8 +66,8 @@
     path: /var/opt/alb/alb-backups/
     state: directory
     mode: '0700'
-    owner: root
-    group: root
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
   when:
     - alb_version_lastrun != alb_version
 
@@ -86,29 +76,23 @@
     path: /var/opt/alb/apps-backups/
     state: directory
     mode: '0700'
-    owner: root
-    group: root
-  when:
-    - alb_version_lastrun != alb_version
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
 
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/opt/alb/sysapps-backups/"
   file:
     path: /var/opt/alb/sysapps-backups/
     state: directory
     mode: '0700'
-    owner: root
-    group: root
-  when:
-    - alb_version_lastrun != alb_version
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
 
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/log/alb/"
   file:
     path: /var/log/alb/
     state: directory
     mode: '0644'
-    owner: root
-  when:
-    - alb_version_lastrun != alb_version
+    owner: "{{ alb_internal_root_user }}"
 
 - name: "bootstrap | alb-standard | filesystem-structure: touch /var/log/alb/access.log"
   file:
@@ -117,8 +101,6 @@
     mode: '0644'
     owner: "{{ alb_nginx_user }}"
     group: "{{ alb_nginx_user }}"
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure:  touch /var/log/alb/error.log"
   file:
@@ -127,8 +109,6 @@
     mode: '0644'
     owner: "{{ alb_nginx_user }}"
     group: "{{ alb_nginx_user }}"
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure: touch /var/log/alb/letsencrypt.log"
   file:
@@ -137,33 +117,27 @@
     mode: '0644'
     owner: "{{ alb_nginx_user }}"
     group: "{{ alb_nginx_user }}"
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/apps/"
   file:
     path: /opt/alb/apps/
     state: directory
     mode: '0655'
-    owner: root
-  when:
-    - alb_version_lastrun != alb_version
+    owner: "{{ alb_internal_root_user }}"
 
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/sysapps/"
   file:
     path: /opt/alb/sysapps/
     state: directory
     mode: '0655'
-    owner: root
-  when:
-    - alb_version_lastrun != alb_version
+    owner: "{{ alb_internal_root_user }}"
 
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/info/"
   file:
     path: /opt/alb/info/
     state: directory
     mode: '0655'
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
   when:
     - alb_version_lastrun != alb_version
 
@@ -172,9 +146,7 @@
     path: /opt/alb/bin/
     state: directory
     mode: '0655'
-    owner: root
-  when:
-    - alb_version_lastrun != alb_version
+    owner: "{{ alb_internal_root_user }}"
 
 #- name: "bootstrap | alb-standard | filesystem-structure:  mkdir /var/app/"
 #  file:
@@ -199,18 +171,14 @@
     path: /var/log/app
     state: directory
     mode: '0644'
-    owner: root
-  when:
-    - alb_version_lastrun != alb_version
+    owner: "{{ alb_internal_root_user }}"
 
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/log/sysapp"
   file:
     path: /var/log/sysapp
     state: directory
     mode: '0644'
-    owner: root
-  when:
-    - alb_version_lastrun != alb_version
+    owner: "{{ alb_internal_root_user }}"
 
 # Syntactic sugar symbolic links
 #- name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/alb/ /opt/alb/alb-data"
@@ -227,61 +195,49 @@
   file:
     src: /var/opt/alb/alb-cache/
     dest: /opt/alb/alb-cache
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     # force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/opt/alb/alb-backups/ /opt/alb/alb-backups"
   file:
     src: /var/opt/alb/alb-backups/
     dest: /opt/alb/alb-backups
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     # force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/opt/alb/alb-tmp/ /opt/alb/alb-tmp"
   file:
     src: /var/opt/alb/alb-tmp/
     dest: /opt/alb/alb-tmp
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     # force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/opt/alb/apps-backups/ /opt/alb/apps-backups"
   file:
     src: /var/opt/alb/apps-backups/
     dest: /opt/alb/apps-backups
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     # force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/opt/alb/sysapps-backups/ /opt/alb/sysapps-backups"
   file:
     src: /var/opt/alb/sysapps-backups/
     dest: /opt/alb/apps-backups
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     # force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure: ln -s /var/log/alb/ /opt/alb/alb-logs"
   file:
     src: /var/log/alb/
     dest: /opt/alb/alb-logs
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     # force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 #- name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/app/ /opt/alb/apps-data"
 #  file:
@@ -307,93 +263,75 @@
   file:
     src: /var/log/app/
     dest: /var/log/alb/apps
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     # force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure: ln -s /var/log/sysapp/ /var/log/alb/sysapps"
   file:
     src: /var/log/sysapp/
     dest: /var/log/alb/sysapps
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     # force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure: ln -s /var/log/app/ /opt/alb/apps-logs"
   file:
     src: /var/log/app/
     dest: /opt/alb/apps-logs
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     # force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure: ln -s /var/log/sysapp/ /opt/alb/sysapps-logs"
   file:
     src: /var/log/sysapp/
     dest: /opt/alb/sysapps-logs
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     # force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 # The next links have force: yes because are likely to not exist on first installation
 - name: "bootstrap | alb-standard | filesystem-structure: ln -s /etc/haproxy/ /opt/alb/haproxy"
   file:
     src: /etc/haproxy/
     dest: /opt/alb/haproxy
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure: ln -s /usr/local/openresty/nginx/ /opt/alb/nginx"
   file:
     src: /usr/local/openresty/nginx/
     dest: /opt/alb/nginx
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure: ln -s /etc/resty-auto-ssl/letsencrypt/ /opt/alb/letsencrypt"
   file:
     src: /etc/resty-auto-ssl/letsencrypt/
     dest: /opt/alb/letsencrypt
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 # alb.conf is a syntax sugar to real nginx.conf
 - name: "bootstrap | alb-standard | filesystem-structure: ln -s /usr/local/openresty/nginx/conf/nginx.conf /opt/alb/alb.conf"
   file:
     src: /usr/local/openresty/nginx/conf/nginx.conf
     dest: /opt/alb/alb.conf
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 - name: "bootstrap | alb-standard | filesystem-structure: ln -s /etc/haproxy/haproxy.cfg /opt/alb/nlb.cfg"
   file:
     src: /etc/haproxy/haproxy.cfg
     dest: /opt/alb/nlb.cfg
-    owner: root
+    owner: "{{ alb_internal_root_user }}"
     state: link
     force: yes
-  when:
-    - alb_version_lastrun != alb_version
 
 
 # TASK [ap-application-load-balancer : bootstrap | alb-standard | pip3 install passlib] **********************************************************************************************************************************************

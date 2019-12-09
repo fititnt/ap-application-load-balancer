@@ -7,6 +7,9 @@
 #                             'Ascendos', 'CloudLinux', 'PSBM', 'OracleLinux', 'OVS',
 #                             'OEL', 'Amazon', 'Virtuozzo', 'XenServer', 'Alibaba'],
 
+alb_internal_root_user: 'root'
+alb_internal_root_group: 'root'
+
 alb_internal_bootstrap_basic_tools:
   - name: net-tools
     state: present

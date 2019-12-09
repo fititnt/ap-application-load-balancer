@@ -6,6 +6,9 @@
 #                  'Debian': ['Debian', 'Ubuntu', 'Raspbian', 'Neon', 'KDE neon',
 #                            'Linux Mint', 'SteamOS', 'Devuan', 'Kali', 'Cumulus Linux'],
 
+alb_internal_root_user: 'root'
+alb_internal_root_group: 'root'
+
 alb_internal_bootstrap_basic_tools:
   - name: aptitude
     state: present

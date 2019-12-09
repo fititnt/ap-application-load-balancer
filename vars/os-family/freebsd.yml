@@ -10,6 +10,9 @@
 
 # For me: https://www.cyberciti.biz/faq/how-to-prepare-freebsd-server-to-be-managed-by-ansible-tool/
 
+alb_internal_root_user: 'wheel'
+alb_internal_root_group: 'wheel'
+
 alb_internal_bootstrap_basic_tools:
   - name: rsync
     state: present

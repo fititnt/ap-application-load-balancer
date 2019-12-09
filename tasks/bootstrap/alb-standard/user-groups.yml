@@ -1,13 +1,22 @@
 ---
 # FILE:            {{ role_path }}/tasks/bootstrap/alb-standard/user-groups.yml
 # LICENSE:         Public Domain
+# SEE:             https://docs.ansible.com/ansible/latest/modules/user_module.html
+# SEE:             https://docs.ansible.com/ansible/latest/modules/group_module.html
 
-- name: "bootstrap | alb-standard | user-groups: alb group"
-  group:
+# fatal: [rocha_anortosito]: FAILED! => {"changed": false, "gid": 0, "group": "wheel", "mode": "0755", "msg": "chgrp failed: failed to look up group root", "owner": "root", "path": "/opt/alb/", "size": 2, "state": "directory", "uid": 0}
+
+- name: "bootstrap | alb-standard | user-groups: alb user, alb group"
+  user:
     name: alb
+    group: alb
+    comment:  "ALB (Application Load Balancer) user"
     state: present
-  when:
-    - alb_version_lastrun != alb_version
+
+#- name: "bootstrap | alb-standard | user-groups: alb group"
+#  group:
+#    name: alb
+#    state: present
 
 # Note: the system user albd is not fully used yet on all supported
 #       OSs (fititnt, 2019-12-08 08:50 BRT)
@@ -21,5 +30,3 @@
     group: alb
     groups: "{{ alb_nginx_user }}"
     # groups: www-data
-  when:
-    - alb_version_lastrun != alb_version

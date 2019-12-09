@@ -62,26 +62,44 @@
 
 - name: "repositories-common-sense/main.yml"
   include: repositories-common-sense/main.yml
+  tags:
+    - alb-bootstrap-repositories-common-sense
 
 - name: "repositories-3rd-party/main.yml"
   include: repositories-3rd-party/main.yml
+  tags:
+    - alb-bootstrap-repositories-3rd-party
 
 - name: "repositories-from-sources/main.yml"
   include: repositories-from-sources/main.yml
+  tags:
+    - alb-bootstrap-repositories-from-sources
 
 - name: "basic-tools/main.yml"
   include: basic-tools/main.yml
+  tags:
+    - alb-bootstrap-basic-tools
 
 - name: "extra-tools/main.yml"
   include: extra-tools/main.yml
+  tags:
+    - alb-bootstrap-extra-tools
 
 - name: "alb-minimal/main.yml"
   include: alb-minimal/main.yml
+  tags:
+    - alb-bootstrap-alb-minimal
 
 - name: "alb-standard/main.yml"
   include: alb-standard/main.yml
+  tags:
+    - alb-bootstrap-alb-standard
+  when:
+    - (alb_version_lastrun != alb_version) or (alb_forceredeploy is defined and alb_forceredeploy|bool)
 
 - name: "ansible-control-node/main.yml"
   include: ansible-control-node/main.yml
+  tags:
+    - alb-bootstrap-ansible-control-node
   when:
     - alb_bootstrap_ansible_control_node is defined and alb_bootstrap_ansible_control_node|bool

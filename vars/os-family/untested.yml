@@ -33,6 +33,9 @@
 # Note, actually  more systems are detected than these ones (the
 # distribution.py mention OpenBSD for example)
 
+alb_internal_root_user: 'root'
+alb_internal_root_group: 'root'
+
 alb_internal_alert_critical_all: >
   untested_os_family | message here
 

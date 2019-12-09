@@ -4,8 +4,8 @@
   template:
     src: "{{ alb_logrotate_template_alb }}"
     dest: /etc/logrotate.d/alb
-    owner: root
-    group: root
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
     mode: '0644'
     backup: no
 
@@ -13,8 +13,8 @@
   template:
     src: "{{ alb_logrotate_template_alb_apps }}"
     dest: /etc/logrotate.d/alb_apps
-    owner: root
-    group: root
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
     mode: '0644'
     backup: no
 
@@ -22,7 +22,7 @@
   template:
     src: "{{ alb_logrotate_template_alb_sysapps }}"
     dest: /etc/logrotate.d/alb_sysapps
-    owner: root
-    group: root
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
     mode: '0644'
     backup: no
