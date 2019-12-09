@@ -8,6 +8,7 @@
 
 alb_internal_root_user: 'root'
 alb_internal_root_group: 'root'
+alb_internal_package_manager_group: "{{ ansible_pkg_mgr }}"
 
 alb_internal_bootstrap_basic_tools:
   - name: aptitude
@@ -19,6 +20,12 @@ alb_internal_bootstrap_basic_tools:
 
 alb_internal_bootstrap_extra_tools:
   - name: python3-pip
+    state: present
+  - name: python3-setuptools 
+    state: present
+  - name: python3-apt
+    state: present
+  - name: python3-passlib
     state: present
   - name: nmap
     state: present

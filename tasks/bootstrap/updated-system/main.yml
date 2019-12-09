@@ -1,0 +1,21 @@
+---
+
+# FILE:            {{ role_path }}/tasks/bootstrap/updated-system//main.yml
+# LICENSE:         Public Domain
+# SEE:             https://docs.ansible.com/ansible/latest/modules/package_module.html
+
+
+- name: "apt.yml"
+  include: "apt.yml"
+  when:
+    - "(alb_internal_package_manager_group is defined) and (alb_internal_package_manager_group == 'apt')"
+
+- name: "yum.yml"
+  include: "yum.yml"
+  when:
+    - "(alb_internal_package_manager_group is defined) and (alb_internal_package_manager_group == 'yum')"
+
+- name: "pkgng.yml"
+  include: "pkgng.yml"
+  when:
+    - "(alb_internal_package_manager_group is defined) and (alb_internal_package_manager_group == 'pkgng')"

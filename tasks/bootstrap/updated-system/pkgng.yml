@@ -1,0 +1,21 @@
+---
+
+# FILE:            {{ role_path }}/tasks/bootstrap/updated-system/pkgng.yml
+# LICENSE:         Public Domain
+#
+# DESCRIPTION      pkgng – Package manager for FreeBSD >= 9.0
+#
+# SEE:             https://docs.ansible.com/ansible/latest/modules/pkgng_module.html
+
+#- name: "bootstrap | updated-system | pkgng.yml: update caches"
+#  pkgng:
+#    update_cache: yes
+#    cache_valid_time: 86400
+#  changed_when: false
+
+- name: "bootstrap | updated-system | pkgng.yml: update all packages"
+  pkgng:
+    name: "*"
+    state: latest
+  when:
+    - "(alb_bootstrap_canupdatesystem is defined) and (alb_bootstrap_canupdatesystem|bool)"

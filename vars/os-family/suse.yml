@@ -8,6 +8,7 @@
 
 alb_internal_root_user: 'root'
 alb_internal_root_group: 'root'
+alb_internal_package_manager_group: "{{ ansible_pkg_mgr }}"
 
 alb_internal_bootstrap_basic_tools:
   - name: rsync
@@ -17,6 +18,8 @@ alb_internal_bootstrap_basic_tools:
 
 alb_internal_bootstrap_extra_tools:
   - name: python-pip
+    state: present
+  - name: python-passlib
     state: present
   - name: nmap
     state: present
@@ -31,4 +34,4 @@ alb_internal_bootstrap_ansible_control_node_packages:
     state: latest
 
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
-alb_internal_bootstrap_alb_standard_hostname_use: 'debian'
+alb_internal_bootstrap_alb_standard_hostname_use: 'sles'

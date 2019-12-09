@@ -1,0 +1,18 @@
+---
+
+# FILE:            {{ role_path }}/tasks/bootstrap/updated-system/apt.yml
+# LICENSE:         Public Domain
+# SEE:             https://docs.ansible.com/ansible/latest/modules/package_module.html
+
+- name: "bootstrap | updated-system | apt.yml: update caches"
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400
+  changed_when: false
+
+- name: "bootstrap | updated-system | apt.yml: update all packages"
+  apt:
+    upgrade: yes
+    cache_valid_time: 86400
+  when:
+    - "(alb_bootstrap_canupdatesystem is defined) and (alb_bootstrap_canupdatesystem|bool)"

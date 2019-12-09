@@ -10,8 +10,14 @@
 
 # For me: https://www.cyberciti.biz/faq/how-to-prepare-freebsd-server-to-be-managed-by-ansible-tool/
 
-alb_internal_root_user: 'wheel'
+alb_internal_root_user: 'root'
 alb_internal_root_group: 'wheel'
+alb_internal_package_manager_group: "pkgng"
+
+# TODO: review this later
+ansible_python_interpreter: "/usr/local/bin/python3.6"
+#fatal: [rocha_anortosito_freebsd12]: FAILED! => {"ansible_facts": {}, "changed": false, "failed_modules": {"setup": {"ansible_facts": {"discovered_interpreter_python": "/usr/local/bin/python3.6"}, "cmd": "/etc/ansible/facts.d/alb_openresty.fact", "failed": true, "invocation": {"module_args": {"fact_path": "/etc/ansible/facts.d", "filter": "*", "gather_subset": ["all"], "gather_timeout": 10}}, "msg": "[Errno 2] No such file or directory: b'/etc/ansible/facts.d/alb_openresty.fact': b'/etc/ansible/facts.d/alb_openresty.fact'", "rc": 2, "warnings": ["Platform freebsd on host rocha_anortosito_freebsd12 is using the discovered Python interpreter at /usr/local/bin/python3.6, but future installation of another Python interpreter could change this. See https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information."]}}, "msg": "The following modules failed to execute: setup\n"}
+
 
 alb_internal_bootstrap_basic_tools:
   - name: rsync
@@ -22,6 +28,8 @@ alb_internal_bootstrap_extra_tools:
   - name: py36-pip
     state: present
   - name: py36-setuptools
+    state: present
+  - name: py36-passlib
     state: present
   - name: nmap
     state: present
@@ -46,3 +54,6 @@ alb_internal_alert_critical_openresty: >
 
 alb_internal_alert_critical_haproxy: >
   FreeBSD | @TODO note to self, implement basic functionality with HAProxy (fititnt, 2019-12-08 00:22 BRT)
+
+# https://docs.ansible.com/ansible/latest/modules/hostname_module.html
+alb_internal_bootstrap_alb_standard_hostname_use: 'freebsd'

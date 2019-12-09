@@ -17,14 +17,14 @@
 #  with_items: "{{ alb_sysapps }}"
 #  notify: reload openresty
 
-- name: /etc/ansible/facts.d/alb_sysapps.fact
+- name: "sysapps | /etc/ansible/facts.d/alb_sysapps.fact"
   template:
     src: files/alb_sysapps.fact
     dest: /etc/ansible/facts.d/alb_sysapps.fact
     mode: 0755
   register: alb_sysapps_facts_deployed
 
-- name: " sysapps | /opt/alb/sysapps/.htaccess"
+- name: "sysapps | /opt/alb/sysapps/.htaccess"
   htpasswd:
     path: /opt/alb/sysapps/.htaccess
     name: "{{ item.username }}"

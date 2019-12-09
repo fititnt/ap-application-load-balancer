@@ -60,6 +60,11 @@
 
 ## Bootstraping, now with Python and Facts _____________________________________
 
+- name: "updated-system/main.yml"
+  include: updated-system/main.yml
+  tags:
+    - alb-bootstrap-updated-system
+
 - name: "repositories-common-sense/main.yml"
   include: repositories-common-sense/main.yml
   tags:

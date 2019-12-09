@@ -9,6 +9,7 @@
 
 alb_internal_root_user: 'root'
 alb_internal_root_group: 'root'
+alb_internal_package_manager_group: "yum"
 
 alb_internal_bootstrap_basic_tools:
   - name: net-tools
@@ -18,6 +19,10 @@ alb_internal_bootstrap_basic_tools:
 
 alb_internal_bootstrap_extra_tools:
   - name: python3-pip
+    state: present
+  - name: python3-setuptools 
+    state: present
+  - name: python-3passlib
     state: present
   - name: nmap
     state: present
@@ -33,3 +38,6 @@ alb_internal_bootstrap_ansible_control_node_packages:
     state: present
   - name: ansible
     state: latest
+
+# https://docs.ansible.com/ansible/latest/modules/hostname_module.html
+alb_internal_bootstrap_alb_standard_hostname_use: 'redhat'

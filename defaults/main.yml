@@ -14,7 +14,7 @@ alb_hide_alb: yes           # This and 'alb_forcedebug: no' means try to hide ev
 alb_expose_version: no      # If alb_hide_alb: no, this will be displayed like "alb/1.2.3".
 alb_forcedebug: no
 alb_forceredeploy: no # Ignore already made changes base on facts from /etc/ansible/fact.d/alb*.fact
-
+alb_bootstrap_canupdatesystem: yes
 
 ### AP-ALB Components overview _________________________________________________
 # The defaults of v0.7.4+ will use: Apps, HAProxy, Logrotate, OpenResty
