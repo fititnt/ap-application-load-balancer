@@ -4,6 +4,9 @@
 # LICENSE:         Public Domain
 # SEE:             https://docs.ansible.com/ansible/latest/modules/package_module.html
 
+# Note: this may actually be more complicated, some systems does not support it, see
+#       https://github.com/ansible/ansible/issues/24189
+#       This means FreeBSD and pkgng
 
 - name: "apt.yml"
   include: "apt.yml"
@@ -15,7 +18,7 @@
   when:
     - "(alb_internal_package_manager_group is defined) and (alb_internal_package_manager_group == 'yum')"
 
-- name: "pkgng.yml"
-  include: "pkgng.yml"
-  when:
-    - "(alb_internal_package_manager_group is defined) and (alb_internal_package_manager_group == 'pkgng')"
+#- name: "pkgng.yml"
+#  include: "pkgng.yml"
+#  when:
+#    - "(alb_internal_package_manager_group is defined) and (alb_internal_package_manager_group == 'pkgng')"

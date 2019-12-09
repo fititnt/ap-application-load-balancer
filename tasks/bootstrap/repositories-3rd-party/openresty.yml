@@ -1,0 +1,19 @@
+---
+
+# FILE:            {{ role_path }}/tasks/bootstrap/repositories-3rd-party/openresty.yml
+# LICENSE:         Public Domain
+
+- name: "bootstrap | repositories-3rd-party | openresty.yml: apt_key (TODO: fix to remove warnings later)"
+  apt_key: "{{ alb_internal_openresty_apt_key }}"
+  when:
+    - "(alb_internal_openresty_apt_key is defined) and (alb_internal_openresty_apt_key.url is defined)"
+
+- name: "bootstrap | repositories-3rd-party | openresty.yml: apt_repository (TODO: fix to remove warnings later)"
+  apt_repository: "{{ alb_internal_openresty_apt_repository }}"
+  when:
+    - "(alb_internal_openresty_apt_repository is defined) and (alb_internal_openresty_apt_repository.repo is defined)"
+
+- name: "bootstrap | repositories-3rd-party | openresty.yml: yum_repository (TODO: fix to remove warnings later)"
+  yum_repository: "{{ alb_internal_openresty_yum_repository }}"
+  when:
+    - "(alb_internal_openresty_yum_repository is defined) and (alb_internal_openresty_yum_repository.baseurl is defined)"

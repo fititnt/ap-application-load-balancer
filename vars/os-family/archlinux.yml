@@ -30,5 +30,12 @@ alb_internal_bootstrap_ansible_control_node_packages:
   - name: ansible
     state: latest
 
+alb_internal_openresty_apt_key: false
+alb_internal_openresty_apt_repository: false
+alb_internal_openresty_yum_repository: false
+alb_internal_haproxy_apt_key: false
+alb_internal_haproxy_apt_repository: false
+alb_internal_ohaproxy_yum_repository: false
+
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 # alb_internal_bootstrap_alb_standard_hostname_use: 'debian'

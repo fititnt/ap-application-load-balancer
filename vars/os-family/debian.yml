@@ -30,6 +30,20 @@ alb_internal_bootstrap_extra_tools:
   - name: nmap
     state: present
 
+alb_internal_openresty_apt_key:
+  url: "https://openresty.org/package/pubkey.gpg"
+  state: present
+
+alb_internal_openresty_apt_repository:
+  repo: "deb http://openresty.org/package/ubuntu bionic main"
+  state: "present"
+  filename: "openresty"
+  update_cache: yes
+
+alb_internal_haproxy_apt_repository:
+  repo: ppa:vbernat/haproxy-2.0
+  update_cache: yes
+
 # ALB/Bootstrap/AnsibleContolNode: is NOT installed by default.
 # requires: `alb_bootstrap_ansible_control_node: yes` explicit
 alb_internal_bootstrap_ansible_control_node_apt_repository:

@@ -22,7 +22,7 @@ alb_internal_bootstrap_extra_tools:
     state: present
   - name: python3-setuptools 
     state: present
-  - name: python-3passlib
+  - name: python3-passlib
     state: present
   - name: nmap
     state: present
@@ -38,6 +38,20 @@ alb_internal_bootstrap_ansible_control_node_packages:
     state: present
   - name: ansible
     state: latest
+
+alb_internal_openresty_yum_repository:
+  name: "openresty"
+  description: "Official OpenResty Open Source Repository for CentOS"
+  # baseurl: 'https://openresty.org/package/centos/$releasever/$basearch' # This original line
+  baseurl: 'https://openresty.org/package/centos/7/$basearch'
+  skip_if_unavailable: false
+  gpgcheck: true
+  repo_gpgcheck: false
+  gpgkey: 'https://openresty.org/package/pubkey.gpg'
+  state: present
+  enabled: true
+
+alb_internal_haproxy_apt_repository: false
 
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 alb_internal_bootstrap_alb_standard_hostname_use: 'redhat'

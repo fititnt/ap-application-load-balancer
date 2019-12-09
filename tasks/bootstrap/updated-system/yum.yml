@@ -11,10 +11,11 @@
 #  changed_when: false
 
 - name: "bootstrap | updated-system | yum.yml (yum, dnf): update caches"
-  command: "yum clean all"
+  command:
+    cmd: "yum clean all"
+    warn: false
   become: yes
   changed_when: false
-  warn: false
 
 - name: "bootstrap | updated-system | yum.yml (yum, dnf): update all packages"
   yum:
