@@ -14,6 +14,8 @@ alb_internal_bootstrap_basic_tools:
     state: present
 
 alb_internal_bootstrap_extra_tools:
+  - name: python3-pip
+    state: present
   - name: nmap
     state: present
 

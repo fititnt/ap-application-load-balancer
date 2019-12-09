@@ -1,0 +1,9 @@
+---
+
+# FILE:            {{ role_path }}/tasks/bootstrap/alb-minimal/ansible-facts.yml
+# LICENSE:         Public Domain
+
+- name: "bootstrap | alb-minimal | ansible-facts.yml: mkdir -p /etc/ansible/facts.d/"
+  file:
+    path: /etc/ansible/facts.d/
+    state: directory

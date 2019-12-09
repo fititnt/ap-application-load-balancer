@@ -8,12 +8,18 @@
 
 # BSD users: read https://docs.ansible.com/ansible/latest/user_guide/intro_bsd.html
 
+# For me: https://www.cyberciti.biz/faq/how-to-prepare-freebsd-server-to-be-managed-by-ansible-tool/
+
 alb_internal_bootstrap_basic_tools:
   - name: rsync
     state: present
 #  - net-tools # FreeBSD 12 seems to already ship with netstat
 
 alb_internal_bootstrap_extra_tools:
+  - name: py36-pip
+    state: present
+  - name: py36-setuptools
+    state: present
   - name: nmap
     state: present
 

@@ -19,29 +19,6 @@
   when:
     - alb_version_lastrun != alb_version
 
-# Example group command from Ansible Playbooks
-- name: "bootstrap | alb-standard | filesystem-structure: Create group alb if already does not exist"
-  group:
-    name: alb
-    state: present
-  when:
-    - alb_version_lastrun != alb_version
-
-- name: "bootstrap | alb-standard | filesystem-structure: Create system user alb"
-  user:
-    name: alb
-    comment: "System user for ALB (Application Load Balancer)"
-    system: yes
-    create_home: no
-    shell: /usr/sbin/nologin
-    group: alb
-    groups: "{{ alb_nginx_user }}"
-    # groups: www-data
-  when:
-    - alb_version_lastrun != alb_version
-# TODO: check on new installations www-data user already exist and this command would not fail (fititnt, 2019-11-07 21:11 BRT)
-# NOTE: yes, it fails on CentOS and new installations first time, before OpenResty (fititnt, 2019-12-06 06:09)
-
 ## Let's create all directories that would not be created by OpenResty or HAproxy
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/ | Base directory for ALB, with symlinks for other important places"
   file:
@@ -50,8 +27,17 @@
     mode: '0611'
     owner: root
     group: root
+  
   when:
     - alb_version_lastrun != alb_version
+
+# TASK [ap-application-load-balancer : bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/ | Base directory for ALB, with symlinks for other important places] **********************************************************
+# ok: [ap_delta]
+# ok: [ap_echo]
+# ok: [ap_golf]
+# fatal: [rocha_anortosito]: FAILED! => {"changed": false, "gid": 0, "group": "wheel", "mode": "0755", "msg": "chgrp failed: failed to look up group root", "owner": "root", "path": "/opt/alb/", "size": 2, "state": "directory", "uid": 0}
+# ok: [ap_foxtrot]
+# ok: [rocha_basalto]
 
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /var/opt/alb/ | Base path for variable data on run time (temporary, cache, backups...)"
   file:
@@ -409,18 +395,6 @@
   when:
     - alb_version_lastrun != alb_version
 
-- name: "bootstrap | alb-standard | filesystem-structure: install python3-pip"
-  package:
-    name: "python3-pip"
-    state: present
-  when:
-    - alb_version_lastrun != alb_version
-
-- name: "bootstrap | alb-standard | filesystem-structure: pip3 install passlib"
-  pip:
-    name: passlib
-  when:
-    - alb_version_lastrun != alb_version
 
 # TASK [ap-application-load-balancer : bootstrap | alb-standard | pip3 install passlib] **********************************************************************************************************************************************
 # An exception occurred during task execution. To see the full traceback, use -vvv. The error was: ImportError: No module named pkg_resources

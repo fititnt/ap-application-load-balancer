@@ -3,11 +3,5 @@
 # FILE:            {{ role_path }}/tasks/bootstrap/alb-minimal/main.yml
 # LICENSE:         Public Domain
 
-- name: "bootstrap | alb-minimal | main.yml"
-  debug:
-    msg: "TODO: implement me"
-
-- name: "bootstrap | alb-minimal | main.yml: mkdir -p /etc/ansible/facts.d/"
-  file:
-    path: /etc/ansible/facts.d/
-    state: directory
+- name: "ansible-facts.yml"
+  include: ansible-facts.yml

@@ -1,21 +1,19 @@
 ---
-# FILE:            {{ role_path }}/vars/os-family/debian.yml
+# FILE:            {{ role_path }}/vars/os-family/suse.yml
 # LICENSE:         Public Domain
 #
 # DESCRIPTION:     This file is loaded by default for at least these OSs:
-#                  'Debian': ['Debian', 'Ubuntu', 'Raspbian', 'Neon', 'KDE neon',
-#                            'Linux Mint', 'SteamOS', 'Devuan', 'Kali', 'Cumulus Linux'],
+#                  'Suse': ['SuSE', 'SLES', 'SLED', 'openSUSE', 'openSUSE Tumbleweed',
+#                          'SLES_SAP', 'SUSE_LINUX', 'openSUSE Leap'],
 
 alb_internal_bootstrap_basic_tools:
-  - name: aptitude
-    state: present
   - name: rsync
     state: present
   - name: net-tools
     state: present
 
 alb_internal_bootstrap_extra_tools:
-  - name: python3-pip
+  - name: python-pip
     state: present
   - name: nmap
     state: present
