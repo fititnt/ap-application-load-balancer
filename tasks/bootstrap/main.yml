@@ -41,11 +41,11 @@
     # - ansible_facts is not defined
 
 
-- debug:
-    msg:
-      ansible_hostname: "{{ ansible_hostname | default('undefined') }}"
-      alb_boostrap_python: "{{ alb_boostrap_python | default('undefined') }}"
-      ansible_facts: "{{ ansible_facts | default('undefined') }}"
+# - debug:
+#     msg:
+#       ansible_hostname: "{{ ansible_hostname | default('undefined') }}"
+#       alb_boostrap_python: "{{ alb_boostrap_python | default('undefined') }}"
+#       ansible_facts: "{{ ansible_facts | default('undefined') }}"
 
 - name: "bootstrap | Warn user if is running in unknown"
   fail:
@@ -73,6 +73,11 @@
   tags:
     - alb-bootstrap-updated-system
 
+- name: "basic-tools/main.yml"
+  include: basic-tools/main.yml
+  tags:
+    - alb-bootstrap-basic-tools
+
 - name: "repositories-common-sense/main.yml"
   include: repositories-common-sense/main.yml
   tags:
@@ -87,11 +92,6 @@
   include: repositories-from-sources/main.yml
   tags:
     - alb-bootstrap-repositories-from-sources
-
-- name: "basic-tools/main.yml"
-  include: basic-tools/main.yml
-  tags:
-    - alb-bootstrap-basic-tools
 
 - name: "extra-tools/main.yml"
   include: extra-tools/main.yml

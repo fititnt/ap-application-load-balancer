@@ -8,8 +8,9 @@
   when:
     - "(alb_internal_openresty_apt_key is defined) and (alb_internal_openresty_apt_key.url is defined)"
 
-- name: "bootstrap | repositories-3rd-party | openresty.yml: apt_repository (TODO: fix to remove warnings later)"
+- name: "bootstrap | repositories-3rd-party | openresty.yml: apt_repository (TODO: fix to remove warnings later; fix apt cache update failed and remove ignore_errors )"
   apt_repository: "{{ alb_internal_openresty_apt_repository }}"
+  ignore_errors: true #TODO remove this later
   when:
     - "(alb_internal_openresty_apt_repository is defined) and (alb_internal_openresty_apt_repository.repo is defined)"
 
@@ -17,3 +18,19 @@
   yum_repository: "{{ alb_internal_openresty_yum_repository }}"
   when:
     - "(alb_internal_openresty_yum_repository is defined) and (alb_internal_openresty_yum_repository.baseurl is defined)"
+
+
+# TASK [ap-application-load-balancer : bootstrap | repositories-3rd-party | openresty.yml: apt_repository (TODO: fix to remove warnings later)] *****************************************************************************************
+# [WARNING]: Using a variable for a task's 'args' is unsafe in some situations (see https://docs.ansible.com/ansible/devel/reference_appendices/faq.html#argsplat-unsafe)
+
+# [WARNING]: Using a variable for a task's 'args' is unsafe in some situations (see https://docs.ansible.com/ansible/devel/reference_appendices/faq.html#argsplat-unsafe)
+
+# skipping: [ap_foxtrot_centos8]
+# skipping: [ap_golf_archilinux]
+# skipping: [rocha_anortosito_freebsd12]
+# skipping: [rocha_basalto_opensuse15]
+# fatal: [ap_echo_debian10]: FAILED! => {"changed": false, "msg": "apt cache update failed"}
+# fatal: [ap_delta_ubuntu18]: FAILED! => {"changed": false, "msg": "apt cache update failed"}
+
+    
+    

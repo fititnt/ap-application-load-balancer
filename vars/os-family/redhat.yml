@@ -39,17 +39,6 @@ alb_internal_bootstrap_ansible_control_node_packages:
   - name: ansible
     state: latest
 
-alb_internal_openresty_yum_repository:
-  name: "openresty"
-  description: "Official OpenResty Open Source Repository for CentOS"
-  # baseurl: 'https://openresty.org/package/centos/$releasever/$basearch' # This original line
-  baseurl: 'https://openresty.org/package/centos/7/$basearch'
-  skip_if_unavailable: false
-  gpgcheck: true
-  repo_gpgcheck: false
-  gpgkey: 'https://openresty.org/package/pubkey.gpg'
-  state: present
-  enabled: true
 
 ## ALB/HAProxy _________________________________________________________________
 # @see https://haproxy.debian.net/
@@ -63,6 +52,21 @@ alb_internal_haproxy_apt_repository: false
 alb_internal_openresty_package:
   name: "openresty"
   state: present
+
+# As 2019-12-10, OpenResty does not have a repository for Redhat Family 8
+# We will overide this manually on sub files
+alb_internal_openresty_yum_repository:
+  name: "openresty"
+  description: "Official OpenResty Open Source Repository for CentOS"
+  # baseurl: 'https://openresty.org/package/centos/$releasever/$basearch' # This original line
+  # baseurl: 'https://openresty.org/package/centos/7/$basearch' # The ideal hotfix for RedHat 8 Family 
+  baseurl: "https://openresty.org/package/centos/{{ (ansible_distribution_major_version is version('8', '>=')) | ternary('7','$releasever') }}/$basearch"
+  skip_if_unavailable: false
+  gpgcheck: true
+  repo_gpgcheck: false
+  gpgkey: 'https://openresty.org/package/pubkey.gpg'
+  state: present
+  enabled: true
 
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 alb_internal_bootstrap_alb_standard_hostname_use: 'redhat'

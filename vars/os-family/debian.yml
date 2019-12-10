@@ -13,14 +13,16 @@ alb_internal_package_manager_group: "{{ ansible_pkg_mgr }}"
 alb_internal_bootstrap_basic_tools:
   - name: aptitude
     state: present
+  - name: sudo
+    state: present
+  - name: software-properties-common
+    state: present
   - name: rsync
     state: present
   - name: net-tools
     state: present
 
 alb_internal_bootstrap_extra_tools:
-  - name: software-properties-common
-    state: present
   - name: python3-pip
     state: present
   - name: python3-setuptools 
@@ -41,9 +43,9 @@ alb_internal_haproxy_package:
 alb_internal_haproxy_apt_repository:
   repo: ppa:vbernat/haproxy-2.0
   state: present
-  # update_cache: yes # Debian 10 seems to have issues with this option sometimes
 
 ## ALB/OpenResty _______________________________________________________________
+# @see https://openresty.org/en/linux-packages.html
 alb_internal_openresty_package:
   name: "openresty"
   state: present
@@ -53,11 +55,9 @@ alb_internal_openresty_apt_key:
   state: present
 
 alb_internal_openresty_apt_repository:
-  repo: "deb http://openresty.org/package/ubuntu bionic main"
+  repo: "deb http://openresty.org/package/debian $(lsb_release -sc) main"
   state: "present"
   filename: "openresty"
-  # update_cache: yes # Debian 10 seems to have issues with this option sometimes
-
 
 # ALB/Bootstrap/AnsibleContolNode: is NOT installed by default.
 # requires: `alb_bootstrap_ansible_control_node: yes` explicit

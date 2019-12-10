@@ -3,5 +3,17 @@
 ## ALB/HAProxy _________________________________________________________________
 # @see https://haproxy.debian.net/
 alb_internal_haproxy_package:
-    name: "haproxy=2.0.\\*"
-    state: present
+  name: "haproxy=2.0.\\*"
+  state: present
+  
+alb_internal_haproxy_apt_repository:
+  repo: ppa:vbernat/haproxy-2.0
+  state: present
+
+## ALB/OpenResty _______________________________________________________________
+# @see https://openresty.org/en/linux-packages.html
+
+alb_internal_openresty_apt_repository:
+  repo: "deb http://openresty.org/package/ubuntu $(lsb_release -sc) main"
+  state: "present"
+  filename: "openresty"
