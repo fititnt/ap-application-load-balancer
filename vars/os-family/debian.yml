@@ -40,7 +40,8 @@ alb_internal_haproxy_package:
 
 alb_internal_haproxy_apt_repository:
   repo: ppa:vbernat/haproxy-2.0
-  # update_cache: yes
+  state: present
+  # update_cache: yes # Debian 10 seems to have issues with this option sometimes
 
 ## ALB/OpenResty _______________________________________________________________
 alb_internal_openresty_package:
@@ -55,8 +56,7 @@ alb_internal_openresty_apt_repository:
   repo: "deb http://openresty.org/package/ubuntu bionic main"
   state: "present"
   filename: "openresty"
-  update_cache: yes
-
+  # update_cache: yes # Debian 10 seems to have issues with this option sometimes
 
 
 # ALB/Bootstrap/AnsibleContolNode: is NOT installed by default.

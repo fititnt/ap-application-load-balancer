@@ -1029,6 +1029,8 @@ the new upgrades for some specific app.
   - `--tags alb-bootstrap --check`
     - Example: `ansible-playbook -i hosts main.yml --tags alb-bootstrap --check`
 
+<!--
+
 This ALB group of tasks have 3 responsabilities:
 
 1. If a node does not even have python installed, if you run with
@@ -1061,6 +1063,8 @@ This ALB group of tasks have 3 responsabilities:
 5. Then, if it will mark you server as bootstraped. By default it will not try
   to do any of these tasks again at least until AP-ALB Role was upgraded.
 
+-->
+
 #### Bootstrap Python installation
 - **Tested Operational Systems**:
   - CentOS 7, CentOS 8
@@ -1069,32 +1073,25 @@ This ALB group of tasks have 3 responsabilities:
   - Ubuntu: 18.04
 
 Ansible requires Python (better if is Python3) and for very new hosts, you may
-get this error message: "the module failed to execute correctly you probably
-need to set the interpreter".
+get this error message: _"the module failed to execute correctly you probably
+need to set the interpreter"_.
 
-If you run AP-ALB and the boostrap part detect the host don't have python, (tip:
-you may need `gather_facts: false` at least one time) the boostrap will try
-apply try [raw – Executes a low-down and dirty
-command](https://docs.ansible.com/ansible/latest/modules/raw_module.html) and
-do this for you. Then the next time you run (can be with `gather_facts: true`)
-it will try continue the boostraping.
+This means that you need to manually install python on your target hosts.
+**BUT** you can use AP-ALB to use try [raw – Executes a low-down and dirty
+command](https://docs.ansible.com/ansible/latest/modules/raw_module.html)
+and do it for you.
 
-```yaml
-# File: my-playbook-without-gather-facts.yml
-# Execute using:
-#   ansible-playbook my-playbook-without-gather-facts.yml
-#   ansible-playbook my-playbook-without-gather-facts.yml -e="alb_boostrap_caninstallpython=true"
+Check [example/bootstrap-even-python.yml](example/bootstrap-even-python.yml)
+for more details. It's not necessary (and not recommended) leave
+`alb_boostrap_python: "force"` saved on playbooks, since this part in special
+of the ALB/Bootstrap have very limited safety checks if you missuse. You can
+temporaly use via CLI extra commands, like this:
 
-- name: "ansible-linux-ha-cluster: bootstrap.yml"
-  hosts: all
-  remote_user: root
-  gather_facts: false
-  vars:
-    alb_boostrap_caninstallpython: true
-
-  roles:
-    - ap-application-load-balancer
+```bash
+ansible-playbook my-playbook-with-gather_facts-false.yml -i example.org, -e='alb_boostrap_python=force'
 ```
+
+Note, if even this fails, do it manually.
 
 ### HAProxy
 
