@@ -8,9 +8,13 @@
 
 alb_internal_root_user: 'root'
 alb_internal_root_group: 'root'
-alb_internal_package_manager_group: "{{ ansible_pkg_mgr }}"
+alb_internal_package_manager_group: "zypper"
 
 alb_internal_bootstrap_basic_tools:
+  - name: python-xml
+    state: present
+  - name: rpm
+    state: present
   - name: rsync
     state: present
   - name: net-tools
@@ -25,7 +29,7 @@ alb_internal_bootstrap_extra_tools:
     state: present
 
 ## ALB/HAProxy _________________________________________________________________
-# @see https://haproxy.debian.net/
+# @see https://software.opensuse.org/download.html?project=server%3Ahttp&package=haproxy
 alb_internal_haproxy_package:
   name: "haproxy"
   state: present
@@ -34,6 +38,12 @@ alb_internal_haproxy_package:
 alb_internal_openresty_package:
   name: "openresty"
   state: present
+
+alb_internal_openresty_zypper_repository:
+  repo: "https://openresty.org/package/opensuse/openresty.repo"
+  name: openresty
+  state: present
+  auto_import_keys: yes
 
 # ALB/Bootstrap/AnsibleContolNode: is NOT installed by default.
 # requires: `alb_bootstrap_ansible_control_node: yes` explicit

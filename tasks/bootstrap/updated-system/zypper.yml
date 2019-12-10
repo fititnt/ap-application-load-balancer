@@ -1,0 +1,10 @@
+---
+
+# FILE:            {{ role_path }}/tasks/bootstrap/updated-system/apt.yml
+# LICENSE:         Public Domain
+# SEE:             https://docs.ansible.com/ansible/latest/modules/package_module.html
+
+- name: "bootstrap | updated-system | zypper.yml: update caches"
+  zypper_repository:
+    repo: '*'
+    runrefresh: yes

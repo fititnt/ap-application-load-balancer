@@ -18,6 +18,11 @@
   when:
     - "(alb_internal_haproxy_yum_repository is defined) and (alb_internal_haproxy_yum_repository.baseurl is defined)"
 
+- name: "bootstrap | repositories-3rd-party | haproxy.yml: zypper_repository (TODO: fix to remove warnings later)"
+  zypper_repository: "{{ alb_internal_haproxy_zypper_repository }}"
+  when:
+    - "(alb_internal_haproxy_zypper_repository is defined) and (alb_internal_haproxy_zypper_repository.repo is defined)"
+
 ## TODO: solve
 # TASK [ap-application-load-balancer : bootstrap | repositories-3rd-party | haproxy.yml: apt_repository (TODO: fix to remove warnings later)] *******************************************************************************************
 # [WARNING]: Using a variable for a task's 'args' is unsafe in some situations (see https://docs.ansible.com/ansible/devel/reference_appendices/faq.html#argsplat-unsafe)

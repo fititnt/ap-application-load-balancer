@@ -6,7 +6,12 @@
 
 # fatal: [rocha_anortosito]: FAILED! => {"changed": false, "gid": 0, "group": "wheel", "mode": "0755", "msg": "chgrp failed: failed to look up group root", "owner": "root", "path": "/opt/alb/", "size": 2, "state": "directory", "uid": 0}
 
-- name: "bootstrap | alb-standard | user-groups: alb user, alb group"
+- name: "bootstrap | alb-standard | user-groups: alb group"
+  group:
+    name: alb
+    state: present
+
+- name: "bootstrap | alb-standard | user-groups: alb user"
   user:
     name: alb
     group: alb

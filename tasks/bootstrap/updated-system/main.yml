@@ -18,6 +18,11 @@
   when:
     - "(alb_internal_package_manager_group is defined) and (alb_internal_package_manager_group == 'yum')"
 
+- name: "zypper.yml"
+  include: "zypper.yml"
+  when:
+    - "(alb_internal_package_manager_group is defined) and (alb_internal_package_manager_group == 'zypper')"
+
 #- name: "pkgng.yml"
 #  include: "pkgng.yml"
 #  when:
