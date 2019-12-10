@@ -17,4 +17,17 @@
   yum_repository: "{{ alb_internal_haproxy_yum_repository }}"
   when:
     - "(alb_internal_haproxy_yum_repository is defined) and (alb_internal_haproxy_yum_repository.baseurl is defined)"
+
+## TODO: solve
+# TASK [ap-application-load-balancer : bootstrap | repositories-3rd-party | haproxy.yml: apt_repository (TODO: fix to remove warnings later)] *******************************************************************************************
+# [WARNING]: Using a variable for a task's 'args' is unsafe in some situations (see https://docs.ansible.com/ansible/devel/reference_appendices/faq.html#argsplat-unsafe)
+
+# [WARNING]: Using a variable for a task's 'args' is unsafe in some situations (see https://docs.ansible.com/ansible/devel/reference_appendices/faq.html#argsplat-unsafe)
+
+# skipping: [rocha_anortosito_freebsd12]
+# skipping: [ap_foxtrot_centos8]
+# skipping: [ap_golf_archilinux]
+# skipping: [rocha_basalto_opensuse15]
+# ok: [ap_delta_ubuntu18]
+# fatal: [ap_echo_debian10]: FAILED! => {"changed": false, "msg": "apt cache update failed"}
     

@@ -111,7 +111,7 @@
     - alb_manange_openresty is sameas true
 
 - name: HAproxy
-  include: haproxy/haproxy.yml
+  include: haproxy/main.yml
   tags:
     - alb
     - alb-haproxy

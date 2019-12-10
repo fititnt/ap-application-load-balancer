@@ -1,0 +1,10 @@
+---
+# FILE:            {{ role_path }}/tasks/haproxy/compilation.yml
+# LICENSE:         Public Domain
+
+# Message for who does not read documentation, but is reading the sources
+- name: "haproxy | compilation: this feature is not here (see bootstrap/repositories-from-sources)"
+  fail:
+    msg: >
+      Trying to import wrong file? This message is a reminder that ALB/HAproxy
+      does not manange the repositories, but at bootstrap/repositories-from-sources

@@ -12,13 +12,13 @@
 
 # https://haproxy.debian.net/#?distribution=Ubuntu&release=bionic&version=2.0
 
-- name: "haproxy (Debian/Ubuntu) | add-apt-repository ppa:vbernat/haproxy-2.0"
-  apt_repository:
-    repo: ppa:vbernat/haproxy-2.0
-    update_cache: yes
-  when:
-   - "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
-   - "alb_manange_haproxy_repository is defined and alb_manange_haproxy_repository|bool"
+# - name: "haproxy (Debian/Ubuntu) | add-apt-repository ppa:vbernat/haproxy-2.0"
+#   apt_repository:
+#     repo: ppa:vbernat/haproxy-2.0
+#     update_cache: yes
+#   when:
+#    - "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
+#    - "alb_manange_haproxy_repository is defined and alb_manange_haproxy_repository|bool"
 
 - name: 'haproxy (Debian/Ubuntu) | apt-get install haproxy=2.0.\*'
   apt:
@@ -35,12 +35,12 @@
 #   when:
 #     - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
 
-#- name: "haproxy (CentOS/RHEL) | Install HAProxy"
-#  package:
-#    name: haproxy
-#    state: present
-#  when:
-#    - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
+- name: "haproxy (CentOS/RHEL) | Install HAProxy"
+  package:
+    name: haproxy
+    state: present
+  when:
+   - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
 
 - name: "haproxy (CentOS/RHEL) | Install HAProxy"
   yum:
@@ -63,33 +63,3 @@
   when:
     - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
     - "alb_manange_haproxy_install is defined and alb_manange_haproxy_install|bool"
-
-# Tive que logar diretamente e rodar 
-#    sudo dnf install haproxy -y
-#    systemctl start haproxy
-
-- name: "haproxy | /etc/haproxy/haproxy.cfg"
-  template:
-    # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
-    src: "{{ alb_haproxy_haproxy_template }}"
-    dest: /etc/haproxy/haproxy.cfg
-    owner: "{{ alb_internal_root_user }}"
-    group: "{{ alb_internal_root_group }}"
-    mode: '0644'
-    backup: yes
-  notify:
-    - reload haproxy
-
-# Enabled/Started must be AFTER moving new /etc/haproxy/haproxy.cfg
-# configurations or Ansible will not be able to update one new valid
-# configuration if old one was already with error. By moving this step
-# after we avoid user being forced to solve manually on the server 
-- name: haproxy | sudo systemctl enable haproxy.service
-  systemd:
-    name: haproxy
-    state: started
-    enabled: yes
-
-- name: haproxy | facts
-  debug:
-    msg: "{{ alb_haproxy_facts }}"

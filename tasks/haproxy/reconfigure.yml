@@ -1,9 +1,9 @@
 ---
-# FILE:            {{ role_path }}/tasks/haproxy/configure.yml
+# FILE:            {{ role_path }}/tasks/haproxy/reconfigure.yml
 # LICENSE:         Public Domain
 
 
-- name: "haproxy | configure: /etc/haproxy/haproxy.cfg"
+- name: "haproxy | reconfigure: /etc/haproxy/haproxy.cfg"
   template:
     # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
     src: "{{ alb_haproxy_haproxy_template }}"
@@ -19,12 +19,12 @@
 # configurations or Ansible will not be able to update one new valid
 # configuration if old one was already with error. By moving this step
 # after we avoid user being forced to solve manually on the server 
-- name: "haproxy | configure: sudo systemctl enable haproxy.service"
+- name: "haproxy | reconfigure: sudo systemctl enable haproxy.service"
   systemd:
     name: haproxy
     state: started
     enabled: yes
 
-- name: "haproxy | configure: facts"
+- name: "haproxy | reconfigure: facts"
   debug:
     msg: "{{ alb_haproxy_facts }}"

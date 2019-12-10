@@ -33,9 +33,21 @@ alb_internal_bootstrap_ansible_control_node_packages:
 alb_internal_openresty_apt_key: false
 alb_internal_openresty_apt_repository: false
 alb_internal_openresty_yum_repository: false
+
+## ALB/HAProxy _________________________________________________________________
+# @see https://haproxy.debian.net/
+alb_internal_haproxy_package:
+  name: "haproxy"
+  state: present
+
 alb_internal_haproxy_apt_key: false
 alb_internal_haproxy_apt_repository: false
 alb_internal_ohaproxy_yum_repository: false
+
+## ALB/OpenResty _______________________________________________________________
+alb_internal_openresty_package:
+  name: "openresty"
+  state: present
 
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 # alb_internal_bootstrap_alb_standard_hostname_use: 'debian'

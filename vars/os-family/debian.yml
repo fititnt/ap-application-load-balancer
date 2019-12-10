@@ -19,6 +19,8 @@ alb_internal_bootstrap_basic_tools:
     state: present
 
 alb_internal_bootstrap_extra_tools:
+  - name: software-properties-common
+    state: present
   - name: python3-pip
     state: present
   - name: python3-setuptools 
@@ -30,6 +32,21 @@ alb_internal_bootstrap_extra_tools:
   - name: nmap
     state: present
 
+## ALB/HAProxy _________________________________________________________________
+# @see https://haproxy.debian.net/
+alb_internal_haproxy_package:
+  name: "haproxy=2.0.\\*"
+  state: present
+
+alb_internal_haproxy_apt_repository:
+  repo: ppa:vbernat/haproxy-2.0
+  # update_cache: yes
+
+## ALB/OpenResty _______________________________________________________________
+alb_internal_openresty_package:
+  name: "openresty"
+  state: present
+
 alb_internal_openresty_apt_key:
   url: "https://openresty.org/package/pubkey.gpg"
   state: present
@@ -40,9 +57,7 @@ alb_internal_openresty_apt_repository:
   filename: "openresty"
   update_cache: yes
 
-alb_internal_haproxy_apt_repository:
-  repo: ppa:vbernat/haproxy-2.0
-  update_cache: yes
+
 
 # ALB/Bootstrap/AnsibleContolNode: is NOT installed by default.
 # requires: `alb_bootstrap_ansible_control_node: yes` explicit

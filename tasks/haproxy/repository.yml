@@ -1,0 +1,8 @@
+---
+
+# Message for who does not read documentation, but is reading the sources
+- name: "haproxy | repository: this feature is not here (see bootstrap/repositories/*)"
+  fail:
+    msg: >
+      Trying to import wrong file? This message is a reminder that ALB/HAproxy
+      does not manange the repositories, but at bootstrap/repositories-*

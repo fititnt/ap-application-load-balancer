@@ -51,7 +51,18 @@ alb_internal_openresty_yum_repository:
   state: present
   enabled: true
 
+## ALB/HAProxy _________________________________________________________________
+# @see https://haproxy.debian.net/
+alb_internal_haproxy_package:
+  name: "haproxy"
+  state: present
+
 alb_internal_haproxy_apt_repository: false
+
+## ALB/OpenResty _______________________________________________________________
+alb_internal_openresty_package:
+  name: "openresty"
+  state: present
 
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 alb_internal_bootstrap_alb_standard_hostname_use: 'redhat'

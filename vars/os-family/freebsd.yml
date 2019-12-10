@@ -37,6 +37,17 @@ alb_internal_bootstrap_extra_tools:
 # OpenResty https://openresty.org/en/installation.html
 # alb_internal_bootstrap_repositories_from_source:
 
+## ALB/HAProxy _________________________________________________________________
+# @see https://haproxy.debian.net/
+alb_internal_haproxy_package:
+  name: "haproxy"
+  state: present
+
+## ALB/OpenResty _______________________________________________________________
+alb_internal_openresty_package:
+  name: "openresty"
+  state: present
+
 ## ALB/Components not implemented ______________________________________________
 alb_internal_alert_critical_ufw: >
   FreeBSD | Critical error! You are trying test native ALB/UFW FreeBSD-like

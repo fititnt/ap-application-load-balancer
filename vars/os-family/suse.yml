@@ -24,6 +24,17 @@ alb_internal_bootstrap_extra_tools:
   - name: nmap
     state: present
 
+## ALB/HAProxy _________________________________________________________________
+# @see https://haproxy.debian.net/
+alb_internal_haproxy_package:
+  name: "haproxy"
+  state: present
+
+## ALB/OpenResty _______________________________________________________________
+alb_internal_openresty_package:
+  name: "openresty"
+  state: present
+
 # ALB/Bootstrap/AnsibleContolNode: is NOT installed by default.
 # requires: `alb_bootstrap_ansible_control_node: yes` explicit
 alb_internal_bootstrap_ansible_control_node_apt_repository:

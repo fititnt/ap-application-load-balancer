@@ -3,11 +3,15 @@
 # LICENSE:         Public Domain
 
 # ansible-playbook -i hosts.yml infra-alb.yml --tags="alb-haproxy" --extra-vars "alb_forceredeploy=yes"
+# ansible-playbook -i hosts.yml infra-alb.yml --tags="alb-haproxy,alb-bootstrap-repositories-3rd-party" --extra-vars "alb_forceredeploy=yes"
 
 - name: "install.yml"
+  include: "{{ role_path }}/tasks/haproxy/install.yml"
   when:
+    - "(alb_internal_haproxy_disable_install is not defined) or (not  alb_internal_haproxy_disable_install|bool)"
     - "(alb_manange_haproxy_install is defined) and (alb_manange_haproxy_install|bool)"
 
-- name: "configure.yml"
+- name: "reconfigure.yml"
+  include: "{{ role_path }}/tasks/haproxy/reconfigure.yml"
   #when:
   #  - "(alb_manange_haproxy_install is defined) and (alb_manange_haproxy_install|bool)"
