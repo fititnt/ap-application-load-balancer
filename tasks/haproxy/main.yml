@@ -1,0 +1,13 @@
+---
+# FILE:            {{ role_path }}/tasks/haproxy/main.yml
+# LICENSE:         Public Domain
+
+# ansible-playbook -i hosts.yml infra-alb.yml --tags="alb-haproxy" --extra-vars "alb_forceredeploy=yes"
+
+- name: "install.yml"
+  when:
+    - "(alb_manange_haproxy_install is defined) and (alb_manange_haproxy_install|bool)"
+
+- name: "configure.yml"
+  #when:
+  #  - "(alb_manange_haproxy_install is defined) and (alb_manange_haproxy_install|bool)"

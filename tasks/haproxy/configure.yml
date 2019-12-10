@@ -1,0 +1,30 @@
+---
+# FILE:            {{ role_path }}/tasks/haproxy/configure.yml
+# LICENSE:         Public Domain
+
+
+- name: "haproxy | configure: /etc/haproxy/haproxy.cfg"
+  template:
+    # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
+    src: "{{ alb_haproxy_haproxy_template }}"
+    dest: /etc/haproxy/haproxy.cfg
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: '0644'
+    backup: yes
+  notify:
+    - reload haproxy
+
+# Enabled/Started must be AFTER moving new /etc/haproxy/haproxy.cfg
+# configurations or Ansible will not be able to update one new valid
+# configuration if old one was already with error. By moving this step
+# after we avoid user being forced to solve manually on the server 
+- name: "haproxy | configure: sudo systemctl enable haproxy.service"
+  systemd:
+    name: haproxy
+    state: started
+    enabled: yes
+
+- name: "haproxy | configure: facts"
+  debug:
+    msg: "{{ alb_haproxy_facts }}"
