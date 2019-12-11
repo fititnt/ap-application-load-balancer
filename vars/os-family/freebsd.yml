@@ -53,6 +53,17 @@ alb_internal_openresty_package:
 # alb_internal_status_localports: "netstat -ntulp"
 alb_internal_status_localports: "sockstat -4l"
 alb_internal_status_diskspace: "df -h"
+alb_internal_status_availablepackages_haproxy: "pkg search haproxy"
+alb_internal_status_availablepackages_openresty: "pkg search openresty"
+alb_internal_status_availablepackages_python: "pkg search python"
+alb_internal_status_availablepackages_lua: "pkg search lua*"
+alb_internal_status_availablepackages_luarocks: "pkg search luarocks"
+
+alb_internal_status_installedpackages_haproxy: "pkg info haproxy"
+alb_internal_status_installedpackages_openresty: "pkg info openresty"
+alb_internal_status_installedpackages_python: "pkg info python"
+alb_internal_status_installedpackages_lua: "pkg info lua"
+alb_internal_status_installedpackages_luarocks: "pkg info luarocks"
 
 ## ALB/Components not implemented ______________________________________________
 alb_internal_alert_critical_ufw: >

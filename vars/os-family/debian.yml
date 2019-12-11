@@ -83,5 +83,17 @@ alb_internal_bootstrap_ansible_control_node_packages:
 alb_internal_status_localports: "netstat -ntulp"
 alb_internal_status_diskspace: "df -h"
 
+alb_internal_status_availablepackages_haproxy: "apt search haproxy"
+alb_internal_status_availablepackages_openresty: "apt search openresty"
+alb_internal_status_availablepackages_python: "apt search python"
+alb_internal_status_availablepackages_lua: "apt search lua*"
+alb_internal_status_availablepackages_luarocks: "apt search luarocks"
+
+alb_internal_status_installedpackages_haproxy: "apt-cache policy haproxy"
+alb_internal_status_installedpackages_openresty: "apt-cache policy openresty"
+alb_internal_status_installedpackages_python: "apt-cache policy python"
+alb_internal_status_installedpackages_lua: "apt-cache policy lua"
+alb_internal_status_installedpackages_luarocks: "apt-cache policy luarocks"
+
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 alb_internal_bootstrap_alb_standard_hostname_use: 'debian'

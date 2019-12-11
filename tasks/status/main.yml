@@ -3,6 +3,21 @@
 # FILE:            {{ role_path }}/status/main.yml
 # LICENSE:         Public Domain
 
+
+# TODO: move to end of this list
+- name: "installed-packages.yml"
+  include: installed-packages.yml
+  tags:
+    - alb-status-alb
+    - alb-status-installed-packages
+
+# TODO: move to end of this list
+- name: "available-packages.yml"
+  include: available-packages.yml
+  tags:
+    - alb-status-alb
+    - alb-status-available-packages
+
 - name: "network.yml"
   include: network.yml
   tags:

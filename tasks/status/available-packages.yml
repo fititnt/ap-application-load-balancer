@@ -1,0 +1,107 @@
+---
+
+# FILE:            {{ role_path }}/status/available-packages.yml
+# LICENSE:         Public Domain
+
+# TODO: this script very likely could be converted in some sort of loop (fititnt, 2019-12-11 03:43 BRT)
+
+# HAproxy
+- name: "status | available-packages.yml: haproxy, detect"
+  command: "{{ alb_internal_status_availablepackages_haproxy }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_availablepackages_haproxy
+  when:
+    - "alb_internal_status_availablepackages_haproxy is defined and alb_internal_status_availablepackages_haproxy"
+
+- name: "status | available-packages.yml: haproxy, print"
+  debug:
+    msg:
+      stdout_lines: "{{ alb_status_availablepackages_haproxy.stdout_lines | default('undefined') }}"
+      stderr_lines: "{{ alb_status_availablepackages_haproxy.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_status_availablepackages_haproxy is defined and alb_status_availablepackages_haproxy"
+    - "(alb_status_availablepackages_haproxy.failed is not defined) or (alb_status_availablepackages_haproxy.failed|bool is sameas false)"
+
+# OpenResty
+- name: "status | available-packages.yml: openresty, detect"
+  command: "{{ alb_internal_status_availablepackages_openresty }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_availablepackages_openresty
+  when:
+    - "alb_internal_status_availablepackages_openresty is defined and alb_internal_status_availablepackages_openresty"
+
+- name: "status | available-packages.yml: openresty, print"
+  debug:
+    msg:
+      stdout_lines: "{{ alb_status_availablepackages_openresty.stdout_lines | default('undefined') }}"
+      stderr_lines: "{{ alb_status_availablepackages_openresty.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_status_availablepackages_openresty is defined and alb_status_availablepackages_openresty"
+    - "(alb_status_availablepackages_openresty.failed is not defined) or (alb_status_availablepackages_openresty.failed|bool is sameas false)"
+
+# Python
+- name: "status | available-packages.yml: python, detect"
+  command: "{{ alb_internal_status_availablepackages_python }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_availablepackages_python
+  when:
+    - "alb_internal_status_availablepackages_python is defined and alb_internal_status_availablepackages_python"
+
+- name: "status | available-packages.yml: python, print"
+  debug:
+    msg:
+      stdout_lines: "{{ alb_status_availablepackages_python.stdout_lines | default('undefined') }}"
+      stderr_lines: "{{ alb_status_availablepackages_python.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_status_availablepackages_python is defined and alb_status_availablepackages_python"
+    - "(alb_status_availablepackages_python.failed is not defined) or (alb_status_availablepackages_python.failed|bool is sameas false)"
+
+
+# Lua
+- name: "status | available-packages.yml: lua, detect"
+  command: "{{ alb_internal_status_availablepackages_lua }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_availablepackages_lua
+  when:
+    - "alb_internal_status_availablepackages_lua is defined and alb_internal_status_availablepackages_lua"
+
+- name: "status | available-packages.yml: lua, print"
+  debug:
+    msg:
+      stdout_lines: "{{ alb_status_availablepackages_lua.stdout_lines | default('undefined') }}"
+      stderr_lines: "{{ alb_status_availablepackages_lua.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_status_availablepackages_lua is defined and alb_status_availablepackages_lua"
+    - "(alb_status_availablepackages_lua.failed is not defined) or (alb_status_availablepackages_lua.failed|bool is sameas false)"
+
+# LuaRocks
+- name: "status | available-packages.yml: luarocks, detect"
+  command: "{{ alb_internal_status_availablepackages_luarocks }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_availablepackages_luarocks
+  when:
+    - "alb_internal_status_availablepackages_luarocks is defined and alb_internal_status_availablepackages_luarocks"
+
+- name: "status | available-packages.yml: luarocks, print"
+  debug:
+    msg:
+      stdout_lines: "{{ alb_status_availablepackages_luarocks.stdout_lines | default('undefined') }}"
+      stderr_lines: "{{ alb_status_availablepackages_luarocks.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_status_availablepackages_luarocks is defined and alb_status_availablepackages_luarocks"
+    - "(alb_status_availablepackages_luarocks.failed is not defined) or (alb_status_availablepackages_luarocks.failed|bool is sameas false)"

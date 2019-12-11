@@ -2,6 +2,10 @@
 
 > @TODO: improve this debugging-quickstart.md draft (fititnt, 2019-11-16 23:06 BRT)
 
+> @TODO: mention that after AP-ALB v0.8.4-alpha we have
+[ALB/Status][README.md#status] to make automated checks for quickstart debugging
+(fititnt, 2019-12-11 02:44 BRT)
+
 ## In case of emergency
 
 > If editing/testing configurations directly on a production server (_actually

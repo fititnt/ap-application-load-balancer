@@ -7,7 +7,7 @@ alb_name_datacenter: "dc1"  # Datacenter identifier of a group of active nodes
 
 # ALB/Boostrap/alb-standard can both set up each node hostname and timezone
 # based on variables or hardcoded values. Set to empty "" or false not change
-alb_node_hostname: "{{ inventory_hostname }}"
+alb_node_hostname: "{{ inventory_hostname | replace('_', '-') }}"
 alb_node_timezone: "UTC"
 
 alb_hide_alb: yes           # This and 'alb_forcedebug: no' means try to hide even references to NGinx/OpenResty

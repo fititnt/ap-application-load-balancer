@@ -1,0 +1,107 @@
+---
+
+# FILE:            {{ role_path }}/status/installed-packages.yml
+# LICENSE:         Public Domain
+
+# TODO: this script very likely could be converted in some sort of loop (fititnt, 2019-12-11 03:43 BRT)
+
+# HAproxy
+- name: "status | installed-packages.yml: haproxy, detect"
+  command: "{{ alb_internal_status_installedpackages_haproxy }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_installedpackages_haproxy
+  when:
+    - "alb_internal_status_installedpackages_haproxy is defined and alb_internal_status_installedpackages_haproxy"
+
+- name: "status | installed-packages.yml: haproxy, print"
+  debug:
+    msg:
+      stdout_lines: "{{ alb_status_installedpackages_haproxy.stdout_lines | default('undefined') }}"
+      stderr_lines: "{{ alb_status_installedpackages_haproxy.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_status_installedpackages_haproxy is defined and alb_status_installedpackages_haproxy"
+    - "(alb_status_installedpackages_haproxy.failed is not defined) or (alb_status_installedpackages_haproxy.failed|bool is sameas false)"
+
+# OpenResty
+- name: "status | installed-packages.yml: openresty, detect"
+  command: "{{ alb_internal_status_installedpackages_openresty }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_installedpackages_openresty
+  when:
+    - "alb_internal_status_installedpackages_openresty is defined and alb_internal_status_installedpackages_openresty"
+
+- name: "status | installed-packages.yml: openresty, print"
+  debug:
+    msg:
+      stdout_lines: "{{ alb_status_installedpackages_openresty.stdout_lines | default('undefined') }}"
+      stderr_lines: "{{ alb_status_installedpackages_openresty.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_status_installedpackages_openresty is defined and alb_status_installedpackages_openresty"
+    - "(alb_status_installedpackages_openresty.failed is not defined) or (alb_status_installedpackages_openresty.failed|bool is sameas false)"
+
+
+# Python
+- name: "status | installed-packages.yml: python, detect"
+  command: "{{ alb_internal_status_installedpackages_python }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_installedpackages_python
+  when:
+    - "alb_internal_status_installedpackages_python is defined and alb_internal_status_installedpackages_python"
+
+- name: "status | installed-packages.yml: python, print"
+  debug:
+    msg:
+      stdout_lines: "{{ alb_status_installedpackages_python.stdout_lines | default('undefined') }}"
+      stderr_lines: "{{ alb_status_installedpackages_python.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_status_installedpackages_python is defined and alb_status_installedpackages_python"
+    - "(alb_status_installedpackages_python.failed is not defined) or (alb_status_installedpackages_python.failed|bool is sameas false)"
+
+# Lua
+- name: "status | installed-packages.yml: lua, detect"
+  command: "{{ alb_internal_status_installedpackages_lua }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_installedpackages_lua
+  when:
+    - "alb_internal_status_installedpackages_lua is defined and alb_internal_status_installedpackages_lua"
+
+- name: "status | installed-packages.yml: lua, print"
+  debug:
+    msg:
+      stdout_lines: "{{ alb_status_installedpackages_lua.stdout_lines | default('undefined') }}"
+      stderr_lines: "{{ alb_status_installedpackages_lua.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_status_installedpackages_lua is defined and alb_status_installedpackages_lua"
+    - "(alb_status_installedpackages_lua.failed is not defined) or (alb_status_installedpackages_lua.failed|bool is sameas false)"
+
+# LuaRocks
+- name: "status | installed-packages.yml: luarocks, detect"
+  command: "{{ alb_internal_status_installedpackages_luarocks }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_installedpackages_luarocks
+  when:
+    - "alb_internal_status_installedpackages_luarocks is defined and alb_internal_status_installedpackages_luarocks"
+
+- name: "status | installed-packages.yml: luarocks, print"
+  debug:
+    msg:
+      stdout_lines: "{{ alb_status_installedpackages_luarocks.stdout_lines | default('undefined') }}"
+      stderr_lines: "{{ alb_status_installedpackages_luarocks.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_status_installedpackages_luarocks is defined and alb_status_installedpackages_luarocks"
+    - "(alb_status_installedpackages_luarocks.failed is not defined) or (alb_status_installedpackages_luarocks.failed|bool is sameas false)"

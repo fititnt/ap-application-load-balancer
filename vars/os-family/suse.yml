@@ -52,5 +52,17 @@ alb_internal_openresty_zypper_repository:
 alb_internal_status_localports: "netstat -ntulp"
 alb_internal_status_diskspace: "df -h"
 
+alb_internal_status_availablepackages_haproxy: "zypper search haproxy"
+alb_internal_status_availablepackages_openresty: "zypper search openresty"
+alb_internal_status_availablepackages_python: "zypper search python"
+alb_internal_status_availablepackages_lua: "zypper search lua*"
+alb_internal_status_availablepackages_luarocks: "zypper search luarocks"
+
+alb_internal_status_installedpackages_haproxy: "zypper info -t pattern haproxy"
+alb_internal_status_installedpackages_openresty: "zypper info -t pattern openresty"
+alb_internal_status_installedpackages_python: "zypper info -t pattern python"
+alb_internal_status_installedpackages_lua: "zypper info -t pattern lua"
+alb_internal_status_installedpackages_luarocks: "zypper info -t pattern luarocks"
+
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 alb_internal_bootstrap_alb_standard_hostname_use: 'sles'

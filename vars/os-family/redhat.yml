@@ -71,5 +71,17 @@ alb_internal_openresty_yum_repository:
 alb_internal_status_localports: "netstat -ntulp"
 alb_internal_status_diskspace: "df -h"
 
+alb_internal_status_availablepackages_haproxy: "yum search haproxy"
+alb_internal_status_availablepackages_openresty: "yum search openresty"
+alb_internal_status_availablepackages_python: "yum search python"
+alb_internal_status_availablepackages_lua: "yum search lua*"
+alb_internal_status_availablepackages_luarocks: "yum search luarocks"
+
+alb_internal_status_installedpackages_haproxy: "yum info haproxy"
+alb_internal_status_installedpackages_openresty: "yum info openresty"
+alb_internal_status_installedpackages_python: "yum info python"
+alb_internal_status_installedpackages_lua: "yum info lua"
+alb_internal_status_installedpackages_luarocks: "yum info luarocks"
+
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 alb_internal_bootstrap_alb_standard_hostname_use: 'redhat'

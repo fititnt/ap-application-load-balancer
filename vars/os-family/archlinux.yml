@@ -53,5 +53,17 @@ alb_internal_openresty_package:
 alb_internal_status_localports: "netstat -ntulp"
 alb_internal_status_diskspace: "df -h"
 
+alb_internal_status_availablepackages_haproxy: "pacman -Ss haproxy"
+alb_internal_status_availablepackages_openresty: "pacman -Ss openresty"
+alb_internal_status_availablepackages_python: "pacman -Ss python"
+alb_internal_status_availablepackages_lua: "pacman -Ss lua"
+alb_internal_status_availablepackages_luarocks: "pacman -Ss luarocks"
+
+alb_internal_status_installedpackages_haproxy: "pacman -Qi haproxy"
+alb_internal_status_installedpackages_openresty: "pacman -Qi openresty"
+alb_internal_status_installedpackages_python: "pacman -Qi python"
+alb_internal_status_installedpackages_lua: "pacman -Qi lua"
+alb_internal_status_installedpackages_luarocks: "pacman -Qi luarocks"
+
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 # alb_internal_bootstrap_alb_standard_hostname_use: 'debian'

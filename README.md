@@ -119,6 +119,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
         - [Run OpenResty without HAProxy](#run-openresty-without-haproxy)
         - [lua-resty-auto-ssl](#lua-resty-auto-ssl)
     - [SanityCheck](#sanitycheck)
+    - [Status](#status)
     - [Sysapps](#sysapps)
     - [UFW](#ufw)
         - [Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)](#applying-only-firewall-rules-on-a-specific-server-ie-do-not-install-haproxy-openresty)
@@ -1243,6 +1244,28 @@ This ALB component (enabled by default) will run at very start of a play and
 try to do some very basic sanity checks that have a tendency to cause a
 node or a [entire cluster to enter on a non-operational state](https://en.wiktionary.org/wiki/clusterfuck)
 via human mistakes on ALB configurations.
+
+### Status
+> This **mode is safe run**, and can be used even in **Check Mode ("Dry Run")**
+> with `--check` parameter. It's also expected (and you will be informed) that
+> some checks will soft fail (like trying to check `alb_apps.facts`) on a node
+> that does not have apps.
+
+```bash
+# Note: by default the standard status checks are always run at the end of a
+#       successful. This may slow down your run, but we're consider a good
+#       default.
+
+#       BUT you may have a system so broken that not even the status checks
+#       will start or you want call it directly
+
+# This skips other steps and go diretly to minimal status checks
+ansible-playbook playbook.yml -i hosts.yml --check --tags="alb-status"
+
+# TODO: implement a mode even more verbose:
+ansible-playbook playbook.yml -i hosts.yml --check --tags="alb-status-full"
+```
+
 
 ### Sysapps
 > This feature still a draft (fititnt, 2019-12-02 14:25 BRT)
