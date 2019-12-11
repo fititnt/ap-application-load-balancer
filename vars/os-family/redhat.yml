@@ -39,7 +39,6 @@ alb_internal_bootstrap_ansible_control_node_packages:
   - name: ansible
     state: latest
 
-
 ## ALB/HAProxy _________________________________________________________________
 # @see https://haproxy.debian.net/
 alb_internal_haproxy_package:

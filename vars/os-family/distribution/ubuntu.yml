@@ -17,3 +17,12 @@ alb_internal_openresty_apt_repository:
   repo: "deb http://openresty.org/package/ubuntu $(lsb_release -sc) main"
   state: "present"
   filename: "openresty"
+
+## ALB/Bootstrap/AnsibleContolNode: is NOT installed by default ________________
+# requires: `alb_bootstrap_ansible_control_node: yes` explicit
+alb_internal_bootstrap_ansible_control_node_apt_repository:
+  - repo: "ppa:ansible/ansible"
+    state: present
+alb_internal_bootstrap_ansible_control_node_packages:
+  - name: ansible
+    state: latest

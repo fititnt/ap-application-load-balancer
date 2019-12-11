@@ -1,6 +1,16 @@
 ---
 
 
+# TASK [ap-application-load-balancer : openresty (CentOS/RHEL) | luarocks: dnf install -y luarocks] *************************************************************************************************************************************
+# skipping: [ap_echo_debian10]
+# skipping: [ap_delta_ubuntu18]
+# skipping: [rocha_anortosito_freebsd12]
+# skipping: [ap_golf_archilinux]
+# fatal: [ap_foxtrot_centos8]: FAILED! => {"changed": false, "failures": ["No package luarocks available."], "msg": "Failed to install some of the specified packages", "rc": 1, "results": []}
+# TASK [ap-application-load-balancer : openresty | resty-auto-ssl: sudo luarocks install lua-resty-auto-ssl] ****************************************************************************************************************************
+# fatal: [ap_golf_archilinux]: FAILED! => {"changed": true, "cmd": "luarocks install lua-resty-auto-ssl", "delta": "0:00:00.007213", "end": "2019-12-10 12:59:27.287421", "msg": "non-zero return code", "rc": 127, "start": "2019-12-10 12:59:27.280208", "stderr": "/bin/sh: luarocks: command not found", "stderr_lines": ["/bin/sh: luarocks: command not found"], "stdout": "", "stdout_lines": []}
+
+
 - name: /etc/ansible/facts.d/alb_openresty.fact
   template:
     src: files/alb_openresty.fact

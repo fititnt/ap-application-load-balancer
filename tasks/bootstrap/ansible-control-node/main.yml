@@ -11,6 +11,11 @@
 #       {{ role_path }}/vars/os-family/*. This may be improved on future,
 #       like adding some awareness about other nodes
 
+- name: "bootstrap | ansible-control-node | main.yml: apt_key (TODO: fix to remove warnings later)"
+  apt_key: "{{ alb_internal_bootstrap_ansible_control_node_apt_key }}"
+  when:
+    - "(alb_internal_bootstrap_ansible_control_node_apt_key is defined) and ((alb_internal_bootstrap_ansible_control_node_apt_key.id is defined) or (alb_internal_bootstrap_ansible_control_node_apt_key.url is defined))"
+
 - name: "bootstrap | ansible-control-node | apt_repository"
   apt_repository:
     repo: "{{ item.repo }}"
