@@ -28,7 +28,6 @@
     - alb
     - always
 
-
 ## Variable loading based on node Operational System ___________________________
 - name: "ALB | OS Family variables"
   include_vars: "{{ item }}"
@@ -155,6 +154,14 @@
   when:
     - alb_manange_all is sameas true
     - alb_manange_ufw is sameas true
+
+- name: status/main.yml
+  include: status/main.yml
+  tags:
+    - always
+    - alb
+    - alb-status
+    - alb-status-final
 
 ## Goodbye _____________________________________________________________________
 

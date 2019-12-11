@@ -8,7 +8,7 @@
 
 alb_internal_root_user: 'root'
 alb_internal_root_group: 'root'
-alb_internal_package_manager_group: "{{ ansible_pkg_mgr }}"
+alb_internal_package_manager_group: "apt"
 
 alb_internal_bootstrap_basic_tools:
   - name: aptitude
@@ -37,7 +37,7 @@ alb_internal_bootstrap_extra_tools:
 ## ALB/HAProxy _________________________________________________________________
 # @see https://haproxy.debian.net/
 alb_internal_haproxy_package:
-  name: "haproxy=2.0.\\*"
+  name: 'haproxy=2.0.\*'
   state: present
 
 # TASK [ap-application-load-balancer : haproxy | install.yml: generic method] ***********************************************************************************************************************************************************
@@ -78,6 +78,10 @@ alb_internal_bootstrap_ansible_control_node_apt_repository:
 alb_internal_bootstrap_ansible_control_node_packages:
   - name: ansible
     state: latest
+
+## ALB/Status __________________________________________________________________
+alb_internal_status_localports: "netstat -ntulp"
+alb_internal_status_diskspace: "df -h"
 
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 alb_internal_bootstrap_alb_standard_hostname_use: 'debian'

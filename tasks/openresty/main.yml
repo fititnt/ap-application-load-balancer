@@ -10,12 +10,24 @@
 # TASK [ap-application-load-balancer : openresty | resty-auto-ssl: sudo luarocks install lua-resty-auto-ssl] ****************************************************************************************************************************
 # fatal: [ap_golf_archilinux]: FAILED! => {"changed": true, "cmd": "luarocks install lua-resty-auto-ssl", "delta": "0:00:00.007213", "end": "2019-12-10 12:59:27.287421", "msg": "non-zero return code", "rc": 127, "start": "2019-12-10 12:59:27.280208", "stderr": "/bin/sh: luarocks: command not found", "stderr_lines": ["/bin/sh: luarocks: command not found"], "stdout": "", "stdout_lines": []}
 
+# TASK [ap-application-load-balancer : openresty | resty-auto-ssl: sudo luarocks install lua-resty-auto-ssl] ****************************************************************************************************************************
+# skipping: [ap_delta_ubuntu18]
+# skipping: [ap_echo_debian10]
+# fatal: [ap_foxtrot_centos8]: FAILED! => {"changed": true, "cmd": "luarocks install lua-resty-auto-ssl", "delta": "0:00:00.007615", "end": "2019-12-11 03:21:53.009619", "msg": "non-zero return code", "rc": 127, "start": "2019-12-11 03:21:53.002004", "stderr": "/bin/sh: luarocks: command not found", "stderr_lines": ["/bin/sh: luarocks: command not found"], "stdout": "", "stdout_lines": []}
+# [ap_foxtrot_centos8] TASK: ap-application-load-balancer : openresty | resty-auto-ssl: sudo luarocks install lua-resty-auto-ssl (debug)> c
+# fatal: [ap_golf_archilinux]: FAILED! => {"changed": true, "cmd": "luarocks install lua-resty-auto-ssl", "delta": "0:00:00.006505", "end": "2019-12-11 03:21:53.322386", "msg": "non-zero return code", "rc": 127, "start": "2019-12-11 03:21:53.315881", "stderr": "/bin/sh: luarocks: command not found", "stderr_lines": ["/bin/sh: luarocks: command not found"], "stdout": "", "stdout_lines": []}
+# fatal: [rocha_anortosito_freebsd12]: FAILED! => {"changed": true, "cmd": "luarocks install lua-resty-auto-ssl", "delta": "0:00:00.093826", "end": "2019-12-11 03:21:54.975631", "msg": "non-zero return code", "rc": 127, "start": "2019-12-11 03:21:54.881805", "stderr": "/bin/sh: luarocks: not found", "stderr_lines": ["/bin/sh: luarocks: not found"], "stdout": "", "stdout_lines": []}
+# fatal: [rocha_basalto_opensuse15]: FAILED! => {"changed": true, "cmd": "luarocks install lua-resty-auto-ssl", "delta": "0:00:00.004047", "end": "2019-12-11 03:21:54.461712", "msg": "non-zero return code", "rc": 127, "start": "2019-12-11 03:21:54.457665", "stderr": "/bin/sh: luarocks: command not found", "stderr_lines": ["/bin/sh: luarocks: command not found"], "stdout": "", "stdout_lines": []}
+# [ap_golf_archilinux] TASK: ap-application-load-balancer : openresty | resty-auto-ssl: sudo luarocks install lua-resty-auto-ssl (debug)> c
+# [rocha_anortosito_freebsd12] TASK: ap-application-load-balancer : openresty | resty-auto-ssl: sudo luarocks install lua-resty-auto-ssl (debug)> c
+# [rocha_basalto_opensuse15] TASK: ap-application-load-balancer : openresty | resty-auto-ssl: sudo luarocks install lua-resty-auto-ssl (debug)> c
+
 
 - name: /etc/ansible/facts.d/alb_openresty.fact
   template:
     src: files/alb_openresty.fact
     dest: /etc/ansible/facts.d/alb_openresty.fact
-    mode: 0755
+    #mode: 0755
   register: alb_openresty_facts_deployed
 
 - name: Instalação de OpenResty, Lua Rest & Lua Resty AutoSSL (faz o HTTPS para os Apps)

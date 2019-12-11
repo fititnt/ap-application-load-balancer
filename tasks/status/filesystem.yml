@@ -1,0 +1,22 @@
+---
+
+# FILE:            {{ role_path }}/status/filesystem.yml
+# LICENSE:         Public Domain
+
+- name: "status | filesystem.yml: disk space, detect"
+  command: "{{ alb_internal_status_diskspace }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_netstat
+  when:
+    - "alb_internal_status_diskspace is defined and alb_internal_status_diskspace"
+
+- name: "status | main.yml: disk space, print"
+  debug:
+    msg:
+      stdout_lines: "{{ alb_status_netstat.stdout_lines | default('undefined') }}"
+      stderr_lines: "{{ alb_status_netstat.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_internal_status_diskspace is defined and alb_internal_status_diskspace"

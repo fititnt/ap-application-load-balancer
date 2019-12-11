@@ -1,0 +1,9 @@
+---
+
+# FILE:            {{ role_path }}/status/alb-cluster.yml
+# LICENSE:         Public Domain
+
+- name: "status | alb-cluster.yml: draft"
+  debug:
+    msg: "Not implemented at this moment"
+    

@@ -1,0 +1,29 @@
+---
+
+# FILE:            {{ role_path }}/status/main.yml
+# LICENSE:         Public Domain
+
+- name: "network.yml"
+  include: network.yml
+  tags:
+    - alb-status-alb-minimal
+    - alb-status-basic
+
+- name: "filesystem.yml"
+  include: filesystem.yml
+  tags:
+    - alb-status-alb-minimal
+    - alb-status-basic
+
+- name: "alb-node.yml"
+  include: alb-node.yml
+  tags:
+    - alb-status-alb
+    - alb-status-alb-node
+
+- name: "alb-cluster.yml"
+  include: alb-cluster.yml
+  tags:
+    - alb-status-alb
+    - alb-status-alb-cluster
+    - never

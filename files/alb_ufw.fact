@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 cat <<EOF
 {{ alb_ufw_facts | to_json }}
 EOF

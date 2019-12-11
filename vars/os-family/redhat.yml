@@ -67,5 +67,9 @@ alb_internal_openresty_yum_repository:
   state: present
   enabled: true
 
+## ALB/Status __________________________________________________________________
+alb_internal_status_localports: "netstat -ntulp"
+alb_internal_status_diskspace: "df -h"
+
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 alb_internal_bootstrap_alb_standard_hostname_use: 'redhat'

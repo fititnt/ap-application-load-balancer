@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # TODO: implement this alb_haproxy_facts (fititnt, 2019-11-19 07:09 BRT)
 

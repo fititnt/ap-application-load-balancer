@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # TODO: consider if is really necessary this check (fititnt, 2019-11-19 06:59 BRT)
 

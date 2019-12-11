@@ -3,5 +3,5 @@
 ## ALB/HAProxy _________________________________________________________________
 # @see https://haproxy.debian.net/
 #alb_internal_haproxy_package:
-#  name: "haproxy=2.0.\\*"
+#  name: 'haproxy=2.0.\*'
 #  state: present

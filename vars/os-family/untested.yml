@@ -71,3 +71,6 @@ alb_internal_haproxy_disable_install: true
 alb_internal_haproxy_apt_key: false
 alb_internal_haproxy_apt_repository: false
 alb_internal_ohaproxy_yum_repository: false
+
+## ALB/Status __________________________________________________________________
+alb_internal_status_localports: "netstat -ntulp"

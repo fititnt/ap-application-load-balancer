@@ -1,0 +1,9 @@
+---
+
+# FILE:            {{ role_path }}/status/alb-node.yml
+# LICENSE:         Public Domain
+
+- name: "status | alb-node.yml: draft"
+  debug:
+    msg: "Not implemented at this moment"
+    

@@ -48,5 +48,9 @@ alb_internal_openresty_zypper_repository:
 # ALB/Bootstrap/AnsibleContolNode: is NOT installed by default.
 # requires: `alb_bootstrap_ansible_control_node: yes` explicit
 
+## ALB/Status __________________________________________________________________
+alb_internal_status_localports: "netstat -ntulp"
+alb_internal_status_diskspace: "df -h"
+
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 alb_internal_bootstrap_alb_standard_hostname_use: 'sles'

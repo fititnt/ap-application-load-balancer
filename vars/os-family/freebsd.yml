@@ -15,7 +15,7 @@ alb_internal_root_group: 'wheel'
 alb_internal_package_manager_group: "pkgng"
 
 # TODO: review this later
-ansible_python_interpreter: "/usr/local/bin/python3.6"
+ansible_python_interpreter: "/usr/local/bin/python3"
 #fatal: [rocha_anortosito_freebsd12]: FAILED! => {"ansible_facts": {}, "changed": false, "failed_modules": {"setup": {"ansible_facts": {"discovered_interpreter_python": "/usr/local/bin/python3.6"}, "cmd": "/etc/ansible/facts.d/alb_openresty.fact", "failed": true, "invocation": {"module_args": {"fact_path": "/etc/ansible/facts.d", "filter": "*", "gather_subset": ["all"], "gather_timeout": 10}}, "msg": "[Errno 2] No such file or directory: b'/etc/ansible/facts.d/alb_openresty.fact': b'/etc/ansible/facts.d/alb_openresty.fact'", "rc": 2, "warnings": ["Platform freebsd on host rocha_anortosito_freebsd12 is using the discovered Python interpreter at /usr/local/bin/python3.6, but future installation of another Python interpreter could change this. See https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information."]}}, "msg": "The following modules failed to execute: setup\n"}
 
 
@@ -47,6 +47,12 @@ alb_internal_haproxy_package:
 alb_internal_openresty_package:
   name: "openresty"
   state: present
+
+## ALB/Status __________________________________________________________________
+# @see https://superuser.com/questions/587912/what-is-the-bsd-equivalent-of-linux-netstat-lptun
+# alb_internal_status_localports: "netstat -ntulp"
+alb_internal_status_localports: "sockstat -4l"
+alb_internal_status_diskspace: "df -h"
 
 ## ALB/Components not implemented ______________________________________________
 alb_internal_alert_critical_ufw: >
