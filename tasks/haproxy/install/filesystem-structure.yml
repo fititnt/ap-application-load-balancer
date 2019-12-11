@@ -1,0 +1,27 @@
+---
+# FILE:            {{ role_path }}/tasks/haproxy/install/filesystem-structure.yml
+# LICENSE:         Public Domain
+
+- name: "haproxy | install | filesystem-structure.yml: ensure consistent diretory structure (/etc/haproxy, /etc/haproxy/errors/) on all OSs"
+  file:
+    path: /etc/haproxy/errors/
+    state: directory
+    recurse: yes
+
+- name: "haproxy | install | filesystem-structure.yml: ensure consistent error files on all OSs"
+  copy:
+    src: "{{ alb_haproxy_errors_folder }}"
+    dest: /etc/haproxy/errors/
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: '0644'
+
+- name: "haproxy | install | filesystem-structure.yml: ln -s /etc/haproxy/haproxy.cfg /opt/alb/nlb.cfg"
+  file:
+    src: "{{ alb_internal_haproxy_conf_symlinkfrom }}"
+    dest: "{{ alb_internal_haproxy_conf }}"
+    owner: "{{ alb_internal_root_user }}"
+    state: link
+    force: yes
+  when:
+    - "(alb_internal_haproxy_conf_symlinkfrom is defined) and (alb_internal_haproxy_conf_symlinkfrom)"

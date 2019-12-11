@@ -2,8 +2,15 @@
 # FILE:            {{ role_path }}/tasks/haproxy/main.yml
 # LICENSE:         Public Domain
 
-- name: "install.yml: choose method"
+
+- name: "haproxy | install | main.yml: filesystem-structure.yml"
+  include: "{{ role_path }}/tasks/haproxy/install/filesystem-structure.yml"
+
+- name: "haproxy | install | main.yml: choose method"
   include: "{{ item }}"
   with_first_found:
-    - "{{ role_path }}/tasks/haproxy/install/{{ alb_internal_package_manager_group | default('undefined')  }}.yml"
-    - "{{ role_path }}/tasks/haproxy/install/generic.yml"
+    - "{{ role_path }}/tasks/haproxy/install/package-manager/{{ alb_internal_package_manager_group | default('undefined')  }}.yml"
+    - "{{ role_path }}/tasks/haproxy/install/package-manager/generic.yml"
+
+- name: "haproxy | install | main.yml: user-groups.yml"
+  include: "{{ role_path }}/tasks/haproxy/install/user-groups.yml"

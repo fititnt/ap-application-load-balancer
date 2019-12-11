@@ -2,8 +2,5 @@
 # FILE:            {{ role_path }}/tasks/haproxy/management/main.yml
 # LICENSE:         Public Domain
 
-- name: "haproxy | management | main.yml: errorfiles"
-  include: "{{ role_path }}/tasks/haproxy/management/errorfiles.yml"
-
 - name: "haproxy | management | main.yml: choose method based on OS"
   include: "{{ role_path }}/tasks/haproxy/management/{{ alb_internal_haproxy_management }}.yml"

@@ -38,8 +38,10 @@ alb_internal_bootstrap_extra_tools:
 # alb_internal_bootstrap_repositories_from_source:
 
 ## ALB/HAProxy _________________________________________________________________
-alb_internal_haproxy_conf: "/usr/local/etc/haproxy.conf"
+alb_internal_haproxy_conf: "/etc/haproxy/haproxy.cfg" # "/usr/local/etc/haproxy.conf" whould be the default on FreeBSD
+alb_internal_haproxy_conf_symlinkfrom: "/usr/local/etc/haproxy.conf"
 alb_internal_haproxy_management: "bsd-init"
+alb_internal_haproxy_createhaproxyuser: yes
 
 alb_internal_haproxy_package:
   name: "haproxy"
