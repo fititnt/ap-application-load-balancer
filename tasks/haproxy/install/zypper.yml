@@ -1,0 +1,10 @@
+---
+# FILE:            {{ role_path }}/tasks/haproxy/install/zypper.yml
+# LICENSE:         Public Domain
+
+# TODO: improve this hardcoded version (fititnt, 2019-12-11 04:54 BRT)
+- name: "haproxy | install | zypper.yml (SUSE Family)"
+  zypper:
+    name: haproxy
+    # state: present
+    state: latest

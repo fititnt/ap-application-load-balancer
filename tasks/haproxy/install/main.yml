@@ -1,0 +1,9 @@
+---
+# FILE:            {{ role_path }}/tasks/haproxy/main.yml
+# LICENSE:         Public Domain
+
+- name: "install.yml: choose method"
+  include: "{{ item }}"
+  with_first_found:
+    - "{{ role_path }}/tasks/haproxy/install/{{ alb_internal_package_manager_group | default('undefined')  }}.yml"
+    - "{{ role_path }}/tasks/haproxy/install/generic.yml"

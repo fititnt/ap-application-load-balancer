@@ -58,7 +58,7 @@ alb_internal_status_availablepackages_python: "zypper search python"
 alb_internal_status_availablepackages_lua: "zypper search lua*"
 alb_internal_status_availablepackages_luarocks: "zypper search luarocks"
 
-alb_internal_status_installedpackages_haproxy: "zypper info -t pattern haproxy"
+alb_internal_status_installedpackages_haproxy: "zypper info -t pattern package:haproxy"
 alb_internal_status_installedpackages_openresty: "zypper info -t pattern openresty"
 alb_internal_status_installedpackages_python: "zypper info -t pattern python"
 alb_internal_status_installedpackages_lua: "zypper info -t pattern lua"

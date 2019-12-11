@@ -2,7 +2,7 @@
 # FILE:            {{ role_path }}/tasks/haproxy/install.yml
 # LICENSE:         Public Domain
 
-- name: "haproxy | install.yml: generic method"
+- name: "haproxy | install | generic.yml"
   package:
     name: "{{ alb_internal_haproxy_package.name }}"
     state: "{{ alb_internal_haproxy_package.state }}"
