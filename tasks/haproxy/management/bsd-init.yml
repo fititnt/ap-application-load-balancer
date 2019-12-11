@@ -1,13 +1,12 @@
 ---
-# FILE:            {{ role_path }}/tasks/haproxy/reconfigure.yml
+# FILE:            {{ role_path }}/tasks/haproxy/management/bsd-init.yml
 # LICENSE:         Public Domain
 
-
-- name: "haproxy | reconfigure: /etc/haproxy/haproxy.cfg"
+- name: "haproxy | management | bsd-init.yml: {{ alb_internal_haproxy_conf }}"
   template:
     # src: "{{ role_path }}/templates/openresty/nginx/conf/nginx.conf.j2"
     src: "{{ alb_haproxy_haproxy_template }}"
-    dest: /etc/haproxy/haproxy.cfg
+    dest: "{{ alb_internal_haproxy_conf }}"
     owner: "{{ alb_internal_root_user }}"
     group: "{{ alb_internal_root_group }}"
     mode: '0644'

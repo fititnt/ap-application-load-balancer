@@ -38,7 +38,9 @@ alb_internal_bootstrap_extra_tools:
 # alb_internal_bootstrap_repositories_from_source:
 
 ## ALB/HAProxy _________________________________________________________________
-# @see https://haproxy.debian.net/
+alb_internal_haproxy_conf: "/usr/local/etc/haproxy.conf"
+alb_internal_haproxy_management: "bsd-init"
+
 alb_internal_haproxy_package:
   name: "haproxy"
   state: present

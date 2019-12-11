@@ -40,6 +40,9 @@ alb_internal_bootstrap_ansible_control_node_packages:
     state: latest
 
 ## ALB/HAProxy _________________________________________________________________
+alb_internal_haproxy_conf: "/etc/haproxy/haproxy.cfg"
+alb_internal_haproxy_management: "systemd"
+
 # @see https://haproxy.debian.net/
 alb_internal_haproxy_package:
   name: "haproxy"

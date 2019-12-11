@@ -234,6 +234,7 @@ alb_haproxy_ip: "*"
 alb_haproxy_httpport: 80
 alb_haproxy_httpsport: 443
 alb_haproxy_haproxy_template: "{{ role_path }}/templates/nlb/haproxy-standard.cfg.j2"
+alb_haproxy_errors_folder: "{{ role_path }}/templates/nlb/errorfiles/"
 # alb_haproxy_haproxy_template: "{{ role_path }}/templates/nlb-strategy/haproxy-minimal.cfg.j2"
 # Check alb_openresty_httpport. HAProxy also consider this variable
 # Check alb_openresty_httpsport. HAProxy also consider this variable

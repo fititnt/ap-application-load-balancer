@@ -35,6 +35,9 @@ alb_internal_openresty_apt_repository: false
 alb_internal_openresty_yum_repository: false
 
 ## ALB/HAProxy _________________________________________________________________
+alb_internal_haproxy_conf: "/etc/haproxy/haproxy.cfg"
+alb_internal_haproxy_management: "systemd"
+
 # @see https://haproxy.debian.net/
 alb_internal_haproxy_package:
   name: "haproxy"

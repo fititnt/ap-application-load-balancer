@@ -11,7 +11,7 @@
     - "(alb_internal_haproxy_disable_install is not defined) or (not  alb_internal_haproxy_disable_install|bool)"
     - "(alb_manange_haproxy_install is defined) and (alb_manange_haproxy_install|bool)"
 
-- name: "reconfigure.yml"
-  include: "{{ role_path }}/tasks/haproxy/reconfigure.yml"
+- name: "management.yml"
+  include: "{{ role_path }}/tasks/haproxy/management/main.yml"
   #when:
   #  - "(alb_manange_haproxy_install is defined) and (alb_manange_haproxy_install|bool)"
