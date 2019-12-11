@@ -16,12 +16,20 @@
     group: "{{ alb_internal_root_group }}"
     mode: '0644'
 
-- name: "haproxy | install | filesystem-structure.yml: ln -s /etc/haproxy/haproxy.cfg /opt/alb/nlb.cfg"
+# Starting frontend GLOBAL: cannot bind UNIX socket [/run/haproxy/admin.sock]
+- name: "haproxy | install | filesystem-structure.yml: ensure /run/haproxy/ folder already exist on all OSs (to allow use /run/haproxy/admin.sock)"
   file:
-    src: "{{ alb_internal_haproxy_conf_symlinkfrom }}"
-    dest: "{{ alb_internal_haproxy_conf }}"
+    path: /run/haproxy/
+    state: directory
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+
+- name: "haproxy | install | filesystem-structure.yml: extra symbolic link (FreeBSD Family)"
+  file:
+    src: "{{ alb_internal_haproxy_conf }}"
+    dest: "{{ alb_internal_haproxy_conf_symlink }}"
     owner: "{{ alb_internal_root_user }}"
     state: link
     force: yes
   when:
-    - "(alb_internal_haproxy_conf_symlinkfrom is defined) and (alb_internal_haproxy_conf_symlinkfrom)"
+    - "(alb_internal_haproxy_conf_symlink is defined) and (alb_internal_haproxy_conf_symlink)"

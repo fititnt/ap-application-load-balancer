@@ -39,9 +39,13 @@ alb_internal_bootstrap_extra_tools:
 
 ## ALB/HAProxy _________________________________________________________________
 alb_internal_haproxy_conf: "/etc/haproxy/haproxy.cfg" # "/usr/local/etc/haproxy.conf" whould be the default on FreeBSD
-alb_internal_haproxy_conf_symlinkfrom: "/usr/local/etc/haproxy.conf"
+alb_internal_haproxy_conf_symlink: "/usr/local/etc/haproxy.conf"
 alb_internal_haproxy_management: "bsd-init"
-alb_internal_haproxy_createhaproxyuser: yes
+
+# alb_internal_haproxy_createhaproxyuser: yes # this option, if enabled, create haproxy user for you. Consider using for not running as root/wheel
+alb_internal_haproxy_system_user: "{{ alb_haproxy_system_user | default('root') }}"
+alb_internal_haproxy_system_group: "{{ alb_haproxy_system_group | default('wheel') }}"
+
 
 alb_internal_haproxy_package:
   name: "haproxy"
@@ -57,6 +61,11 @@ alb_internal_openresty_package:
 # alb_internal_status_localports: "netstat -ntulp"
 alb_internal_status_localports: "sockstat -4l"
 alb_internal_status_diskspace: "df -h"
+
+# BSD uses /usr/local/sbin/haproxy instead of /usr/sbin/haproxy
+alb_internal_status_syntax_haproxy: "/usr/local/sbin/haproxy -c -V -f /etc/haproxy/haproxy.cfg"
+alb_internal_status_syntax_openresty: "openresty -t"
+
 alb_internal_status_availablepackages_haproxy: "pkg search haproxy"
 alb_internal_status_availablepackages_openresty: "pkg search openresty"
 alb_internal_status_availablepackages_python: "pkg search python"
@@ -68,6 +77,11 @@ alb_internal_status_installedpackages_openresty: "pkg info openresty"
 alb_internal_status_installedpackages_python: "pkg info python"
 alb_internal_status_installedpackages_lua: "pkg info lua"
 alb_internal_status_installedpackages_luarocks: "pkg info luarocks"
+
+# @TODO: check where FreeBSD log things. maybe this helps
+#        http://www.dctrwatson.com/2010/07/enable-logging-in-haproxy-on-freebsd/
+#        https://www.mail-archive.com/haproxy@formilux.org/msg02544.html
+#        (fititnt, 2019-12-11 09:41 BRT)
 
 ## ALB/Components not implemented ______________________________________________
 alb_internal_alert_critical_ufw: >

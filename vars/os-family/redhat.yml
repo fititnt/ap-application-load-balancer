@@ -42,6 +42,8 @@ alb_internal_bootstrap_ansible_control_node_packages:
 ## ALB/HAProxy _________________________________________________________________
 alb_internal_haproxy_conf: "/etc/haproxy/haproxy.cfg"
 alb_internal_haproxy_management: "systemd"
+alb_internal_haproxy_system_user: "{{ alb_haproxy_system_user | default('haproxy') }}"
+alb_internal_haproxy_system_group: "{{ alb_haproxy_system_group | default('haproxy') }}"
 
 # @see https://haproxy.debian.net/
 alb_internal_haproxy_package:
@@ -73,6 +75,9 @@ alb_internal_openresty_yum_repository:
 ## ALB/Status __________________________________________________________________
 alb_internal_status_localports: "netstat -ntulp"
 alb_internal_status_diskspace: "df -h"
+
+alb_internal_status_syntax_haproxy: "/usr/sbin/haproxy -c -V -f /etc/haproxy/haproxy.cfg"
+alb_internal_status_syntax_openresty: "openresty -t"
 
 alb_internal_status_availablepackages_haproxy: "yum search haproxy"
 alb_internal_status_availablepackages_openresty: "yum search openresty"
