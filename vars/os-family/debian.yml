@@ -31,6 +31,8 @@ alb_internal_bootstrap_extra_tools:
     state: present
   - name: python3-passlib
     state: present
+  - name: apache2-utils
+    state: present
   - name: nmap
     state: present
 

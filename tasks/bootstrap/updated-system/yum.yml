@@ -10,14 +10,14 @@
 #    cache_valid_time: 86400
 #  changed_when: false
 
-- name: "bootstrap | updated-system | yum.yml (yum, dnf): update caches"
+- name: "bootstrap | updated-system | yum.yml: update caches (RedHat Family)"
   command:
     cmd: "yum clean all"
     warn: false
   become: yes
   changed_when: false
 
-- name: "bootstrap | updated-system | yum.yml (yum, dnf): update all packages"
+- name: "bootstrap | updated-system | yum.yml: update all packages (RedHat Family)"
   yum:
     name: "*"
     state: latest

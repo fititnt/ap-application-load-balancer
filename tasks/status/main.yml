@@ -24,9 +24,9 @@
 - name: "alb-cluster.yml"
   include: alb-cluster.yml
   tags:
+    - never
     - alb-status-alb
     - alb-status-alb-cluster
-    - never
 
 - name: "installed-packages.yml"
   include: installed-packages.yml
@@ -37,5 +37,6 @@
 - name: "available-packages.yml"
   include: available-packages.yml
   tags:
+    - never
     - alb-status-alb
     - alb-status-available-packages

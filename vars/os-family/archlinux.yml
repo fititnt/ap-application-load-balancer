@@ -18,6 +18,8 @@ alb_internal_bootstrap_basic_tools:
 alb_internal_bootstrap_extra_tools:
   - name: python-pip
     state: present
+  - name: apache-tools
+    state: present
   - name: nmap
     state: present
 
@@ -75,3 +77,14 @@ alb_internal_status_installedpackages_luarocks: "pacman -Qi luarocks"
 
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 # alb_internal_bootstrap_alb_standard_hostname_use: 'debian'
+
+## ALB/Components not officially implemented ___________________________________
+
+# Even if user enable, we will hardcode these options as false for Arch Linux at
+# this moment. In short, means that as version v0.8.4, we will not enable
+# tasks that require installation of OpenResty. But if user already have one
+# OpenResty installed on default paths, it would be possible, but we're not
+# documenting this now for lack of imediate time (fititnt, 2019-12-11 10:17 BRT)
+alb_manange_openresty: false
+alb_manange_sysapps: false
+alb_manange_apps: false

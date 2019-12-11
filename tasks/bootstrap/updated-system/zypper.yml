@@ -4,7 +4,7 @@
 # LICENSE:         Public Domain
 # SEE:             https://docs.ansible.com/ansible/latest/modules/package_module.html
 
-- name: "bootstrap | updated-system | zypper.yml: update caches"
+- name: "bootstrap | updated-system | zypper.yml: update caches (SUSE Family)"
   zypper_repository:
     repo: '*'
     runrefresh: yes

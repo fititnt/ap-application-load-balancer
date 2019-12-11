@@ -3,7 +3,7 @@
 # LICENSE:         Public Domain
 # DESCRIPTION:     This file {{ role_path }}/vars/main.yml always is loaded.
 
-alb_version: "v0.8.4-alpha"
+alb_version: "v0.8.5-alpha"
 alb_version_lastrun: -1
 
 ### ALB Internal Variables: Mixed usage ________________________________________

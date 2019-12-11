@@ -11,7 +11,7 @@ alb_internal_root_group: 'root'
 alb_internal_package_manager_group: "zypper"
 
 alb_internal_bootstrap_basic_tools:
-  - name: python-xml
+  - name: python3-xml
     state: present
   - name: rpm
     state: present
@@ -21,9 +21,13 @@ alb_internal_bootstrap_basic_tools:
     state: present
 
 alb_internal_bootstrap_extra_tools:
-  - name: python-pip
+  - name: python3-pip
     state: present
-  - name: python-passlib
+  - name: python3-passlib
+    state: present
+  - name: python3-setuptools
+    state: present
+  - name: apache2-utils
     state: present
   - name: nmap
     state: present
@@ -74,3 +78,14 @@ alb_internal_status_installedpackages_luarocks: "zypper info -t pattern luarocks
 
 # https://docs.ansible.com/ansible/latest/modules/hostname_module.html
 alb_internal_bootstrap_alb_standard_hostname_use: 'sles'
+
+## ALB/Components not officially implemented ___________________________________
+
+# Even if user enable, we will hardcode these options as false for OpenSUSE at
+# this moment. In short, means that as version v0.8.4, we will not enable
+# tasks that require installation of OpenResty. But if user already have one
+# OpenResty installed on default paths, it would be possible, but we're not
+# documenting this now for lack of imediate time (fititnt, 2019-12-11 10:17 BRT)
+alb_manange_openresty: false
+alb_manange_sysapps: false
+alb_manange_apps: false

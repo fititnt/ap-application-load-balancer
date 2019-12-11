@@ -31,6 +31,8 @@ alb_internal_bootstrap_extra_tools:
     state: present
   - name: py36-passlib
     state: present
+  - name: p5-Apache-Htpasswd
+    state: present
   - name: nmap
     state: present
 
@@ -83,7 +85,16 @@ alb_internal_status_installedpackages_luarocks: "pkg info luarocks"
 #        https://www.mail-archive.com/haproxy@formilux.org/msg02544.html
 #        (fititnt, 2019-12-11 09:41 BRT)
 
-## ALB/Components not implemented ______________________________________________
+## ALB/Components not officially implemented ___________________________________
+
+# Even if user enable, we will hardcode these options as false for FreeBSD at
+# this moment. In short, means that as version v0.8.4, we will not enable
+# tasks that require installation of OpenResty and UFW (fititnt, 2019-12-11 10:17 BRT)
+alb_manange_openresty: false
+alb_manange_sysapps: false
+alb_manange_apps: false
+alb_manange_ufw: false
+
 alb_internal_alert_critical_ufw: >
   FreeBSD | Critical error! You are trying test native ALB/UFW FreeBSD-like
   operational systems. Please disable ALB/UFW on this node and implement

@@ -24,6 +24,14 @@
     mode: 0755
   register: alb_sysapps_facts_deployed
 
+# failed: [ap_echo_debian10] (item=None) => {"censored": "the output has been hidden due to the fact that 'no_log: true' was specified for this result", "changed": false}
+# changed: [ap_delta_ubuntu18] => (item=None)
+# failed: [ap_echo_debian10] (item=None) => {"censored": "the output has been hidden due to the fact that 'no_log: true' was specified for this result", "changed": false}
+# changed: [ap_delta_ubuntu18] => (item=None)
+# failed: [ap_echo_debian10] (item=None) => {"censored": "the output has been hidden due to the fact that 'no_log: true' was specified for this result", "changed": false}
+# fatal: [ap_echo_debian10]: FAILED! => {"censored": "the output has been hidden due to the fact that 'no_log: true' was specified for this result", "changed": false}
+# [ap_echo_debian10] TASK: ap-application-load-balancer : sysapps | /opt/alb/sysapps/.htaccess (debug)> 
+
 - name: "sysapps | /opt/alb/sysapps/.htaccess"
   htpasswd:
     path: /opt/alb/sysapps/.htaccess

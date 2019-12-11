@@ -126,6 +126,9 @@
     - is_openresty is failed
     - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
 
+# fatal: [ap_foxtrot_centos8]: FAILED! => {"changed": false, "failures": ["No package luarocks available."], "msg": "Failed to install some of the specified packages", "rc": 1, "results": []}
+# [ap_foxtrot_centos8] TASK: ap-application-load-balancer : openresty (CentOS/RHEL) | luarocks: dnf install -y luarocks (debug)> 
+
 - name: "openresty (CentOS/RHEL) | luarocks: dnf install -y luarocks"
   dnf:
     name: "luarocks"
