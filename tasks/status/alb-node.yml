@@ -3,7 +3,102 @@
 # FILE:            {{ role_path }}/status/alb-node.yml
 # LICENSE:         Public Domain
 
-- name: "status | alb-node.yml: draft"
+
+- name: "status | alb-node.yml: alb_apps, detect (OK to fail if not installed on this node!)"
+  command: "{{ alb_internal_status_alb_apps }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_alb_apps
+  when:
+    - "alb_internal_status_alb_apps is defined and alb_internal_status_alb_apps"
+
+- name: "status | main.yml: alb_apps, print"
   debug:
-    msg: "Not implemented at this moment"
-    
+    msg:
+      stdout: "{{ alb_status_alb_apps.stdout | default('{}') | from_json }}"
+      stderr_lines: "{{ alb_status_alb_apps.stderr_lines | default('undefined') }}"
+      # raw: "{{ alb_status_alb_apps | default('undefined') }}"
+  when:
+    - "alb_internal_status_alb_apps is defined and alb_internal_status_alb_apps"
+    - "(alb_status_alb_apps.failed|bool is sameas false)"
+    # - "(alb_status_alb_apps.failed is not defined) or (alb_status_alb_apps.failed|bool is sameas false)"
+
+- name: "status | alb-node.yml: alb_apps, detect (OK to fail if not installed on this node!)"
+  command: "{{ alb_internal_status_alb_haproxy }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_alb_haproxy
+  when:
+    - "alb_internal_status_alb_haproxy is defined and alb_internal_status_alb_haproxy"
+
+- name: "status | main.yml: alb_haproxy, print (OK to fail if not installed on this node!)"
+  debug:
+    msg:
+      stdout: "{{ alb_status_alb_haproxy.stdout | default('{}') | from_json }}"
+      stderr_lines: "{{ alb_status_alb_haproxy.stderr_lines | default('undefined') }}"
+      # raw: "{{ alb_status_alb_haproxy | default('undefined') }}"
+  when:
+    - "alb_internal_status_alb_haproxy is defined and alb_internal_status_alb_haproxy"
+    - "(alb_status_alb_haproxy.failed|bool is sameas false)"
+
+- name: "status | alb-node.yml: alb_openresty, detect (OK to fail if not installed on this node!)"
+  command: "{{ alb_internal_status_alb_openresty }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_alb_openresty
+  when:
+    - "alb_internal_status_alb_openresty is defined and alb_internal_status_alb_openresty"
+
+- name: "status | main.yml: alb_haproxy, print (OK to fail if not installed on this node!)"
+  debug:
+    msg:
+      stdout: "{{ alb_status_alb_openresty.stdout | default('{}') | from_json }}"
+      stderr_lines: "{{ alb_status_alb_openresty.stderr_lines | default('undefined') }}"
+      raw: "{{ alb_status_alb_openresty | default('undefined') }}"
+  when:
+    - "alb_internal_status_alb_openresty is defined and alb_internal_status_alb_openresty"
+    - "(alb_status_alb_openresty.failed|bool is sameas false)"
+
+- name: "status | alb-node.yml: alb_sysapps, detect (OK to fail if not installed on this node!)"
+  command: "{{ alb_internal_status_alb_sysapps }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_alb_sysapps
+  when:
+    - "alb_internal_status_alb_sysapps is defined and alb_internal_status_alb_sysapps"
+
+- name: "status | main.yml: alb_haproxy, print (OK to fail if not installed on this node!)"
+  debug:
+    msg:
+      stdout: "{{ alb_status_alb_sysapps.stdout | default('{}') | from_json }}"
+      stderr_lines: "{{ alb_status_alb_sysapps.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_internal_status_alb_sysapps is defined and alb_internal_status_alb_sysapps"
+    - "(alb_status_alb_sysapps.failed|bool is sameas false)"
+
+- name: "status | alb-node.yml: alb_ufw, detect (OK to fail if not installed on this node!)"
+  command: "{{ alb_internal_status_alb_ufw }}"
+  become: yes
+  ignore_errors: true
+  changed_when: false
+  check_mode: no
+  register: alb_status_alb_ufw
+  when:
+    - "alb_internal_status_alb_ufw is defined and alb_internal_status_alb_ufw"
+
+- name: "status | main.yml: alb_haproxy, print"
+  debug:
+    msg:
+      stdout: "{{ alb_status_alb_ufw.stdout | default('{}') | from_json }}"
+      stderr_lines: "{{ alb_status_alb_ufw.stderr_lines | default('undefined') }}"
+  when:
+    - "alb_internal_status_alb_ufw is defined and alb_internal_status_alb_ufw"
+    - "(alb_status_alb_ufw.failed|bool is sameas false)"

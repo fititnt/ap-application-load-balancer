@@ -141,6 +141,13 @@ alb_ufw_facts:
   autoapply_bastion_hosts: "{{ alb_ufw_autoapply_bastion_hosts | default(None) }}"
   autoapply_jump_boxes: "{{ alb_ufw_autoapply_jump_boxes | default(None) }}"
 
+## Internal, commom to all OSs
+alb_internal_status_alb_apps: "sh /etc/ansible/facts.d/alb_apps.fact"
+alb_internal_status_alb_haproxy: "sh /etc/ansible/facts.d/alb_haproxy.fact"
+alb_internal_status_alb_openresty: "sh /etc/ansible/facts.d/alb_openresty.fact"
+alb_internal_status_alb_sysapps: "sh /etc/ansible/facts.d/alb_sysappss.fact"
+alb_internal_status_alb_ufw: "sh /etc/ansible/facts.d/alb_ufw.fact"
+
 ## Other/Temporary _____________________________________________________________
 alb_manange_openresty_install: yes    # We require manange OpenResty, this is not optional
 alb_manange_openresty_repository: yes # We require manange OpenResty, this is not optional
