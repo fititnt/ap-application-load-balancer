@@ -10,6 +10,18 @@ providers** (e.g. [Alibaba](https://www.alibabacloud.com/product/server-load-bal
 create your own ALB on cheaper hardware on these same cloud providers or
 have your own ALB on any other provider of VPSs or bare metal servers.
 
+AP-ALB is flexible: you can either use dedicated very small VPSs with the role
+of load balancing to another services or replace your Apache/NGinx/HAproxy in
+each server with AP-ALB. Consider around just 64MB of RAM per node. _(So, if
+you are deployng in a dedicated 1GB VPS, consider **at least** reuse the same
+node puting behind the AP-ALB one Varnish-Cache ;)_
+
+**New on v0.8:** in addition to the single-node setup, you can now deploy 3-node
+High Available AP-ALB Cluster using [Consul](https://www.consul.io/) instead of
+local filesystem. We recommend using the Ansible Role
+[brianshumate.consul](https://github.com/brianshumate/ansible-consul) for setup
+and manangement of Consul component.
+
 [![asciicast](https://asciinema.org/a/281411.svg)](https://asciinema.org/a/281411)
 > Source code for this demo at <https://github.com/fititnt/ap-alb-demo/releases/tag/v0.6.4-beta>
 
@@ -145,11 +157,22 @@ humanitarian or commercial projects from who help we on Etica.AI.
 > ☺️ 🤖 :end: **UFW <sup>(:1-65535)</sup>** :end: **HAProxy <sup>(:80, :443)</sup>** :end: **OpenResty <sup>(:8080, :4443 🔒)</sup>** :end: **App**
 
 - **Infrastructure as Code**:
-  - [Ansible 2.8+](https://github.com/ansible/ansible) _(See: [Ansibe documentation](https://docs.ansible.com/))_
+  - [Ansible 2.9+](https://github.com/ansible/ansible) _(See: [Ansibe documentation](https://docs.ansible.com/))_
 - **Operational System**:
-  - [Ubuntu Server LTS 18.04+](https://ubuntu.com/)
+  - **Debian Family**
+    - Debian 10
+    - Ubuntu Server LTS 18.04
+  - **RedHat Family**
+    - CentOS 8, CentOS 7
+    - RHEL 8, RHEL 7
+  - Compatible, but some functionalities requires extra steps:
+    - **Arch Linux**
+    - **BSD Family**: _FreeBSD 12_
+    - **SUSE Family**: _OpenSUSE 15_
 - **Firewall**
   - [UFW](https://help.ubuntu.com/community/UFW)
+    - With exception of FreeBSD (OS that not even as option can have UFW
+      installed) other OSs listed as supported can work with UFW.
 - **Load Balancing**
   - [HAProxy 2.0.x](https://github.com/haproxy/haproxy)
     _(See: [HAProxy starter guide](https://cbonte.github.io/haproxy-dconv/2.0/intro.html),

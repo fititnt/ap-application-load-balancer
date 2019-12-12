@@ -18,10 +18,9 @@ alb_internal_bootstrap_basic_tools:
 alb_internal_bootstrap_extra_tools:
   - name: python-pip
     state: present
-  - name: apache-tools
-    state: present
   - name: nmap
     state: present
+  # @TODO: fine htpasswd package on Arch Linux (fititnt, 2019-12-12-07:39 BRT)
 
 # ALB/Bootstrap/AnsibleContolNode: is NOT installed by default.
 # requires: `alb_bootstrap_ansible_control_node: yes` explicit
