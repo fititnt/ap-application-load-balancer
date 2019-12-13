@@ -32,9 +32,19 @@
 - name: "ALB | OS Family variables"
   include_vars: "{{ item }}"
   with_first_found:
-    - "{{ (alb_vars_osfamily is defined) | ternary(alb_vars_osfamily,'name-of-a-file-that-does-not-exist.yml') }}"
+    - "{{ (alb_vars_osfamily is defined) | ternary(alb_vars_osfamily, 'name-of-a-file-that-does-not-exist.yml') }}"
     - "os-family/{{ ansible_os_family | default('undefined') | lower }}.yml"
     - "os-family/{{ (ansible_os_family is defined) | ternary('untested','unknown') }}.yml"
+  tags:
+    - alb
+    - always
+
+- name: "ALB | OS Family version variables"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ (alb_vars_osfamilyversion is defined) | ternary(alb_vars_osfamilyversion, 'name-of-a-file-that-does-not-exist.yml') }}"
+    - "os-family/os-family-version/{{ ansible_os_family | default('undefined') | lower }}-{{ ansible_distribution_major_version | default('undefined') | lower }}.yml"
+    - "os-family/os-family-version/no-os-family-version-customization.yml"
   tags:
     - alb
     - always

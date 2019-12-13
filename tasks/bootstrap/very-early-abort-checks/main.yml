@@ -1,5 +1,8 @@
 ---
 
+# TODO: consider implement one way that does not result in errors, like
+#       test https://linuxize.com/post/bash-check-if-file-exists/
+#       (fititnt, 2019-12-13 15:47 BRT)
 
 - name: "bootstrap | very-early-abort-checks | main.yml block"
   block:
@@ -8,7 +11,7 @@
       register: bootstrap_checks_cpanel
       changed_when: false
     - name: "bootstrap | very-early-abort-checks | main.yml: Port 80?"
-      raw: netstat -tulpn | grep ':22'
+      raw: netstat -tulpn | grep ':80'
       register: bootstrap_checks_port80
       changed_when: false
     #- name: "bootstrap | really-minimal-dependencies |  debug"

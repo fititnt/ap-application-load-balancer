@@ -6,7 +6,7 @@ alb_internal_haproxy_package:
   #name: 'haproxy=2.0.\*'
   name: 'haproxy=2.0.*'
   state: present
-  
+
 alb_internal_haproxy_apt_repository:
   repo: ppa:vbernat/haproxy-2.0
   state: present

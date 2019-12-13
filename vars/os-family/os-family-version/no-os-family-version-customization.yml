@@ -1,0 +1,4 @@
+---
+# This empty exist only to avoid Ansible warnings when there is no
+# os-family-version-customization
+

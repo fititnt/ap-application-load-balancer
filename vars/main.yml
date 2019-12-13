@@ -148,6 +148,16 @@ alb_internal_status_alb_openresty: "sh /etc/ansible/facts.d/alb_openresty.fact"
 alb_internal_status_alb_sysapps: "sh /etc/ansible/facts.d/alb_sysappss.fact"
 alb_internal_status_alb_ufw: "sh /etc/ansible/facts.d/alb_ufw.fact"
 
+## very-early-abort-checks _____________________________________________________
+# TODO: consider implement this instead of hardcoded
+#       boostrap/very-early-abort-checks/main.yml (fititnt, 2019-12-13 15:59 BRT)
+
+alb_internal_boostrap_very_early_abort_checks:
+  - "test -f /usr/local/cpanel/version"
+
+# TODO: how to implement one netstat equivalent on all platforms even when we
+#       did not have netstat? This is and example netstat -tulpn | grep ':22'
+
 ## Other/Temporary _____________________________________________________________
 alb_manange_openresty_install: yes    # We require manange OpenResty, this is not optional
 alb_manange_openresty_repository: yes # We require manange OpenResty, this is not optional
