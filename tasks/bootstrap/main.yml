@@ -98,6 +98,11 @@
   tags:
     - alb-bootstrap-extra-tools
 
+- name: "lua/main.yml"
+  include: lua/main.yml
+  tags:
+    - alb-bootstrap-lua
+
 - name: "alb-minimal/main.yml"
   include: alb-minimal/main.yml
   tags:

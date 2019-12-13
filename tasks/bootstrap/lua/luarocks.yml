@@ -1,0 +1,20 @@
+---
+# FILE:            {{ role_path }}/tasks/lua/luarocks.yml
+# LICENSE:         Public Domain
+
+# TODO: consider optimize this loop when all itens have same state to not use loop (fititnt, 2019-12-08 02:06 BRT)
+- name: "bootstrap | lua | luarocks.yml: generic packages"
+  package:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items: "{{ alb_internal_bootstrap_luarocks_packages }}"
+  when:
+    - "(alb_internal_bootstrap_luarocks_packages is defined) and (alb_internal_bootstrap_luarocks_packages[0] is defined) and (alb_internal_bootstrap_luarocks_packages[0].name is defined)"
+
+- name: "bootstrap | lua | luarocks.yml: yum (RedHat Family)"
+  yum:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items: "{{ alb_internal_bootstrap_luarocks_yums }}"
+  when:
+    - "(alb_internal_bootstrap_luarocks_yums is defined) and (alb_internal_bootstrap_luarocks_yums[0] is defined) and (alb_internal_bootstrap_luarocks_yums[0].name is defined)"

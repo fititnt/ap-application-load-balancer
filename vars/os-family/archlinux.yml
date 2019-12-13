@@ -22,6 +22,10 @@ alb_internal_bootstrap_extra_tools:
     state: present
   # @TODO: fine htpasswd package on Arch Linux (fititnt, 2019-12-12-07:39 BRT)
 
+alb_internal_bootstrap_luarocks_packages:
+  - name: luarocks
+    state: present
+
 # ALB/Bootstrap/AnsibleContolNode: is NOT installed by default.
 # requires: `alb_bootstrap_ansible_control_node: yes` explicit
 #alb_internal_bootstrap_ansible_control_node_apt_repository:

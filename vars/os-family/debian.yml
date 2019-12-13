@@ -36,6 +36,10 @@ alb_internal_bootstrap_extra_tools:
   - name: nmap
     state: present
 
+alb_internal_bootstrap_luarocks_packages:
+  - name: luarocks
+    state: present
+
 ## ALB/HAProxy _________________________________________________________________
 alb_internal_haproxy_conf: "/etc/haproxy/haproxy.cfg"
 alb_internal_haproxy_management: "systemd"

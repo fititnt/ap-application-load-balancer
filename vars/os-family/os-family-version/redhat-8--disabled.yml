@@ -1,0 +1,19 @@
+---
+# FILE:            {{ role_path }}/vars/os-family/os-family-version/redhat-7.yml
+# LICENSE:         Public Domain
+
+## ALB/OpenResty _______________________________________________________________
+# @see https://openresty.org/en/linux-packages.html
+
+# As 2019-12-10, OpenResty does not have a repository for Redhat Family 8. We
+# will temporaly force to use OpenResty for RedHat 7
+alb_internal_openresty_yum_repository:
+  name: "openresty"
+  description: "Official OpenResty Open Source Repository for CentOS"
+  baseurl: "https://openresty.org/package/centos/7/$basearch"
+  skip_if_unavailable: false
+  gpgcheck: true
+  repo_gpgcheck: false
+  gpgkey: 'https://openresty.org/package/pubkey.gpg'
+  state: present
+  enabled: true

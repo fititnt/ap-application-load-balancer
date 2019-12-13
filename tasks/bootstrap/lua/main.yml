@@ -1,0 +1,9 @@
+---
+
+# FILE:            {{ role_path }}/tasks/lua/main.yml
+# LICENSE:         Public Domain
+
+- name: "luarocks.yml"
+  include: luarocks.yml
+  when:
+    - "(alb_manange_openresty|bool)"

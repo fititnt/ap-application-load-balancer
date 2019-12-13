@@ -29,6 +29,15 @@ alb_internal_bootstrap_extra_tools:
   - name: nmap
     state: present
 
+# RHEL/CentOS 7 have luarocks without directy RPM install. 8 does not, so we use RPM for now
+alb_internal_bootstrap_luarocks_packages: null
+#  - name: luarocks
+#    state: present
+alb_internal_bootstrap_luarocks_yums:
+  - name: http://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/luarocks-2.3.0-1.el7.x86_64.rpm
+    state: present
+
+
 alb_internal_bootstrap_repositories_common_sense_packages:
   - name: epel-release
     state: present
@@ -55,18 +64,15 @@ alb_internal_haproxy_package:
 alb_internal_haproxy_apt_repository: false
 
 ## ALB/OpenResty _______________________________________________________________
+# @see https://openresty.org/en/linux-packages.html
 alb_internal_openresty_package:
   name: "openresty"
   state: present
 
-# As 2019-12-10, OpenResty does not have a repository for Redhat Family 8
-# We will overide this manually on sub files
 alb_internal_openresty_yum_repository:
   name: "openresty"
-  description: "Official OpenResty Open Source Repository for CentOS"
-  # baseurl: 'https://openresty.org/package/centos/$releasever/$basearch' # This original line
-  # baseurl: 'https://openresty.org/package/centos/7/$basearch' # The ideal hotfix for RedHat 8 Family 
-  baseurl: "https://openresty.org/package/centos/{{ (ansible_distribution_major_version is version('8', '>=')) | ternary('7','$releasever') }}/$basearch"
+  description: "Official OpenResty Open Source Repository for RHEL"
+  baseurl: 'https://openresty.org/package/rhel/$releasever/$basearch'
   skip_if_unavailable: false
   gpgcheck: true
   repo_gpgcheck: false

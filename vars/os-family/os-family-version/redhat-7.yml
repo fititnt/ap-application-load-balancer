@@ -1,1 +1,26 @@
 ---
+# FILE:            {{ role_path }}/vars/os-family/os-family-version/redhat-7.yml
+# LICENSE:         Public Domain
+
+# Since file {{ role_path }}/vars/os-family/redhat.yml is aimed to RedHat 8
+# Family, on this we will only overryde some values to support all OS
+# based on RHEL 7 (like Centos 7)
+
+alb_internal_bootstrap_extra_tools:
+  - name: python-pip
+    state: present
+  - name: python-setuptools 
+    state: present
+  - name: python-passlib
+    state: present
+  - name: httpd-tools
+    state: present
+  - name: nmap
+    state: present
+
+# RHEL/CentOS 7 have luarocks without directy RPM install. 8 does not, so we use RPM for now
+alb_internal_bootstrap_luarocks_packages:
+  - name: luarocks
+    state: present
+
+alb_internal_bootstrap_luarocks_yums: null
