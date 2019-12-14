@@ -4,11 +4,20 @@
 
 - name: "openresty | install | package-manager | generic.yml"
   package:
-    name: "{{ item.name }}"
-    state: "{{ item.state }}"
+    name: "{{ item_generic.name }}"
+    state: "{{ item_generic.state }}"
   with_items: "{{ alb_internal_openresty_packages }}"
+  loop_control:
+    loop_var: "item_generic"
   when:
     - "(alb_internal_openresty_packages is defined) and (alb_internal_openresty_packages[0] is defined) and alb_internal_openresty_packages[0].name is defined"
 
 - name: "openresty | install | package-manager | generic.yml: luarocks install lua-resty-auto-ssl"
   shell: "luarocks install lua-resty-auto-ssl"
+  register: alb_openresty_install_luarestyaytossl_result
+
+- name: "openresty | install | package-manager | generic.yml: luarocks install lua-resty-auto-ssl (debug)"
+  debug:
+    msg: "{{ alb_openresty_install_luarestyaytossl_result | default ('undefined')}}"
+#  when:
+#    - "(alb_internal_bootstrap_luarocks_scripts is defined) and (alb_internal_bootstrap_luarocks_scripts[0] is defined)"

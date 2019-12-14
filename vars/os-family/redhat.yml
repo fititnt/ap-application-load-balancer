@@ -28,6 +28,10 @@ alb_internal_bootstrap_extra_tools:
     state: present
   - name: nmap
     state: present
+  - name: gcc
+    state: present
+  - name: make
+    state: present
 
 # RHEL/CentOS 7 have luarocks without directy RPM install. 8 does not, so we use RPM for now
 alb_internal_bootstrap_luarocks_packages:

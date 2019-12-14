@@ -5,4 +5,4 @@
 
 - name: "openresty | apps | nlb-rules.yml"
   debug:
-    msg: "apps/nlb/main.yml planned, but not implmented yet"
+    msg: "apps/nlb/main.yml (ALB/HAproxy App rules) is planned, but not implemented inside tasks/apps (like ALB/OpenResty) on this ALB version."

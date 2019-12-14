@@ -148,6 +148,8 @@
     - alb_manange_all is sameas true
     - alb_manange_ufw is sameas true
 
+# - meta: flush_handlers
+
 - name: "AP-ALB | ALB/Status"
   include: status/main.yml
   tags:

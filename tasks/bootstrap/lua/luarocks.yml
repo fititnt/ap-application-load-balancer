@@ -22,5 +22,12 @@
 - name: "bootstrap | lua | luarocks.yml: raw script (transfer local script to remote, them execute. Try use other alternatives than this)"
   script: "{{ item }}"
   with_items: "{{ alb_internal_bootstrap_luarocks_scripts }}"
+  register: alb_internal_bootstrap_luarocks_scripts_result
+  when:
+    - "(alb_internal_bootstrap_luarocks_scripts is defined) and (alb_internal_bootstrap_luarocks_scripts[0] is defined)"
+
+- name: "bootstrap | lua | luarocks.yml: raw script debug"
+  debug:
+    msg: "{{ alb_internal_bootstrap_luarocks_scripts_result | default ('undefined')}}"
   when:
     - "(alb_internal_bootstrap_luarocks_scripts is defined) and (alb_internal_bootstrap_luarocks_scripts[0] is defined)"

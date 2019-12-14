@@ -30,7 +30,7 @@
     group: "{{ alb_nginx_user }}"
     mode: 0650
   with_items: "{{ alb_sysapps_htpassword }}"
-  # no_log: true
+  no_log: "not (alb_forcedebug is defined and alb_forcedebug|bool)"
   when:
     - alb_sysapps is defined and alb_sysapps[0] is defined
     - alb_sysapps_htpassword is defined and alb_sysapps_htpassword[0] is defined
