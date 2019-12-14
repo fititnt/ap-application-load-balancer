@@ -8,9 +8,11 @@ providers** (e.g. [Alibaba](https://www.alibabacloud.com/product/server-load-bal
 [GCloud](https://cloud.google.com/load-balancing/),
 [IBM](https://www.ibm.com/cloud/load-balancer), etc). It can be used both to
 create your own ALB on cheaper hardware on these same cloud providers or
-have your own ALB on any other provider of VPSs or bare metal servers.
+have your own ALB on any other provider of VPSs or bare metal servers. And yes,
+it handle automatic HTTPS for you on-the-fly **even** for clusters of ALBs, like
+enterprise versions of Traefik or Caddyserver.
 
-AP-ALB is flexible: you can either use dedicated very small VPSs with the role
+**AP-ALB is flexible**: you can either use dedicated very small VPSs with the role
 of load balancing to another services or replace your Apache/NGinx/HAproxy in
 each server with AP-ALB. Consider around just 64MB of RAM per node. _(So, if
 you are deployng in a dedicated 1GB VPS, consider **at least** reuse the same
@@ -20,7 +22,8 @@ node puting behind the AP-ALB one Varnish-Cache ;)_
 High Available AP-ALB Cluster using [Consul](https://www.consul.io/) instead of
 local filesystem. We recommend using the Ansible Role
 [brianshumate.consul](https://github.com/brianshumate/ansible-consul) for setup
-and manangement of Consul component.
+and manangement of Consul component. Examples can be found at
+[fititnt/ansible-linux-ha-cluster](https://github.com/fititnt/ansible-linux-ha-cluster).
 
 [![asciicast](https://asciinema.org/a/281411.svg)](https://asciinema.org/a/281411)
 > Source code for this demo at <https://github.com/fititnt/ap-alb-demo/releases/tag/v0.6.4-beta>
@@ -202,12 +205,12 @@ production at least with security updates without human intervention**.
 - **HAProxy 2.0**:
   - _Note: version **haproxy=2.0.\*** is locked_
   - <https://haproxy.debian.net/#?distribution=Ubuntu&release=bionic&version=2.0>
-- **OpenrResty**: 
+- **OpenResty**:
   - We use OpenResty® provides official pre-built packages
   - <https://openresty.org/en/linux-packages.html>
 - **Automatic HTTPS**
   - GUI/lua-resty-auto-ssl
-    - We use OpenrResty package mananger
+    - We use OpenResty package mananger
     - `luarocks install lua-resty-auto-ssl`
   - At moment we do not provide out of the box HTTPS using only HAProxy
     - Trust me. We do not found ways to automate Automatic HTTPS with HAProxy.
