@@ -1,0 +1,43 @@
+---
+# FILE:            {{ role_path }}/tasks/apps/logging/file.yml
+# LICENSE:         Public Domain
+
+- name: "apps | logging | file.yml: /var/log/app/[app_uid]/ directory"
+  file:
+    path: /var/log/app/{{ item.app_uid }}
+    state: directory
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_nginx_user }}"
+  with_items: "{{ alb_apps }}"
+  when:
+    - alb_apps is defined and alb_apps[0] is defined
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
+    - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+
+- name: "apps | logging | file.yml: /var/log/app/[app_uid]/access.log"
+  file:
+    path: /var/log/app/{{ item.app_uid }}/access.log
+    state: touch
+    owner: "{{ alb_nginx_user }}"
+    group: "{{ alb_nginx_user }}"
+    mode: 0644
+  with_items: "{{ alb_apps }}"
+  changed_when: false
+  when:
+    - alb_apps is defined and alb_apps[0] is defined
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
+    - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+
+- name: "apps | logging | file.yml: /var/log/app/[app_uid]/error.log"
+  file:
+    path: /var/log/app/{{ item.app_uid }}/error.log
+    state: touch
+    owner: "{{ alb_nginx_user }}"
+    group: "{{ alb_nginx_user }}"
+    mode: 0644
+  with_items: "{{ alb_apps }}"
+  changed_when: false
+  when:
+    - alb_apps is defined and alb_apps[0] is defined
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
+    - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"

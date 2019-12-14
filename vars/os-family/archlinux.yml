@@ -23,6 +23,8 @@ alb_internal_bootstrap_extra_tools:
   # @TODO: fine htpasswd package on Arch Linux (fititnt, 2019-12-12-07:39 BRT)
 
 alb_internal_bootstrap_luarocks_packages:
+  - name: lua
+    state: present
   - name: luarocks
     state: present
 

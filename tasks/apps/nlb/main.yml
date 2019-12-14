@@ -1,0 +1,8 @@
+---
+
+# FILE:            {{ role_path }}/tasks/apps/nlb/main.yml
+# LICENSE:         Public Domain
+
+- name: "openresty | apps | nlb-rules.yml"
+  debug:
+    msg: "apps/nlb/main.yml planned, but not implmented yet"

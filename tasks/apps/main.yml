@@ -2,5 +2,47 @@
 # FILE:            {{ role_path }}/tasks/apps/main.yml
 # LICENSE:         Public Domain
 
-- name: "openresty | main.yml: include apps.yml"
-  include: "{{ role_path }}/tasks/apps/apps.yml"
+# To force run this task file, you can use
+#    ansible-playbook --tags="alb-apps" --extra-vars "alb_forceredeploy=yes" -i hosts my_playbook.yml
+# To run only one app_use
+#    ansible-playbook --tags="alb-apps" --extra-vars "alb_forceredeploy=yes only_app_uid=my_app_uid" -i hosts my_playbook.yml
+
+- name: "openresty | apps | main.yml: /etc/ansible/facts.d/alb_apps.fact"
+  template:
+    src: files/alb_apps.fact
+    dest: /etc/ansible/facts.d/alb_apps.fact
+    mode: 0755
+  register: alb_apps_facts_deployed
+
+- name: "openresty | apps | alb-rules.yml: app_hook_before"
+  include_tasks: "{{ item_active.app_hook_before }}"
+  with_items: "{{ alb_apps }}"
+  loop_control:
+    loop_var: item_active
+  when:
+    #- item.app_alb_strategy is defined
+    - (item_active.app_hook_before is defined and item_active.app_hook_before)
+    - alb_apps is defined and alb_apps[0] is defined
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item_active.app_uid)"
+    - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+
+- name: "openresty | apps | main.yml: include alb/main.yml"
+  include: "{{ role_path }}/tasks/apps/alb/main.yml"
+
+- name: "openresty | apps | main.yml: include nlb/main.yml"
+  include: "{{ role_path }}/tasks/apps/nlb/main.yml"
+
+- name: "openresty | apps | main.yml: include logging/main.yml"
+  include: "{{ role_path }}/tasks/apps/logging/main.yml"
+
+- name: "openresty | apps | alb-rules.yml: app_hook_after"
+  include_tasks: "{{ item_active.app_hook_after }}"
+  with_items: "{{ alb_apps }}"
+  loop_control:
+    loop_var: item_active
+  when:
+    #- item.app_alb_strategy is defined
+    - (item_active.app_hook_after is defined and item_active.app_hook_after)
+    - alb_apps is defined and alb_apps[0] is defined
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item_active.app_uid)"
+    - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"

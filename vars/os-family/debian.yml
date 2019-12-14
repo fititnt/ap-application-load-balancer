@@ -25,7 +25,7 @@ alb_internal_bootstrap_basic_tools:
 alb_internal_bootstrap_extra_tools:
   - name: python3-pip
     state: present
-  - name: python3-setuptools 
+  - name: python3-setuptools
     state: present
   - name: python3-apt
     state: present
@@ -37,6 +37,8 @@ alb_internal_bootstrap_extra_tools:
     state: present
 
 alb_internal_bootstrap_luarocks_packages:
+  - name: lua5.1
+    state: present
   - name: luarocks
     state: present
 

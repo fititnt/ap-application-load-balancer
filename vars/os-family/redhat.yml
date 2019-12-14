@@ -20,7 +20,7 @@ alb_internal_bootstrap_basic_tools:
 alb_internal_bootstrap_extra_tools:
   - name: python3-pip
     state: present
-  - name: python3-setuptools 
+  - name: python3-setuptools
     state: present
   - name: python3-passlib
     state: present
@@ -30,9 +30,10 @@ alb_internal_bootstrap_extra_tools:
     state: present
 
 # RHEL/CentOS 7 have luarocks without directy RPM install. 8 does not, so we use RPM for now
-alb_internal_bootstrap_luarocks_packages: null
-#  - name: luarocks
-#    state: present
+alb_internal_bootstrap_luarocks_packages:
+  - name: lua
+    state: present
+
 alb_internal_bootstrap_luarocks_yums:
   - name: http://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/luarocks-2.3.0-1.el7.x86_64.rpm
     state: present

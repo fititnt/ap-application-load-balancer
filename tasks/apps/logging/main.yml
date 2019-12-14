@@ -1,0 +1,6 @@
+---
+# FILE:            {{ role_path }}/tasks/apps/logging/main.yml
+# LICENSE:         Public Domain
+
+- name: "apps | logging | main.yml: include file.yml"
+  include: "{{ role_path }}/tasks/apps/logging/file.yml"
