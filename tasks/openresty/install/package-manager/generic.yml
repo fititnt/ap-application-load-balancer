@@ -9,3 +9,6 @@
   with_items: "{{ alb_internal_openresty_packages }}"
   when:
     - "(alb_internal_openresty_packages is defined) and (alb_internal_openresty_packages[0] is defined) and alb_internal_openresty_packages[0].name is defined"
+
+- name: "openresty | install | package-manager | generic.yml: luarocks install lua-resty-auto-ssl"
+  shell: "luarocks install lua-resty-auto-ssl"

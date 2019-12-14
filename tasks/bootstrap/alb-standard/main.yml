@@ -15,3 +15,6 @@
 
 - name: "filesystem-structure.yml"
   include: filesystem-structure.yml
+
+- name: "fallback-keys.yml"
+  include: fallback-keys.yml

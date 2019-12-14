@@ -1,0 +1,20 @@
+---
+
+# FILE:            {{ role_path }}/tasks/bootstrap/alb-standard/fallback-keys.yml
+# LICENSE:         Public Domain
+
+- name: "bootstrap | alb-standard | fallback-keys.yml: /etc/ssl/resty-auto-ssl-fallback.crt"
+  template:
+    src: "{{ alb_bootstrap_restyautosslfallback_crt }}"
+    dest: /etc/ssl/resty-auto-ssl-fallback.crt
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: 0644
+
+- name: "bootstrap | alb-standard | fallback-keys.yml: /etc/ssl/resty-auto-ssl-fallback.key"
+  template:
+    src: "{{ alb_bootstrap_restyautosslfallback_key}}"
+    dest: /etc/ssl/resty-auto-ssl-fallback.key
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: 0644

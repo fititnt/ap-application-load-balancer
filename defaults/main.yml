@@ -37,7 +37,11 @@ alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
 # undocummented:
 alb_use_consul: no
 
-##AP-ALB custom repositories ---------------------------------------------------
+# root@ap-echo-ubuntu18:~# openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj '/CN=sni-support-required-for-valid-ssl' -keyout /etc/ssl/resty-auto-ssl-fallback.key -out /etc/ssl/resty-auto-ssl-fallback.crt
+alb_bootstrap_restyautosslfallback_crt: "{{ role_path }}/files/etc/ssl/resty-auto-ssl-fallback.crt"
+alb_bootstrap_restyautosslfallback_key: "{{ role_path }}/files/etc/ssl/resty-auto-ssl-fallback.key"
+
+## AP-ALB custom repositories --------------------------------------------------
 # These options only are used if you have `alb_manange_NameOfComponent: yes`
 alb_manange_haproxy_install: yes
 alb_manange_haproxy_repository: yes
@@ -48,7 +52,7 @@ alb_manange_ufw_repository: yes
 
 ### AP-ALB Components: shared options __________________________________________
 # Some variables are used on more than one ALB component by default for avoiding
-# some repetitive work (...) 
+# some repetitive work (...)
 
 alb_auth_users: []
 # alb_auth_users:
@@ -342,7 +346,4 @@ alb_ufw_autoapply_jump_boxes: yes    # no: ALB/UFW ignore alb_jump_boxes: []
 alb_forceignore_haproxy: false
 alb_forceignore_openresty: false
 alb_forceignore_ufw: false
-
-alb_vars_saveondisk: yes
-
 
