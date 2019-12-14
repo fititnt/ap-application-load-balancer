@@ -1,0 +1,15 @@
+---
+# FILE:            {{ role_path }}/tasks/openresty/main.yml
+# LICENSE:         Public Domain
+
+- name: "openresty | install | main.yml: choose method"
+  include: "{{ item }}"
+  with_first_found:
+    - "{{ role_path }}/tasks/openresty/install/package-manager/{{ alb_internal_package_manager_group | default('undefined')  }}.yml"
+    - "{{ role_path }}/tasks/openresty/install/package-manager/generic.yml"
+
+- name: "openresty | install | main.yml: default-files.yml"
+  include: "{{ role_path }}/tasks/openresty/install/default-files.yml"
+
+#- name: "openresty | install | main.yml: user-groups.yml"
+#  include: "{{ role_path }}/tasks/openresty/install/user-groups.yml"

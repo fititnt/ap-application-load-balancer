@@ -1,0 +1,6 @@
+---
+# FILE:            {{ role_path }}/tasks/openresty/management/main.yml
+# LICENSE:         Public Domain
+
+- name: "openresty | management | main.yml: nginx.conf"
+  include: "{{ role_path }}/tasks/openresty/management/nginx-conf-global.yml"

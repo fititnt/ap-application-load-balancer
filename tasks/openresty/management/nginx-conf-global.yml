@@ -1,0 +1,14 @@
+---
+# FILE:            {{ role_path }}/tasks/openresty/management/main.yml
+# LICENSE:         Public Domain
+
+- name: "openresty | management | nginx-conf-global.yml: /usr/local/openresty/nginx/conf/nginx.conf"
+  template:
+    src: "{{ alb_nginx_conf_file }}"
+    dest: /usr/local/openresty/nginx/conf/nginx.conf
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: '0644'
+    backup: yes
+  notify:
+    - reload openresty

@@ -1,0 +1,22 @@
+---
+# FILE:            {{ role_path }}/tasks/openresty/install/default-files.yml
+# LICENSE:         Public Domain
+
+- name: "openresty | install | default-files.yml: deploy default index, error, robots.txt, favicon.ico files on all OSs"
+  copy:
+    src: "{{ alb_nginx_html_folder }}"
+    dest: /usr/local/openresty/nginx/html/
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: '0644'
+
+- name: "openresty | install | default-files.yml: /usr/local/openresty/nginx/conf/nginx.conf"
+  template:
+    src: "{{ alb_nginx_conf_file }}"
+    dest: /usr/local/openresty/nginx/conf/nginx.conf
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: '0644'
+    backup: yes
+  notify:
+    - reload openresty

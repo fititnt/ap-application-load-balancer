@@ -55,9 +55,11 @@ alb_internal_haproxy_apt_repository: false
 alb_internal_ohaproxy_yum_repository: false
 
 ## ALB/OpenResty _______________________________________________________________
-alb_internal_openresty_package:
-  name: "openresty"
-  state: present
+alb_internal_openresty_packages:
+  - name: "openresty"
+    state: present
+  - name: "openresty-opm"
+    state: present
 
 ## ALB/Status __________________________________________________________________
 alb_internal_status_localports: "netstat -ntulp"

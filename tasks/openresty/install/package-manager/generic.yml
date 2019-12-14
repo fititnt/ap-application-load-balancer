@@ -1,0 +1,11 @@
+---
+# FILE:            {{ role_path }}/tasks/openresty/install/package-manager/generic.yml
+# LICENSE:         Public Domain
+
+- name: "openresty | install | package-manager | generic.yml"
+  package:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items: "{{ alb_internal_openresty_packages }}"
+  when:
+    - "(alb_internal_openresty_packages is defined) and (alb_internal_openresty_packages[0] is defined) and alb_internal_openresty_packages[0].name is defined"

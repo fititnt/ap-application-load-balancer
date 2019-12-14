@@ -180,6 +180,13 @@
     mode: '0644'
     owner: "{{ alb_internal_root_user }}"
 
+- name: "bootstrap | alb-standard | filesystem-structure: GUI/lua-resty-auto-ssl directory /etc/resty-auto-ssl"
+  file:
+    state: directory
+    path: /etc/resty-auto-ssl
+    owner: "{{ alb_nginx_user }}"
+    group: "{{ alb_nginx_user }}"
+
 # Syntactic sugar symbolic links
 #- name: "bootstrap | alb-standard | filesystem-structure:  ln -s /var/alb/ /opt/alb/alb-data"
 #  file:
@@ -332,12 +339,3 @@
     owner: "{{ alb_internal_root_user }}"
     state: link
     force: yes
-
-
-# TASK [ap-application-load-balancer : bootstrap | alb-standard | pip3 install passlib] **********************************************************************************************************************************************
-# An exception occurred during task execution. To see the full traceback, use -vvv. The error was: ImportError: No module named pkg_resources
-# fatal: [ap_echo]: FAILED! => {"changed": false, "msg": "Failed to import the required Python library (setuptools) on vmi274557.contaboserver.net's Python /usr/bin/python. Please read module documentation and install in the appropriate location. If the required library is installed, but Ansible is using the wrong Python interpreter, please consult the documentation on ansible_python_interpreter"}
-# fatal: [ap_golf]: FAILED! => {"changed": false, "msg": "Unable to find any of pip2, pip to use.  pip needs to be installed."}
-# fatal: [ap_delta]: FAILED! => {"changed": false, "msg": "Unable to find any of pip2, pip to use.  pip needs to be installed."}
-# changed: [rocha_basalto]
-# changed: [ap_foxtrot]

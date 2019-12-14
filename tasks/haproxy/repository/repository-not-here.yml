@@ -1,7 +1,9 @@
 ---
+# FILE:            {{ role_path }}/tasks/haproxy/compile/repository-not-here.yml
+# LICENSE:         Public Domain
 
 # Message for who does not read documentation, but is reading the sources
-- name: "haproxy | repository | repository-not-here: this feature is not here (see bootstrap/repositories/*)"
+- name: "haproxy | repository | repository-not-here.yml: this feature is not here (see bootstrap/repositories/*)"
   fail:
     msg: >
       Trying to import wrong file? This message is a reminder that ALB/HAproxy

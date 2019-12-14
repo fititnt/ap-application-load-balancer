@@ -63,9 +63,11 @@ alb_internal_haproxy_apt_repository:
 
 ## ALB/OpenResty _______________________________________________________________
 # @see https://openresty.org/en/linux-packages.html
-alb_internal_openresty_package:
-  name: "openresty"
-  state: present
+alb_internal_openresty_packages:
+  - name: "openresty"
+    state: present
+  - name: "openresty-opm"
+    state: present
 
 alb_internal_openresty_apt_key:
   url: "https://openresty.org/package/pubkey.gpg"
