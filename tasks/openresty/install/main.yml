@@ -8,14 +8,8 @@
     - "{{ role_path }}/tasks/openresty/install/package-manager/{{ alb_internal_package_manager_group | default('undefined')  }}.yml"
     - "{{ role_path }}/tasks/openresty/install/package-manager/generic.yml"
 
-# - name: "openresty | install | main.yml: resty-auto-ssl-keys.yml"
-#   include: "{{ role_path }}/tasks/openresty/install/resty-auto-ssl-keys.yml"
-
 - name: "openresty | install | main.yml: storage-adapters/main.yml"
   include: "{{ role_path }}/tasks/openresty/install/storage-adapters/main.yml"
 
 - name: "openresty | install | main.yml: default-files.yml"
   include: "{{ role_path }}/tasks/openresty/install/default-files.yml"
-
-#- name: "openresty | install | main.yml: user-groups.yml"
-#  include: "{{ role_path }}/tasks/openresty/install/user-groups.yml"

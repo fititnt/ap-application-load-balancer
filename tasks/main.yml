@@ -3,20 +3,7 @@
 # FILE:            {{ role_path }}/tasks/main.yml
 # LICENSE:         Public Domain
 
-## AP-ALB v0.8.x adaptations to support RHEL/CentOS 8 family and design changes to allow flexibility even for non-tested OSs #34
-##   - https://github.com/fititnt/ap-application-load-balancer/issues/34
-##   - https://linuxize.com/post/how-to-install-python-on-centos-8/
-##   - https://www.linuxschoolonline.com/how-to-use-ansible-even-it-the-target-host-does-not-have-python-installed/
-##   - https://medium.com/@somakdas/simple-ansible-paybook-without-python-installed-in-target-machines-1df423004da5
-##   - https://ansible-tips-and-tricks.readthedocs.io/en/latest/ansible/commands/#when-all-else-fails
-
-# About tags https://docs.ansible.com/ansible/latest/user_guide/playbooks_tags.html
-
-# ansible -m raw -s -a "sudo dnf install python3 -y" aguia-pescadora-delta.etica.ai
-
-# OpenResty https://openresty.org/en/linux-packages.html
-
-- name: "ALB Info"
+- name: "AP-ALB | Welcome message"
   debug:
     msg:
       alb_version: "{{ alb_version }}"
@@ -29,7 +16,7 @@
     - always
 
 ## Variable loading based on node Operational System ___________________________
-- name: "ALB | OS Family variables"
+- name: "AP-ALB | OS Family variables"
   include_vars: "{{ item }}"
   with_first_found:
     - "{{ (alb_vars_osfamily is defined) | ternary(alb_vars_osfamily, 'name-of-a-file-that-does-not-exist.yml') }}"
@@ -39,7 +26,7 @@
     - alb
     - always
 
-- name: "ALB | OS Family version variables"
+- name: "AP-ALB | OS Family version variables"
   include_vars: "{{ item }}"
   with_first_found:
     - "{{ (alb_vars_osfamilyversion is defined) | ternary(alb_vars_osfamilyversion, 'name-of-a-file-that-does-not-exist.yml') }}"
@@ -49,7 +36,7 @@
     - alb
     - always
 
-- name: "ALB | Distribution variables (may override OS Family variables, if exist)"
+- name: "AP-ALB | Distribution variables (may override OS Family variables, if exist)"
   include_vars: "{{ item }}"
   with_first_found:
     - "{{ (alb_vars_distribution is defined) | ternary(alb_vars_distribution, 'name-of-a-file-that-does-not-exist.yml') }}"
@@ -59,7 +46,7 @@
     - alb
     - always
 
-- name: "ALB | Specific version distribution variables (may override OS Family and Distribution variables, if exist)"
+- name: "AP-ALB | Specific version distribution variables (may override OS Family and Distribution variables, if exist)"
   include_vars: "{{ item }}"
   with_first_found:
     - "{{ (alb_vars_distribution_version is defined) | ternary(alb_vars_distribution_version, 'name-of-a-file-that-does-not-exist.yml') }}"
@@ -80,7 +67,7 @@
     - alb_manange_all is sameas true
     - alb_manange_bootstrap is sameas true
 
-- name: "ALB | Abort if running in Unknow state"
+- name: "AP-ALB | Abort if running in Unknow state"
   fail:
     msg: "{{ alb_internal_alert_critical_all }}"
   tags:
@@ -97,7 +84,7 @@
     - ansible_facts['ansible_local'] is defined and ansible_facts['ansible_local']['alb_lastrun'] is defined and ansible_facts['ansible_local']['alb_lastrun']['alb_version'] is defined
     - alb_version_lastrun|int != -1
 
-- name: "sanitycheck/main.yml"
+- name: "AP-ALB | ALB/SanityCheck"
   include: sanitycheck/main.yml
   tags:
     - alb
@@ -106,11 +93,7 @@
     - alb_manange_all is sameas true
     - alb_manange_sanitycheck is sameas true
 
-# TODO: remove this check very soon after the testing with all the OSs (fititnt, 2019-12-08 11:14 BRT)
-#- fail:
-#    msg: "testing"
-
-- name: OpenResty
+- name: "AP-ALB | ALB/OpenResty"
   include: openresty/main.yml
   tags:
     - alb
@@ -119,7 +102,7 @@
     - alb_manange_all is sameas true
     - alb_manange_openresty is sameas true
 
-- name: HAproxy
+- name: "AP-ALB | ALB/HAproxy"
   include: haproxy/main.yml
   tags:
     - alb
@@ -128,7 +111,7 @@
     - alb_manange_all is sameas true
     - alb_manange_haproxy is sameas true
 
-- name: ALB rule for each Sysapp
+- name: "AP-ALB | ALB/Sysapps"
   include: sysapps/main.yml
   tags:
     - alb
@@ -137,7 +120,7 @@
     - alb_manange_all is sameas true
     - alb_manange_sysapps is sameas true
 
-- name: ALB rule for each App
+- name: "AP-ALB | ALB/Apps"
   include: apps/main.yml
   tags:
     - alb
@@ -146,7 +129,7 @@
     - alb_manange_all is sameas true
     - alb_manange_apps is sameas true
 
-- name: logrotate/logrotate.yml
+- name: "AP-ALB | ALB/Logrotate"
   include: logrotate/logrotate.yml
   tags:
     - alb
@@ -155,7 +138,7 @@
     - alb_manange_all is sameas true
     - alb_manange_logrotate is sameas true
 
-- name: ufw/main.yml
+- name: "AP-ALB | ALB/UFW"
   include: ufw/main.yml
   tags:
     - alb
@@ -165,7 +148,7 @@
     - alb_manange_all is sameas true
     - alb_manange_ufw is sameas true
 
-- name: status/main.yml
+- name: "AP-ALB | ALB/Status"
   include: status/main.yml
   tags:
     #- always

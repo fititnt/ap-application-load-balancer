@@ -1,0 +1,6 @@
+---
+# FILE:            {{ role_path }}/vars/os-family/os-family-version/redhat-7.yml
+# LICENSE:         Public Domain
+
+alb_internal_bootstrap_luarocks_scripts:
+  - "{{ role_path }}/tasks/bootstrap/lua/centos-8-luarocks.sh"

@@ -100,7 +100,7 @@
 # TASK [ap-application-load-balancer : Configure the kernel to keep connections alive when enabling the firewall] ********************
 #  [WARNING]: The value 1 (type int) in a string field was converted to '1' (type string). If this does not look like what you
 # expect, quote the entire value to ensure it does not change.
-# 
+#
 # fatal: [apps_server_apalbdemo]: FAILED! => {"changed": false, "msg": "Failed to reload sysctl: kernel.panic = 10\nnet.ipv6.conf.all.disable_ipv6 = 1\nsysctl: cannot stat /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal: No such file or directory\n"}
 
 #- name: "UFW state {{ alb_ufw_state | default (alb_ufw_state__default) }}"
