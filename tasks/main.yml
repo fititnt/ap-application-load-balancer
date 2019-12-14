@@ -11,6 +11,7 @@
         os: "{{ ansible_os_family | default('undefined') | lower }}"
         dist: "{{ ansible_distribution | default('undefined') | lower }}"
         dist_major_ver: "{{ ansible_distribution_major_version | default('undefined') | lower }}"
+        ansible_lsb: "{{ ansible_lsb }}"
   tags:
     - alb
     - always

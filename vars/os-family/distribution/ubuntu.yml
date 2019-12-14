@@ -15,9 +15,9 @@ alb_internal_haproxy_apt_repository:
 # @see https://openresty.org/en/linux-packages.html
 
 alb_internal_openresty_apt_repository:
-  repo: "deb http://openresty.org/package/ubuntu $(lsb_release -sc) main"
+  # repo: "deb http://openresty.org/package/ubuntu $(lsb_release -sc) main"
+  repo: "deb http://openresty.org/package/ubuntu {{ ansible_lsb.codename }} main"
   state: "present"
-  filename: "openresty"
 
 ## ALB/Bootstrap/AnsibleContolNode: is NOT installed by default ________________
 # requires: `alb_bootstrap_ansible_control_node: yes` explicit

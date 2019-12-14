@@ -80,9 +80,10 @@ alb_internal_openresty_apt_key:
   state: present
 
 alb_internal_openresty_apt_repository:
-  repo: "deb http://openresty.org/package/debian $(lsb_release -sc) main"
+  # repo: "deb http://openresty.org/package/debian $(lsb_release -sc) openresty"
+  repo: "deb http://openresty.org/package/debian {{ ansible_lsb.codename }} openresty"
   state: "present"
-  filename: "openresty"
+  # filename: "openresty"
 
 ## ALB/Bootstrap/AnsibleContolNode: is NOT installed by default ________________
 # requires: `alb_bootstrap_ansible_control_node: yes` explicit

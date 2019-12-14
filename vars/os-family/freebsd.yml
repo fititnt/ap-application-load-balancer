@@ -108,7 +108,7 @@ alb_internal_alert_critical_openresty: >
   FreeBSD | Critical error! You are test ALB/OpenResty on FreeBSD, but we
   do not implemented the compilation step as described here
   https://openresty.org/en/installation.html.
-  
+
   This warning can be disabled at ap-application-load-balancer/vars/freebsd.yml
 
 # Note: FreeBSD have logrotate https://www.freebsd.org/cgi/man.cgi?query=logrotate

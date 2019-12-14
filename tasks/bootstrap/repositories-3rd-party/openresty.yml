@@ -3,14 +3,24 @@
 # FILE:            {{ role_path }}/tasks/bootstrap/repositories-3rd-party/openresty.yml
 # LICENSE:         Public Domain
 
-- name: "bootstrap | repositories-3rd-party | openresty.yml: apt_key (TODO: fix to remove warnings later)"
-  apt_key: "{{ alb_internal_openresty_apt_key }}"
+- name: "bootstrap | repositories-3rd-party | openresty.yml: apt_key"
+  # apt_key: "{{ alb_internal_openresty_apt_key }}"
+  apt_key:
+    url: "{{ alb_internal_openresty_apt_key.url | default(omit) }}"
+    state: "{{ alb_internal_openresty_apt_key.state | default(omit) }}"
+    id: "{{ alb_internal_openresty_apt_key.id | default(omit) }}"
+    keyring: "{{ alb_internal_openresty_apt_key.keyring | default(omit) }}"
   when:
     - "(alb_internal_openresty_apt_key is defined) and (alb_internal_openresty_apt_key.url is defined)"
 
-- name: "bootstrap | repositories-3rd-party | openresty.yml: apt_repository (TODO: fix to remove warnings later; fix apt cache update failed and remove ignore_errors )"
-  apt_repository: "{{ alb_internal_openresty_apt_repository }}"
-  ignore_errors: true #TODO remove this later
+- name: "bootstrap | repositories-3rd-party | openresty.yml: apt_repository"
+  # apt_repository: "{{ alb_internal_openresty_apt_repository }}"
+  apt_repository:
+    repo: "{{ alb_internal_openresty_apt_repository.repo | default(omit) }}"
+    state: "{{ alb_internal_openresty_apt_repository.state | default('present') }}"
+    filename: "{{ alb_internal_openresty_apt_repository.filename | default(omit) }}"
+    # update_cache: false
+  # ignore_errors: true #TODO remove this later
   when:
     - "(alb_internal_openresty_apt_repository is defined) and (alb_internal_openresty_apt_repository.repo is defined)"
 
@@ -35,25 +45,25 @@
     - "(alb_internal_openresty_zypper_repository is defined) and (alb_internal_openresty_zypper_repository.repo is defined)"
 
 # Nothing to do.
-# vmi322005:~ # zypper update 
+# vmi322005:~ # zypper update
 # Retrieving repository 'Official OpenResty Open Source Repository for OpenSUSE' metadata --------------------------------------------------------------------------------------------------------------------------------------------[\]
 # Looking for gpg key ID D5EDEB74 in cache /var/cache/zypp/pubkeys.
 
 # New repository or package signing key received:
 
 #   Repository:       Official OpenResty Open Source Repository for OpenSUSE
-#   Key Name:         OpenResty Admin <admin@openresty.com>                 
-#   Key Fingerprint:  E52218E7 087897DC 6DEA6D6D 97DB7443 D5EDEB74          
-#   Key Created:      Sun May 21 00:15:29 2017                              
-#   Key Expires:      (does not expire)                                     
-#   Subkey:           D511AE9FFBAEC167 2017-05-21 [does not expire]         
-#   Rpm Name:         gpg-pubkey-d5edeb74-5920dc21                          
+#   Key Name:         OpenResty Admin <admin@openresty.com>
+#   Key Fingerprint:  E52218E7 087897DC 6DEA6D6D 97DB7443 D5EDEB74
+#   Key Created:      Sun May 21 00:15:29 2017
+#   Key Expires:      (does not expire)
+#   Subkey:           D511AE9FFBAEC167 2017-05-21 [does not expire]
+#   Rpm Name:         gpg-pubkey-d5edeb74-5920dc21
 
 
 # Do you want to reject the key, or trust always? [r/a/?] (r): y
 # : Invalid answer 'y'.
 # [r/a/?] (r): a
-    
+
 
 # TASK [ap-application-load-balancer : bootstrap | repositories-3rd-party | openresty.yml: apt_repository (TODO: fix to remove warnings later)] *****************************************************************************************
 # [WARNING]: Using a variable for a task's 'args' is unsafe in some situations (see https://docs.ansible.com/ansible/devel/reference_appendices/faq.html#argsplat-unsafe)
@@ -67,5 +77,4 @@
 # fatal: [ap_echo_debian10]: FAILED! => {"changed": false, "msg": "apt cache update failed"}
 # fatal: [ap_delta_ubuntu18]: FAILED! => {"changed": false, "msg": "apt cache update failed"}
 
-    
-    
+

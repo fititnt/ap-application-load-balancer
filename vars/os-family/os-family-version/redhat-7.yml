@@ -9,13 +9,17 @@
 alb_internal_bootstrap_extra_tools:
   - name: python-pip
     state: present
-  - name: python-setuptools 
+  - name: python-setuptools
     state: present
   - name: python-passlib
     state: present
   - name: httpd-tools
     state: present
   - name: nmap
+    state: present
+  - name: gcc
+    state: present
+  - name: make
     state: present
 
 # RHEL/CentOS 7 have luarocks without directy RPM install. 8 does not, so we use RPM for now

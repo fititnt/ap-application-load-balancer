@@ -19,7 +19,18 @@ make install
 # Very ugly hack on RHEL/CentOS to allow OpenResty discover where auto-ssl is
 # installed without change nginx. Will not be necessary when luarocks do not
 # need be compiled
-ln -s /usr/local/share/lua/5.3 /usr/local/share/lua/5.1
+if [ -L /usr/local/share/lua/5.1 ] ; then
+   if [ -e /usr/local/share/lua/5.1 ] ; then
+      echo "Good link"
+   else
+      echo "Broken link"
+   fi
+elif [ -e /usr/local/share/lua/5.1 ] ; then
+   echo "Not a link"
+else
+   echo "Missing"
+   ln -s /usr/local/share/lua/5.3 /usr/local/share/lua/5.1
+fi
 
 # TODO: maybe we should force the 'luarocks install lua-resty-auto-ssl'
 #       install the library inside the OpenResty folder than make arbiratrary
