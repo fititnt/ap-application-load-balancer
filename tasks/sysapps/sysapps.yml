@@ -1,21 +1,9 @@
 ---
 
-# FILE:            {{ role_path }}/tasks/sysapps.yml
+# FILE:            {{ role_path }}/tasks/sysapps/sysapps.yml
 # LICENSE:         Public Domain
 
 # ansible-playbook -i hosts.yml infra-alb.yml --tags="alb-sysapps" --extra-vars "alb_forceredeploy=yes"
-
-## NGinx Server Blocks (e.g. ~Apache Virtual Hosts)
-#- name: "NGinx Server Blocks (e.g. ~Apache Virtual Hosts)"
-#  template:
-#    src: "{{ item.vhost_template|default(alb_sysapps_serverblock_template) }}"
-#    dest: "/usr/local/openresty/nginx/conf/sites-enabled/{{ item.domain }}.conf"
-#    owner: root
-#    group: "root"
-#    mode: 0644
-#    backup: yes
-#  with_items: "{{ alb_sysapps }}"
-#  notify: reload openresty
 
 - name: "sysapps | /etc/ansible/facts.d/alb_sysapps.fact"
   template:
@@ -30,7 +18,7 @@
 # changed: [ap_delta_ubuntu18] => (item=None)
 # failed: [ap_echo_debian10] (item=None) => {"censored": "the output has been hidden due to the fact that 'no_log: true' was specified for this result", "changed": false}
 # fatal: [ap_echo_debian10]: FAILED! => {"censored": "the output has been hidden due to the fact that 'no_log: true' was specified for this result", "changed": false}
-# [ap_echo_debian10] TASK: ap-application-load-balancer : sysapps | /opt/alb/sysapps/.htaccess (debug)> 
+# [ap_echo_debian10] TASK: ap-application-load-balancer : sysapps | /opt/alb/sysapps/.htaccess (debug)>
 
 - name: "sysapps | /opt/alb/sysapps/.htaccess"
   htpasswd:
@@ -42,7 +30,7 @@
     group: "{{ alb_nginx_user }}"
     mode: 0650
   with_items: "{{ alb_sysapps_htpassword }}"
-  no_log: true
+  # no_log: true
   when:
     - alb_sysapps is defined and alb_sysapps[0] is defined
     - alb_sysapps_htpassword is defined and alb_sysapps_htpassword[0] is defined
@@ -69,7 +57,7 @@
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
   notify: reload openresty
 
-- name: sysapps | mkdir /var/log/sysapp/[app_uid]
+- name: "sysapps | mkdir /var/log/sysapp/[app_uid]"
   file:
     path: /var/log/sysapp/{{ item.app_uid }}
     state: directory
@@ -81,7 +69,7 @@
     - alb_sysapps is defined and alb_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
-- name: sysapps | mkdir /var/log/sysapp/[app_uid]/access.log
+- name: "sysapps | mkdir /var/log/sysapp/[app_uid]/access.log"
   file:
     path: /var/log/sysapp/{{ item.app_uid }}/access.log
     state: touch
@@ -93,7 +81,7 @@
     - alb_sysapps is defined and alb_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
-- name: sysapps | mkdir /var/log/sysapp/[app_uid]/error.log
+- name: "sysapps | mkdir /var/log/sysapp/[app_uid]/error.log"
   file:
     path: /var/log/sysapp/{{ item.app_uid }}/error.log
     state: touch

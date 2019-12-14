@@ -1,0 +1,12 @@
+---
+# FILE:            {{ role_path }}/tasks/openresty/install/storage-adapters/file.yml
+# LICENSE:         Public Domain
+
+# Message for who does not read documentation, but is reading the sources
+- name: "openresty | install | storage-adapters | file.yml: this feature is already implemented"
+  fail:
+  msg: >
+    Trying to import wrong file? This message is a reminder that ALB/OpenResty
+    already assume /etc/resty-auto-ssl was created by AP-ALB/boostrap/alb-standard.
+    If you are not using some clustered storage (like Consul), is on this path
+    that you will find your private SSL keys

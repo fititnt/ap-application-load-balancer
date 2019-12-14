@@ -1,0 +1,6 @@
+---
+# FILE:            {{ role_path }}/tasks/sysapps/main.yml
+# LICENSE:         Public Domain
+
+- name: "openresty | main.yml: include sysapps.yml"
+  include: "{{ role_path }}/tasks/sysapps/sysapps.yml"

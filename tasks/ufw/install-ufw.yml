@@ -1,15 +1,5 @@
 ---
 
-- name: "ufw (CentOS/RHEL) | sudo dnf install -y epel-release (ufw is not present on default repository)"
-  dnf:
-    name:
-      - epel-release
-    state: present
-  when:
-   - "ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'"
-   - "alb_manange_ufw_repository is defined and alb_manange_ufw_repository|bool"
-   - "alb_manange_ufw_install is defined and alb_manange_ufw_install|bool"
-
 - name: "ufw | package: ufw state: present"
   package:
     name: ufw

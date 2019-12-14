@@ -17,7 +17,7 @@
 # OpenResty https://openresty.org/en/linux-packages.html
 
 - name: "ALB Info"
-  debug: 
+  debug:
     msg:
       alb_version: "{{ alb_version }}"
       node:
@@ -129,7 +129,7 @@
     - alb_manange_haproxy is sameas true
 
 - name: ALB rule for each Sysapp
-  include: sysapps/sysapps.yml
+  include: sysapps/main.yml
   tags:
     - alb
     - alb-sysapps
@@ -138,7 +138,7 @@
     - alb_manange_sysapps is sameas true
 
 - name: ALB rule for each App
-  include: apps/apps.yml
+  include: apps/main.yml
   tags:
     - alb
     - alb-apps
@@ -183,4 +183,4 @@
   changed_when: false
   tags:
     - always
-  when: (alb_manange_haproxy is sameas true) or (alb_manange_openresty is sameas true) or (alb_manange_ufw is sameas true) or (alb_manange_common is sameas true) or (alb_manange_apps is sameas true) or (alb_manange_logrotate is sameas true) 
+  when: (alb_manange_haproxy is sameas true) or (alb_manange_openresty is sameas true) or (alb_manange_ufw is sameas true) or (alb_manange_common is sameas true) or (alb_manange_apps is sameas true) or (alb_manange_logrotate is sameas true)

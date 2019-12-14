@@ -1,0 +1,8 @@
+---
+# FILE:            {{ role_path }}/tasks/openresty/install/storage-adapters/main.yml
+# LICENSE:         Public Domain
+
+- name: "openresty | install | storage-adapters | main.yml: consul.yml"
+  include: "{{ role_path }}/tasks/openresty/install/storage-adapters/consul.yml"
+  when:
+  - "(alb_use_consul is defined) and (alb_use_consul|bool)"
