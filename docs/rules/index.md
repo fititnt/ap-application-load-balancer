@@ -1,5 +1,93 @@
 # AP-ALB Application Rules (The "Load Balancer listener" standard)
-## Applications/Sysapplications variables
+[![GitHub: fititnt/ap-application-load-balancer](../img/badges/github.svg)](https://github.com/fititnt/ap-application-load-balancer) [![Website: ap-application-load-balancer.etica.ai](../img/badges/website.svg)](https://ap-application-load-balancer.etica.ai/)
+
+TL;DR:
+- **The AP-ALB Ansible Role use YAML definitions as internal way to know what
+  what is the desired final state of a ALB node. It means that, by default,
+  there is not graphical user interface or API**.
+- The control node (hint: can be your own notebook controling just one cheap
+  VPS) will need root access to convert apply the YAML instructions.
+  - AP-ALB by design will try protect from human errors related to
+    misconfigurations.
+  - AP-ALB alone, without human supervision is not able to protect from
+    intentional configurations aimed to steal data from another applications.
+- For more advanced cases (to abstract the security issues with root or use
+  non-YAML alternative), you can still use AP-ALB to control your nodes, but
+  - Use [Ansible AWX](https://github.com/ansible/awx) /
+    [Ansible Tower](https://www.ansible.com/products/tower)
+  - Create your own custom GUI / custom API to pre-process the YAML files used
+    by AP-ALB (or any other *-ALB implementation)
+- Read this documentation considering that some features AP-ALB are very
+  exclusive to AP-ALB (or any solution that abstract HAProxy and
+  OpenResty/NGinx) and do not have equivalent on cloud Load Balancers. Examples
+  - AP-ALB may both installed on dedicated Load Balancer servers and also on
+    the servers that have the applications running
+    - It means that you can replace your Apache and Nginx with AP-ALB.
+
+<!--
+The AP-ALB Ansible Role use YAML definitions as internal way to apply changes on
+your ALB nodes and (because of the underlining components HAProxy & OpenResty)
+the AP-ALB will require root access. This implementation could work fine on
+smaller implementations (when you have some trust on your developers will use this
+to access data from other applications) or medium to large hosting companies
+where you have someone from help desk to do some quick review.
+
+Other pertinent aspect: The control node (hint: can be your own notebook
+controling just one cheap VPS), because because of the underlining components
+HAProxy & OpenResty, will need root access.
+-->
+
+## Table of Contents
+
+<!-- TOC -->
+
+- [AP-ALB Application Rules (The "Load Balancer listener" standard)](#ap-alb-application-rules-the-load-balancer-listener-standard)
+    - [Table of Contents](#table-of-contents)
+    - [Overview of Applications Variables on servers using AP-ALB standard](#overview-of-applications-variables-on-servers-using-ap-alb-standard)
+    - [Applications variables](#applications-variables)
+        - [app_*](#app_)
+            - [app_uid](#app_uid)
+            - [app_state](#app_state)
+            - [app_domain](#app_domain)
+            - [app_domain_extras](#app_domain_extras)
+            - [app_debug](#app_debug)
+            - [app_forcehttps](#app_forcehttps)
+            - [app_hook_after](#app_hook_after)
+            - [app_hook_before](#app_hook_before)
+            - [app_index](#app_index)
+            - [app_root](#app_root)
+            - [app_tags](#app_tags)
+        - [app_data_*](#app_data_)
+            - [app_data_directories](#app_data_directories)
+            - [app_data_files](#app_data_files)
+            - [app_data_hook_export_after](#app_data_hook_export_after)
+            - [app_data_hook_export_before](#app_data_hook_export_before)
+            - [app_data_hook_import_after](#app_data_hook_import_after)
+            - [app_data_hook_import_before](#app_data_hook_import_before)
+        - [app_*_strategy](#app__strategy)
+            - [app_alb_strategy](#app_alb_strategy)
+            - [app_backup_strategy](#app_backup_strategy)
+            - [app_ha_strategy](#app_ha_strategy)
+            - [app_nlb_strategy](#app_nlb_strategy)
+        - [app_alb_*](#app_alb_)
+            - [app_alb_hosts](#app_alb_hosts)
+            - [app_alb_proxy](#app_alb_proxy)
+            - [app_alb_proxy_defaults](#app_alb_proxy_defaults)
+            - [app_alb_proxy_location](#app_alb_proxy_location)
+            - [app_alb_proxy_params](#app_alb_proxy_params)
+            - [app_alb_raw](#app_alb_raw)
+            - [app_alb_raw_file](#app_alb_raw_file)
+        - [Deprecated app_* variables](#deprecated-app_-variables)
+            - [app_raw_conf](#app_raw_conf)
+            - [No default value for app_alb_strategy](#no-default-value-for-app_alb_strategy)
+    - [AP-ALB Application Rules compared to other load balancers](#ap-alb-application-rules-compared-to-other-load-balancers)
+        - [Azure Load balancer](#azure-load-balancer)
+        - [AWS Application Load Balancers Listeners](#aws-application-load-balancers-listeners)
+        - [Google Cloud Load Balancing](#google-cloud-load-balancing)
+
+<!-- /TOC -->
+
+## Overview of Applications Variables on servers using AP-ALB standard
 
 Variables prefixed with `app_` are used by [Apps](#apps) and [Sysapps](#sysapps)
 and have some extra customization via [ALB Strategies](#alb-strategies).
@@ -23,46 +111,7 @@ These are key elements that form a single dictionary (think _object_) for the
         app_alb_strategy: "proxy"
 ```
 
-<!-- TOC depthFrom:2 -->
-
-- [Applications/Sysapplications variables](#applicationssysapplications-variables)
-    - [app_*](#app_)
-        - [app_uid](#app_uid)
-        - [app_state](#app_state)
-        - [app_domain](#app_domain)
-        - [app_domain_extras](#app_domain_extras)
-        - [app_debug](#app_debug)
-        - [app_forcehttps](#app_forcehttps)
-        - [app_hook_after](#app_hook_after)
-        - [app_hook_before](#app_hook_before)
-        - [app_index](#app_index)
-        - [app_root](#app_root)
-        - [app_tags](#app_tags)
-    - [app_data_*](#app_data_)
-        - [app_data_directories](#app_data_directories)
-        - [app_data_files](#app_data_files)
-        - [app_data_hook_export_after](#app_data_hook_export_after)
-        - [app_data_hook_export_before](#app_data_hook_export_before)
-        - [app_data_hook_import_after](#app_data_hook_import_after)
-        - [app_data_hook_import_before](#app_data_hook_import_before)
-    - [app_*_strategy](#app__strategy)
-        - [app_alb_strategy](#app_alb_strategy)
-        - [app_backup_strategy](#app_backup_strategy)
-        - [app_ha_strategy](#app_ha_strategy)
-        - [app_nlb_strategy](#app_nlb_strategy)
-    - [app_alb_*](#app_alb_)
-        - [app_alb_hosts](#app_alb_hosts)
-        - [app_alb_proxy](#app_alb_proxy)
-        - [app_alb_proxy_defaults](#app_alb_proxy_defaults)
-        - [app_alb_proxy_location](#app_alb_proxy_location)
-        - [app_alb_proxy_params](#app_alb_proxy_params)
-        - [app_alb_raw](#app_alb_raw)
-        - [app_alb_raw_file](#app_alb_raw_file)
-    - [Deprecated app_* variables](#deprecated-app_-variables)
-        - [app_raw_conf](#app_raw_conf)
-        - [No default value for app_alb_strategy](#no-default-value-for-app_alb_strategy)
-
-<!-- /TOC -->
+## Applications variables
 
 ### app_*
 
@@ -489,3 +538,22 @@ ignored by OpenResty.
 The reason for this is allow on future have apps that can exist only for other
 reasons (for example, for NLB/HAProxy, or for Backup tasks). This also means
 that a same app group could have variables reused for different strategies
+
+## AP-ALB Application Rules compared to other load balancers
+
+### Azure Load balancer
+- <https://docs.microsoft.com/pt-br/azure/load-balancer/>
+
+> @TODO write small paragraph about AP-ALB and Azure Load Balancer (fititnt, 2019-12-15 06:44 BRT)
+
+
+### AWS Application Load Balancers Listeners
+- <https://docs.aws.amazon.com/en_us/elasticloadbalancing/latest/application/load-balancer-listeners.html>
+
+> @TODO write small paragraph about AP-ALB and AWS Application Load Balancers Listeners (fititnt, 2019-12-15 06:44 BRT)
+
+### Google Cloud Load Balancing
+
+- <https://cloud.google.com/load-balancing/docs/apis>
+
+> @TODO write small paragraph about AP-ALB and AWS Google Cloud Load Balancing (fititnt, 2019-12-15 06:44 BRT)
