@@ -26,7 +26,11 @@ global
 	log /dev/log	local0
 	log /dev/log	local1 notice
 	chroot /var/lib/haproxy
+{% if (alb_internal_haproxy_compatibility_veryoldversion is undefined or alb_internal_haproxy_compatibility_veryoldversion|bool is sameas false) %}
 	stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+{% else %}
+    stats socket /run/haproxy/admin.sock mode 660 level admin
+{% endif %}
 	stats timeout 30s
 	user {{ alb_internal_haproxy_system_user }}
 	group {{ alb_internal_haproxy_system_group }}

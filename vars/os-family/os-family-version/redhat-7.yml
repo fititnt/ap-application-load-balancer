@@ -2,6 +2,9 @@
 # FILE:            {{ role_path }}/vars/os-family/os-family-version/redhat-7.yml
 # LICENSE:         Public Domain
 
+# Quick fix to disable some features on CentOS 7 that not even have HAProxy 1.8
+alb_internal_haproxy_compatibility_veryoldversion: true
+
 # Since file {{ role_path }}/vars/os-family/redhat.yml is aimed to RedHat 8
 # Family, on this we will only overryde some values to support all OS
 # based on RHEL 7 (like Centos 7)

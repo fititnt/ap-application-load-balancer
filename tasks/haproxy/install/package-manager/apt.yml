@@ -2,11 +2,22 @@
 # FILE:            {{ role_path }}/tasks/haproxy/install/apt.yml
 # LICENSE:         Public Domain
 
+# apt install haproxy=2.0.\* -t buster-backports-2.0
+
 # TODO: improve this hardcoded version (fititnt, 2019-12-11 04:54 BRT)
-- name: "haproxy | install | apt.yml (Debian Family)"
-  apt:
-    name: 'haproxy=2.0.*'
-    state: 'present'
+# - name: "haproxy | install | apt.yml (Debian Family)"
+#   apt:
+#     name: 'haproxy=2.0.*'
+#     state: 'present'
 #  when:
 #    - "ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'"
 #    - "alb_manange_haproxy_install is defined and alb_manange_haproxy_install|bool"
+
+- name: "haproxy | install | apt.yml (Debian Family) [If this fails, please check/customize alb_internal_haproxy_package]"
+  apt:
+    name: "{{ alb_internal_haproxy_package.name }}"
+    state: '{{ alb_internal_haproxy_package.state }}'
+    default_release: "{{ alb_internal_haproxy_package.default_release | default(omit) }}"
+    # default_release: "buster-backports-2.0"
+#  when:
+#    - "(alb_internal_haproxy_package is defined) and (alb_internal_haproxy_package.name is defined)"

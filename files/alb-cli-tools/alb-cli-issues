@@ -1,4 +1,65 @@
 #!/bin/sh
-# /opt/alb/bin/alb-cli-issues
+# FILE:            /opt/alb/bin/alb-cli-issues
+# LICENSE:         Public Domain
+#
+# DESCRIPTION:
+#
+# USAGE:           Logged on the node, use
+#                      /opt/alb/bin/alb-cli-issues
+#                  From your control machine, hosts.yml as inventory
+#                      ansible all -i hosts.yml -m raw -a "/opt/alb/bin/alb-cli-issues"
+#                      ansible all -i hosts.yml --user=root -m raw -a "/opt/alb/bin/alb-cli-issues"
 
-echo "hello! alb-cli-issues is a draft. Planned, but not implemented."
+
+ALB_CLI_RESULT=0
+ALB_BIN_OPENRESTY=/usr/bin/openresty
+ALB_BIN_HAPROXY=/usr/sbin/haproxy
+
+
+if test -f "$ALB_BIN_OPENRESTY"; then
+  # echo "$ALB_BIN_OPENRESTY exist"
+  echo "\nopenresty -t"
+  openresty -t
+  if [ $? -eq 0 ]
+  then
+    echo "OpenResty +OK"
+  else
+    echo "OpenResty -NOK"
+    ALB_CLI_RESULT=1
+  fi
+else
+  echo "$ALB_BIN_OPENRESTY does not exist. Ignoring"
+fi
+
+if test -f "$ALB_BIN_HAPROXY"; then
+  # echo "$ALB_BIN_HAPROXY exist"
+  echo "\n$ALB_BIN_HAPROXY -c -V -f /etc/haproxy/haproxy.cfg"
+  $ALB_BIN_HAPROXY -c -V -f /etc/haproxy/haproxy.cfg
+if [ $? -eq 0 ]
+then
+  echo "HAProxy +OK"
+else
+  $ALB_BIN_HAPROXY -v
+  echo "\n"
+  echo "HAProxy -NOK"
+  ALB_CLI_RESULT=1
+fi
+else
+  echo "$ALB_BIN_HAPROXY does not exist. Ignoring"
+fi
+
+
+if [ $ALB_CLI_RESULT -eq 0 ]
+then
+  echo ""
+  echo "AP-ALB +OK"
+else
+  $ALB_BIN_OPENRESTY --version
+  echo ""
+  echo "AP-ALB -NOK"
+  ALB_CLI_RESULT=1
+fi
+
+#echo "result $RESULT"
+
+exit $ALB_CLI_RESULT

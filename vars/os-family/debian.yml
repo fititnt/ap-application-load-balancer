@@ -56,8 +56,9 @@ alb_internal_haproxy_system_group: "{{ alb_haproxy_system_group | default('hapro
 
 # @see https://haproxy.debian.net/
 alb_internal_haproxy_package:
-  name: 'haproxy=2.0.\*'
+  name: 'haproxy=2.0.*'
   state: present
+  default_release: "buster-backports-2.0"
 
 # TASK [ap-application-load-balancer : haproxy | install.yml: generic method] ***********************************************************************************************************************************************************
 # fatal: [ap_echo_debian10]: FAILED! => {"cache_update_time": 1575982429, "cache_updated": false, "changed": false, "msg": "'/usr/bin/apt-get -y -o \"Dpkg::Options::=--force-confdef\" -o \"Dpkg::Options::=--force-confold\"      install 'haproxy=2.0.\\*'' failed: E: Version '2.0.\\*' for 'haproxy' was not found\n", "rc": 100, "stderr": "E: Version '2.0.\\*' for 'haproxy' was not found\n", "stderr_lines": ["E: Version '2.0.\\*' for 'haproxy' was not found"], "stdout": "Reading package lists...\nBuilding dependency tree...\nReading state information...\n", "stdout_lines": ["Reading package lists...", "Building dependency tree...", "Reading state information..."]}

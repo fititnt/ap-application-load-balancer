@@ -60,7 +60,6 @@ alb_internal_haproxy_management: "systemd"
 alb_internal_haproxy_system_user: "{{ alb_haproxy_system_user | default('haproxy') }}"
 alb_internal_haproxy_system_group: "{{ alb_haproxy_system_group | default('haproxy') }}"
 
-# @see https://haproxy.debian.net/
 alb_internal_haproxy_package:
   name: "haproxy"
   state: present

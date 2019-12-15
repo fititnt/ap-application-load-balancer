@@ -3,8 +3,10 @@
 ## ALB/HAProxy _________________________________________________________________
 # @see https://haproxy.debian.net/
 alb_internal_haproxy_package:
-  name: 'haproxy=2.0.\*'
+  name: 'haproxy=2.0.*~bpo10+1'
+  #name: 'haproxy=2.0.*'
   state: present
+  default_release: "buster-backports-2.0"
 
 alb_internal_haproxy_apt_key:
   url: "https://haproxy.debian.net/bernat.debian.org.gpg"
