@@ -1,0 +1,28 @@
+---
+
+# FILE:            {{ role_path }}/tasks/bootstrap/alb-standard/cli.yml
+# LICENSE:         Public Domain
+
+- name: "bootstrap | alb-standard | cli: /opt/alb/bin/alb-cli"
+  copy:
+    src: "{{ role_path }}/files/alb-cli-tools/alb-cli"
+    dest: "/opt/alb/bin/alb-cli"
+    owner: "{{ alb_internal_root_user }}"
+    group: "alb"
+    mode: 0550
+
+- name: "bootstrap | alb-standard | cli: /opt/alb/bin/alb-cli-ping"
+  copy:
+    src: "{{ role_path }}/files/alb-cli-tools/alb-cli-ping"
+    dest: "/opt/alb/bin/alb-cli-ping"
+    owner: "{{ alb_internal_root_user }}"
+    group: "alb"
+    mode: 0550
+
+- name: "bootstrap | alb-standard | cli: /opt/alb/bin/alb-cli-issues"
+  copy:
+    src: "{{ role_path }}/files/alb-cli-tools/alb-cli-issues"
+    dest: "/opt/alb/bin/alb-cli-issues"
+    owner: "{{ alb_internal_root_user }}"
+    group: "alb"
+    mode: 0550

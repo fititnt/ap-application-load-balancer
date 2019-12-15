@@ -1,0 +1,4 @@
+#!/bin/sh
+# /opt/alb/bin/alb-cli-ping
+
+echo "pong"

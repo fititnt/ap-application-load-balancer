@@ -1,0 +1,4 @@
+#!/bin/sh
+# /opt/alb/bin/alb-cli
+
+echo "hello! alb-cli is a draft. Planned, but not implemented."

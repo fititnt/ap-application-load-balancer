@@ -26,6 +26,8 @@ alb_internal_bootstrap_extra_tools:
     state: present
   - name: httpd-tools
     state: present
+  - name: jq
+    state: present
   - name: nmap
     state: present
   - name: gcc

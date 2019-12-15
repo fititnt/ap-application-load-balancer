@@ -16,5 +16,12 @@
 - name: "filesystem-structure.yml"
   include: filesystem-structure.yml
 
+# TODO: remove this too much specific tag (fititnt, 2019-12-15 10:23 BRT)
+# ansible-playbook -i hosts.yml infra-alb.yml --tags="alb-bootstrap-alb-standard-cli"
+- name: "cli.yml"
+  include: cli.yml
+  tags:
+    - alb-bootstrap-alb-standard-cli
+
 - name: "fallback-keys.yml"
   include: fallback-keys.yml

@@ -18,6 +18,8 @@ alb_internal_bootstrap_basic_tools:
 alb_internal_bootstrap_extra_tools:
   - name: python-pip
     state: present
+  - name: jq
+    state: present
   - name: nmap
     state: present
   # @TODO: fine htpasswd package on Arch Linux (fititnt, 2019-12-12-07:39 BRT)

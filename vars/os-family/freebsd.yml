@@ -29,6 +29,8 @@ alb_internal_bootstrap_extra_tools:
     state: present
   - name: py36-passlib
     state: present
+  - name: jq-1.6
+    state: present
   - name: p5-Apache-Htpasswd
     state: present
   - name: nmap
