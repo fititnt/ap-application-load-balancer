@@ -1,4 +1,5 @@
-#### Applications/Sysapplications variables
+# AP-ALB Application Rules (The "Load Balancer listener" standard)
+## Applications/Sysapplications variables
 
 Variables prefixed with `app_` are used by [Apps](#apps) and [Sysapps](#sysapps)
 and have some extra customization via [ALB Strategies](#alb-strategies).
@@ -63,12 +64,12 @@ These are key elements that form a single dictionary (think _object_) for the
 
 <!-- /TOC -->
 
-##### app_*
+### app_*
 
 > Note: as v0.8.x, this section still maybe not reflex all implementation, but
 > as here as a plan of action (fititnt, 2019-12-04 17:27 BRT)
 
-###### app_uid
+#### app_uid
 - **Required**: _always_
 - **Default**: _no default_
 - **Type of Value**: `String`, `[a-zA-Z0-9\-\_]`
@@ -90,7 +91,7 @@ Internaly, AP-ALB use `app_uid` common name for configutation files (like
 `/opt/alb/apps/{{ app_uid }}.conf`), default logs directory, default data
 diretory, internal aliases for which load balance and more.
 
-###### app_state
+#### app_state
 - **Required**: _no (implicit value)_
 - **Default**: "present"
 - **Examples of Value**: `present`, `absent`
@@ -103,7 +104,7 @@ node. After this, you can remove referentes to the old app/sysapp.
 Note: implementators **should not** automaticaly remove backups based only on
 this configutation.
 
-###### app_domain
+#### app_domain
 - **Required**: _yes_
 - **Default**: _Default value is user configurable, based on `app_uid`_
 - **Type of Value**: `String`, `Regex String`
@@ -113,7 +114,7 @@ this configutation.
 Most `app_type` expect at least one main domain so the the AP-ALB will know what
 to do when a request comes in.
 
-###### app_domain_extras
+#### app_domain_extras
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**: list of `String`, `Regex String`
@@ -135,7 +136,7 @@ to do when a request comes in.
 
 Use this to add extra domains to [app_domain](#app_domain).
 
-###### app_debug
+#### app_debug
 - **Required**: _no_
 - **Default**: `alb_forcedebug`<sup>(If defined)</sup>, `alb_default_app_forcedebug`<sup>(If defined)</sup>
 - **Type of Value**: _Boolean_
@@ -144,7 +145,7 @@ Use this to add extra domains to [app_domain](#app_domain).
 Mark one app in special to show more information, useful for debug. The
 information depends on the [app_type](#app_type) implementation.
 
-###### app_forcehttps
+#### app_forcehttps
 - **Required**: _no_
 - **Default**: `false`, `alb_default_app_forcehttps`<sup>(If defined)</sup>
 - **Type of Value**: _Boolean_
@@ -159,7 +160,7 @@ than one datacenter).
 
 > @TODO: implement this feature (fititnt, 2019-12-04 22:43 BRT)
 
-###### app_hook_after
+#### app_hook_after
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**: _String_ (path to a single Ansible Tasks file to execute)
@@ -167,7 +168,7 @@ than one datacenter).
 
 You can execute custom tasks specific to one app after deployed.
 
-###### app_hook_before
+#### app_hook_before
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**: _String_ (path to a single Ansible Tasks file to execute)
@@ -176,7 +177,7 @@ You can execute custom tasks specific to one app after deployed.
 
 You can execute custom tasks specific to one app after deployed.
 
-###### app_index
+#### app_index
 - **Required**: _no_
 - **Default**: _no default_, `alb_default_app_index`<sup>(If defined)</sup>
 - **Type of Value**: _String_ (name of files separed by spaces)
@@ -184,7 +185,7 @@ You can execute custom tasks specific to one app after deployed.
 - **Advanced documentation**
   - <https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/>
 
-###### app_root
+#### app_root
 - **Required**: _no_
 - **Default**: _no default_, `alb_default_app_root`<sup>(If defined)</sup>
 - **Type of Value**: _String_ (folder path)
@@ -193,7 +194,7 @@ You can execute custom tasks specific to one app after deployed.
   - <https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/#root>
 
 
-###### app_tags
+#### app_tags
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**: list of `String`
@@ -212,7 +213,7 @@ You can execute custom tasks specific to one app after deployed.
 >   - "{{ ansible_default_ipv4.address }}"
 > ```
 
-##### app_data_*
+### app_data_*
 
 `app_data_*` are one way to document specific applications that you care about
 make backups, or export/import from one node to another. The typical scenario
@@ -234,7 +235,7 @@ shared (and often sloooow) filesystem.
 - https://stackoverflow.com/questions/25675314/how-to-backup-sqlite-database
 -->
 
-###### app_data_directories
+#### app_data_directories
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**: _list of Strings_ (list of absolute paths of directories on the node)
@@ -244,7 +245,7 @@ shared (and often sloooow) filesystem.
 >   - "/var/www/myapp"
 > ```
 
-###### app_data_files
+#### app_data_files
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**: _list of Strings_ (list of absolute paths of directories on the node)
@@ -255,33 +256,33 @@ shared (and often sloooow) filesystem.
 >   - "/var/lib/rancher/k3s/server/db/state.db.bak"
 > ```
 
-###### app_data_hook_export_after
+#### app_data_hook_export_after
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**:  _String_ (Path to a Ansible Tasks file)
 - **Examples of Value**: `"{{ playbook_dir }}/delete-temporary-files.yml"`
 
-###### app_data_hook_export_before
+#### app_data_hook_export_before
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**:  _String_ (Path to a Ansible Tasks file)
 - **Examples of Value**: `"{{ playbook_dir }}/database-dump-to-file.yml"`
 
-###### app_data_hook_import_after
+#### app_data_hook_import_after
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**:  _String_ (Path to a Ansible Tasks file)
 - **Examples of Value**: `"{{ playbook_dir }}/populate-database-from-database-dump.yml"`
 
-###### app_data_hook_import_before
+#### app_data_hook_import_before
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**:  _String_ (Path to a Ansible Tasks file)
 - **Examples of Value**: `"{{ playbook_dir }}/install-requeriments-for-this-app-if-already-not-exist.yml"`
 
-##### app_*_strategy
+### app_*_strategy
 
-###### app_alb_strategy
+#### app_alb_strategy
 - **Required**: _always_ (or will be ignored by OpenResty)
 - **Default**: _no default_
 - **Type of Value**: `String` or _undefined_ or _null_
@@ -300,17 +301,17 @@ often are.
 
 -->
 
-###### app_backup_strategy
+#### app_backup_strategy
 > As version v0.8.1-alpha, this app_backup_strategy still not implemented.
 
-###### app_ha_strategy
+#### app_ha_strategy
 > As version v0.8.1-alpha, this app_ha_strategy still not implemented.
 
-###### app_nlb_strategy
+#### app_nlb_strategy
 > As version v0.8.1-alpha, this app_nlb_strategy still not implemented.
 
 <!--
- ###### app__proxy_raw
+ #### app__proxy_raw
 - **app_type**: `proxy`
 - **Required**: _no_
 - **Type of Value**: list of* Key-Value strings
@@ -330,14 +331,14 @@ often are.
 -->
 
 <!--
-  ##### app__raw_*
-  ###### app__raw_conf_file
-  ###### app__raw_conf_string
+  ### app__raw_*
+  #### app__raw_conf_file
+  #### app__raw_conf_string
 -->
 
-##### app_alb_*
+### app_alb_*
 
-###### app_alb_hosts
+#### app_alb_hosts
 - **Required**: _no_
 - **Default**: _all hosts_
 - **Type of Value**: list of `String` equivalent to `{{ inventory_hostname_short }}`
@@ -351,7 +352,7 @@ often are.
 > @TODO consider implement this planned (but not fully usable) feature as
 > additional alternative to Ansible Inventory (fititnt, 2019-12-05 19:17 BRT)
 
-###### app_alb_proxy
+#### app_alb_proxy
 - **app_alb_strategy**: `proxy`
 - **Required**: _no_
 - **Default**: _no default_
@@ -360,7 +361,7 @@ often are.
 - **Advanced documentation**
   - https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
 
-###### app_alb_proxy_defaults
+#### app_alb_proxy_defaults
 - **app_type**: `proxy`
 - **Default**: true
 
@@ -378,7 +379,7 @@ Disable if you is having issues or what to make full customization with
 `app_alb_proxy_raw`. If you are OK with the defaults, use `app_alb_proxy_params`
 to just append new values
 
-###### app_alb_proxy_location
+#### app_alb_proxy_location
 - **app_alb_strategy**: `proxy`
 - **Required**: _no_
 - **Default**: `/`
@@ -387,7 +388,7 @@ to just append new values
 - **Advanced documentation**
   - http://nginx.org/en/docs/http/ngx_http_core_module.html#location
 
-###### app_alb_proxy_params
+#### app_alb_proxy_params
 - **app_alb_strategy**: `proxy`
 - **Required**: _no_
 - **Default**: _no default_, `alb_default_app_alb_proxy_params`<sup>(If defined)</sup>
@@ -406,7 +407,7 @@ to just append new values
 >     - include: "fastcgi_params"
 > ```
 
-###### app_alb_raw
+#### app_alb_raw
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**: _String_ (Path to a Jinja2 template file)
@@ -444,7 +445,7 @@ See <https://yaml-multiline.info> if having issues with identation.
 
 You can use [app_alb_raw_file](#app_alb_raw_file) as alternative.
 
-###### app_alb_raw_file
+#### app_alb_raw_file
 - **Required**: _no_
 - **Default**: _no default_
 - **Type of Value**: _String_ (Path to a Jinja2 template file)
@@ -472,13 +473,13 @@ location / {
 }
 ```
 
-##### Deprecated app_* variables
+### Deprecated app_* variables
 
-###### app_raw_conf
+#### app_raw_conf
 Deprecated. Please use [app_raw_alb](#app_raw_alb) and/or
 [app_alb_raw_file](#app_alb_raw_file)
 
-###### No default value for app_alb_strategy
+#### No default value for app_alb_strategy
 Before AP-ALB v.0.8.x alb_apps[n]app_alb_strategy has default value of
  `hello-word` (and before that,  `files-local`).
 
