@@ -16,13 +16,13 @@
 
 - name: "openresty | apps | alb-rules.yml: app_hook_before"
   include_tasks: "{{ item_active.app_hook_before }}"
-  with_items: "{{ alb_apps }}"
+  with_items: "{{ alb_internal_apps }}"
   loop_control:
     loop_var: item_active
   when:
     #- item.app_alb_strategy is defined
     - (item_active.app_hook_before is defined and item_active.app_hook_before)
-    - alb_apps is defined and alb_apps[0] is defined
+    - alb_internal_apps is defined and alb_internal_apps[0] is defined
     - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item_active.app_uid)"
     - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
@@ -37,12 +37,12 @@
 
 - name: "openresty | apps | alb-rules.yml: app_hook_after"
   include_tasks: "{{ item_active.app_hook_after }}"
-  with_items: "{{ alb_apps }}"
+  with_items: "{{ alb_internal_apps }}"
   loop_control:
     loop_var: item_active
   when:
     #- item.app_alb_strategy is defined
     - (item_active.app_hook_after is defined and item_active.app_hook_after)
-    - alb_apps is defined and alb_apps[0] is defined
+    - alb_internal_apps is defined and alb_internal_apps[0] is defined
     - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item_active.app_uid)"
     - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"

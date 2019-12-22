@@ -3,7 +3,7 @@
 # FILE:            {{ role_path }}/tasks/sysapps/sysapps.yml
 # LICENSE:         Public Domain
 
-# ansible-playbook -i hosts.yml infra-alb.yml --tags="alb-sysapps" --extra-vars "alb_forceredeploy=yes"
+# ansible-playbook -i hosts.yml infra-alb.yml --tags="alb-sysapps" --extra-vars="alb_forceredeploy=yes"
 
 - name: "sysapps | /etc/ansible/facts.d/alb_sysapps.fact"
   template:
@@ -32,7 +32,7 @@
   with_items: "{{ alb_sysapps_htpassword }}"
   no_log: "not (alb_forcedebug is defined and alb_forcedebug|bool)"
   when:
-    - alb_sysapps is defined and alb_sysapps[0] is defined
+    - alb_internal_sysapps is defined and alb_internal_sysapps[0] is defined
     - alb_sysapps_htpassword is defined and alb_sysapps_htpassword[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
@@ -46,14 +46,14 @@
     group: "{{ alb_nginx_user }}"
     mode: 0644
     backup: yes
-  with_items: "{{ alb_sysapps }}"
+  with_items: "{{ alb_internal_sysapps }}"
   vars:
     type_of_app: "sysapp"
     basic_auth_enabled: "{{ item.app_auth_basic_enabled | default(alb_sysapps__app_auth_basic_enabled) }}"
     auth_basic: '"{{ item.app_auth_basic | default(alb_sysapps__app_auth_basic) }}"'
     auth_basic_user_file: '"{{ item.app_auth_basic_user_file | default(alb_sysapps__app_auth_basic_user_file) }}"'
   when:
-    - alb_sysapps is defined and alb_sysapps[0] is defined
+    - alb_internal_sysapps is defined and alb_internal_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
   notify: reload openresty
 
@@ -64,9 +64,9 @@
     mode: '0644'
     owner: "{{ alb_internal_root_user }}"
     group: "{{ alb_nginx_user }}"
-  with_items: "{{ alb_sysapps }}"
+  with_items: "{{ alb_internal_sysapps }}"
   when:
-    - alb_sysapps is defined and alb_sysapps[0] is defined
+    - alb_internal_sysapps is defined and alb_internal_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: "sysapps | mkdir /var/log/sysapp/[app_uid]/access.log"
@@ -76,9 +76,9 @@
     mode: '0644'
     owner: "{{ alb_nginx_user }}"
     group: "{{ alb_nginx_user }}"
-  with_items: "{{ alb_sysapps }}"
+  with_items: "{{ alb_internal_sysapps }}"
   when:
-    - alb_sysapps is defined and alb_sysapps[0] is defined
+    - alb_internal_sysapps is defined and alb_internal_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
 
 - name: "sysapps | mkdir /var/log/sysapp/[app_uid]/error.log"
@@ -88,7 +88,7 @@
     mode: '0644'
     owner: "{{ alb_nginx_user }}"
     group: "{{ alb_nginx_user }}"
-  with_items: "{{ alb_sysapps }}"
+  with_items: "{{ alb_internal_sysapps }}"
   when:
-    - alb_sysapps is defined and alb_sysapps[0] is defined
+    - alb_internal_sysapps is defined and alb_internal_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"

@@ -22,6 +22,10 @@ alb_healthcheck_prefix: "alb-health-check"
 # If user define a alb_healthcheck_token, we wil not enforce IPs
 alb_healthcheck_public: "{{ alb_healthcheck_token is defined and alb_healthcheck_token }}"
 
+
+alb_internal_apps: "{{ (alb_apps_always | default([])) + (alb_apps | default([])) }}"
+alb_internal_sysapps: "{{ (alb_sysapps_always | default([])) + (alb_sysapps | default([])) }}"
+
 ### ALB Internal Variables: Component HAProxy __________________________________
 
 # This variable is used to calculate if we really can enable HAProxy Stats on this host
@@ -78,11 +82,11 @@ nlb_http:
 
 # This result will be stored at /etc/ansible/facts.d/alb_apps.fact
 alb_apps_facts:
-  alb_apps: "{{ alb_apps | default(None) }}"
+  alb_apps: "{{ alb_internal_apps | default(None) }}"
 
 # This result will be stored at /etc/ansible/facts.d/alb_sysapps.fact
 alb_sysapps_facts:
-  alb_apps: "{{ alb_sysapps | default(None) }}"
+  alb_apps: "{{ alb_internal_sysapps | default(None) }}"
 
 alb_openresty_facts:
   ip: "{{ alb_openresty_ip }}"

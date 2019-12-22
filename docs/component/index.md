@@ -119,7 +119,7 @@ alb_acme_url: "{{ 'https://acme-v02.api.letsencrypt.org/directory' if alb_acme_p
 ```
 #### Applications/Sysapplications variables
 
-Content moved to [docs/rules/index.md](docs/rules/index.md).
+Content moved to [../rules/index.md](../rules/index.md).
 
 #### Autentication Credentials
 

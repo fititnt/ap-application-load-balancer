@@ -12,7 +12,7 @@
     group: "{{ alb_nginx_user }}"
     mode: 0644
     backup: yes
-  with_items: "{{ alb_apps }}"
+  with_items: "{{ alb_internal_apps }}"
   vars:
     type_of_app: "app"
     basic_auth_enabled: "{{ item.app_auth_basic_enabled | default(alb_apps__app_auth_basic_enabled) }}"
@@ -20,7 +20,7 @@
     auth_basic_user_file: '"{{ item.app_auth_basic_user_file | default(alb_apps__app_auth_basic_user_file) }}"'
   when:
     - item.app_alb_strategy is defined
-    - alb_apps is defined and alb_apps[0] is defined
+    - alb_internal_apps is defined and alb_internal_apps[0] is defined
     - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
     - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
   register: result_apps_rules
