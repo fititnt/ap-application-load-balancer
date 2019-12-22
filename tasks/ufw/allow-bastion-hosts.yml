@@ -12,7 +12,6 @@
   loop: "{{ alb_bastion_hosts }}"
   loop_control:
     extended: yes
-  when: "alb_bastion_hosts is defined"
 
 - name: "ufw | allow-bastion-hosts: TO {{ alb_bastion_hosts }}"
   ufw:
@@ -22,4 +21,3 @@
   loop: "{{ alb_bastion_hosts }}"
   loop_control:
     extended: yes
-  when: "alb_bastion_hosts is defined"

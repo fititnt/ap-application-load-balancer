@@ -66,18 +66,21 @@
   include: allow-dmz.yml
   when:
     - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
+    - "(alb_dmz is defined) and (alb_dmz[0] is defined)" # allow not specify an alb_dmz
     - alb_ufw_autoapply_dmz is sameas true
 
 - name: ufw | allow-bastion-hosts.yml
   include: allow-bastion-hosts.yml
   when:
     - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
+    - "(alb_bastion_hosts is defined) and (alb_bastion_hosts[0] is defined)" # allow not specify an alb_bastion_hosts
     - alb_ufw_autoapply_bastion_hosts is sameas true
 
 - name: ufw | allow-jump-boxes.yml
   include: allow-jump-boxes.yml
   when:
     - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
+    - "(alb_jump_boxes is defined) and (alb_jump_boxes[0] is defined)" # allow not specify an alb_jump_boxes
     - alb_ufw_autoapply_jump_boxes is sameas true
 
 - name: ufw | default-policies.yml

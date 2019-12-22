@@ -12,7 +12,6 @@
   loop: "{{ alb_jump_boxes }}"
   loop_control:
     extended: yes
-  when: "alb_jump_boxes is defined"
 
 - name: "ufw | allow-jump-boxes: TO {{ alb_jump_boxes }}"
   ufw:
@@ -22,4 +21,3 @@
   loop: "{{ alb_jump_boxes }}"
   loop_control:
     extended: yes
-  when: "alb_jump_boxes is defined"
