@@ -2,23 +2,57 @@
 # FILE:            {{ role_path }}/vars/apps/alb-opinionated-sysapps.yml
 # LICENSE:         Public Domain
 #
+# VERSION:         v1.0.0~v0.8.6-alpha
+#
 # DESCRIPTION:     ap-application-load-balancer/apps/alb-opinionated-sysapps.yml
 #                  file provide some optionated sysapps depending of what AP-ALB
-#                  detect that the node have installed, like for example:
+#                  detect that the node have installed and will be loaded by
+#                  default if you did not customize alb_sysapps_alb_file
+#
+#                  Examples of apps
 #                    - HAProxy Dashboards
 #                    - Consul UI
+#
+# USAGE:           This is enabled by default.
+#                  You can disable this default by overriding `alb_sysapps_alb_file`
+#                  to poing to your custom file and/or set to null
+#                  `alb_sysapps_alb_file: null`
+#
+#                  If you are running a demo playbook from
+#                  fititnt/ansible-linux-ha-cluster tested against an older
+#                  version of AP-ALB and something does not run perfect,
+#                  the first change you could make is using one snapshot of
+#                  the older alb-opinionated-sysapps.yml.
 
 # BACKWARD COMPATIBILITY NOTICE ---------------------------------------------- #
-# ap-application-load-balancer/apps/alb-opinionated-sysapps.yml is not
-# granteed to be have full backward compatibility between minor versions of
-# AP-ALB (e.g. the "B" on vA.B.C, like 1.5 not be fully compatible with 1.4).
+# While the Ansible Role AP-ALB follow the Semantic Versioning (see
+# https://semver.org/) and try keep sane version scheme (e.g. versions with
+# suffix -alpha & -beta are pre-releases, an hipotetic version 1.3 should have
+# backwards compatibility with 1.2 and 1.1, etc) the alb-opinionated-sysapps.yml
+# is not granted to have full backwards compatibility and this MAY affect users
+# that use alb_sysapps_alb from this file instead of customizing your own.
 #
-# ...
+# One example of worst case scenario is the alb-opinionated-sysapps.yml remove
+# a feature (like did not create a rule to proxy to HAproxy Stats page or Consul
+#  UI) that you could easily re-implement on your `alb_sysapps_always` &
+# `alb_sysapps` by coping and pasting it's values present on older versions.
 #
+# Core functionality, documented on AP-ALB public API, still respect Semantic
+# Versioning.
+#
+### HOW TO CONTINUE USING THE OLD FUNCTIONALITY
+#
+# Choose one of these example strategies
+# - Copy this file from the older version and replace the varible
+#      alb_sysapps_alb_file: "{{ role_path }}/vars/apps/alb-opinionated-sysapps.yml"
+#   To a path of your custom file
+# - Define `alb_sysapps_alb_file: null` (so it will not replace your
+#   customizations), then copy the concents of `alb_sysapps_alb` to your
+#   custom `alb_sysapps_alb` (or you can just add on your
+#   `alb_sysapps_always` / `alb_sysapps`)
 # ---------------------------------------------------------------------------- #
 
 alb_sysapps_alb:
-  # @TODO: implicitly add /haproxy?stats before proxifining to http://haproxy.odin-bravo.vps.midias4sexy.com.br/ (fititnt, 2019-12-22 03:16 BRT)
   - app_uid: "_haproxy"
     app_domain: "haproxy.{{ ansible_host }}"
     app_alb_strategy: "proxy"
