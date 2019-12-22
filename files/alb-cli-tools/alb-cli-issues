@@ -14,12 +14,26 @@
 ALB_CLI_RESULT=0
 ALB_BIN_OPENRESTY=/usr/bin/openresty
 ALB_BIN_HAPROXY=/usr/sbin/haproxy
+# ALB_BIN_HAPROXY=/usr/local/sbin/haproxy
+
+
+# https://www.shellscript.sh/functions.html
+open_ports()
+{
+  echo "Open Ports"
+  if ! [ -x "$(command -v sockstat)" ]; then
+    netstat -ntulp
+  else
+    sockstat -4l
+  fi
+}
 
 
 if test -f "$ALB_BIN_OPENRESTY"; then
   # echo "$ALB_BIN_OPENRESTY exist"
   echo "\nopenresty -t"
-  openresty -t
+  $ALB_BIN_OPENRESTY -t
+  # syntax_check_openresty=$($openresty -t)
   if [ $? -eq 0 ]
   then
     echo "OpenResty +OK"
@@ -27,6 +41,15 @@ if test -f "$ALB_BIN_OPENRESTY"; then
     echo "OpenResty -NOK"
     ALB_CLI_RESULT=1
   fi
+
+  # service openresty status
+
+  # if ! [ -x "$(command -v systemctl)" ]; then
+  #   service openresty status
+  # else
+  #   systemctl status openresty
+  # fi
+
 else
   echo "$ALB_BIN_OPENRESTY does not exist. Ignoring"
 fi
@@ -34,16 +57,27 @@ fi
 if test -f "$ALB_BIN_HAPROXY"; then
   # echo "$ALB_BIN_HAPROXY exist"
   echo "\n$ALB_BIN_HAPROXY -c -V -f /etc/haproxy/haproxy.cfg"
+  # syntax_check_haproxy=$($ALB_BIN_HAPROXY -c -V -f /etc/haproxy/haproxy.cfg)
   $ALB_BIN_HAPROXY -c -V -f /etc/haproxy/haproxy.cfg
-if [ $? -eq 0 ]
-then
-  echo "HAProxy +OK"
-else
-  $ALB_BIN_HAPROXY -v
-  echo "\n"
-  echo "HAProxy -NOK"
-  ALB_CLI_RESULT=1
-fi
+  if [ $? -eq 0 ]
+  then
+    echo "HAProxy +OK"
+  else
+    $ALB_BIN_HAPROXY -v
+    service
+    echo ""
+    echo "HAProxy -NOK"
+    ALB_CLI_RESULT=1
+  fi
+
+  # service haproxy status
+
+  # if ! [ -x "$(command -v systemctl)" ]; then
+  #   service haproxy status
+  # else
+  #   systemctl status haproxy
+  # fi
+
 else
   echo "$ALB_BIN_HAPROXY does not exist. Ignoring"
 fi
@@ -55,6 +89,7 @@ then
   echo "AP-ALB +OK"
 else
   $ALB_BIN_OPENRESTY --version
+  open_ports
   echo ""
   echo "AP-ALB -NOK"
   ALB_CLI_RESULT=1

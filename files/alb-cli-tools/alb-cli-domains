@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# ansible cross_platform_test_2 --user=root -i hosts.yml -m raw -a '/etc/ansible/facts.d/alb_sysapps.fact | jq ".alb_apps | .[] | .app_domain"'
+# ansible cross_platform_test_2 --user=root -i hosts.yml -m raw -a '/etc/ansible/facts.d/alb_sysapps.fact | jq ".alb_apps | .[] | .app_domain"'
