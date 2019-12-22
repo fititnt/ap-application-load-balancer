@@ -19,6 +19,7 @@ alb_openresty_stub_status_location: "/openresty_status"
 
 alb_internal_apps: "{{ (alb_apps_always | default([])) + (alb_apps | default([])) }}"
 alb_internal_sysapps: "{{ (alb_sysapps_always | default([])) + (alb_sysapps | default([])) }}"
+# alb_internal_sysapps: "{{ (alb_sysapps_alb | default([])) + (alb_sysapps_always | default([])) + (alb_sysapps | default([])) }}"
 
 ### ALB Instrumentation ________________________________________________________
 alb_internal_instrumentation_prefix_global: "{{ (alb_instrumentation_prefix_global | default('') }}"

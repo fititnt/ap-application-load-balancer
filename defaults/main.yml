@@ -40,6 +40,7 @@ alb_manange_sanitycheck: yes
 alb_manange_apps: "{{ alb_manange_openresty }}"
 alb_manange_sysapps: "{{ alb_manange_apps }}"
 alb_manange_logrotate: "{{ alb_manange_openresty or alb_manange_apps }}"
+alb_sysapps_alb_file: "{{ role_path }}/vars/apps/alb-opinionated-sysapps.yml"
 
 # undocummented:
 alb_use_consul: no

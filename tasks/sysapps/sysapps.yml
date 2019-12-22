@@ -5,6 +5,19 @@
 
 # ansible-playbook -i hosts.yml infra-alb.yml --tags="alb-sysapps" --extra-vars="alb_forceredeploy=yes"
 
+# alb_sysapps_alb_file
+
+- name: "sysapps | preload alb_sysapps_alb from alb_sysapps_alb_file"
+  include_vars: "{{ alb_sysapps_alb_file }}"
+  when:
+    - (alb_sysapps_alb_file is defined and alb_sysapps_alb_file)
+
+- name: "sysapps | set_fact alb_sysapps_alb"
+  set_fact:
+    alb_internal_sysapps: "{{ alb_sysapps_alb + alb_internal_sysapps }}"
+  when:
+    - (alb_sysapps_alb_file is defined and alb_sysapps_alb_file)
+
 - name: "sysapps | /etc/ansible/facts.d/alb_sysapps.fact"
   template:
     src: files/alb_sysapps.fact

@@ -1,0 +1,25 @@
+---
+# FILE:            {{ role_path }}/vars/apps/alb-opinionated-sysapps.yml
+# LICENSE:         Public Domain
+#
+# DESCRIPTION:     ap-application-load-balancer/apps/alb-opinionated-sysapps.yml
+#                  file provide some optionated sysapps depending of what AP-ALB
+#                  detect that the node have installed, like for example:
+#                    - HAProxy Dashboards
+#                    - Consul UI
+
+# BACKWARD COMPATIBILITY NOTICE ---------------------------------------------- #
+# ap-application-load-balancer/apps/alb-opinionated-sysapps.yml is not
+# granteed to be have full backward compatibility between minor versions of
+# AP-ALB (e.g. the "B" on vA.B.C, like 1.5 not be fully compatible with 1.4).
+#
+# ...
+#
+# ---------------------------------------------------------------------------- #
+
+alb_sysapps_alb:
+  # @TODO: implicitly add /haproxy?stats before proxifining to http://haproxy.odin-bravo.vps.midias4sexy.com.br/ (fititnt, 2019-12-22 03:16 BRT)
+  - app_uid: "_haproxy"
+    app_domain: "haproxy.{{ ansible_host }}"
+    app_alb_strategy: "proxy"
+    app_alb_proxy: "http://127.0.0.1:{{ alb_haproxy_stats_port }}"

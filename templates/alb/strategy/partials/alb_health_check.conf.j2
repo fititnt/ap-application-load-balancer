@@ -29,7 +29,7 @@ location = /{{ alb_internal_healthcheck_prefix }}{{ item.app_uid }} {
 # By default if alb_instrumentation_prefix_global is defined, but somewhat a request failed to be
 # mananged by more specific solicitation, we will abort very early (not passing to the application)
 # to avoid health checks DDoS'ing the apps
-{% if (alb_instrumentation_prefix_global is defined and alb_instrumentation_prefix_global | length > 0) %}
+{% if ((alb_instrumentation_prefix_global is defined) and (alb_instrumentation_prefix_global | length > 0)) %}
 location /{{ alb_instrumentation_prefix_global }}/ {
     # charset_types application/json;
     # default_type application/json;

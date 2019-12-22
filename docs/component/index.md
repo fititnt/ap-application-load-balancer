@@ -32,6 +32,7 @@
         - [SanityCheck](#sanitycheck)
         - [Status](#status)
         - [Sysapps](#sysapps)
+            - [ALB optionated sysapps](#alb-optionated-sysapps)
         - [UFW](#ufw)
             - [Applying only firewall rules on a specific server (i.e. do not install HAProxy, OpenResty...)](#applying-only-firewall-rules-on-a-specific-server-ie-do-not-install-haproxy-openresty)
             - [External documentation about UFW and Ansible](#external-documentation-about-ufw-and-ansible)
@@ -573,8 +574,6 @@ ansible-playbook playbook.yml -i hosts.yml --check --tags="alb-status-full"
 
 
 ### Sysapps
-> This feature still a draft (fititnt, 2019-12-02 14:25 BRT)
-
 `Sysapps` implement near the same options than [Apps](#apps), but their focus
 is namespace apps that are not intended for end user usage. The adantages
 of this is apply default access control for all sysapps and also when running
@@ -606,6 +605,20 @@ very large deployment you could choose run only the Apps or the Sysapps rules.
         app_alb_strategy: "proxy"
         app_alb_proxy: "http://127.0.0.1:{{ alb_haproxy_stats_port }}"
 ```
+
+**New on v0.8.6-alpha**: internally ALB will merge `alb_sysapps_alb` +
+`alb_sysapps_always` + `alb_sysapps` and `alb_app_always` + `alb_apps`. Ansible
+default behavior when the same variable is defined default and then some hosts
+also specify the variable is override. To make it easier for who want some
+apps/sysapps be on all nodes on a datacenter (and to avoid you use advanced
+features like `hash_behaviour` or implement plugins like
+[leapfrogonline/ansible-merge-vars](https://github.com/leapfrogonline/ansible-merge-vars))
+we suggest use as convention  `alb_sysapps_always` and `alb_app_always`.
+
+#### ALB optionated sysapps
+
+The variable `alb_sysapps_alb` if defined, will inject some sysapps before
+`alb_sysapps_always` and `alb_sysapps`.
 
 ### UFW
 > _To avoid acidental use, this feature is not enabled by default (and will

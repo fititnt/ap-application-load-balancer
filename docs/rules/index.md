@@ -118,12 +118,14 @@ These are key elements that form a single dictionary (think _object_) for the
         app_alb_proxy: "http://127.0.0.1:8500"
 ```
 
-**New on v0.8.6-alpha**: internally ALB will merge `alb_sysapps_always` +
-`alb_sysapps` and `alb_app_always` + `alb_apps`. Ansible default behavior when
-the same variable is defined default and then some hosts also specify the
-variable is override. To make it easier for who want some apps/sysapps be on all
-nodes on a datacenter (and to avoid you use advanced features like
-`hash_behaviour` or implement plugins like [leapfrogonline/ansible-merge-vars](https://github.com/leapfrogonline/ansible-merge-vars)) we suggest use as convention  `alb_sysapps_always` and `alb_app_always`.
+**New on v0.8.6-alpha**: internally ALB will merge `alb_sysapps_alb` +
+`alb_sysapps_always` + `alb_sysapps` and `alb_app_always` + `alb_apps`. Ansible
+default behavior when the same variable is defined default and then some hosts
+also specify the variable is override. To make it easier for who want some
+apps/sysapps be on all nodes on a datacenter (and to avoid you use advanced
+features like `hash_behaviour` or implement plugins like
+[leapfrogonline/ansible-merge-vars](https://github.com/leapfrogonline/ansible-merge-vars))
+we suggest use as convention  `alb_sysapps_always` and `alb_app_always`.
 
 
 ## Applications variables
