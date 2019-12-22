@@ -17,14 +17,19 @@ alb_openresty_x_served_by_enabled: yes
 alb_openresty_stub_status: "{{ alb_forcedebug }}"
 alb_openresty_stub_status_location: "/openresty_status"
 
-# alb_healthcheck_token: MySemiSecretToAllowRemoteChecking
-alb_healthcheck_prefix: "alb-health-check"
-# If user define a alb_healthcheck_token, we wil not enforce IPs
-alb_healthcheck_public: "{{ alb_healthcheck_token is defined and alb_healthcheck_token }}"
-
-
 alb_internal_apps: "{{ (alb_apps_always | default([])) + (alb_apps | default([])) }}"
 alb_internal_sysapps: "{{ (alb_sysapps_always | default([])) + (alb_sysapps | default([])) }}"
+
+### ALB Instrumentation ________________________________________________________
+alb_internal_instrumentation_prefix_global: "{{ (alb_instrumentation_prefix_global | default('') }}"
+alb_internal_instrumentation_healthcheck_token: "{{ (alb_instrumentation_healthcheck_token is defined and alb_instrumentation_healthcheck_token | ternary('/' + alb_instrumentation_healthcheck_token + '/', '') }}"
+# alb_instrumentation_healthcheck_token: MySemiSecretToAllowRemoteChecking
+alb_internal_healthcheck_prefix: "{{ alb_internal_instrumentation_prefix_global }}health-check{{ alb_internal_instrumentation_healthcheck_token }}"
+# If user define a alb_healthcheck_token, we wil not enforce IPs
+alb_internal_healthcheck_public: "{{ alb_instrumentation_healthcheck_token is defined and alb_healthcheck_token }}"
+
+alb_internal_instrumentation_logging_access: "{{ alb_instrumentation_logging_access is defined | ternary(alb_instrumentation_logging_access | bool, false) }}"
+alb_internal_instrumentation_logging_errors: "{{ alb_instrumentation_logging_access is defined | ternary(alb_instrumentation_logging_access | bool, true) }}"
 
 ### ALB Internal Variables: Component HAProxy __________________________________
 

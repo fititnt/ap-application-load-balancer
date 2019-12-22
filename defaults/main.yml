@@ -16,6 +16,13 @@ alb_forcedebug: no
 alb_forceredeploy: no # Ignore already made changes base on facts from /etc/ansible/fact.d/alb*.fact
 alb_bootstrap_canupdatesystem: yes
 
+# Instrumentation --------------------------------------------------------------
+alb_instrumentation_prefix_global: ".alb/" # When defined, internal requests that must be done via HTTP(S) will use this prefix, e.g. service.example.org/.alb/health-check
+# alb_instrumentation_healthcheck_token: "MySemiSecretToAllowRemoteChecking" # If defined, health checks will require this token on URL and will not enforce need of Basic Auth. Less secure
+# alb_instrumentation_healthcheck_noauthrequired: false
+alb_instrumentation_logging_access: false # Recommened leave this disabled. Log health checks on production can be pretty verbose
+alb_instrumentation_logging_errors: true  # Example of error: acessing /.alb/ folder using wrong path
+
 ### AP-ALB Components overview _________________________________________________
 # The defaults of v0.7.4+ will use: Apps, HAProxy, Logrotate, OpenResty
 # You can enable/disable components. Or explicity enforce on your configuration

@@ -2,31 +2,46 @@
 # Test via command line, use
 #    curl {{ item.app_domain }}/{{ alb_healthcheck_prefix }}/{{ item.app_uid }}
 
-location = /{{ alb_healthcheck_prefix }}/{% if alb_healthcheck_token is defined and alb_healthcheck_token %}{{ alb_healthcheck_token }}/{% endif %}{{ item.app_uid }} {
+# location = /{{ alb_healthcheck_prefix }}/{% if alb_healthcheck_token is defined and alb_healthcheck_token %}{{ alb_healthcheck_token }}/{% endif %}{{ item.app_uid }} {
+location = /{{ alb_internal_healthcheck_prefix }}{{ item.app_uid }} {
     # charset_types application/json;
     # default_type application/json;
 
-{% if (alb_healthcheck_public is undefined or alb_healthcheck_public is not sameas true) %}
-    # This check alow is not sufficient when LB by HAproxy.
-    # Recommended use of alb_healthcheck_token if you don't want expose health
-    # checks
-    allow 127.0.0.1;
-    deny all;
-{% endif %}
+# {% if (alb_healthcheck_public is undefined or alb_healthcheck_public is not sameas true) %}
+#     # This check alow is not sufficient when LB by HAproxy.
+#     # Recommended use of alb_healthcheck_token if you don't want expose health
+#     # checks
+#     allow 127.0.0.1;
+#     deny all;
+# {% endif %}
 
     auth_basic off;
+
+{% if (alb_internal_instrumentation_logging_access is defined or alb_internal_instrumentation_logging_access|bool is sameas false) %}
     access_log off;
+{% endif %}
 
     # Note: these health checks could be improved with more specific application
     #       rules. For now is just a draft
     return 200 "+OK\n$hostname";
 }
-location /{{ alb_healthcheck_prefix }}/ {
+
+# By default if alb_instrumentation_prefix_global is defined, but somewhat a request failed to be
+# mananged by more specific solicitation, we will abort very early (not passing to the application)
+# to avoid health checks DDoS'ing the apps
+{% if (alb_instrumentation_prefix_global is defined and alb_instrumentation_prefix_global | length > 0) %}
+location /{{ alb_instrumentation_prefix_global }}/ {
     # charset_types application/json;
     # default_type application/json;
 
     # allow 127.0.0.1;
     # deny all;
-    # access_log off;
+
+# TODO: allow customize path of instrumentation error logging, like we do with letencrypt (fititnt, 2019-12-22 16:37 BRT)
+{% if (alb_internal_instrumentation_logging_errors is defined or alb_internal_instrumentation_logging_errors|bool is sameas false) %}
+    access_log off;
+{% endif %}
+
     return 404 "Not Found\n";
 }
+{% endif %}
