@@ -72,19 +72,33 @@ alb_node_storage_file_luarestautosl_dir: "/etc/resty-auto-ssl"
 ## AP-ALB Node storage: 'consul' -----------------------------------------------
 # Requires: `alb_node_storage_driver: "consul"`
 
+alb_node_storage_consul_prefix: 'lua-resty-auto-ssl'
 alb_node_storage_consul_port: 8500
 alb_node_storage_consul_host: 127.0.0.1
 alb_node_storage_consul_connect_timeout: '60s'
 alb_node_storage_consul_read_timeout: '60s'
+alb_node_storage_consul_ssl: false
+alb_node_storage_consul_ssl_verify: true
 
 # As v0.8.6-alpha, we only use storge for Let's Encrypt keys. Here you can
 # change the prefix
 alb_node_storage_consul_luarestautossl_prefix: 'lua-resty-auto-ssl'
 
 ## AP-ALB Node storage: 'custom' -----------------------------------------------
-# Requires: `alb_node_storage_driver: "consul"`
+# Requires: `alb_node_storage_driver: "custom"`
+
+# AP-ALB Node storage strong requeriment is how to store ACME (e.g. Let's Encrypt)
+# secrets. This example for using Redis.
 alb_node_storage_custom_luarestautossl: |
-  --
+  -- @see https://github.com/GUI/lua-resty-auto-ssl#storage_adapter
+  -- This example for custom storage use Redis. This must be a valid Lua code
+  auto_ssl:set("storage_adapter", "resty.auto-ssl.storage_adapters.redis")
+  auto_ssl:set("redis", {
+    host = "127.0.0.1",
+    port = 6379,
+    db = 1,
+    prefix = "lua-resty-auto-ssl"
+  })
 
 ### AP-ALB Instrumentation _____________________________________________________
 # alb_instrumentation_prefix_global when defined, internal requests that must be

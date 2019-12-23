@@ -33,14 +33,22 @@ alb_internal_sysapps: "{{
 # pont to {{ role_path }}/vars/apps/alb-opinionated-sysapps.yml, your values
 # will be ignored.
 
-### AP-ALB Storage for internal usage of AP-ALB ________________________________
+### AP-ALB Node storage ________________________________________________________
 alb_internal_node_storage_driver: "{{ alb_node_storage_driver | default('file')}}"
 
-alb_node_storage_file_luarestautosl_dir: "{{ (alb_node_storage_driver == 'file') | ternary(alb_node_storage_file_luarestautosl_dir, false) }}"
+## AP-ALB Node storage: 'file' -------------------------------------------------
+alb_internal_node_storage_file_luarestautosl_dir: "{{ (alb_node_storage_driver == 'file') | ternary(alb_node_storage_file_luarestautosl_dir, false) }}"
 
-alb_internal_node_consul_port: "{{ alb_node_storage_consul_port | default('8500') }}"
-alb_internal_node_consul_host: "{{ alb_node_storage_consul_host | default('127.0.0.1') }}"
-alb_internal_node_file_luarestautosl_dir: "{{ alb_node_storage_file_luarestautosl_dir | default(null) }}" ## auto_ssl:set("dir", "/etc/resty-auto-ssl"), see https://github.com/GUI/lua-resty-auto-ssl#dir
+## AP-ALB Node storage: 'consul' -----------------------------------------------
+alb_internal_node_consul_prefix: "{{ alb_node_storage_consul_prefix }}"
+alb_internal_node_consul_host: "{{ alb_node_storage_consul_host }}"
+alb_internal_node_storage_consul_connect_timeout: "{{ alb_node_storage_consul_connect_timeout }}"
+alb_internal_node_storage_consul_read_timeout: "{{ alb_node_storage_consul_read_timeout }}"
+alb_internal_node_storage_consul_ssl: "{{ alb_node_storage_consul_ssl | ternary('true', 'false') }}" # RAW "true"/ "false" string here
+alb_internal_node_storage_ssl_verify: "{{ alb_node_storage_consul_ssl_verify | ternary('true', 'false') }}" # RAW "true"/ "false" string here
+
+## AP-ALB Node storage: 'custom' -----------------------------------------------
+alb_internal_node_storage_custom_luarestautossl: "{{ alb_node_storage_custom_luarestautossl }}"
 
 ### AP-ALB Instrumentation ________________________________________________________
 alb_internal_instrumentation_prefix_global: "{{ alb_instrumentation_prefix_global | default('') }}"

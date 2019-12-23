@@ -86,8 +86,28 @@ http {
       auto_ssl:set("ca", "{{ alb_acme_url }}")
 {% endif %}
 
-{% if (alb_use_consul|bool) %}
+{% if (alb_internal_node_storage_driver == 'file') %}
+      -- Storage driver: file
+      auto_ssl:set("storage_adapter", "resty.auto-ssl.storage_adapters.file")
+      {% if ((alb_internal_node_storage_file_luarestautosl_dir is defined) and (alb_internal_node_storage_file_luarestautosl_dir|length > 0)) %}
+      auto_ssl:set("dir", "{{ alb_internal_node_storage_file_luarestautosl_dir }}")
+      {% endif %}
+{% elif (alb_internal_node_storage_driver == 'consul') %}
+      -- Storage driver: consul
       auto_ssl:set("storage_adapter", "resty.auto-ssl.storage_adapters.consul")
+      auto_ssl:set("consul", {
+        prefix = "{{ alb_internal_node_consul_prefix }}",
+        connect_timeout = "{{ alb_internal_node_storage_consul_connect_timeout }}",
+        read_timeout = "{{ alb_internal_node_storage_consul_read_timeout }}",
+        ssl = "{{ alb_internal_node_storage_consul_ssl }}",
+        ssl_verify = "{{ alb_internal_node_storage_ssl_verify }}"
+      })
+{% elif (alb_internal_node_storage_driver == 'custom') %}
+      -- Storage driver: custom
+      {{ alb_internal_node_storage_custom_luarestautossl | indent(6) }}
+{% else %}
+      -- Storage driver: unknown storage
+      ngx.log(ngx.EMERG, "WARNING: unknown storage driver ", alb_internal_node_storage_driver)
 {% endif %}
 
       -- Define a function to determine which SNI domains to automatically handle
@@ -99,7 +119,7 @@ http {
 
 {% if ((alb_acme_rule_ips_allowed is defined) and (alb_acme_rule_ips_allowed|bool == false)) %}
         if string.match(domain, "^(%d+).(%d+).(%d+).(%d+)$") or string.find(domain, ":", 1, true) then
-          ngx.log(ngx.INFO, "allow_domain dont allow IP domains", domain)
+          ngx.log(ngx.WARN, "allow_domain dont allow IP domains", domain)
           return false
         end
 {% else %}
@@ -108,7 +128,7 @@ http {
 
 {% if ((alb_acme_rule_whitelist is defined) and (alb_acme_rule_whitelist|length > 0)) %}
         if ngx.re.match(domain, "^({{ alb_acme_rule_whitelist | join('|') }})$", "ijo") then
-          ngx.log(ngx.INFO, "allow_domain whitelisted domain ", domain)
+          ngx.log(ngx.WARN, "allow_domain whitelisted domain ", domain)
           return true
         end
 {% else %}
@@ -117,7 +137,7 @@ http {
 
 {% if ((alb_acme_rule_blacklist is defined) and (alb_acme_rule_blacklist|length > 0)) %}
         if ngx.re.match(domain, "^({{ alb_acme_rule_blacklist | join('|') }})$", "ijo") then
-          ngx.log(ngx.INFO, "allow_domain blacklisted domain ", domain)
+          ngx.log(ngx.WARN, "allow_domain blacklisted domain ", domain)
           return false
         end
 {% else %}
