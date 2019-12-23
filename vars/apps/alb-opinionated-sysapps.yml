@@ -53,7 +53,15 @@
 # ---------------------------------------------------------------------------- #
 
 alb_sysapps_alb:
+
   - app_uid: "_haproxy"
     app_domain: "haproxy.{{ ansible_host }}"
     app_alb_strategy: "proxy"
     app_alb_proxy: "http://127.0.0.1:{{ alb_haproxy_stats_port }}"
+    app_state: present
+
+  - app_uid: "_consul"
+    app_domain: "consul.{{ ansible_host }}"
+    app_alb_strategy: "proxy"
+    app_alb_proxy: "http://127.0.0.1:8500"
+    app_state: "{{ alb_internal_node_storage_driver == 'consul' }}"

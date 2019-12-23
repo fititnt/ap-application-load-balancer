@@ -17,6 +17,7 @@
     alb_internal_sysapps: "{{ alb_sysapps_alb + alb_internal_sysapps }}"
   when:
     - (alb_sysapps_alb_file is defined and alb_sysapps_alb_file)
+    - (alb_sysapps_alb is defined and alb_sysapps_alb[0] is defined)
 
 - name: "sysapps | /etc/ansible/facts.d/alb_sysapps.fact"
   template:

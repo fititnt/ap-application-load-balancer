@@ -16,13 +16,6 @@ alb_forcedebug: no
 alb_forceredeploy: no # Ignore already made changes base on facts from /etc/ansible/fact.d/alb*.fact
 alb_bootstrap_canupdatesystem: yes
 
-# Instrumentation --------------------------------------------------------------
-alb_instrumentation_prefix_global: ".alb/" # When defined, internal requests that must be done via HTTP(S) will use this prefix, e.g. service.example.org/.alb/health-check
-# alb_instrumentation_healthcheck_token: "MySemiSecretToAllowRemoteChecking" # If defined, health checks will require this token on URL and will not enforce need of Basic Auth. Less secure
-# alb_instrumentation_healthcheck_noauthrequired: false
-alb_instrumentation_logging_access: false # Recommened leave this disabled. Log health checks on production can be pretty verbose
-alb_instrumentation_logging_errors: true  # Example of error: acessing /.alb/ folder using wrong path
-
 ### AP-ALB Components overview _________________________________________________
 # The defaults of v0.7.4+ will use: Apps, HAProxy, Logrotate, OpenResty
 # You can enable/disable components. Or explicity enforce on your configuration
@@ -57,6 +50,52 @@ alb_manange_ufw_install: yes
 alb_manange_ufw_repository: yes
 # alb_manange_openresty_install: yes    # We require manange OpenResty, this is not optional
 # alb_manange_openresty_repository: yes # We require manange OpenResty, this is not optional
+
+### AP-ALB Node storage ________________________________________________________
+## Note: this secton ONLY apply to internal storage of AP-ALB Nodes. Some groups
+##       of nodes can have different options
+
+# Each AP-ALB requires store variables on some place.
+# - 'file': default. Without customization, will store on local disk (and not work on clusterized mode)
+# - 'consul': recommended way to run on clustereized mode
+# - 'custom': direct access on how AP-ALB store it's data. We provide example to use Redis storage
+alb_node_storage_driver: "file"
+
+## AP-ALB Node storage: 'file' -------------------------------------------------
+# Requires: `alb_node_storage_driver: "file"`
+
+# If you use a directory different than /etc/resty-auto-ssl, please create it
+# before enable AP-ALB. You may use this option to point to a shared storage,
+# like GlusterFS
+alb_node_storage_file_luarestautosl_dir: "/etc/resty-auto-ssl"
+
+## AP-ALB Node storage: 'consul' -----------------------------------------------
+# Requires: `alb_node_storage_driver: "consul"`
+
+alb_node_storage_consul_port: 8500
+alb_node_storage_consul_host: 127.0.0.1
+alb_node_storage_consul_connect_timeout: '60s'
+alb_node_storage_consul_read_timeout: '60s'
+
+# As v0.8.6-alpha, we only use storge for Let's Encrypt keys. Here you can
+# change the prefix
+alb_node_storage_consul_luarestautossl_prefix: 'lua-resty-auto-ssl'
+
+## AP-ALB Node storage: 'custom' -----------------------------------------------
+# Requires: `alb_node_storage_driver: "consul"`
+alb_node_storage_custom_luarestautossl: |
+  --
+
+### AP-ALB Instrumentation _____________________________________________________
+# alb_instrumentation_prefix_global when defined, internal requests that must be
+# done via HTTP(S) will use this prefix, e.g.
+# service.example.org/.alb/health-check
+alb_instrumentation_prefix_global: ".alb/"
+
+# alb_instrumentation_healthcheck_token: "MySemiSecretToAllowRemoteChecking" # If defined, health checks will require this token on URL and will not enforce need of Basic Auth. Less secure
+# alb_instrumentation_healthcheck_noauthrequired: false
+alb_instrumentation_logging_access: false # Recommened leave this disabled. Log health checks on production can be pretty verbose
+alb_instrumentation_logging_errors: true  # Example of error: acessing /.alb/ folder using wrong path
 
 ### AP-ALB Components: shared options __________________________________________
 # Some variables are used on more than one ALB component by default for avoiding

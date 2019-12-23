@@ -17,15 +17,33 @@ alb_openresty_x_served_by_enabled: yes
 alb_openresty_stub_status: "{{ alb_forcedebug }}"
 alb_openresty_stub_status_location: "/openresty_status"
 
-alb_internal_apps: "{{ (alb_apps_always | default([])) + (alb_apps | default([])) }}"
+# alb_internal_apps: "{{ (alb_apps_always | default([])) + (alb_apps | default([])) }}"
+alb_internal_apps: "{{
+                      ((alb_apps_always is defined and alb_apps_always[0] is defined) | ternary(alb_apps_always, []))
+                      + ((alb_apps is defined and alb_apps[0] is defined) | ternary(alb_apps, []))
+                    }}"
 # alb_internal_sysapps: "{{ (alb_sysapps_always | default([])) + (alb_sysapps | default([])) }}"
-alb_internal_sysapps: "{{ (alb_sysapps_alb | default([])) + (alb_sysapps_always | default([])) + (alb_sysapps | default([])) }}"
+# alb_internal_sysapps: "{{ ((alb_sysapps_always | default([])) + (alb_sysapps | default([]))) }}"
+alb_internal_sysapps: "{{
+                        ((alb_sysapps_alb is defined and alb_sysapps_alb[0] is defined) | ternary(alb_sysapps_alb, []))
+                        + ((alb_sysapps_always is defined and alb_sysapps_always[0] is defined) | ternary(alb_sysapps_always, []))
+                        + ((alb_sysapps is defined and alb_sysapps[0] is defined) | ternary(alb_sysapps, []))
+                      }}"
 # Note about alb_sysapps_alb: if the alb_sysapps_alb_file variables exist, and
 # pont to {{ role_path }}/vars/apps/alb-opinionated-sysapps.yml, your values
 # will be ignored.
 
-### ALB Instrumentation ________________________________________________________
-alb_internal_instrumentation_prefix_global: "{{ (alb_instrumentation_prefix_global | default('') }}"
+### AP-ALB Storage for internal usage of AP-ALB ________________________________
+alb_internal_node_storage_driver: "{{ alb_node_storage_driver | default('file')}}"
+
+alb_node_storage_file_luarestautosl_dir: "{{ (alb_node_storage_driver == 'file') | ternary(alb_node_storage_file_luarestautosl_dir, false) }}"
+
+alb_internal_node_consul_port: "{{ alb_node_storage_consul_port | default('8500') }}"
+alb_internal_node_consul_host: "{{ alb_node_storage_consul_host | default('127.0.0.1') }}"
+alb_internal_node_file_luarestautosl_dir: "{{ alb_node_storage_file_luarestautosl_dir | default(null) }}" ## auto_ssl:set("dir", "/etc/resty-auto-ssl"), see https://github.com/GUI/lua-resty-auto-ssl#dir
+
+### AP-ALB Instrumentation ________________________________________________________
+alb_internal_instrumentation_prefix_global: "{{ alb_instrumentation_prefix_global | default('') }}"
 alb_internal_instrumentation_healthcheck_token: "{{ (alb_instrumentation_healthcheck_token is defined and alb_instrumentation_healthcheck_token | ternary('/' + alb_instrumentation_healthcheck_token + '/', '') }}"
 # alb_instrumentation_healthcheck_token: MySemiSecretToAllowRemoteChecking
 alb_internal_healthcheck_prefix: "{{ alb_internal_instrumentation_prefix_global }}health-check{{ alb_internal_instrumentation_healthcheck_token }}"
