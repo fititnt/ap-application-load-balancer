@@ -108,15 +108,42 @@ Management Environment (ACME). See [ACME on Wikipedia](https://en.wikipedia.org/
 and [RFC 8555](https://tools.ietf.org/html/rfc8555).
 
 ```yaml
+### AP-ALB ACME ________________________________________________________________
+# BY USING Let's Encrypt, even if automated for you, you AGREE with
+# Let’s Encrypt Subscriber Agreement at https://letsencrypt.org/repository/
+
 alb_acme_production: true
+
+alb_acme_rule_ips_allowed: false # ACME (Let's Encript at least) will HTTPS for IPs, so don't even try
+
+# Exact match
 alb_acme_rule_whitelist: []
 alb_acme_rule_whitelist_file: '' # not implemented... yet
-alb_acme_rule_blacklist: []      # not implemented... yet
+alb_acme_rule_blacklist: []
 alb_acme_rule_blacklist_file: '' # not implemented... yet
+
+# Suffix match (e.g. for subdomains) and prefix match (e.g. if any full domain, if start with these values)
+alb_acme_rule_whitelist_suffix: []
+alb_acme_rule_whitelist_prefix: []
+alb_acme_rule_blacklist_suffix: []
+alb_acme_rule_blacklist_prefix: []
+
+# alb_acme_rule_lua inject custom lua inside GUI/lua-resty-auto-ssl allow_domain function.
+alb_acme_rule_lua: |
+  -- FILE: /usr/local/openresty/nginx/conf/nginx.conf
+  -- NGINX CONTEXT: http/init_by_lua_block/auto_ssl:set("allow_domain", function(domain)
+  -- See https://github.com/GUI/lua-resty-auto-ssl
+  -- Note 1: Inside lua blocks (like this one) "--" is used for start comments
+  --       and not "#"
+  -- Note 2: your custom code should 'return true' or 'return false'
+
+# alb_acme_rule_last define your "default" behavior for what was not explicitly
+# whitelisted/blacklisted
 alb_acme_rule_last: true
 
 # This value is infered from alb_acme_production. But you can customize yourself
 alb_acme_url: "{{ 'https://acme-v02.api.letsencrypt.org/directory' if alb_acme_production else 'https://acme-staging-v02.api.letsencrypt.org/directory' }}"
+
 ```
 #### Applications/Sysapplications variables
 

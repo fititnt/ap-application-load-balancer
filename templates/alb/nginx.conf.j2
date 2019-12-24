@@ -117,6 +117,13 @@ http {
 
         ngx.log(ngx.WARN, "allow_domain started. Will evaluate if should or not obtain certificates to ", domain)
 
+        -- About order of rules (when defined by user)
+        --  * alb_acme_rule_ips_allowed: if IPs are allowed or not
+        --  * alb_internal_acme_rule_whitelist: EXACT MATCH whitelist
+        --  * alb_internal_acme_rule_blacklist: EXACT MATCH blacklist
+        --  * alb_acme_rule_lua: custom lua rule
+        --  * alb_acme_rule_last: default rule (apply to domains that where not specified on previus rules)
+
 {% if ((alb_acme_rule_ips_allowed is defined) and (alb_acme_rule_ips_allowed|bool == false)) %}
         if string.match(domain, "^(%d+).(%d+).(%d+).(%d+)$") or string.find(domain, ":", 1, true) then
           ngx.log(ngx.WARN, "allow_domain dont allow IP domains", domain)
@@ -126,6 +133,7 @@ http {
         -- alb_acme_rule_ips_allowed rule not applied
 {% endif %}
 
+        -- EXACT whitelist match test?
 {% if ((alb_internal_acme_rule_whitelist is defined) and (alb_internal_acme_rule_whitelist|length > 0)) %}
         if ngx.re.match(domain, "^({{ alb_internal_acme_rule_whitelist | join('|') }})$", "ijo") then
           ngx.log(ngx.WARN, "allow_domain whitelisted domain ", domain)
@@ -135,6 +143,7 @@ http {
         -- alb_acme_rule_whitelist rule not applied
 {% endif %}
 
+        -- EXACT blacklist match test?
 {% if ((alb_internal_acme_rule_blacklist is defined) and (alb_internal_acme_rule_blacklist|length > 0)) %}
         if ngx.re.match(domain, "^({{ alb_acme_rule_blacklist | join('|') }})$", "ijo") then
           ngx.log(ngx.WARN, "allow_domain blacklisted domain ", domain)
@@ -144,6 +153,47 @@ http {
         -- alb_acme_rule_blacklist rule not applied
 {% endif %}
 
+        -- SUFFIX whitelist (e.g. subdomains, as in '.example.org') test?
+{% if ((alb_internal_acme_rule_whitelist_suffix is defined) and (alb_internal_acme_rule_whitelist_suffix|length > 0)) %}
+        if ngx.re.match(domain, "({{ alb_internal_acme_rule_whitelist_suffix | join('|') }})$", "ijo") then
+          ngx.log(ngx.WARN, "allow_domain whitelisted (via suffix) the domain ", domain)
+          return true
+        end
+{% else %}
+        -- alb_internal_acme_rule_whitelist_suffix rule not applied
+{% endif %}
+
+        -- PREFIX whitelist (e.g. any domain, but subdomain must contain a termi, as in 'test.') test?
+{% if ((alb_internal_acme_rule_whitelist_prefix is defined) and (alb_internal_acme_rule_whitelist_prefix|length > 0)) %}
+        if ngx.re.match(domain, "^({{ alb_internal_acme_rule_whitelist_prefix | join('|') }})", "ijo") then
+          ngx.log(ngx.WARN, "allow_domain whitelisted (via prefix) the domain ", domain)
+          return true
+        end
+{% else %}
+        -- alb_internal_acme_rule_whitelist_prefix rule not applied
+{% endif %}
+
+        -- SUFFIX blacklist (e.g. subdomains, as in '.example.org') test?
+{% if ((alb_internal_acme_rule_blacklist_suffix is defined) and (alb_internal_acme_rule_blacklist_suffix|length > 0)) %}
+        if ngx.re.match(domain, "({{ alb_internal_acme_rule_blacklist_suffix | join('|') }})$", "ijo") then
+          ngx.log(ngx.WARN, "allow_domain blacklisted (via suffix) the domain ", domain)
+          return false
+        end
+{% else %}
+        -- alb_internal_acme_rule_blacklist_suffix rule not applied
+{% endif %}
+
+        -- PREFIX blacklist (e.g. any domain, but subdomain must contain a termi, as in 'test.') test?
+{% if ((alb_internal_acme_rule_blacklist_prefix is defined) and (alb_internal_acme_rule_blacklist_prefix|length > 0)) %}
+        if ngx.re.match(domain, "^({{ alb_internal_acme_rule_blacklist_prefix | join('|') }})", "ijo") then
+          ngx.log(ngx.WARN, "allow_domain whitelisted (via prefix) the domain ", domain)
+          return false
+        end
+{% else %}
+        -- alb_internal_acme_rule_blacklist_prefix rule not applied
+{% endif %}
+
+        -- User applied custom lua rule?
 {% if ((alb_acme_rule_lua is defined) and (alb_acme_rule_lua|length > 0)) %}
         {{ alb_acme_rule_lua | indent(8) }}
 {% else %}

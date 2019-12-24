@@ -37,6 +37,15 @@ alb_internal_sysapps: "{{
 alb_internal_acme_rule_whitelist: "{{ alb_acme_rule_whitelist }}"
 alb_internal_acme_rule_blacklist: "{{ alb_acme_rule_blacklist }}"
 
+# TODO: intead of allow user explicitly give this value, deduce from alb_acme_rule_whitelist values starting with "."
+#       e.g ".example.com" from alb_acme_rule_whitelist would not be on alb_internal_acme_rule_whitelist
+#       but on alb_internal_acme_rule_whitelist_suffix. Same otimizations for blacklist
+#       (fititnt, 2019-12-23 22:47 BRT)
+alb_internal_acme_rule_whitelist_suffix: "{{ alb_acme_rule_whitelist_suffix | default([]) }}"
+alb_internal_acme_rule_whitelist_prefix: "{{ alb_acme_rule_whitelist_prefix | default([]) }}"
+alb_internal_acme_rule_blacklist_suffix: "{{ alb_acme_rule_blacklist_suffix | default([]) }}"
+alb_internal_acme_rule_blacklist_prefix: "{{ alb_acme_rule_blacklist_prefix | default([]) }}"
+
 ### AP-ALB Node storage ________________________________________________________
 alb_internal_node_storage_driver: "{{ alb_node_storage_driver | default('file')}}"
 
