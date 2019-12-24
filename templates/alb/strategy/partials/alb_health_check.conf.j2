@@ -1,8 +1,5 @@
 ## alb-strategy/partials/alb_health_check.conf.j2
-# Test via command line, use
-#    curl {{ item.app_domain }}/{{ alb_healthcheck_prefix }}/{{ item.app_uid }}
 
-# location = /{{ alb_healthcheck_prefix }}/{% if alb_healthcheck_token is defined and alb_healthcheck_token %}{{ alb_healthcheck_token }}/{% endif %}{{ item.app_uid }} {
 location = /{{ alb_internal_healthcheck_prefix }}{{ item.app_uid }} {
     # charset_types application/json;
     # default_type application/json;

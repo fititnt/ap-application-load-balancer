@@ -55,13 +55,22 @@
 alb_sysapps_alb:
 
   - app_uid: "_haproxy"
-    app_domain: "haproxy.{{ ansible_host }}"
-    app_alb_strategy: "proxy"
-    app_alb_proxy: "http://127.0.0.1:{{ alb_haproxy_stats_port }}"
     app_state: present
+    app_domain: "{{ alb_internal_sysapps_domain_haproxy_stats }}"
+
+    app_alb_strategy: "proxy"
+    app_alb_proxy: "http://127.0.0.1:{{ alb_haproxy_stats_port }}{{ alb_haproxy_stats_uri | default() }}"
+    # app_alb_strategy: "minimal"
+    # app_alb_raw_alb: |
+    #   # Raw string at /opt/alb/sysapps/_haproxy.conf
+    #   location / {
+    #       proxy_set_header Host $host;
+    #       proxy_set_header X-Real-IP $remote_addr;
+    #       proxy_pass   http://127.0.0.1:8404;
+    #   }
 
   - app_uid: "_consul"
-    app_domain: "consul.{{ ansible_host }}"
+    app_domain: "{{ alb_internal_sysapps_domain_consul_ui }}"
     app_alb_strategy: "proxy"
     app_alb_proxy: "http://127.0.0.1:8500"
-    app_state: "{{ alb_internal_node_storage_driver == 'consul' }}"
+    app_state: "{{ alb_internal_node_storage_driver == 'consul' | ternary('present', 'absent') }}"

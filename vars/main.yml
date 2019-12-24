@@ -33,6 +33,14 @@ alb_internal_sysapps: "{{
 # pont to {{ role_path }}/vars/apps/alb-opinionated-sysapps.yml, your values
 # will be ignored.
 
+alb_internal_sysapps_domain: "{{ alb_sysapps_domain | default(ansible_host) }}"
+alb_internal_sysapps_domain_haproxy_stats: "{{ alb_sysapps_domain_haproxy_stats | default('haproxy.' + alb_internal_sysapps_domain) }}"
+alb_internal_sysapps_domain_consul_ui: "{{ alb_sysapps_domain_consul_ui | default('consul.' + alb_internal_sysapps_domain) }}"
+
+### AP-ALB Control Node ________________________________________________________
+alb_internal_constrolnode_enabled: "{{ alb_constrolnode_enabled | default(false) }}"
+alb_internal_constrolnode_workspace: "{{ alb_constrolnode_workspace | default('/var/opt/alb-controlnode-default') }}"
+
 ### AP-ALB ACME ________________________________________________________________
 alb_internal_acme_rule_whitelist: "{{ alb_acme_rule_whitelist }}"
 alb_internal_acme_rule_blacklist: "{{ alb_acme_rule_blacklist }}"
@@ -65,11 +73,11 @@ alb_internal_node_storage_custom_luarestautossl: "{{ alb_node_storage_custom_lua
 
 ### AP-ALB Instrumentation ________________________________________________________
 alb_internal_instrumentation_prefix_global: "{{ alb_instrumentation_prefix_global | default('') }}"
-alb_internal_instrumentation_healthcheck_token: "{{ (alb_instrumentation_healthcheck_token is defined and alb_instrumentation_healthcheck_token | ternary('/' + alb_instrumentation_healthcheck_token + '/', '') }}"
+alb_internal_instrumentation_healthcheck_token: "{{ (alb_instrumentation_healthcheck_token is defined and alb_instrumentation_healthcheck_token) | ternary('/' + (alb_instrumentation_healthcheck_token | default('')) + '/', '') }}"
 # alb_instrumentation_healthcheck_token: MySemiSecretToAllowRemoteChecking
 alb_internal_healthcheck_prefix: "{{ alb_internal_instrumentation_prefix_global }}health-check{{ alb_internal_instrumentation_healthcheck_token }}"
 # If user define a alb_healthcheck_token, we wil not enforce IPs
-alb_internal_healthcheck_public: "{{ alb_instrumentation_healthcheck_token is defined and alb_healthcheck_token }}"
+# alb_internal_healthcheck_public: "{{ (alb_instrumentation_healthcheck_token is defined and alb_healthcheck_token) | bool }}"
 
 alb_internal_instrumentation_logging_access: "{{ alb_instrumentation_logging_access is defined | ternary(alb_instrumentation_logging_access | bool, false) }}"
 alb_internal_instrumentation_logging_errors: "{{ alb_instrumentation_logging_access is defined | ternary(alb_instrumentation_logging_access | bool, true) }}"
