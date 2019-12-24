@@ -59,7 +59,8 @@ alb_sysapps_alb:
     app_domain: "{{ alb_internal_sysapps_domain_haproxy_stats }}"
 
     app_alb_strategy: "proxy"
-    app_alb_proxy: "http://127.0.0.1:{{ alb_haproxy_stats_port }}{{ alb_haproxy_stats_uri | default() }}"
+    app_alb_proxy: "http://127.0.0.1:{{ alb_haproxy_stats_port }}/"
+    # app_alb_proxy: "http://127.0.0.1:{{ alb_haproxy_stats_port }}{{ alb_haproxy_stats_uri | default() }}"
     # app_alb_strategy: "minimal"
     # app_alb_raw_alb: |
     #   # Raw string at /opt/alb/sysapps/_haproxy.conf

@@ -5,8 +5,12 @@
 
 frontend stats
     bind {{ alb_haproxy_stats_ip | default('127.0.0.1') }}:{{ alb_haproxy_stats_port | default('8404') }}
+{% if ((alb_haproxy_stats_prometeus_exporter_enabled is defined) and (alb_haproxy_stats_prometeus_exporter_enabled|bool)) %}
+    option http-use-htx
+    http-request use-service prometheus-exporter if { path {{ alb_haproxy_stats_prometeus_exporter_path | default('/stats') }} }
+{% endif %}
     stats enable
-    stats uri {{ alb_haproxy_stats_uri | default('/haproxy?stats') }}
+    stats uri {{ alb_haproxy_stats_uri | default('/stats') }}
     stats realm {{ alb_haproxy_stats_realm_escaped }}
     stats refresh 10s
 
