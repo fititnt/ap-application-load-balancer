@@ -33,6 +33,10 @@ alb_internal_sysapps: "{{
 # pont to {{ role_path }}/vars/apps/alb-opinionated-sysapps.yml, your values
 # will be ignored.
 
+### AP-ALB ACME ________________________________________________________________
+alb_internal_acme_rule_whitelist: "{{ alb_acme_rule_whitelist }}"
+alb_internal_acme_rule_blacklist: "{{ alb_acme_rule_blacklist }}"
+
 ### AP-ALB Node storage ________________________________________________________
 alb_internal_node_storage_driver: "{{ alb_node_storage_driver | default('file')}}"
 

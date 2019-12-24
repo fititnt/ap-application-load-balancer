@@ -99,8 +99,8 @@ http {
         prefix = "{{ alb_internal_node_consul_prefix }}",
         connect_timeout = "{{ alb_internal_node_storage_consul_connect_timeout }}",
         read_timeout = "{{ alb_internal_node_storage_consul_read_timeout }}",
-        ssl = "{{ alb_internal_node_storage_consul_ssl }}",
-        ssl_verify = "{{ alb_internal_node_storage_ssl_verify }}"
+        ssl = {{ alb_internal_node_storage_consul_ssl }},
+        ssl_verify = {{ alb_internal_node_storage_ssl_verify }}
       })
 {% elif (alb_internal_node_storage_driver == 'custom') %}
       -- Storage driver: custom
@@ -126,8 +126,8 @@ http {
         -- alb_acme_rule_ips_allowed rule not applied
 {% endif %}
 
-{% if ((alb_acme_rule_whitelist is defined) and (alb_acme_rule_whitelist|length > 0)) %}
-        if ngx.re.match(domain, "^({{ alb_acme_rule_whitelist | join('|') }})$", "ijo") then
+{% if ((alb_internal_acme_rule_whitelist is defined) and (alb_internal_acme_rule_whitelist|length > 0)) %}
+        if ngx.re.match(domain, "^({{ alb_internal_acme_rule_whitelist | join('|') }})$", "ijo") then
           ngx.log(ngx.WARN, "allow_domain whitelisted domain ", domain)
           return true
         end
@@ -135,7 +135,7 @@ http {
         -- alb_acme_rule_whitelist rule not applied
 {% endif %}
 
-{% if ((alb_acme_rule_blacklist is defined) and (alb_acme_rule_blacklist|length > 0)) %}
+{% if ((alb_internal_acme_rule_blacklist is defined) and (alb_internal_acme_rule_blacklist|length > 0)) %}
         if ngx.re.match(domain, "^({{ alb_acme_rule_blacklist | join('|') }})$", "ijo") then
           ngx.log(ngx.WARN, "allow_domain blacklisted domain ", domain)
           return false
@@ -144,7 +144,13 @@ http {
         -- alb_acme_rule_blacklist rule not applied
 {% endif %}
 
-{{ alb_letsencrypt_allow_domain_customlua|default('') }}
+{% if ((alb_acme_rule_lua is defined) and (alb_acme_rule_lua|length > 0)) %}
+        {{ alb_acme_rule_lua | indent(8) }}
+{% else %}
+        -- alb_acme_rule_lua not applied
+{% endif %}
+
+
 
 {% if alb_acme_rule_last|bool %}
         ngx.log(ngx.INFO, "allow_domain default true (will try to get new certificate) to ", domain)

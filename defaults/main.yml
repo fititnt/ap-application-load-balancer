@@ -167,6 +167,17 @@ alb_acme_rule_whitelist_file: '' # not implemented... yet
 alb_acme_rule_blacklist: []
 alb_acme_rule_blacklist_file: '' # not implemented... yet
 alb_acme_rule_ips_allowed: false # ACME (Let's Encript at least) will HTTPS for IPs, so don't even try
+
+# alb_acme_rule_lua inject custom lua inside GUI/lua-resty-auto-ssl allow_domain function.
+alb_acme_rule_lua: |
+  -- FILE: /usr/local/openresty/nginx/conf/nginx.conf
+  -- NGINX CONTEXT: http/init_by_lua_block/auto_ssl:set("allow_domain", function(domain)
+  -- See https://github.com/GUI/lua-resty-auto-ssl
+  -- Note: Inside lua blocks (like this one) "--" is used for start comments
+  --       and not "#"
+
+# alb_acme_rule_last define your "default" behavior for what was not explicitly
+# whitelisted/blacklisted
 alb_acme_rule_last: true
 
 # This value is infered from alb_acme_production. But you can customize yourself
@@ -185,29 +196,6 @@ alb_apps: []
 alb_apps__app_auth_basic_enabled: false
 alb_apps__app_auth_basic: "Private {{ item.app_uid }} Area"
 alb_apps__app_auth_basic_user_file: "/opt/alb/apps/{{ item.app_uid }}.htpasswd"
-
-alb_letsencrypt_allow_domain_whitelist:
-#  - example.org
-#  - example.com
-
-alb_letsencrypt_allow_domain_blacklist:
-#  - baddomain.com
-#  - oldexpireddomain.com
-
-alb_letsencrypt_allow_domain_customlua: |
-  -- FILE: /usr/local/openresty/nginx/conf/nginx.conf
-  -- NGINX CONTEXT: http/init_by_lua_block/auto_ssl:set("allow_domain", function(domain)
-  -- See https://github.com/GUI/lua-resty-auto-ssl
-  -- Note: Inside lua blocks (like this one) "--" is used for start comments
-  --       and not "#"
-
-alb_letsencrypt_default: "return true" # the default (last) LUA code if a domain should or not checket for Let's Encrypt Keys. Use "return false" to disable
-# alb_letsencrypt_default: "return false"
-#alb_letsencrypt_allow_domain_default: "return true"
-## alb_letsencrypt_default: "return false"
-
-# alb_apps_serverblock_template is deprecated
-# alb_apps_serverblock_template: '{{ role_path }}/templates/openresty/nginx/conf/vhosts/static-site.conf.j2'
 
 # Note: at this moment, only "file" implemented. But later "syslog" could be one option
 alb_logs_method: "file"
