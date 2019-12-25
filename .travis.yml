@@ -1,5 +1,5 @@
 ---
-# dist: bionic
+dist: bionic
 language: python
 services:
   - docker
@@ -14,14 +14,22 @@ before_install:
 # Errors 'fatal: [instance]: FAILED! => {"changed": false, "cmd": "/usr/bin/systemctl", "msg": "Failed to connect to bus: No such file or directory", "rc": 1, "stderr": "Failed to connect to bus: No such file or directory\n", '...
 # The conteiners very likely did not contain the systemd
 
+# MOLECULE_DISTRO=geerlingguy/docker-ubuntu1804-ansible:latest molecule test
+# fatal: [instance]: FAILED! => {"changed": false, "cmd": "/bin/systemctl", "msg": "System has not been booted with systemd as init system (PID 1). Can't operate.", "rc": 1, "stderr":
+# Different error. At least we have something!
+
+#
+# This may help with the Systemd issue related to Molecule
+# https://medium.com/@TomaszKlosinski/testing-ansible-role-of-a-systemd-based-service-using-molecule-and-docker-4b3608a10ef0
+
 env:
   # global:
   #   - ROLE_NAME: my_role_name
   matrix:
-    - MOLECULE_DISTRO: ubuntu:bionic
-    - MOLECULE_DISTRO: debian:buster
-    - MOLECULE_DISTRO: centos:7
-    - MOLECULE_DISTRO: centos:8
+    - MOLECULE_DISTRO: geerlingguy/docker-ubuntu1804-ansible:latest
+    - MOLECULE_DISTRO: geerlingguy/docker-debian10-ansible:latest
+    - MOLECULE_DISTRO: geerlingguy/docker-centos8-ansible:latest
+    - MOLECULE_DISTRO: geerlingguy/docker-centos7-ansible:latest
     - MOLECULE_DISTRO: archlinux:latest
     - MOLECULE_DISTRO: opensuse/leap:latest
 
