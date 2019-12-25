@@ -148,7 +148,7 @@ alb_openresty_facts:
   ip: "{{ alb_openresty_ip }}"
   httpport: "{{ alb_openresty_httpport }}"
   httpsport: "{{ alb_openresty_httpsport }}"
-  haproxy_ip : "{{ alb_haproxy_ip }}"
+  haproxy_ip: "{{ alb_haproxy_ip }}"
   haproxy_httpport: "{{ alb_haproxy_httpport }}"
   haproxy_httpsport: "{{ alb_haproxy_httpsport }}"
 

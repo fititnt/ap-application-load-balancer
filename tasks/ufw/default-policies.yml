@@ -1,15 +1,16 @@
 ---
 
-- set_fact:
+- name: "ufw | default-policies.yml: set_fact alb_ufw__policies"
+  set_fact:
     alb_ufw__policies: "{{ alb_ufw_policy | default(alb_ufw_policy__default) }}"
 
 - name: "ufw | default-policies.yml"
-  debug: 
+  debug:
     msg: "{{ alb_ufw__policies }}"
 
 - name: "ufw | sudo ufw default [alb_ufw_policy OR alb_ufw_policy__default]"
   ufw:
-    direction: "{{item.direction }}"
+    direction: "{{ item.direction }}"
     policy: "{{ item.policy }}"
   with_items: "{{ alb_ufw__policies }}"
   notify:

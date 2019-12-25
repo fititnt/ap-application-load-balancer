@@ -11,7 +11,7 @@
         os: "{{ ansible_os_family | default('undefined') | lower }}"
         dist: "{{ ansible_distribution | default('undefined') | lower }}"
         dist_major_ver: "{{ ansible_distribution_major_version | default('undefined') | lower }}"
-        ansible_lsb: "{{ ansible_lsb | default('undefined')}}"
+        ansible_lsb: "{{ ansible_lsb | default('undefined') }}"
   tags:
     - alb
     - always
@@ -31,7 +31,9 @@
   include_vars: "{{ item }}"
   with_first_found:
     - "{{ (alb_vars_osfamilyversion is defined) | ternary(alb_vars_osfamilyversion, 'name-of-a-file-that-does-not-exist.yml') }}"
-    - "os-family/os-family-version/{{ ansible_os_family | default('undefined') | lower }}-{{ ansible_distribution_major_version | default('undefined') | lower }}.yml"
+    - "os-family/os-family-version/{{ ansible_os_family | default('undefined') | lower }}-{{ ansible_distribution_major_version
+      | default('undefined')
+      | lower }}.yml"
     - "os-family/os-family-version/no-os-family-version-customization.yml"
   tags:
     - alb
@@ -51,7 +53,9 @@
   include_vars: "{{ item }}"
   with_first_found:
     - "{{ (alb_vars_distribution_version is defined) | ternary(alb_vars_distribution_version, 'name-of-a-file-that-does-not-exist.yml') }}"
-    - "os-family/distribution/version/{{ ansible_distribution | default('undefined') | lower }}-{{ ansible_distribution_major_version | default('undefined') | lower }}.yml"
+    - "os-family/distribution/version/{{ ansible_distribution | default('undefined') | lower }}-{{ ansible_distribution_major_version
+      | default('undefined')
+      | lower }}.yml"
     - "os-family/distribution/version/no-distribution-customization.yml"
   tags:
     - alb
@@ -82,7 +86,8 @@
   tags:
     - always
   when:
-    - ansible_facts['ansible_local'] is defined and ansible_facts['ansible_local']['alb_lastrun'] is defined and ansible_facts['ansible_local']['alb_lastrun']['alb_version'] is defined
+    - "ansible_facts['ansible_local'] is defined and ansible_facts['ansible_local']['alb_lastrun'] is defined
+      and ansible_facts['ansible_local']['alb_lastrun']['alb_version'] is defined"
     - alb_version_lastrun|int != -1
 
 - name: "AP-ALB | ALB/SanityCheck"
@@ -161,7 +166,7 @@
 
 ## Goodbye _____________________________________________________________________
 
-- name: "/etc/ansible/facts.d/alb_lastrun.fact (Only alb_manange_sanitycheck: yes /  alb_manange_sanitycheck: yes will not deploy this fact)"
+- name: "/etc/ansible/facts.d/alb_lastrun.fact (Only alb_manange_sanitycheck: yes / alb_manange_sanitycheck: yes will not deploy this fact)"
   template:
     src: files/alb_lastrun.fact
     dest: /etc/ansible/facts.d/alb_lastrun.fact
@@ -169,4 +174,7 @@
   changed_when: false
   tags:
     - always
-  when: (alb_manange_haproxy is sameas true) or (alb_manange_openresty is sameas true) or (alb_manange_ufw is sameas true) or (alb_manange_common is sameas true) or (alb_manange_apps is sameas true) or (alb_manange_logrotate is sameas true)
+  when:
+    - "(alb_manange_haproxy is sameas true) or (alb_manange_openresty is sameas true)
+      or (alb_manange_ufw is sameas true) or (alb_manange_common is sameas true)
+      or (alb_manange_apps is sameas true) or (alb_manange_logrotate is sameas true)"

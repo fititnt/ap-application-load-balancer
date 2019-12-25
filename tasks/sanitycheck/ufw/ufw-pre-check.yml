@@ -3,10 +3,15 @@
 - name: "sanitycheck:ufw | Thing we will ignore checking (the alb_ufw_clusterfuck_ignore var)"
   debug:
     msg: "This you will ignore on precheck: {{ alb_ufw_clusterfuck_ignore }}"
-  when: 
+  when:
    - alb_ufw_clusterfuck_ignore is defined or alb_ufw_clusterfuck_ignore[0] is defined
 
 - name: "sanitycheck:ufw | If alb_ufw_rules_always is empty maybe this will not add 22 as open port; let's warn user"
   fail:
-    msg: "alb_ufw_rules_always is undefined; You can ignore this check by adding alb_ufw_rules_always to a list like this alb_ufw_clusterfuck_ignore\n  - alb_ufw_rules_always"
-  when: (alb_ufw_clusterfuck_ignore is undefined or alb_ufw_clusterfuck_ignore[0] is undefined or 'alb_ufw_rules_always' not in alb_ufw_clusterfuck_ignore) and (alb_ufw_rules_always is undefined or alb_ufw_rules_always[0] is undefined)
+    msg: |
+      alb_ufw_rules_always is undefined; You can ignore this check by adding
+      alb_ufw_rules_always to a list like this alb_ufw_clusterfuck_ignore\n  - alb_ufw_rules_always
+
+  when: (alb_ufw_clusterfuck_ignore is undefined or alb_ufw_clusterfuck_ignore[0]
+        is undefined or 'alb_ufw_rules_always' not in alb_ufw_clusterfuck_ignore)
+        and (alb_ufw_rules_always is undefined or alb_ufw_rules_always[0] is undefined)

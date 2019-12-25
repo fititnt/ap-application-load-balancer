@@ -72,4 +72,3 @@
         path: "{{ item }}"
         state: absent
       with_items: "{{ alb_paths_spefialfiles }}"
-

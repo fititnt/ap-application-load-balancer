@@ -6,7 +6,8 @@
 - name: "openresty | install | storage-adapters | consul.yml: opm get hamishforbes/lua-resty-consul"
   shell: opm get hamishforbes/lua-resty-consul
 
-- name: "openresty | install | storage-adapters | consul.yml: | MONKEYPATCH | resty/auto-ssl/storage_adapters/consul.lua (untill resty-auto-ssl include this storage driver)"
+- name: "openresty | install | storage-adapters | consul.yml: | MONKEYPATCH | resty/auto-ssl/storage_adapters/consul.lua
+        (untill resty-auto-ssl include this storage driver)"
   template:
     src: "files/resty/auto-ssl/storage_adapters/consul.lua"
     dest: /usr/local/share/lua/5.1/resty/auto-ssl/storage_adapters/consul.lua

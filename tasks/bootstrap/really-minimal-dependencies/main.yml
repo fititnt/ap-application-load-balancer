@@ -10,7 +10,7 @@
 
 - name: "detect-os.yml"
   include: detect-os.yml
-  when: 
+  when:
     - bootstrap_python_not_installed is defined and bootstrap_python_not_installed|bool
 
 - debug:

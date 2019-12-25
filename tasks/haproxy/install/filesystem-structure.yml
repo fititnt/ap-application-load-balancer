@@ -2,7 +2,8 @@
 # FILE:            {{ role_path }}/tasks/haproxy/install/filesystem-structure.yml
 # LICENSE:         Public Domain
 
-- name: "haproxy | install | filesystem-structure.yml: ensure consistent diretory structure (/etc/haproxy, /etc/haproxy/errors/) on all OSs"
+- name: "haproxy | install | filesystem-structure.yml: ensure consistent diretory structure
+        (/etc/haproxy, /etc/haproxy/errors/) on all OSs"
   file:
     path: /etc/haproxy/errors/
     state: directory
@@ -17,7 +18,8 @@
     mode: '0644'
 
 # Starting frontend GLOBAL: cannot bind UNIX socket [/run/haproxy/admin.sock]
-- name: "haproxy | install | filesystem-structure.yml: ensure /run/haproxy/ folder already exist on all OSs (to allow use /run/haproxy/admin.sock)"
+- name: "haproxy | install | filesystem-structure.yml: ensure /run/haproxy/ folder already exist on all OSs
+        (to allow use /run/haproxy/admin.sock)"
   file:
     path: /run/haproxy/
     state: directory

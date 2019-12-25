@@ -80,7 +80,7 @@
     from_ip: "{{ item.from_ip | default(omit) }}"
     from: "{{ item.from | default(omit) }}"
     src: "{{ item.src | default(omit) }}"
-  
+
     ## from_port
     # Destination port.
     from_port: "{{ item.from_port | default(omit) }}"
@@ -91,7 +91,7 @@
     to_ip: "{{ item.to_ip | default(omit) }}"
     dest: "{{ item.dest | default(omit) }}"
     to: "{{ item.to | default(omit) }}"
-  
+
     ## to_port, port
     # Destination port.
     to_port: "{{ item.to_port | default(omit) }}"

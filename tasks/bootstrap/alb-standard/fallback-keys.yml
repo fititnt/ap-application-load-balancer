@@ -13,7 +13,7 @@
 
 - name: "bootstrap | alb-standard | fallback-keys.yml: /etc/ssl/resty-auto-ssl-fallback.key"
   template:
-    src: "{{ alb_bootstrap_restyautosslfallback_key}}"
+    src: "{{ alb_bootstrap_restyautosslfallback_key }}"
     dest: /etc/ssl/resty-auto-ssl-fallback.key
     owner: "{{ alb_internal_root_user }}"
     group: "{{ alb_internal_root_group }}"

@@ -29,7 +29,8 @@
   when:
     - "(alb_internal_openresty_yum_repository is defined) and (alb_internal_openresty_yum_repository.baseurl is defined)"
 
-- name: "bootstrap | repositories-3rd-party | openresty.yml: zypper_repository (TODO: need to use shell instead of zypper_repository)"
+- name: "bootstrap | repositories-3rd-party | openresty.yml: zypper_repository
+        (TODO: need to use shell instead of zypper_repository)"
   # zypper_repository: "{{ alb_internal_openresty_zypper_repository }}"
   shell: "zypper ar -g --refresh  --check https://openresty.org/package/opensuse/openresty.repo"
   become: yes
@@ -37,7 +38,8 @@
   when:
     - "(alb_internal_openresty_zypper_repository is defined) and (alb_internal_openresty_zypper_repository.repo is defined)"
 
-- name: "bootstrap | repositories-3rd-party | openresty.yml: zypper_repository check (HOTFIX: if this fail, please log on node and accept the keys from openresty manuall!)"
+- name: "bootstrap | repositories-3rd-party | openresty.yml: zypper_repository check
+        (HOTFIX: if this fail, please log on node and accept the keys from openresty manuall!)"
   # zypper_repository: "{{ alb_internal_openresty_zypper_repository }}"
   shell: "zypper update"
   become: yes
@@ -64,7 +66,6 @@
 # : Invalid answer 'y'.
 # [r/a/?] (r): a
 
-
 # TASK [ap-application-load-balancer : bootstrap | repositories-3rd-party | openresty.yml: apt_repository (TODO: fix to remove warnings later)] *****************************************************************************************
 # [WARNING]: Using a variable for a task's 'args' is unsafe in some situations (see https://docs.ansible.com/ansible/devel/reference_appendices/faq.html#argsplat-unsafe)
 
@@ -76,5 +77,3 @@
 # skipping: [rocha_basalto_opensuse15]
 # fatal: [ap_echo_debian10]: FAILED! => {"changed": false, "msg": "apt cache update failed"}
 # fatal: [ap_delta_ubuntu18]: FAILED! => {"changed": false, "msg": "apt cache update failed"}
-
-

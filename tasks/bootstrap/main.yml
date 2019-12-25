@@ -63,7 +63,9 @@
   tags:
     - always
   when:
-    - ansible_facts['ansible_local'] is defined and ansible_facts['ansible_local']['alb_lastrun'] is defined and ansible_facts['ansible_local']['alb_lastrun']['alb_version'] is defined
+    - "ansible_facts['ansible_local'] is defined
+      and ansible_facts['ansible_local']['alb_lastrun'] is defined
+      and ansible_facts['ansible_local']['alb_lastrun']['alb_version'] is defined"
     - alb_version_lastrun|int != -1
 
 ## Bootstraping, now with Python and Facts _____________________________________

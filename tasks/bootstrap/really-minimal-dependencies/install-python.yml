@@ -3,7 +3,8 @@
 
 - name: "bootstrap | really-minimal-dependencies | install-python.yml | just show message instead of try to install"
   fail:
-    msg: "Aborting trying to force install Python on {{ inventory_hostname }}. If, and only if, is the FIRST time on this node, you can try use alb_boostrap_python='force' instead of manual install"
+    msg: "Aborting trying to force install Python on {{ inventory_hostname }}.
+        If, and only if, is the FIRST time on this node, you can try use alb_boostrap_python='force' instead of manual install"
   when:
     - "(alb_boostrap_python is not defined) or (alb_boostrap_python != 'force')"
 
@@ -11,23 +12,27 @@
   debug:
    msg: "TODO: do less lazy way to install python (like checking the correct OS) than try by error"
 
-- name: "bootstrap | really-minimal-dependencies | install-python.yml | lazy way to install, try by error: sudo apt install -y python3 (Debian/Ubuntu)"
+- name: "bootstrap | really-minimal-dependencies | install-python.yml | lazy way to install, try by error:
+        sudo apt install -y python3 (Debian/Ubuntu)"
   raw: "sudo apt install -y python3"
   ignore_errors: true
 #  when:
 #    - "(alb_boostrap_caninstallpython is defined) and (alb_boostrap_caninstallpython | bool)"
 
-- name: "bootstrap | really-minimal-dependencies | install-python.yml | lazy way to install, try by error: sudo dnf install -y python3 (CentOS/RHEL/etc)"
+- name: "bootstrap | really-minimal-dependencies | install-python.yml | lazy way to install, try by error:
+        sudo dnf install -y python3 (CentOS/RHEL/etc)"
   raw: "sudo dnf install -y python3"
   ignore_errors: true
 #  when:
 #    - "(alb_boostrap_caninstallpython is defined) and (alb_boostrap_caninstallpython | bool)"
 
 ## See https://docs.python.org/3/using/unix.html  On FreeBSD and OpenBSD
-- name: "bootstrap | really-minimal-dependencies | install-python.yml | lazy way to install, try by error: pkg install -y python3 (FreeBSD)"
+- name: "bootstrap | really-minimal-dependencies | install-python.yml | lazy way to install, try by error:
+        pkg install -y python3 (FreeBSD)"
   raw: "pkg install -y python3"
   ignore_errors: true
 
-- name: "bootstrap | really-minimal-dependencies | install-python.yml | lazy way to install, try by error: pkg_add -y -r python (OpenBSD)"
+- name: "bootstrap | really-minimal-dependencies | install-python.yml | lazy way to install, try by error:
+        pkg_add -y -r python (OpenBSD)"
   raw: "pkg_add -y -r python"
   ignore_errors: true

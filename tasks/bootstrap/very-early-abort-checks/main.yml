@@ -21,10 +21,9 @@
   always:
     - name: "Abort if CPanel detected"
       fail:
-       msg: 
+       msg:
          error: "This host may already running some service. Please use alb_boostrap_ignore_very_early_abort_checks as true ignore"
          cpanel: "{{ (not bootstrap_checks_cpanel.failed) }}"
          port_80_used: "{{ (not bootstrap_checks_port80.failed) }}"
-      when: 
+      when:
        - (not bootstrap_checks_cpanel.failed) or (not bootstrap_checks_port80.failed)
-

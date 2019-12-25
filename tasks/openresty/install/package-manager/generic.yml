@@ -18,6 +18,6 @@
 
 - name: "openresty | install | package-manager | generic.yml: luarocks install lua-resty-auto-ssl (debug)"
   debug:
-    msg: "{{ alb_openresty_install_luarestyaytossl_result | default ('undefined')}}"
+    msg: "{{ alb_openresty_install_luarestyaytossl_result | default ('undefined') }}"
 #  when:
 #    - "(alb_internal_bootstrap_luarocks_scripts is defined) and (alb_internal_bootstrap_luarocks_scripts[0] is defined)"

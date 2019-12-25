@@ -1,10 +1,8 @@
 ---
-
-
 - name: "sanitycheck:global | alb_manange_apps is Enabled, but alb_manange_openresty is enabled?"
   fail:
     msg: "This configuration can cause issues [ignore me with --skip-tags=alb-sanitycheck-global-appsyes-openresty-no]"
-  when: 
+  when:
     - alb_manange_apps is sameas true
     - alb_manange_openresty is sameas false
   tags:

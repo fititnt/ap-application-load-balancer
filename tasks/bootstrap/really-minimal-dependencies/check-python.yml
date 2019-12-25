@@ -24,5 +24,6 @@
   debug:
     msg: "{{ bootstrap_python3_version }}"
 
-- set_fact:
+- name: "bootstrap | really-minimal-dependencies | check-python.yml | set_fact bootstrap_python_not_installed"
+  set_fact:
     bootstrap_python_not_installed: "{{ (bootstrap_python_version.failed|bool and bootstrap_python3_version.failed|bool) }}"

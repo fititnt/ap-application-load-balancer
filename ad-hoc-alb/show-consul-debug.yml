@@ -16,7 +16,7 @@
       changed_when: false
       register: ad_hoc_alb_consul_members
 
-    - debug: 
+    - debug:
         msg: "{{ ad_hoc_alb_consul_members.stdout_lines }}"
 
     - name: "ad-hoc-alb | sudo consul keyring -list"
@@ -25,6 +25,5 @@
       changed_when: false
       register: ad_hoc_alb_consul_keyring_list
 
-    - debug: 
+    - debug:
         msg: "{{ ad_hoc_alb_consul_keyring_list.stdout_lines }}"
-

@@ -7,14 +7,16 @@
 # @see https://lists.freebsd.org/pipermail/freebsd-ports/2015-April/098769.html (is it safe to run net/haproxy as root?)
 # @see https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=199314 (people discusion about run or not HAProxy as Root on Free BSD)
 
-- name: "haproxy | install | user-groups: group haproxy (create if already does not exist; for consistency across operational systems know to not have haproxy created by default)"
+- name: "haproxy | install | user-groups: group haproxy
+        (create if already does not exist; for consistency across operational systems know to not have haproxy created by default)"
   group:
     name: haproxy
     state: present
   when:
     - "(alb_internal_haproxy_createhaproxyuser is defined) and (alb_internal_haproxy_createhaproxyuser|bool)"
 
-- name: "haproxy | install | user-groups: system user haproxy (create if already does not exist for consistency across operational systems know to not have haproxy created by default)"
+- name: "haproxy | install | user-groups: system user haproxy
+        (create if already does not exist for consistency across operational systems know to not have haproxy created by default)"
   user:
     name: haproxy
     comment: "System user for ALB (Application Load Balancer)"
@@ -24,4 +26,3 @@
     group: haproxy
   when:
     - "(alb_internal_haproxy_createhaproxyuser is defined) and (alb_internal_haproxy_createhaproxyuser|bool)"
-

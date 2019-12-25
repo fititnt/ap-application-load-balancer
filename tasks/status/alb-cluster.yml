@@ -6,4 +6,3 @@
 - name: "status | alb-cluster.yml: draft"
   debug:
     msg: "Not implemented at this moment"
-    

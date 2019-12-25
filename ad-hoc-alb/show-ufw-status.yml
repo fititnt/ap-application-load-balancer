@@ -16,6 +16,5 @@
       changed_when: false
       register: ad_hoc_alb_ufw_status_verbose
 
-    - debug: 
+    - debug:
         msg: "{{ ad_hoc_alb_ufw_status_verbose.stdout_lines }}"
-

@@ -9,7 +9,9 @@
     state: "{{ item.state }}"
   with_items: "{{ alb_internal_bootstrap_luarocks_packages }}"
   when:
-    - "(alb_internal_bootstrap_luarocks_packages is defined) and (alb_internal_bootstrap_luarocks_packages[0] is defined) and (alb_internal_bootstrap_luarocks_packages[0].name is defined)"
+    - "(alb_internal_bootstrap_luarocks_packages is defined)
+      and (alb_internal_bootstrap_luarocks_packages[0] is defined)
+      and (alb_internal_bootstrap_luarocks_packages[0].name is defined)"
 
 - name: "bootstrap | lua | luarocks.yml: yum (RedHat Family)"
   yum:
@@ -17,7 +19,9 @@
     state: "{{ item.state }}"
   with_items: "{{ alb_internal_bootstrap_luarocks_yums }}"
   when:
-    - "(alb_internal_bootstrap_luarocks_yums is defined) and (alb_internal_bootstrap_luarocks_yums[0] is defined) and (alb_internal_bootstrap_luarocks_yums[0].name is defined)"
+    - "(alb_internal_bootstrap_luarocks_yums is defined)
+      and (alb_internal_bootstrap_luarocks_yums[0] is defined)
+      and (alb_internal_bootstrap_luarocks_yums[0].name is defined)"
 
 - name: "bootstrap | lua | luarocks.yml: raw script (transfer local script to remote, them execute. Try use other alternatives than this)"
   script: "{{ item }}"
@@ -28,6 +32,6 @@
 
 - name: "bootstrap | lua | luarocks.yml: raw script debug"
   debug:
-    msg: "{{ alb_internal_bootstrap_luarocks_scripts_result | default ('undefined')}}"
+    msg: "{{ alb_internal_bootstrap_luarocks_scripts_result | default ('undefined') }}"
   when:
     - "(alb_internal_bootstrap_luarocks_scripts is defined) and (alb_internal_bootstrap_luarocks_scripts[0] is defined)"

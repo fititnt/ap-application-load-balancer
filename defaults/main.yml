@@ -412,4 +412,3 @@ alb_ufw_autoapply_jump_boxes: yes    # no: ALB/UFW ignore alb_jump_boxes: []
 alb_forceignore_haproxy: false
 alb_forceignore_openresty: false
 alb_forceignore_ufw: false
-
