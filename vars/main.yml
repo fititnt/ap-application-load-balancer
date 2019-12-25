@@ -6,6 +6,9 @@
 alb_version: "v0.8.7-alpha"
 alb_version_lastrun: -1
 
+# This variable name may change soon. See MVP of AP-ALB inside docker containers https://github.com/fititnt/ap-application-load-balancer/issues/43
+alb_internal_node_isconteiner: "{{ alb_node_isconteiner | default(false) }}"
+
 ### ALB Internal Variables: Mixed usage ________________________________________
 
 # alb_trusted_ips: "{% set myList = [1,5,3,4,2] %}"

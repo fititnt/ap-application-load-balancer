@@ -17,13 +17,15 @@
 # Enabled/Started must be AFTER moving new /etc/haproxy/haproxy.cfg
 # configurations or Ansible will not be able to update one new valid
 # configuration if old one was already with error. By moving this step
-# after we avoid user being forced to solve manually on the server 
+# after we avoid user being forced to solve manually on the server
 - name: "haproxy | reconfigure: sudo systemctl enable haproxy.service"
   systemd:
     name: haproxy
     state: started
     enabled: yes
+  when:
+    - "(alb_internal_node_isconteiner is not defined) or (alb_internal_node_isconteiner|bool is sameas false)"
 
-- name: "haproxy | reconfigure: facts"
-  debug:
-    msg: "{{ alb_haproxy_facts }}"
+#- name: "haproxy | reconfigure: facts"
+#  debug:
+#    msg: "{{ alb_haproxy_facts }}"

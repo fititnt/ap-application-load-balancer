@@ -5,10 +5,10 @@ driver:
   name: docker
 lint:
   name: yamllint
-  #enabled: false # TODO: re-enable later
+  enabled: false # TODO: re-enable later
 platforms:
   - name: instance
-    image: ${MOLECULE_DISTRO:-ubuntu:bionic}
+    image: ${MOLECULE_DISTRO:-geerlingguy/docker-ubuntu1804-ansible:latest}
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
@@ -22,7 +22,7 @@ provisioner:
   name: ansible
   lint:
     name: ansible-lint
-    #enabled: false # TODO: re-enable later
+    enabled: false # TODO: re-enable later
 verifier:
   name: testinfra
   lint:

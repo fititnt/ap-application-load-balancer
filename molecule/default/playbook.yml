@@ -1,5 +1,7 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    alb_node_isconteiner: true
   roles:
     - role: ap-application-load-balancer

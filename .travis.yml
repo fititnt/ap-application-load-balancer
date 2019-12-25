@@ -1,4 +1,8 @@
 ---
+# To test configurations online, use https://config.travis-ci.com/explore
+# Discussion about alternatives to Travis CI https://github.com/ansible/molecule/issues/1770
+
+os: linux
 dist: bionic
 language: python
 services:
@@ -25,7 +29,7 @@ before_install:
 env:
   # global:
   #   - ROLE_NAME: my_role_name
-  matrix:
+  jobs:
     - MOLECULE_DISTRO: geerlingguy/docker-ubuntu1804-ansible:latest
     - MOLECULE_DISTRO: geerlingguy/docker-debian10-ansible:latest
     - MOLECULE_DISTRO: geerlingguy/docker-centos8-ansible:latest
