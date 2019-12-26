@@ -36,8 +36,8 @@ alb_internal_bootstrap_extra_tools:
   - name: apache2-utils
     state: present
   # Some debian systems (at least conteiners ones) may not have command $(lsb_release -sc) for when we use ansible_lsb.codename
-  - name: lsb-release
-    state: present
+  # - name: lsb-release
+  #   state: present
   - name: jq
     state: present
   - name: nmap
@@ -93,7 +93,8 @@ alb_internal_openresty_apt_key:
 
 alb_internal_openresty_apt_repository:
   # repo: "deb http://openresty.org/package/debian $(lsb_release -sc) openresty"
-  repo: "deb http://openresty.org/package/debian {{ ansible_lsb.codename }} openresty"
+  # Debian (or conteiners) may not have lsb_release installed. Fallback to ansible_distribution_release
+  repo: "deb http://openresty.org/package/debian {{ ansible_lsb.codename | default(ansible_distribution_release) | lower }} openresty"
   state: "present"
   # filename: "openresty"
 
