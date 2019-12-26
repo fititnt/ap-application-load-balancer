@@ -14,6 +14,8 @@ alb_internal_package_manager_group: "yum"
 alb_internal_bootstrap_basic_tools:
   - name: net-tools
     state: present
+  - name: rsync
+    state: present
   - name: yum-utils
     state: present
 
@@ -38,6 +40,10 @@ alb_internal_bootstrap_extra_tools:
   - name: gcc
     state: present
   - name: make
+    state: present
+
+alb_internal_bootstrap_extra_tools_pip:
+  - name: testinfra
     state: present
 
 # RHEL/CentOS 7 have luarocks without directy RPM install. 8 does not, so we use RPM for now

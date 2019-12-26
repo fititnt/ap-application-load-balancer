@@ -42,13 +42,13 @@ alb_internal_alert_critical_haproxy: >
   untested_os_family | ALB/HAproxy not tested on Unknow operational system host
 
 alb_internal_alert_critical_logrotate: >
-  untested_os_family | ALB/Logrotate not tested on Unknow operational system host 
+  untested_os_family | ALB/Logrotate not tested on Unknow operational system host
 
 alb_internal_alert_critical_openresty: >
-  untested_os_family | ALB/OpenResty not tested on Unknow operational system host 
+  untested_os_family | ALB/OpenResty not tested on Unknow operational system host
 
 alb_internal_alert_critical_ufw: >
-  untested_os_family | ALB/UFW not tested on Unknow operational system host 
+  untested_os_family | ALB/UFW not tested on Unknow operational system host
 
 alb_internal_root_user: 'root'
 alb_internal_root_group: 'root'
@@ -57,6 +57,7 @@ alb_internal_root_group: 'root'
 alb_internal_package_manager_group: false
 alb_internal_bootstrap_basic_tools: []
 alb_internal_bootstrap_extra_tools: []
+alb_internal_bootstrap_extra_tools_pip: []
 alb_internal_bootstrap_repositories_common_sense_packages: []
 alb_internal_bootstrap_ansible_control_node_packages: []
 

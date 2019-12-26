@@ -36,7 +36,7 @@ alb_internal_bootstrap_extra_tools:
   - name: apache2-utils
     state: present
   # Some debian systems (at least conteiners ones) may not have command $(lsb_release -sc) for when we use ansible_lsb.codename
-  - name: lsb-core
+  - name: lsb-release
     state: present
   - name: jq
     state: present
@@ -45,6 +45,10 @@ alb_internal_bootstrap_extra_tools:
   - name: gcc
     state: present
   - name: make
+    state: present
+
+alb_internal_bootstrap_extra_tools_pip:
+  - name: testinfra
     state: present
 
 alb_internal_bootstrap_luarocks_packages:

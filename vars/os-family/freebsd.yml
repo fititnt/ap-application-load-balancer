@@ -39,6 +39,14 @@ alb_internal_bootstrap_extra_tools:
   - name: nmap
     state: present
 
+alb_internal_bootstrap_extra_tools_pip:
+  - name: testinfra
+    state: present
+
+# TODO: check https://computingforgeeks.com/how-to-install-pip-python-package-manager-on-freebsd-12/
+#       ln -s /usr/local/bin/pip-3.6 /usr/local/bin/pip
+#       Ansible did not autodiscover the pip 'pip-3.6' package on FreeBSD
+
 #alb_internal_bootstrap_luarocks_packages:
 #  - name: luarocks
 #    state: present

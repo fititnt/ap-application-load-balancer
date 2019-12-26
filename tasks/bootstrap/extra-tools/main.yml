@@ -5,10 +5,30 @@
 # SEE:             https://docs.ansible.com/ansible/latest/modules/package_module.html
 
 # TODO: consider optimize this loop when all itens have same state to not use loop (fititnt, 2019-12-08 02:06 BRT)
-- name: "bootstrap | extra-tools | main.yml"
+- name: "bootstrap | extra-tools | main.yml: package"
   package:
     name: "{{ item.name }}"
-    state: "{{ item.state }}"
+    state: "{{ item.state | default(omit) }}"
   with_items: "{{ alb_internal_bootstrap_extra_tools }}"
   when:
-    - alb_internal_bootstrap_extra_tools is defined
+    - "(alb_internal_bootstrap_extra_tools is defined) and (alb_internal_bootstrap_extra_tools[0] is defined)"
+
+- name: "bootstrap | extra-tools | main.yml: pip (TODO: fix the ignore_errors hotfix on Centos7)"
+  pip:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default(omit) }}"
+    chdir: "{{ item.chdir | default(omit) }}"
+    editable: "{{ item.editable | default(omit) }}"
+    executable: "{{ item.executable | default(omit) }}"
+    extra_args: "{{ item.extra_args | default(omit) }}"
+    requirements: "{{ item.requirements | default(omit) }}"
+    umask: "{{ item.umask | default(omit) }}"
+    version: "{{ item.version | default(omit) }}"
+    virtualenv: "{{ item.virtualenv | default(omit) }}"
+    virtualenv_command: "{{ item.virtualenv_command | default(omit) }}"
+    virtualenv_python: "{{ item.virtualenv_python | default(omit) }}"
+    virtualenv_site_packages: "{{ item.virtualenv_site_packages | default(omit) }}"
+  with_items: "{{ alb_internal_bootstrap_extra_tools_pip }}"
+  ignore_errors: true
+  when:
+    - "(alb_internal_bootstrap_extra_tools_pip is defined) and (alb_internal_bootstrap_extra_tools_pip[0] is defined)"

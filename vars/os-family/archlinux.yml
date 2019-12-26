@@ -31,6 +31,10 @@ alb_internal_bootstrap_extra_tools:
   - name: make
     state: present
 
+alb_internal_bootstrap_extra_tools_pip:
+  - name: testinfra
+    state: present
+
 alb_internal_bootstrap_luarocks_packages:
   - name: lua
     state: present

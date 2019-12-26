@@ -36,6 +36,10 @@ alb_internal_bootstrap_extra_tools:
   - name: nmap
     state: present
 
+alb_internal_bootstrap_extra_tools_pip:
+  - name: testinfra
+    state: present
+
 #alb_internal_bootstrap_luarocks_packages:
 #  - name: luarocks
 #    state: present
