@@ -58,3 +58,74 @@ script:
 
 # notifications:
 #   webhooks: https://galaxy.ansible.com/api/v1/notifications/
+
+# TODO: issues to solve (fititnt, 2019-12-25 21:29 BRT):
+
+# ERROR: Idempotence test failed because of the following tasks:
+# * [instance] => ap-application-load-balancer : bootstrap | alb-standard | filesystem-structure:  ln -s /var/opt/alb/apps-backups/ /opt/alb/apps-backups
+# * [instance] => ap-application-load-balancer : bootstrap | alb-standard | filesystem-structure:  ln -s /var/opt/alb/sysapps-backups/ /opt/alb/sysapps-backups
+# * [instance] => ap-application-load-balancer : openresty | install | package-manager | generic.yml: luarocks install lua-resty-auto-ssl
+# * [instance] => ap-application-load-balancer : openresty | install | package-manager | generic.yml: luarocks install lua-resty-auto-ssl
+# * [instance] => ap-application-load-balancer : haproxy | install | filesystem-structure.yml: ensure /run/haproxy/ folder already exist on all OSs (to allow use /run/haproxy/admin.sock)
+#
+# --> Executing Ansible Lint on /alligo/code/fititnt/ap-application-load-balancer/molecule/default/playbook.yml...
+# [301] Commands should not change things if nothing needs doing
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/bootstrap/really-minimal-dependencies/install-python.yml:15
+# Task/Handler: bootstrap | really-minimal-dependencies | install-python.yml | lazy way to install, try by error: sudo apt install -y python3 (Debian/Ubuntu)
+
+# [301] Commands should not change things if nothing needs doing
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/bootstrap/really-minimal-dependencies/install-python.yml:22
+# Task/Handler: bootstrap | really-minimal-dependencies | install-python.yml | lazy way to install, try by error: sudo dnf install -y python3 (CentOS/RHEL/etc)
+
+# [301] Commands should not change things if nothing needs doing
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/bootstrap/really-minimal-dependencies/install-python.yml:30
+# Task/Handler: bootstrap | really-minimal-dependencies | install-python.yml | lazy way to install, try by error: pkg install -y python3 (FreeBSD)
+
+# [301] Commands should not change things if nothing needs doing
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/bootstrap/really-minimal-dependencies/install-python.yml:35
+# Task/Handler: bootstrap | really-minimal-dependencies | install-python.yml | lazy way to install, try by error: pkg_add -y -r python (OpenBSD)
+
+# [305] Use shell only when shell functionality is required
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/bootstrap/repositories-3rd-party/openresty.yml:32
+# Task/Handler: bootstrap | repositories-3rd-party | openresty.yml: zypper_repository (TODO: need to use shell instead of zypper_repository)
+
+# [305] Use shell only when shell functionality is required
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/bootstrap/repositories-3rd-party/openresty.yml:41
+# Task/Handler: bootstrap | repositories-3rd-party | openresty.yml: zypper_repository check (HOTFIX: if this fail, please log on node and accept the keys from openresty manuall!)
+
+# [403] Package installs should not use latest
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/bootstrap/updated-system/yum.yml:20
+# Task/Handler: bootstrap | updated-system | yum.yml: update all packages (RedHat Family)
+
+# [403] Package installs should not use latest
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/haproxy/install/package-manager/yum.yml:6
+# Task/Handler: haproxy | install | yum.yml (RedHat Family)
+
+# [403] Package installs should not use latest
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/haproxy/install/package-manager/zypper.yml:6
+# Task/Handler: haproxy | install | zypper.yml (SUSE Family)
+
+# [301] Commands should not change things if nothing needs doing
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/openresty/install/package-manager/generic.yml:15
+# Task/Handler: openresty | install | package-manager | generic.yml: luarocks install lua-resty-auto-ssl
+
+# [305] Use shell only when shell functionality is required
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/openresty/install/package-manager/generic.yml:15
+# Task/Handler: openresty | install | package-manager | generic.yml: luarocks install lua-resty-auto-ssl
+
+# [301] Commands should not change things if nothing needs doing
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/openresty/install/storage-adapters/consul.yml:6
+# Task/Handler: openresty | install | storage-adapters | consul.yml: opm get hamishforbes/lua-resty-consul
+
+# [305] Use shell only when shell functionality is required
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/openresty/install/storage-adapters/consul.yml:6
+# Task/Handler: openresty | install | storage-adapters | consul.yml: opm get hamishforbes/lua-resty-consul
+
+# [305] Use shell only when shell functionality is required
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/ufw/main.yml:17
+# Task/Handler: ufw | ufw status verbose (before)
+
+# [305] Use shell only when shell functionality is required
+# /alligo/code/fititnt/ap-application-load-balancer/tasks/ufw/main.yml:120
+# Task/Handler: ufw | ufw status verbose (after)
+

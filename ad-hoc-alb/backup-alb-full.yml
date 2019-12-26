@@ -42,6 +42,8 @@
       file:
         path: "{{ backup_destiny_realfolders }}"
         state: touch
+        modification_time: preserve
+        access_time: preserve
 
     - name: "ad-hoc-alb | backup-alb-full.yml | create backup at {{ backup_destiny_realfolders }}"
       archive:

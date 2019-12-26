@@ -98,28 +98,34 @@
   file:
     path: /var/log/alb/access.log
     state: touch
+    modification_time: preserve
+    access_time: preserve
     mode: '0644'
     owner: "{{ alb_nginx_user }}"
     group: "{{ alb_nginx_user }}"
-  changed_when: false
+  # changed_when: false
 
 - name: "bootstrap | alb-standard | filesystem-structure:  touch /var/log/alb/error.log"
   file:
     path: /var/log/alb/error.log
     state: touch
+    modification_time: preserve
+    access_time: preserve
     mode: '0644'
     owner: "{{ alb_nginx_user }}"
     group: "{{ alb_nginx_user }}"
-  changed_when: false
+  # changed_when: false
 
 - name: "bootstrap | alb-standard | filesystem-structure: touch /var/log/alb/letsencrypt.log"
   file:
     path: /var/log/alb/letsencrypt.log
     state: touch
     mode: '0644'
+    modification_time: preserve
+    access_time: preserve
     owner: "{{ alb_nginx_user }}"
     group: "{{ alb_nginx_user }}"
-  changed_when: false
+  # changed_when: false
 
 - name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/apps/"
   file:

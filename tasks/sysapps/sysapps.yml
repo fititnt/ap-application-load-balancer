@@ -87,6 +87,8 @@
   file:
     path: /var/log/sysapp/{{ item.app_uid }}/access.log
     state: touch
+    modification_time: preserve
+    access_time: preserve
     mode: '0644'
     owner: "{{ alb_nginx_user }}"
     group: "{{ alb_nginx_user }}"
@@ -99,6 +101,8 @@
   file:
     path: /var/log/sysapp/{{ item.app_uid }}/error.log
     state: touch
+    modification_time: preserve
+    access_time: preserve
     mode: '0644'
     owner: "{{ alb_nginx_user }}"
     group: "{{ alb_nginx_user }}"

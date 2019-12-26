@@ -18,11 +18,13 @@
   file:
     path: /var/log/app/{{ item.app_uid }}/access.log
     state: touch
+    modification_time: preserve
+    access_time: preserve
     owner: "{{ alb_nginx_user }}"
     group: "{{ alb_nginx_user }}"
     mode: 0644
   with_items: "{{ alb_internal_apps }}"
-  changed_when: false
+  # changed_when: false
   when:
     - alb_internal_apps is defined and alb_internal_apps[0] is defined
     - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
@@ -32,11 +34,13 @@
   file:
     path: /var/log/app/{{ item.app_uid }}/error.log
     state: touch
+    modification_time: preserve
+    access_time: preserve
     owner: "{{ alb_nginx_user }}"
     group: "{{ alb_nginx_user }}"
     mode: 0644
   with_items: "{{ alb_internal_apps }}"
-  changed_when: false
+  # changed_when: false
   when:
     - alb_internal_apps is defined and alb_internal_apps[0] is defined
     - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
