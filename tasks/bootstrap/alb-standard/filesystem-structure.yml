@@ -157,9 +157,9 @@
     mode: '0655'
     owner: "{{ alb_internal_root_user }}"
 
-- name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/bin/testinfra"
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/bin/tests"
   file:
-    path: /opt/alb/bin/testinfra
+    path: /opt/alb/bin/tests
     state: directory
     mode: '0655'
     owner: "{{ alb_internal_root_user }}"

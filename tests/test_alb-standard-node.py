@@ -1,3 +1,5 @@
+# FILE: /opt/alb/bin/tests/test_alb-standard-node.py
+
 def test_passwd_file(host):
     passwd = host.file("/etc/passwd")
     assert passwd.contains("root")

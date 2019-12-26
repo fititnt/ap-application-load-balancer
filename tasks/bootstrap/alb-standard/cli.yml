@@ -35,10 +35,15 @@
     group: "alb"
     mode: 0550
 
-- name: "bootstrap | alb-standard | cli: /opt/alb/bin/testinfra/test_alb-full.py"
-  copy:
-    src: "{{ role_path }}/files/alb-cli-tools/testinfra/test_alb-full.py"
-    dest: "/opt/alb/bin/testinfra/test_alb-full.py"
-    owner: "{{ alb_internal_root_user }}"
-    group: "alb"
-    mode: 0550
+# - name: "bootstrap | alb-standard | cli: /opt/alb/bin/testinfra/test_alb-full.py"
+#   copy:
+#     src: "{{ role_path }}/files/alb-cli-tools/testinfra/test_alb-full.py"
+#     dest: "/opt/alb/bin/testinfra/test_alb-full.py"
+#     owner: "{{ alb_internal_root_user }}"
+#     group: "alb"
+#     mode: 0550
+
+- name: "bootstrap | alb-standard | cli: synchronize from {{ role_path }}/tests/ to /opt/alb/bin/tests"
+  synchronize:
+    src: "{{ role_path }}/tests/"
+    dest: /opt/alb/bin/tests

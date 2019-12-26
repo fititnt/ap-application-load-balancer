@@ -27,6 +27,8 @@ alb_internal_bootstrap_extra_tools:
     state: present
   - name: python3-setuptools
     state: present
+  - name: python3-pytest
+    state: present
   - name: python3-apt
     state: present
   - name: python3-passlib

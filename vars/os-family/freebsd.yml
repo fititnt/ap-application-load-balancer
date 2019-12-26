@@ -27,6 +27,9 @@ alb_internal_bootstrap_extra_tools:
     state: present
   - name: py36-setuptools
     state: present
+  # TODO: check if is really py36-pytest package
+  - name: py36-pytest
+    state: present
   - name: py36-passlib
     state: present
   - name: jq-1.6
