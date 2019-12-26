@@ -30,15 +30,15 @@ verifier:
 
 scenario:
   test_sequence:
-    #- lint
-    #- dependency
-    #- cleanup
-    #- destroy
-    #- syntax
-    #- create
-    #- prepare
-    #- converge
-    - idempotence
+    - lint
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    # - idempotence # TODO: re-enable later
     - side_effect
     - verify
     - cleanup

@@ -11,39 +11,46 @@ services:
 before_install:
   - sudo apt-get -qq update
 
-# molecule test
-# MOLECULE_DISTRO=ubuntu:bionic molecule test
-# MOLECULE_DISTRO=opensuse/leap:latest molecule test
-#
-# Errors 'fatal: [instance]: FAILED! => {"changed": false, "cmd": "/usr/bin/systemctl", "msg": "Failed to connect to bus: No such file or directory", "rc": 1, "stderr": "Failed to connect to bus: No such file or directory\n", '...
-# The conteiners very likely did not contain the systemd
-
-# MOLECULE_DISTRO=geerlingguy/docker-ubuntu1804-ansible:latest molecule test
-# fatal: [instance]: FAILED! => {"changed": false, "cmd": "/bin/systemctl", "msg": "System has not been booted with systemd as init system (PID 1). Can't operate.", "rc": 1, "stderr":
-# Different error. At least we have something!
-
-#
-# This may help with the Systemd issue related to Molecule
-# https://medium.com/@TomaszKlosinski/testing-ansible-role-of-a-systemd-based-service-using-molecule-and-docker-4b3608a10ef0
-
 env:
-  # global:
-  #   - ROLE_NAME: my_role_name
-  jobs:
-    - MOLECULE_DISTRO: geerlingguy/docker-ubuntu1804-ansible:latest
-    - MOLECULE_DISTRO: geerlingguy/docker-debian10-ansible:latest
-    - MOLECULE_DISTRO: geerlingguy/docker-centos8-ansible:latest
-    - MOLECULE_DISTRO: geerlingguy/docker-centos7-ansible:latest
-    - MOLECULE_DISTRO: archlinux:latest
-    - MOLECULE_DISTRO: opensuse/leap:latest
+# global:
+#   - ROLE_NAME: my_role_name
 
-    ## - MOLECULE_DISTRO: freebsd:latest
+jobs:
+  # fast_finish: true
+  include:
+    - env:
+        MOLECULE_DISTRO: geerlingguy/docker-ubuntu1804-ansible:latest
+    - env:
+        MOLECULE_DISTRO: geerlingguy/docker-debian10-ansible:latest
+    - env:
+        MOLECULE_DISTRO: geerlingguy/docker-centos8-ansible:latest
+    - env:
+        MOLECULE_DISTRO: geerlingguy/docker-centos7-ansible:latest
+    - env:
+        MOLECULE_DISTRO: archlinux:latest
+    - env:
+        MOLECULE_DISTRO: opensuse/leap:latest
+    # - env:
+    #     MOLECULE_DISTRO: freebsd:latest
     # FreeBSD support on travis is not trivial
     # @see https://github.com/travis-ci/travis-ci/issues/1818
     # Humm... someone installed FreeBSD inside Ubuntu and
     # then released as image https://github.com/weitjong/dockerized/blob/master/urho3d/freebsd/Dockerfile
     # And this one was from Alpine
     # https://github.com/ustclug/ustcmirror-images/tree/master/freebsd-ports
+  allow_failures:
+    - env:
+        MOLECULE_DISTRO: geerlingguy/docker-ubuntu1804-ansible:latest
+    - env:
+        MOLECULE_DISTRO: geerlingguy/docker-debian10-ansible:latest
+    - env:
+        MOLECULE_DISTRO: geerlingguy/docker-centos8-ansible:latest
+    - env:
+        MOLECULE_DISTRO: geerlingguy/docker-centos7-ansible:latest
+    - env:
+        MOLECULE_DISTRO: archlinux:latest
+    - env:
+        MOLECULE_DISTRO: opensuse/leap:latest
 
 install:
   - pip install testinfra molecule docker
