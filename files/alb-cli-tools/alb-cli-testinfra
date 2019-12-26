@@ -1,0 +1,3 @@
+#!/bin/sh
+# /opt/alb/bin/alb-cli-testinfra
+py.test -v testinfra/test_alb-full.py

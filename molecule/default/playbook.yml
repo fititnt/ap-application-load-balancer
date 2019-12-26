@@ -1,6 +1,7 @@
 ---
 - name: Converge
   hosts: all
+  remote_user: root
   vars:
     alb_node_isconteiner: true
   roles:

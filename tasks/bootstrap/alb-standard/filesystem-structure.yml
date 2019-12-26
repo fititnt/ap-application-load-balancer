@@ -157,6 +157,13 @@
     mode: '0655'
     owner: "{{ alb_internal_root_user }}"
 
+- name: "bootstrap | alb-standard | filesystem-structure: mkdir /opt/alb/bin/testinfra"
+  file:
+    path: /opt/alb/bin/testinfra
+    state: directory
+    mode: '0655'
+    owner: "{{ alb_internal_root_user }}"
+
 #- name: "bootstrap | alb-standard | filesystem-structure:  mkdir /var/app/"
 #  file:
 #    path: /var/app/
