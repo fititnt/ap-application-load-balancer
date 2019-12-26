@@ -38,6 +38,8 @@ jobs:
     # then released as image https://github.com/weitjong/dockerized/blob/master/urho3d/freebsd/Dockerfile
     # And this one was from Alpine
     # https://github.com/ustclug/ustcmirror-images/tree/master/freebsd-ports
+    - env:
+      MOLECULE_DISTRO: ustcmirror/freebsd-ports:latest
   allow_failures:
     - env:
         MOLECULE_DISTRO: geerlingguy/docker-ubuntu1804-ansible:latest
@@ -51,6 +53,8 @@ jobs:
         MOLECULE_DISTRO: archlinux:latest
     - env:
         MOLECULE_DISTRO: opensuse/leap:latest
+    - env:
+      MOLECULE_DISTRO: ustcmirror/freebsd-ports:latest
 
 install:
   - pip install testinfra molecule docker
