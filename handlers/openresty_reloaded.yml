@@ -1,0 +1,18 @@
+---
+
+#- name: "handlers | reload openresty"
+#  service: name=openresty state=reloaded
+
+- name: "reload openresty"
+  block:
+    - name: "handlers | reload openresty"
+      service:
+        name: openresty
+        state: reloaded
+  rescue:
+    - name: "handlers | reload openresty | shell:openresty -t"
+      shell: "openresty -t"
+      register: syntax_check_haproxy
+    - name: "handlers | reload openresty | output: openresty -t"
+      debug:
+        msg: "{{ syntax_check_openresty }}"

@@ -4,6 +4,7 @@
 # TODO: ver meio de testar se arquivos de configuração estão ok ANTES de dar reload/restart no OpenResty (fititnt, 2019-07-28 23:15 BRT)
 
 - name: reload openresty
+  # include: "handlers/openresty_reloaded.yml"
   service: name=openresty state=reloaded
 
 - name: restart openresty
@@ -12,6 +13,7 @@
 # Know bug: if Openresty was restarted too soon, but did not released the :80
 # this will make haproxy reload fail
 - name: reload haproxy
+  # include: "handlers/haproxy_reloaded.yml"
   service: name=haproxy state=restarted
 
 ### @todo checar este erro em vez de transformar o reload em restarted
