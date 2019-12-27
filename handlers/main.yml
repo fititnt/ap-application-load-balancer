@@ -25,3 +25,62 @@
 
 - name: restart ufw
   service: name=ufw state=restarted
+
+## About /opt/alb/info/ files
+# This folder may contain some very basic information about enabled components
+# on each ALB node. The existence means a service was installed and (eventually)
+# it's contents (INI format) could be used to describe more about the service.
+#
+# One main initial reason is allow testinfra (and later other scripts) know
+# what state the node was expected to be. At this moment it just create empty
+# file.
+
+- name: "info alb component openresty"
+  file:
+    path: "/opt/alb/info/openresty"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: "0640"
+
+- name: "info alb component haproxy"
+  file:
+    path: "/opt/alb/info/haproxy"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: "0640"
+
+- name: "info alb component ufw"
+  file:
+    path: "/opt/alb/info/ufw"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: "0640"
+
+- name: "info alb component apps"
+  file:
+    path: "/opt/alb/info/apps"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: "0640"
+
+- name: "info alb component sysapps"
+  file:
+    path: "/opt/alb/info/sysapps"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: "0640"

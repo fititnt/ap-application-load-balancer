@@ -6,3 +6,5 @@
     state: present
   when:
     - "alb_manange_ufw_install is defined and alb_manange_ufw_install|bool"
+  notify:
+    - "info alb component ufw"

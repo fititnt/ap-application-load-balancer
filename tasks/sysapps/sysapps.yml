@@ -69,7 +69,9 @@
   when:
     - alb_internal_sysapps is defined and alb_internal_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
-  notify: reload openresty
+  notify:
+    - "reload openresty"
+    - "info alb component sysapps"
 
 - name: "sysapps | mkdir /var/log/sysapp/[app_uid]"
   file:

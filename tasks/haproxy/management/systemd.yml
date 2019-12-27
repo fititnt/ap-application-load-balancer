@@ -13,6 +13,7 @@
     backup: yes
   notify:
     - reload haproxy
+    - info alb component haproxy
 
 # Enabled/Started must be AFTER moving new /etc/haproxy/haproxy.cfg
 # configurations or Ansible will not be able to update one new valid

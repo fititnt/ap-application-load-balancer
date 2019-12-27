@@ -11,4 +11,5 @@
     mode: '0644'
     backup: yes
   notify:
-    - reload openresty
+    - "reload openresty"
+    - "info alb component openresty"

@@ -24,4 +24,7 @@
     - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
     - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
   register: result_apps_rules
-  notify: reload openresty
+  notify:
+    - "reload openresty"
+    - "info alb component apps"
+
