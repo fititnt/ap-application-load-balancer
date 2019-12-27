@@ -1,0 +1,38 @@
+---
+
+- name: reload openresty
+  service:
+    name: openresty
+    state: reloaded
+  # ignore_errors: yes
+  failed_when: false
+  register: openresty_service_status
+  notify:
+    - "debug openresty failed"
+
+- name: restart openresty
+  service:
+    name: openresty
+    state: restarted
+  # ignore_errors: yes
+  failed_when: false
+  register: openresty_service_status
+  notify:
+    - "debug openresty failed"
+
+## Handlers to debug information in case of critical fail ______________________
+- name: "debug openresty failed"
+  shell: "openresty -t"
+  register: openresty_service_debug_syntax
+  when:
+    - "(openresty_service_status is defined) and (openresty_service_status.failed is sameas true)"
+  notify:
+    - "debug openresty failed 2"
+
+- name: "debug openresty failed 2"
+  debug:
+    msg:
+      # - "{{ openresty_service_status }}"
+      - "{{ openresty_service_debug_syntax }}"
+  when:
+    - "(openresty_service_status is defined) and (openresty_service_status.failed is sameas true)"

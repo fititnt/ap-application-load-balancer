@@ -3,18 +3,77 @@
 
 # TODO: ver meio de testar se arquivos de configuração estão ok ANTES de dar reload/restart no OpenResty (fititnt, 2019-07-28 23:15 BRT)
 
+# @see https://selivan.github.io/2017/01/15/ansible-multiple-handlers-subtlety.html
+
 - name: reload openresty
-  # include: "handlers/openresty_reloaded.yml"
-  service: name=openresty state=reloaded
+  service:
+    name: openresty
+    state: reloaded
+  # ignore_errors: yes
+  failed_when: false
+  changed_when: true
+  register: openresty_service_status
+  notify:
+    - "debug openresty failed"
 
 - name: restart openresty
-  service: name=openresty state=restarted
+  service:
+    name: openresty
+    state: restarted
+  # ignore_errors: yes
+  failed_when: false
+  changed_when: true
+  register: openresty_service_status
+  notify:
+    - "debug openresty failed"
 
-# Know bug: if Openresty was restarted too soon, but did not released the :80
-# this will make haproxy reload fail
+## Handlers to debug information in case of critical fail ______________________
+- name: "debug openresty failed"
+  shell: "openresty -t"
+  register: openresty_service_debug_syntax
+  when:
+    - "(openresty_service_status is defined) and (openresty_service_status.failed is sameas true)"
+  notify:
+    - "debug openresty failed 2"
+
+- name: "debug openresty failed 2"
+  debug:
+    msg:
+      # - "{{ openresty_service_status }}"
+      - "{{ openresty_service_debug_syntax }}"
+  when:
+    - "(openresty_service_status is defined) and (openresty_service_status.failed is sameas true)"
+
+# - name: "handlers/openresty.yml"
+#   include: "{{ role_path }}/handlers/openresty.yml"
+
+# - name: reload openresty
+#   # include: "handlers/openresty_reloaded.yml"
+#   service: name=openresty state=reloaded
+#   # ignore_errors: yes
+#   failed_when: false
+#   register: openresty_service_status
+#   notify:
+#     - "debug openresty failed"
+
+# - name: restart openrestyc
+#   service: name=openresty state=restarted
+#   ignore_errors: yes
+#   register: openresty_service_status
+#   notify:
+#     - "debug openresty failed"
+
 - name: reload haproxy
-  # include: "handlers/haproxy_reloaded.yml"
   service: name=haproxy state=restarted
+
+# - name: "handlers/haproxy.yml"
+#   include: "{{ role_path }}/handlers/haproxy.yml"
+
+# # Know bug: if Openresty was restarted too soon, but did not released the :80
+# # this will make haproxy reload fail
+# - name: reload haproxy
+#   # include: "handlers/haproxy_reloaded.yml"
+#   service: name=haproxy state=restarted
 
 ### @todo checar este erro em vez de transformar o reload em restarted
 ## Failed to reload ufw.service: Job type reload is not applicable for unit ufw.service.
@@ -28,7 +87,25 @@
 - name: restart ufw
   service: name=ufw state=restarted
 
-## About /opt/alb/info/ files
+# ## Handlers to debug information in case of critical fail ______________________
+# - name: "debug openresty failed"
+#   shell: "openresty -t"
+#   register: openresty_service_debug_syntax
+#   when:
+#     - "(openresty_service_status is defined) and (openresty_service_status.failed is sameas true)"
+#   notify:
+#     - "debug openresty failed 2"
+
+# - name: "debug openresty failed 2"
+#   debug:
+#     msg:
+#       # - "{{ openresty_service_status }}"
+#       - "{{ openresty_service_debug_syntax }}"
+#   when:
+#     - "(openresty_service_status is defined) and (openresty_service_status.failed is sameas true)"
+
+
+## About /opt/alb/info/ files __________________________________________________
 # This folder may contain some very basic information about enabled components
 # on each ALB node. The existence means a service was installed and (eventually)
 # it's contents (INI format) could be used to describe more about the service.

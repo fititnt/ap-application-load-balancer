@@ -167,7 +167,7 @@
 
 ## Goodbye _____________________________________________________________________
 
-- name: "/etc/ansible/facts.d/alb_lastrun.fact (Only alb_manange_sanitycheck: yes / alb_manange_sanitycheck: yes will not deploy this fact)"
+- name: "/etc/ansible/facts.d/alb_lastrun.fact"
   template:
     src: files/alb_lastrun.fact
     dest: /etc/ansible/facts.d/alb_lastrun.fact
