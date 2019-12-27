@@ -1,5 +1,7 @@
 ---
 
+# Note: this file is not used at this moment and may be removed later (fititnt, 2019-12-27 04:01 BRT)
+
 - name: reload openresty
   service:
     name: openresty

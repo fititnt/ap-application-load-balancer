@@ -1,0 +1,15 @@
+---
+# FILE:            {{ role_path }}/tasks/bootstrap/alb-standard/alb-inside-conteiner.yml
+# LICENSE:         Public Domain
+
+- name: "bootstrap | alb-standard | alb-inside-conteiner: /opt/alb/info/isconteiner"
+  file:
+    path: "/opt/alb/info/isconteiner"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+    owner: "{{ alb_internal_root_user }}"
+    group: "{{ alb_internal_root_group }}"
+    mode: "0640"
+  when:
+    - "(alb_internal_node_isconteiner is defined) and (alb_internal_node_isconteiner is sameas true)"
