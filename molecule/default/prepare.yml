@@ -4,6 +4,5 @@
   remote_user: root
   gather_facts: false
   pre_tasks:
-    # - raw: sudo apt-get -y install python-simplejson
-    - name: Run a script with arguments (free form)
+    - name: "Prepare setup-python.sh"
       script: setup-python.sh

@@ -39,7 +39,13 @@ jobs:
     # And this one was from Alpine
     # https://github.com/ustclug/ustcmirror-images/tree/master/freebsd-ports
     - env:
-      MOLECULE_DISTRO: ustcmirror/freebsd-ports:latest
+      # Note: ustcmirror/freebsd-ports:latest is based on Alpine. It's actually
+      #       not possible to emulate a non-linux on a linux machine with docker
+      #       and even if have a FreeBSD host, BSDs does not have same support
+      #       bor BSDs
+        MOLECULE_DISTRO: ustcmirror/freebsd-ports:latest
+    - env:
+        MOLECULE_DISTRO: openresty/openresty:alpine-fat
   allow_failures:
     - env:
         MOLECULE_DISTRO: geerlingguy/docker-ubuntu1804-ansible:latest
@@ -54,7 +60,9 @@ jobs:
     - env:
         MOLECULE_DISTRO: opensuse/leap:latest
     - env:
-      MOLECULE_DISTRO: ustcmirror/freebsd-ports:latest
+        MOLECULE_DISTRO: ustcmirror/freebsd-ports:latest
+    - env:
+        MOLECULE_DISTRO: openresty/openresty:alpine-fat
 
 install:
   - pip install testinfra molecule docker

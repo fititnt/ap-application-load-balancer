@@ -4,3 +4,5 @@
 
 - name: "haproxy | management | main.yml: choose method based on OS"
   include: "{{ role_path }}/tasks/haproxy/management/{{ alb_internal_haproxy_management }}.yml"
+  when:
+    - "(alb_internal_haproxy_management is defined)"
