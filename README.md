@@ -1,4 +1,4 @@
-# AP Application Load Balancer - v0.8.7-alpha
+# AP Application Load Balancer - v0.8.7-beta
 
 [![GitHub: fititnt/ap-application-load-balancer](docs/img/badges/github.svg)](https://github.com/fititnt/ap-application-load-balancer) [![Website: ap-application-load-balancer.etica.ai](docs/img/badges/website.svg)](https://ap-application-load-balancer.etica.ai/)
 
@@ -29,7 +29,10 @@ and manangement of Consul component. Examples can be found at
 [fititnt/ansible-linux-ha-cluster](https://github.com/fititnt/ansible-linux-ha-cluster).
 
 [![asciicast](https://asciinema.org/a/288305.svg)](https://asciinema.org/a/288305)
-> Source code for this demo at <https://github.com/fititnt/ansible-linux-ha-cluster/releases/tag/demo-001-ap-alb-v0.8.5-alpha>
+> Source code for this demo at <https://github.com/fititnt/ansible-linux-ha-cluster/releases/tag/demo-003-ap-alb-v0.8.7-beta>.
+> The roles [brianshumate.consul: v2.5.3, 2019-11-14](https://github.com/brianshumate/ansible-consul/releases/tag/v2.5.3)
+> and [githubixx.ansible_role_wireguard: v4.1.1, 2019-11-11](https://github.com/githubixx/ansible-role-wireguard/releases/tag/4.1.1)
+> are not part of AP-ALB, but are used to show a demo of a cross-platform cluster.
 
 <!--
 
