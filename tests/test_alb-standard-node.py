@@ -6,9 +6,9 @@ def test_required_haproxy_is_installed(host):
 
 
 def test_required_haproxy_is_enabled(host):
-    assert not host.file("/opt/alb/info/isconteiner").exists or \
-        (host.file("/opt/alb/info/haproxy").exists
-            and host.service("haproxy").is_enabled)
+    assert host.file("/opt/alb/info/isconteiner").exists or \
+        (not host.file("/opt/alb/info/haproxy").exists
+            or host.service("haproxy").is_enabled)
 
 
 def test_required_haproxy_is_running(host):
@@ -22,9 +22,9 @@ def test_required_openresty_is_installed(host):
 
 
 def test_required_openresty_is_enabled(host):
-    assert not host.file("/opt/alb/info/isconteiner").exists or \
-        (host.file("/opt/alb/info/openresty").exists
-            and host.service("openresty").is_enabled)
+    assert host.file("/opt/alb/info/isconteiner").exists or \
+        (not host.file("/opt/alb/info/openresty").exists
+            or host.service("openresty").is_enabled)
 
 
 def test_required_openresty_is_running(host):
@@ -38,9 +38,9 @@ def test_required_ufw_is_installed(host):
 
 
 def test_required_ufw_is_enabled(host):
-    assert not host.file("/opt/alb/info/isconteiner").exists or \
-        (host.file("/opt/alb/info/ufw").exists
-            and host.service("ufw").is_enabled)
+    assert host.file("/opt/alb/info/isconteiner").exists or \
+        (not host.file("/opt/alb/info/ufw").exists
+            or host.service("ufw").is_enabled)
 
 
 def test_required_ufw_is_running(host):
