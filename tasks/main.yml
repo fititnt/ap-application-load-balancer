@@ -13,6 +13,9 @@
         dist_release: "{{ ansible_distribution_release | default('undefined') | lower }}"
         dist_major_ver: "{{ ansible_distribution_major_version | default('undefined') | lower }}"
         ansible_lsb: "{{ ansible_lsb | default('undefined') }}"
+        # If behind NAT, this may not represent real public IPv4.
+        # Alternative: https://docs.ansible.com/ansible/latest/modules/ipify_facts_module.html
+        ansible_default_ipv4: "{{ ansible_default_ipv4.address | default('undefined') }}"
   tags:
     - alb
     - always

@@ -19,7 +19,12 @@
     #    msg: "{{ bootstrap_checks_cpanel }}, {{ bootstrap_checks_cpanel.failed }}, {{ bootstrap_checks_port80 }}"
   ignore_errors: yes
   always:
-    - name: "Abort if CPanel detected"
+    #- name: "debug"
+    #  debug:
+    #    msg:
+    #      - "{{ bootstrap_checks_cpanel }}"
+    #      - "{{ bootstrap_checks_port80 }}"
+    - name: "bootstrap | very-early-abort-checks | Abort if CPanel detected"
       fail:
        msg:
          error: "This host may already running some service. Please use alb_boostrap_ignore_very_early_abort_checks as true ignore"

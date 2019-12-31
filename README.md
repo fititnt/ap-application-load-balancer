@@ -28,7 +28,7 @@ local filesystem. We recommend using the Ansible Role
 and manangement of Consul component. Examples can be found at
 [fititnt/ansible-linux-ha-cluster](https://github.com/fititnt/ansible-linux-ha-cluster).
 
-[![asciicast](https://asciinema.org/a/288305.svg)](https://asciinema.org/a/288305)
+[![asciicast](https://asciinema.org/a/TKWVLoK0tISoZF05Q7FYZ7CcQ.svg)](https://asciinema.org/a/TKWVLoK0tISoZF05Q7FYZ7CcQ)
 > Source code for this demo at <https://github.com/fititnt/ansible-linux-ha-cluster/releases/tag/demo-003-ap-alb-v0.8.7-beta>.
 > The roles [brianshumate.consul: v2.5.3, 2019-11-14](https://github.com/brianshumate/ansible-consul/releases/tag/v2.5.3)
 > and [githubixx.ansible_role_wireguard: v4.1.1, 2019-11-11](https://github.com/githubixx/ansible-role-wireguard/releases/tag/4.1.1)

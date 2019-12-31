@@ -6,6 +6,8 @@
 alb_version: "v0.8.7-beta"
 alb_version_lastrun: -1
 
+# TODO: consider implement features using https://dnsjson.com/ (fititnt, 2019-12-31 05:24 BRT)
+
 # This variable name may change soon. See MVP of AP-ALB inside docker containers https://github.com/fititnt/ap-application-load-balancer/issues/43
 alb_internal_node_isconteiner: "{{ alb_node_isconteiner | default(false) }}"
 
