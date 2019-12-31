@@ -3,9 +3,6 @@
 # FILE:            {{ role_path }}/tasks/bootstrap/alb-standard/main.yml
 # LICENSE:         Public Domain
 
-- name: "alb-inside-conteiner.yml"
-  include: "alb-inside-conteiner.yml"
-
 # hosts.yml may confict with user hosts.yml inventory, so full path here
 - name: "hosts.yml"
   include: "{{ role_path }}/tasks/bootstrap/alb-standard/hosts.yml"
@@ -18,6 +15,9 @@
 
 - name: "filesystem-structure.yml"
   include: filesystem-structure.yml
+
+- name: "alb-inside-conteiner.yml"
+  include: "alb-inside-conteiner.yml"
 
 # TODO: remove this too much specific tag (fititnt, 2019-12-15 10:23 BRT)
 # ansible-playbook -i hosts.yml infra-alb.yml --tags="alb-bootstrap-alb-standard-cli"
