@@ -10,6 +10,6 @@
     access_time: preserve
     owner: "{{ alb_internal_root_user }}"
     group: "{{ alb_internal_root_group }}"
-    mode: "0640"
+    mode: "0644"
   when:
     - "(alb_internal_node_isconteiner is defined) and (alb_internal_node_isconteiner is sameas true)"

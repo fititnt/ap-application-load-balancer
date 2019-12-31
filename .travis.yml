@@ -47,8 +47,8 @@ jobs:
     - env:
         MOLECULE_DISTRO: openresty/openresty:alpine-fat
   allow_failures:
-    - env:
-        MOLECULE_DISTRO: geerlingguy/docker-ubuntu1804-ansible:latest
+    # - env:
+    #     MOLECULE_DISTRO: geerlingguy/docker-ubuntu1804-ansible:latest
     - env:
         MOLECULE_DISTRO: geerlingguy/docker-debian10-ansible:latest
     - env:
