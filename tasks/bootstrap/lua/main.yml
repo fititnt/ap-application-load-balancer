@@ -7,3 +7,19 @@
   include: luarocks.yml
   when:
     - "(alb_manange_openresty|bool)"
+
+# Note: this may need be moved to OpenResty folder
+- name: "bootstrap | lua | main.yml: symbolic links and/or extra directory structure"
+  file:
+    path: "{{ item.path | default(omit) }}"
+    src: "{{ item.src | default(omit) }}"
+    dest: "{{ item.dest | default(omit) }}"
+    owner: "{{ item.owner | default(alb_internal_root_user) }}"
+    group: "{{ item.group | default(alb_internal_root_group) }}"
+    state: "{{ item.state | default('link') }}"
+    recurse: "{{ item.recurse | default(omit) }}"
+  with_items: "{{ alb_internal_bootstrap_lua_symlinks }}"
+  when:
+    - "(alb_manange_openresty|bool)"
+    - "(alb_internal_bootstrap_lua_symlinks is defined)
+      and (alb_internal_bootstrap_lua_symlinks[0] is defined)"

@@ -30,6 +30,21 @@ alb_internal_bootstrap_extra_tools:
   - name: make
     state: present
 
+# CentOS 7 may install LuaResty on a path that OpenResty does not know where is
+alb_internal_bootstrap_lua_symlinks:
+  # The subfolder needs to exist before create the symlink
+#  - path: /usr/local/openresty/site/lualib/resty
+#    state: directory
+#  - src: /usr/share/lua/5.1/resty/auto-ssl
+#    dest: /usr/local/openresty/site/lualib/resty/auto-ssl
+#    state: link
+  - path: /usr/local/openresty/site/lualib/
+    state: directory
+    recurse: yes
+  - src: /usr/share/lua/5.1/resty
+    dest: /usr/local/openresty/site/lualib/resty
+    state: link
+
 # RHEL/CentOS 7 have luarocks without directy RPM install. 8 does not, so we use RPM for now
 alb_internal_bootstrap_luarocks_packages:
   - name: luarocks
