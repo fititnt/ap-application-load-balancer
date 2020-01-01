@@ -124,7 +124,7 @@ humanitarian or commercial projects from who help we on Etica.AI.
   - [YAML Syntax](https://yaml.org/)
     - [OpenResty](https://yaml.org/) / [NGinx](http://nginx.org/en/docs/) syntax <sup>(To make your own YAML template apps)</sup>
       - TL;DR: `/opt/alb/apps/{{ app_uid }}.conf` is where each App/Rule is stored
-    - [HAProxy](https://yaml.org/) <sup>(Only for very advanced cases)</sup>
+    - [HAProxy](https://yaml.org/)
 
 > See [Advanced usage](#advanced-usage).
 

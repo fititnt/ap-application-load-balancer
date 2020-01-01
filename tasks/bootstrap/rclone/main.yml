@@ -1,0 +1,12 @@
+---
+
+# FILE:            {{ role_path }}/tasks/bootstrap/rclone/main.yml
+# LICENSE:         Public Domain
+# SEE:             https://docs.ansible.com/ansible/latest/modules/package_module.html
+
+# TODO: remove ignore_errors: true (fititnt, 2020-01-01 10:45 BRT)
+- name: "bootstrap | rclone | main.yml: generic package install rclone"
+  package:
+    name: "rclone"
+    state: "present"
+  ignore_errors: true

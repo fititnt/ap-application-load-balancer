@@ -11,6 +11,12 @@ services:
 before_install:
   - sudo apt-get -qq update
 
+# https://docs.travis-ci.com/user/hosts/
+addons:
+  hosts:
+    - haproxy.instance
+    - hello-world.instance
+
 env:
 # global:
 #   - ROLE_NAME: my_role_name
