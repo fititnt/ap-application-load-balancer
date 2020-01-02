@@ -33,6 +33,8 @@ jobs:
     - env:
         MOLECULE_DISTRO: geerlingguy/docker-centos7-ansible:latest
     - env:
+        MOLECULE_DISTRO: geerlingguy/docker-fedora31-ansible:latest
+    - env:
         MOLECULE_DISTRO: archlinux:latest
     - env:
         MOLECULE_DISTRO: opensuse/leap:latest
@@ -61,6 +63,8 @@ jobs:
         MOLECULE_DISTRO: geerlingguy/docker-centos8-ansible:latest
     - env:
         MOLECULE_DISTRO: geerlingguy/docker-centos7-ansible:latest
+    - env:
+        MOLECULE_DISTRO: geerlingguy/docker-fedora31-ansible:latest
     - env:
         MOLECULE_DISTRO: archlinux:latest
     - env:

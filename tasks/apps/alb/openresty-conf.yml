@@ -27,4 +27,3 @@
   notify:
     - "reload openresty"
     - "info alb component apps"
-
