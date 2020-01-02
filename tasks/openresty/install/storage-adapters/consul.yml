@@ -5,6 +5,10 @@
 # Message for who does not read documentation, but is reading the sources
 - name: "openresty | install | storage-adapters | consul.yml: opm get hamishforbes/lua-resty-consul"
   shell: opm get hamishforbes/lua-resty-consul
+  args:
+    warn: false
+  tags:
+    - skip_ansible_lint
 
 - name: "openresty | install | storage-adapters | consul.yml: | MONKEYPATCH | resty/auto-ssl/storage_adapters/consul.lua
         (untill resty-auto-ssl include this storage driver)"

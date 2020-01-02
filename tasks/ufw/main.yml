@@ -19,6 +19,10 @@
   become: "yes"
   changed_when: false
   ignore_errors: true
+  args:
+    warn: false
+  tags:
+    - skip_ansible_lint
   register: ufw_status_verbose1
   when:
     - "(alb_ufw_facts_deployed is changed) or (alb_forceredeploy|bool)"
@@ -120,6 +124,10 @@
 - name: "ufw | ufw status verbose (after)"
   shell: "ufw status verbose"
   become: "yes"
+  args:
+    warn: false
+  tags:
+    - skip_ansible_lint
   changed_when: false
   register: ufw_status_verbose2
   when:

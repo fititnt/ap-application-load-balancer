@@ -53,6 +53,7 @@ alb_internal_bootstrap_luarocks_packages:
 
 alb_internal_bootstrap_luarocks_yums: []
 
+# redhat.yml is overridden by by distribution/fedora.yml to []. Fedore does not have/require epel-release
 alb_internal_bootstrap_repositories_common_sense_packages:
   - name: epel-release
     state: present

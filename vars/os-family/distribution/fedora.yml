@@ -1,0 +1,6 @@
+---
+# FILE:            {{ role_path }}/vars/os-family/distribution/fedora.yml
+# LICENSE:         Public Domain
+
+# redhat.yml is overridden by by distribution/fedora.yml to []. Fedore does not have/require epel-release
+alb_internal_bootstrap_repositories_common_sense_packages: []

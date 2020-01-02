@@ -14,6 +14,10 @@
 
 - name: "openresty | install | package-manager | generic.yml: luarocks install lua-resty-auto-ssl"
   shell: "luarocks install lua-resty-auto-ssl"
+  args:
+    warn: false
+  tags:
+    - skip_ansible_lint
   register: alb_openresty_install_luarestyaytossl_result
 
 - name: "openresty | install | package-manager | generic.yml: luarocks install lua-resty-auto-ssl (debug)"

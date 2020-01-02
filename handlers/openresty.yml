@@ -25,6 +25,10 @@
 ## Handlers to debug information in case of critical fail ______________________
 - name: "debug openresty failed"
   shell: "openresty -t"
+  args:
+    warn: false
+  tags:
+    - skip_ansible_lint
   register: openresty_service_debug_syntax
   when:
     - "(openresty_service_status is defined) and (openresty_service_status.failed is sameas true)"

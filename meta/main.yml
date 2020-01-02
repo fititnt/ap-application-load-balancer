@@ -5,16 +5,6 @@ galaxy_info:
   license: Unlicense
   min_ansible_version: 2.9
   platforms:
-
-    # Options we have on Contabo, as 2019-12-06, would be:
-    #   - Arch Linux
-    #   - CentOS 6,7,8
-    #   - Debian 8, 9, 10
-    #   - Fedora 30
-    #   - FreeBSD 12.0
-    #   - OpenSUSE 15.1
-    #   - Ubuntu 16.04, 18.04, 19.04, 19.10
-
     - name: Alpine
       versions:
         - any

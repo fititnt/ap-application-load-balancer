@@ -1,4 +1,6 @@
 ---
+# FILE:            {{ role_path }}/vars/os-family/distribution/ubuntu.yml
+# LICENSE:         Public Domain
 
 ## ALB/HAProxy _________________________________________________________________
 # @see https://haproxy.debian.net/
