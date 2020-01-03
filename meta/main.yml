@@ -1,6 +1,10 @@
 galaxy_info:
   author: "Emerson Rocha <rocha(at)ieee.org>"
-  description: "AP Application Load Balancer (AP-ALB)"
+  description: |
+    AP Application Load Balancer (AP-ALB). Sophisticated monolithic Ansible role
+    to manage standalone and clusters of cross-platform and multicloud load
+    balancers. Abstract HAProxy + OpenResty + On-the-fly auto HTTPS. Dedicated
+    to Public Domain.
   company: Etica.AI
   license: Unlicense
   min_ansible_version: 2.9

@@ -8,14 +8,7 @@
     - [ALB components](#alb-components)
         - [Shared options](#shared-options)
             - [ACME](#acme)
-- [alb_node_storage_driver also define where each node will store it's HTTPS secrets. Values:](#alb_node_storage_driver-also-define-where-each-node-will-store-its-https-secrets-values)
-- [- 'file'](#--file)
-- [- This is the default, uses /etc/resty-auto-ssl](#--this-is-the-default-uses-etcresty-auto-ssl)
-- [- 'consul'](#--consul)
-- [- 'custom'](#--custom)
-- [- Tip: alb_node_storage_custom_luarestautossl example you can use Redis storage](#--tip-alb_node_storage_custom_luarestautossl-example-you-can-use-redis-storage)
-- [If debugging, consider using multitail with these paths:](#if-debugging-consider-using-multitail-with-these-paths)
-- [multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log](#multitail--ci-white-varlogalbaccesslog--ci-yellow--i-varlogalberrorlog---ci-blue--i-varlogalbletsencryptlog)
+                - [Example using ACME](#example-using-acme)
             - [Applications/Sysapplications variables](#applicationssysapplications-variables)
             - [Autentication Credentials](#autentication-credentials)
             - [Bastion Hosts](#bastion-hosts)
@@ -151,6 +144,7 @@ alb_acme_rule_last: true
 
 # This value is infered from alb_acme_production. But you can customize yourself
 alb_acme_url: "{{ 'https://acme-v02.api.letsencrypt.org/directory' if alb_acme_production else 'https://acme-staging-v02.api.letsencrypt.org/directory' }}"
+```
 
 ##### Example using ACME
 
@@ -189,7 +183,6 @@ alb_acme_rule_last: false
 #     multitail -ci white /var/log/alb/access.log -ci yellow -I /var/log/alb/error.log  -ci blue -I /var/log/alb/letsencrypt.log
 ```
 
-```
 #### Applications/Sysapplications variables
 
 Content moved to [../rules/index.md](../rules/index.md).

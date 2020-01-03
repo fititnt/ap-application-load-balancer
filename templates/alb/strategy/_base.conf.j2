@@ -13,7 +13,7 @@ server {
     error_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/error.log;
     access_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/access.log  main;
 
-    {% if (item.app_root is defined and item.app_root) %}root "{{ item.app_root }}"{% endif %}
+    {% if (item.app_root is defined and item.app_root) %}root "{{ item.app_root }}";{% endif %}
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
@@ -39,7 +39,7 @@ server {
     error_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/error.log;
     access_log  /var/log/{{ type_of_app }}/{{ item.app_uid }}/access.log  main;
 
-    {% if (item.app_root is defined and item.app_root) %}root "{{ item.app_root }}"{% endif %}
+    {% if (item.app_root is defined and item.app_root) %}root "{{ item.app_root }}";{% endif %}
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
