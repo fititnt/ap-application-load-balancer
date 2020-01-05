@@ -16,6 +16,10 @@ alb_forcedebug: no
 alb_forceredeploy: no # Ignore already made changes base on facts from /etc/ansible/fact.d/alb*.fact
 alb_bootstrap_canupdatesystem: yes
 
+### AP-ALB Run mode ("ALB Play") _______________________________________________
+# alb_play
+alb_play: ""
+
 ### AP-ALB Components overview _________________________________________________
 # The defaults of v0.7.4+ will use: Apps, HAProxy, Logrotate, OpenResty
 # You can enable/disable components. Or explicity enforce on your configuration

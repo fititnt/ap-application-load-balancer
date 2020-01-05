@@ -27,6 +27,14 @@
     group: "alb"
     mode: 0550
 
+- name: "bootstrap | alb-standard | cli: /opt/alb/bin/alb-cli-domains"
+  copy:
+    src: "{{ role_path }}/files/alb-cli-tools/alb-cli-domains"
+    dest: "/opt/alb/bin/alb-cli-domains"
+    owner: "{{ alb_internal_root_user }}"
+    group: "alb"
+    mode: 0550
+
 - name: "bootstrap | alb-standard | cli: /opt/alb/bin/alb-cli-testinfra"
   copy:
     src: "{{ role_path }}/files/alb-cli-tools/alb-cli-issues"

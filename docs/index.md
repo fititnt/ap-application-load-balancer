@@ -80,7 +80,7 @@ that use our standard) will apply changes on your nodes.
 Please visit <http://ap-application-load-balancer-extras.etica.ai/>
 
 Some non-core features are not enabled by default on the base
-ap-application-load-balancer **but** are avaiible on
+ap-application-load-balancer **but** are available on
 ap-application-load-balancer-extras. In general the _extra features_ are more
 specific to the application deployment, like create system users, populate
 content for initial testing, basic installation of PHP, etc.

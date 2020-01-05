@@ -52,8 +52,6 @@ HAProxy & OpenResty, will need root access.
             - [app_domain_extras](#app_domain_extras)
             - [app_debug](#app_debug)
             - [app_forcehttps](#app_forcehttps)
-            - [app_hook_after](#app_hook_after)
-            - [app_hook_before](#app_hook_before)
             - [app_index](#app_index)
             - [app_root](#app_root)
             - [app_tags](#app_tags)
@@ -64,10 +62,20 @@ HAProxy & OpenResty, will need root access.
             - [app_data_hook_export_before](#app_data_hook_export_before)
             - [app_data_hook_import_after](#app_data_hook_import_after)
             - [app_data_hook_import_before](#app_data_hook_import_before)
+        - [app_healthcheck_*](#app_healthcheck_)
+            - [app_healthcheck_extras <sup>(draft)</sup>](#app_healthcheck_extras-supdraftsup)
+            - [app_healthcheck_path <sup>(draft)</sup>](#app_healthcheck_path-supdraftsup)
+            - [app_healthcheck_value_ok <sup>(draft)</sup>](#app_healthcheck_value_ok-supdraftsup)
         - [app_*_strategy](#app__strategy)
+            - [`app_hook_*`](#app_hook_)
+            - [`app_hook_after`](#app_hook_after)
+            - [`app_hook_before`](#app_hook_before)
+            - [`app_hook_onchange` <sup>(draft)</sup>](#app_hook_onchange-supdraftsup)
+            - [`app_hook_[alb_play]_*`](#app_hook_alb_play_)
             - [app_alb_strategy](#app_alb_strategy)
             - [app_backup_strategy](#app_backup_strategy)
             - [app_ha_strategy](#app_ha_strategy)
+            - [app_healthcheck_strategy](#app_healthcheck_strategy)
             - [app_nlb_strategy](#app_nlb_strategy)
         - [app_alb_*](#app_alb_)
             - [app_alb_hosts](#app_alb_hosts)
@@ -226,23 +234,6 @@ than one datacenter).
 
 > @TODO: implement this feature (fititnt, 2019-12-04 22:43 BRT)
 
-#### app_hook_after
-- **Required**: _no_
-- **Default**: _no default_
-- **Type of Value**: _String_ (path to a single Ansible Tasks file to execute)
-- **Examples of Value**: `{{ playbook_dir }}/hooks/app-static-html.yml`, `{{ role_path }}/ad-hoc-alb/hooks/debug.yml`, `{{ role_path }}/ad-hoc-alb/hooks/example/example_app_hook_after.yml`
-
-You can execute custom tasks specific to one app after deployed.
-
-#### app_hook_before
-- **Required**: _no_
-- **Default**: _no default_
-- **Type of Value**: _String_ (path to a single Ansible Tasks file to execute)
-- **Examples of Value**: `{{ playbook_dir }}/hooks/app-static-html.yml`, `{{ role_path }}/ad-hoc-alb/hooks/debug.yml`, `{{ role_path }}/ad-hoc-alb/hooks/example/example_app_hook_before.yml`
-
-
-You can execute custom tasks specific to one app after deployed.
-
 #### app_index
 - **Required**: _no_
 - **Default**: _no default_, `alb_default_app_index`<sup>(If defined)</sup>
@@ -346,7 +337,69 @@ shared (and often sloooow) filesystem.
 - **Type of Value**:  _String_ (Path to a Ansible Tasks file)
 - **Examples of Value**: `"{{ playbook_dir }}/install-requeriments-for-this-app-if-already-not-exist.yml"`
 
+### app_healthcheck_*
+
+#### app_healthcheck_extras <sup>(draft)</sup>
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: list of Dictionaries contaning `app_healthcheck_*` additional to the default one
+- **Examples of Value**: `/app-health-check`
+
+> @TODO: this is a draft (fititnt, 2020-01-05 09:33 BRT)
+
+#### app_healthcheck_path <sup>(draft)</sup>
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _String_
+- **Examples of Value**: `/app-health-check`
+
+> @TODO: this is a draft (fititnt, 2020-01-05 09:33 BRT)
+
+#### app_healthcheck_value_ok <sup>(draft)</sup>
+- **Required**: _no_
+- **Default**: _+OK_
+- **Type of Value**: _String_
+- **Examples of Value**: `Some string that health page have`, `Hello to my frontpage`
+
+> @TODO: this is a draft (fititnt, 2020-01-05 09:33 BRT)
 ### app_*_strategy
+
+#### `app_hook_*`
+
+#### `app_hook_after`
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _String_ (path to a single Ansible Tasks file to execute)
+- **Examples of Value**: `{{ playbook_dir }}/hooks/app-static-html.yml`, `{{ role_path }}/ad-hoc-alb/hooks/debug.yml`, `{{ role_path }}/ad-hoc-alb/hooks/example/example_app_hook_after.yml`
+
+You can execute custom tasks specific to one app after deployed.
+
+#### `app_hook_before`
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _String_ (path to a single Ansible Tasks file to execute)
+- **Examples of Value**: `{{ playbook_dir }}/hooks/app-static-html.yml`, `{{ role_path }}/ad-hoc-alb/hooks/debug.yml`, `{{ role_path }}/ad-hoc-alb/hooks/example/example_app_hook_before.yml`
+
+You can execute custom tasks specific to one app before deployed.
+
+#### `app_hook_onchange` <sup>(draft)</sup>
+Equivalent of [`app_hook_after`](#app_hook_after), but will only run if the alb
+app was changed.
+
+#### `app_hook_[alb_play]_*`
+- **Required**: _no_
+- **Default**: _no default_
+- **Type of Value**: _String_ (path to a single Ansible Tasks file to execute)
+- **Examples of key names**: `app_hook_infra_after`, `app_hook_infra_before`, `app_hook_infra_onchange`, `app_hook_backup_before`
+- **Examples of Value**: `{{ playbook_dir }}/hooks/app-static-html.yml`, `{{ role_path }}/ad-hoc-alb/hooks/debug.yml`, `{{ role_path }}/ad-hoc-alb/hooks/example/example_app_hook_after.yml`
+
+All options from `app_hook_*` are avalible to `app_hook_[alb_play]_*`. The main
+difference here is that `[alb_play]` act as one way to namespace your hooks.
+
+The special variable `alb_play` could be hardcoded on your playbook or defined
+as command line variable (e.g.
+`ansible-playbook -i hosts.yml my-playbook.yml -e="alb_play=infra"`) so only
+when this variable is defined, these hooks will be run.
 
 #### app_alb_strategy
 - **Required**: _always_ (or will be ignored by OpenResty)
@@ -372,6 +425,9 @@ often are.
 
 #### app_ha_strategy
 > As version v0.8.1-alpha, this app_ha_strategy still not implemented.
+
+#### app_healthcheck_strategy
+> As version v0.8.7-beta, this app_healthcheck_strategy still not implemented.
 
 #### app_nlb_strategy
 > As version v0.8.1-alpha, this app_nlb_strategy still not implemented.

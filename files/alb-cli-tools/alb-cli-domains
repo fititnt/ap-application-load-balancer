@@ -1,4 +1,24 @@
 #!/bin/sh
+# FILE:            /opt/alb/bin/alb-cli-domains
+# LICENSE:         Public Domain
+#
+# DESCRIPTION:     For the ACTIVE openresty process on the local none, output
+#                  all server_name's. Works with non-ALB nodes using openresty
+#                  (and with changes even with nginx)
+#
+# SEE:             https://stackoverflow.com/questions/32400933/how-can-i-list-all-vhosts-in-nginx
+#
+# USAGE:           Logged on the node, use
+#                      /opt/alb/bin/alb-cli-domains
+#                  From your control machine, hosts.yml as inventory
+#                      ansible all -i hosts.yml -m raw -a "/opt/alb/bin/alb-cli-domains"
+#                      ansible all -i hosts.yml --user=root -m raw -a "/opt/alb/bin/alb-cli-domains"
 
-# ansible cross_platform_test_2 --user=root -i hosts.yml -m raw -a '/etc/ansible/facts.d/alb_sysapps.fact | jq ".alb_apps | .[] | .app_domain"'
-# ansible cross_platform_test_2 --user=root -i hosts.yml -m raw -a '/etc/ansible/facts.d/alb_sysapps.fact | jq ".alb_apps | .[] | .app_domain"'
+# The simpler, one-liner option, would be
+#    openresty -T | grep "server_name "
+
+openresty -T | sed -r -e 's/[ \t]*$//' -e 's/^[ \t]*//' -e 's/^#.*$//' -e 's/[ \t]*#.*$//' -e '/^$/d' | \
+sed -e ':a;N;$!ba;s/\([^;\{\}]\)\n/\1 /g' | \
+grep -P 'server_name[ \t]' | grep -v '\$' | grep '\.' | \
+sed -r -e 's/(\S)[ \t]+(\S)/\1\n\2/g' -e 's/[\t ]//g' -e 's/;//' -e 's/server_name//' | \
+sort | uniq | xargs -L1
