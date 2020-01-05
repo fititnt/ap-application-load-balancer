@@ -1,4 +1,4 @@
-# AP Application Load Balancer - v0.8.7-alpha
+# AP Application Load Balancer - v0.8.7-beta
 [![GitHub: fititnt/ap-application-load-balancer](img/badges/github.svg)](https://github.com/fititnt/ap-application-load-balancer) [![Website: ap-application-load-balancer.etica.ai](img/badges/website.svg)](https://ap-application-load-balancer.etica.ai/)
 
 AP-ALB is not a single software, but **[Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code)
@@ -33,6 +33,7 @@ the same node puting behind the AP-ALB one Varnish-Cache!)_
     - [Sysapplication Rules](#sysapplication-rules)
 - [End-user documentation](#end-user-documentation)
     - [Application Rules](#application-rules)
+- [ap-application-load-balancer-extras](#ap-application-load-balancer-extras)
 - [License](#license)
 
 <!-- /TOC -->
@@ -73,6 +74,21 @@ some of this complexity with [Ansible AWX](https://github.com/ansible/awx) /
 [Ansible Tower](https://www.ansible.com/products/tower) or creating a custom
 GUI / custom API to pre-process what AP-ALB (or any other custom implementation
 that use our standard) will apply changes on your nodes.
+
+## ap-application-load-balancer-extras
+
+Please visit <http://ap-application-load-balancer-extras.etica.ai/>
+
+Some non-core features are not enabled by default on the base
+ap-application-load-balancer **but** are avaiible on
+ap-application-load-balancer-extras. In general the _extra features_ are more
+specific to the application deployment, like create system users, populate
+content for initial testing, basic installation of PHP, etc.
+
+Most of the time the features of ap-application-load-balancer-extras could be
+replaced by other Ansible roles or created ad-hoc by you. But since the base
+ap-application-load-balancer Role support target platforms than most of the
+popular Ansible roles, we released an extra role just for these features.
 
 ## License
 [![Public Domain](img/dominio-publico.png)](UNLICENSE)

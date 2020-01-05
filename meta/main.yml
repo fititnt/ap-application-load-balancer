@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: "ap_application_load_balancer"
   author: "Emerson Rocha <rocha(at)ieee.org>"
   description: |
     AP Application Load Balancer (AP-ALB). Sophisticated monolithic Ansible role

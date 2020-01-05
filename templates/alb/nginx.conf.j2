@@ -49,6 +49,13 @@ http {
 
     access_log  {{ alb_logs_path }}/access.log  main;
 
+{% if (alb_internal_node_nginx_server_names_hash_max_size is defined and alb_internal_node_nginx_server_names_hash_max_size|int > 1) %}
+    server_names_hash_max_size {{ alb_internal_node_nginx_server_names_hash_max_size }};
+{% endif %}
+{% if (alb_internal_node_nginx_server_names_hash_bucket_size is defined and alb_internal_node_nginx_server_names_hash_bucket_size|int > 1) %}
+    server_names_hash_bucket_size {{ alb_internal_node_nginx_server_names_hash_bucket_size }};
+{% endif %}
+
     sendfile        on;
     #tcp_nopush     on;
 

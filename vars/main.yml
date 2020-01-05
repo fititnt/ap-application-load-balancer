@@ -224,6 +224,18 @@ alb_internal_boostrap_very_early_abort_checks:
 # TODO: how to implement one netstat equivalent on all platforms even when we
 #       did not have netstat? This is and example netstat -tulpn | grep ':22'
 
+## NGinx performance & size of node ____________________________________________
+# @TODO: make it more user friendly to customize these variables (fititnt, 2020-01-05 09:19 BRT)
+
+# NGinx server names -----------------------------------------------------------
+# @see http://nginx.org/en/docs/http/server_names.html
+
+# @see http://nginx.org/en/docs/http/ngx_http_core_module.html#server_names_hash_bucket_size
+alb_internal_node_nginx_server_names_hash_bucket_size: 128 # Default: 32|64|128 (based processor’s cache line)
+
+# @see http://nginx.org/en/docs/http/ngx_http_core_module.html#server_names_hash_max_size
+alb_internal_node_nginx_server_names_hash_max_size: 512 # Default: 512
+
 ## Other/Temporary _____________________________________________________________
 alb_manange_openresty_install: yes    # We require manange OpenResty, this is not optional
 alb_manange_openresty_repository: yes # We require manange OpenResty, this is not optional
