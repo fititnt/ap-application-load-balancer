@@ -66,12 +66,12 @@ HAProxy & OpenResty, will need root access.
             - [app_healthcheck_extras <sup>(draft)</sup>](#app_healthcheck_extras-supdraftsup)
             - [app_healthcheck_path <sup>(draft)</sup>](#app_healthcheck_path-supdraftsup)
             - [app_healthcheck_value_ok <sup>(draft)</sup>](#app_healthcheck_value_ok-supdraftsup)
-        - [app_*_strategy](#app__strategy)
-            - [`app_hook_*`](#app_hook_)
+            - [app_hook_*](#app_hook_)
             - [`app_hook_after`](#app_hook_after)
             - [`app_hook_before`](#app_hook_before)
             - [`app_hook_onchange` <sup>(draft)</sup>](#app_hook_onchange-supdraftsup)
             - [`app_hook_[alb_play]_*`](#app_hook_alb_play_)
+        - [app_*_strategy](#app__strategy)
             - [app_alb_strategy](#app_alb_strategy)
             - [app_backup_strategy](#app_backup_strategy)
             - [app_ha_strategy](#app_ha_strategy)
@@ -362,9 +362,8 @@ shared (and often sloooow) filesystem.
 - **Examples of Value**: `Some string that health page have`, `Hello to my frontpage`
 
 > @TODO: this is a draft (fititnt, 2020-01-05 09:33 BRT)
-### app_*_strategy
 
-#### `app_hook_*`
+#### app_hook_*
 
 #### `app_hook_after`
 - **Required**: _no_
@@ -400,6 +399,10 @@ The special variable `alb_play` could be hardcoded on your playbook or defined
 as command line variable (e.g.
 `ansible-playbook -i hosts.yml my-playbook.yml -e="alb_play=infra"`) so only
 when this variable is defined, these hooks will be run.
+
+> @TODO: this explain some workarounds to archive this https://github.com/ansible/ansible/issues/17324
+
+### app_*_strategy
 
 #### app_alb_strategy
 - **Required**: _always_ (or will be ignored by OpenResty)

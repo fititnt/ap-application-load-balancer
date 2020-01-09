@@ -35,6 +35,9 @@
 - name: "openresty | apps | main.yml: include logging/main.yml"
   include: "{{ role_path }}/tasks/apps/logging/main.yml"
 
+- name: "openresty | consul | main.yml: include consul/main.yml"
+  include: "{{ role_path }}/tasks/apps/consul/main.yml"
+
 - name: "openresty | apps | alb-rules.yml: app_hook_after"
   include_tasks: "{{ item_active.app_hook_after }}"
   with_items: "{{ alb_internal_apps }}"

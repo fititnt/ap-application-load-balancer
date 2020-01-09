@@ -209,7 +209,7 @@ alb_sysapps__app_auth_basic_enabled: true
 ### AP-ALB Component: Apps _____________________________________________________
 
 alb_apps: []
-alb_default_app_index: "index.html"
+alb_default_app_index: "index.html index.htm"
 alb_default_app_root: "/var/www/html/"
 alb_apps__app_auth_basic_enabled: false
 alb_apps__app_auth_basic: "Private {{ item.app_uid }} Area"

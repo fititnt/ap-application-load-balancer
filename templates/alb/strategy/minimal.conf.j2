@@ -1,26 +1,26 @@
 {% extends "_base.conf.j2" %}
 {% block app_alb_strategy_name %}{{ super() }},minimal{% endblock %}
 
-{% block app_alb_raw_https %}
+{% block app_raw_https %}
 # minimal | block app_alb_raw_https
 
-{% if item.app_alb_raw_alb_file is defined and item.app_alb_raw_alb_file %}
-{% filter indent(width=4) %}{% include item.app_alb_raw_alb_file %}{% endfilter %}
+{% if item.app_alb_raw_file is defined and item.app_alb_raw_file %}
+    {% filter indent(width=4) %}{% include item.app_alb_raw_file %}{% endfilter %}
 {% endif %}
-{% if item.app_alb_raw_alb is defined and item.app_alb_raw_alb %}
-{% filter indent(width=4) %}{{ item.app_alb_raw_alb }}{% endfilter %}
+{% if item.app_alb_raw is defined and item.app_alb_raw %}
+    {% filter indent(width=4) %}{{ item.app_alb_raw }}{% endfilter %}
 {% endif %}
 
-{% endblock app_alb_raw_https %}
+{% endblock app_raw_https %}
 
-{% block app_alb_raw_http %}
+{% block app_raw_http %}
 # minimal | block app_alb_raw_http
 
-{% if item.app_alb_raw_alb_file is defined and item.app_alb_raw_alb_file %}
-{% filter indent(width=4) %}{% include item.app_alb_raw_alb_file %}{% endfilter %}
+{% if item.app_alb_raw_file is defined and item.app_alb_raw_file %}
+    {% filter indent(width=4) %}{% include item.app_alb_raw_file %}{% endfilter %}
 {% endif %}
-{% if item.app_alb_raw_alb is defined and item.app_alb_raw_alb %}
-{% filter indent(width=4) %}{{ item.app_alb_raw_alb }}{% endfilter %}
+{% if item.app_alb_raw is defined and item.app_alb_raw %}
+    {% filter indent(width=4) %}{{ item.app_alb_raw }}{% endfilter %}
 {% endif %}
 
-{% endblock app_alb_raw_http %}
+{% endblock app_raw_http %}

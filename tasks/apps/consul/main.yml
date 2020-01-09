@@ -1,0 +1,73 @@
+---
+
+# FILE:            {{ role_path }}/tasks/apps/consul/main.yml
+# LICENSE:         Public Domain
+# SEE:             https://docs.ansible.com/ansible/latest/modules/consul_module.html
+
+# TODO: allow multiple health checks for single apps (fititnt, 2020-01-08 19:08 BRT)
+
+- name: "openresty | apps | consul | main.yml (BETA!)"
+  consul:
+    check_name: "{{ item.1.check_name | default(item.0.app_uid) }}"
+    check_id: "{{ item.1.check_id | default(item.0.app_uid + '__' + inventory_hostname_short) }}"
+    service_name: "{{ item.1.service_name | default(item.0.app_uid) }}"
+    service_id: "{{ item.1.service_id | default(item.0.app_uid + '__' + inventory_hostname_short) }}"
+    state: "{{ item.1.state | default(omit) }}"
+    host: "{{ item.1.host | default(omit) }}"
+    http: "{{ item.1.http | default(omit) }}"
+    interval: "{{ item.1.interval | default(omit) }}"
+    notes: "{{ item.1.notes | default(omit) }}"
+    port: "{{ item.1.port | default(omit) }}"
+    scheme: "{{ item.1.scheme | default(omit) }}"
+    script: "{{ item.1.script | default(omit) }}"
+    service_address: "{{ item.1.service_address | default(omit) }}"
+    service_port: "{{ item.1.service_port | default(omit) }}"
+    tags: "{{ item.1.tags | default(omit) }}"
+    timeout: "{{ item.1.timeout | default(omit) }}"
+    token: "{{ item.1.token | default(omit) }}"
+    ttl: "{{ item.1.ttl | default(omit) }}"
+    validate_certs: "{{ item.1.validate_certs | default(omit) }}"
+  # with_items: "{{ alb_internal_apps }}"
+  with_subelements:
+    - "{{ alb_internal_apps }}"
+    - "app_consul_services"
+    - skip_missing: true
+  # vars:
+  #   type_of_app: "app"
+  #   basic_auth_enabled: "{{ item.app_auth_basic_enabled | default(alb_apps__app_auth_basic_enabled) }}"
+  #   auth_basic: '"{{ item.app_auth_basic | default(alb_apps__app_auth_basic) }}"'
+  #   auth_basic_user_file: '"{{ item.app_auth_basic_user_file | default(alb_apps__app_auth_basic_user_file) }}"'
+  when:
+    # - item.app_consul_service is defined
+    # - item.app_consul_services is defined
+    # - alb_internal_apps is defined and alb_internal_apps[0] is defined
+    # - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
+    # - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+  register: result_consul_rules
+  #notify:
+  #  - "reload openresty"
+  #  - "info alb component apps"
+
+- name: "openresty | apps | consul | main.yml debug (BETA!)"
+  debug:
+    msg:
+      - zero: "{{ item.0 }}"
+      - one: "{{ item.1 }}"
+      - result_consul_rules: "{{ result_consul_rules | default('undefined') }}"
+  # with_items: "{{ alb_internal_apps }}"
+  with_subelements:
+    - "{{ alb_internal_apps }}"
+    - "app_consul_services"
+    - skip_missing: true
+  # vars:
+  #   type_of_app: "app"
+  #   basic_auth_enabled: "{{ item.app_auth_basic_enabled | default(alb_apps__app_auth_basic_enabled) }}"
+  #   auth_basic: '"{{ item.app_auth_basic | default(alb_apps__app_auth_basic) }}"'
+  #   auth_basic_user_file: '"{{ item.app_auth_basic_user_file | default(alb_apps__app_auth_basic_user_file) }}"'
+  when:
+    # - item.app_consul_service is defined
+    # - item.app_consul_services is defined
+    # - alb_internal_apps is defined and alb_internal_apps[0] is defined
+    # - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
+    # - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+  # register: result_apps_rules
