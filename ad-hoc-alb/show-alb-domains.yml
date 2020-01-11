@@ -1,0 +1,46 @@
+---
+# FILE:            {{ role_path }}/ad-hoc-alb/show-alb-domains.yml
+# LICENSE:         Public Domain
+# DESCRIPTION:     This playbook executes /opt/alb/bin/alb-cli-domains on nodes
+#                  grouped as alb_nodes (customizable using
+#                  -e="target=your_custom_group") and print.
+#                  As extra feature it also merge and sort domains values for
+#                  all nodes.
+#
+# USAGE:           With this folder symlinked to a folter ad-hoc-alb where you
+#                  run your playbooks
+#                      ansible-playbook ad-hoc-alb/show-alb-domains.yml -i hosts.yml
+#                      ansible-playbook ad-hoc-alb/show-alb-domains.yml -i hosts.yml -e="target=alb_nodes"
+
+- name: "Show AP-ALB domains (/opt/alb/bin/alb-cli-domains)"
+  hosts: "{{ target | default('alb_nodes') }}"
+  gather_facts: no
+  vars:
+    all_domains: []
+  tasks:
+    - name: "/opt/alb/bin/alb-cli-domains (run command)"
+      shell: "/opt/alb/bin/alb-cli-domains"
+      changed_when: false
+      register: ad_hoc_alb_domains
+
+    - name: "/opt/alb/bin/alb-cli-domains (print results, each host)"
+      debug:
+        msg: "{{ ad_hoc_alb_domains.stdout_lines }}"
+
+    - name: "/opt/alb/bin/alb-cli-domains (concat all_domains from all nodes)"
+      # debug:
+      #   msg: "{{ hostvars[item].ad_hoc_alb_domains.stdout_lines }}"
+      set_fact:
+        all_domains: "{{ all_domains }} + {{ hostvars[item].ad_hoc_alb_domains.stdout_lines }}"
+      with_items: "{{ groups[target | default('alb_nodes')] }}"
+      run_once: true
+
+    - name: "/opt/alb/bin/alb-cli-domains (unique & sorted values for all_domains)"
+      set_fact:
+        all_domains: "{{ all_domains | unique | sort }}"
+      run_once: true
+
+    - name: "/opt/alb/bin/alb-cli-domains all_domains"
+      debug:
+        msg:
+          all_domains: "{{ all_domains }}"

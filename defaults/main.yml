@@ -211,6 +211,7 @@ alb_sysapps__app_auth_basic_enabled: true
 alb_apps: []
 alb_default_app_index: "index.html index.htm"
 alb_default_app_root: "/var/www/html/"
+alb_default_app_robots_disabled: null
 alb_apps__app_auth_basic_enabled: false
 alb_apps__app_auth_basic: "Private {{ item.app_uid }} Area"
 alb_apps__app_auth_basic_user_file: "/opt/alb/apps/{{ item.app_uid }}.htpasswd"
