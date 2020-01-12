@@ -251,7 +251,13 @@ http {
     # HTTP server
     server {
       # listen 80;
-      listen {{ alb_openresty_ip }}:{{ alb_openresty_httpport }};
+      listen {{ alb_openresty_ip }}:{{ alb_openresty_httpport }} default_server;
+      server_name  _;
+
+      location = /ping {
+          access_log off;
+          return 200 "pong\n";
+      }
 
       # Endpoint used for performing domain verification with Let's Encrypt.
       location /.well-known/acme-challenge/ {
@@ -300,6 +306,11 @@ http {
         }
         ssl_certificate /etc/ssl/resty-auto-ssl-fallback.crt;
         ssl_certificate_key /etc/ssl/resty-auto-ssl-fallback.key;
+
+        location = /ping {
+            access_log off;
+            return 200 "pong\n";
+        }
 
 {% if alb_openresty_stub_status|bool %}
         # TODO: do better ACL here since HAProxy is also 127.0.0.1 (fititnt, 2019-11-26 19:56 BRT)
