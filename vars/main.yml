@@ -42,6 +42,16 @@ alb_internal_sysapps_domain: "{{ alb_sysapps_domain | default(ansible_host) }}"
 alb_internal_sysapps_domain_haproxy_stats: "{{ alb_sysapps_domain_haproxy_stats | default('haproxy.' + alb_internal_sysapps_domain) }}"
 alb_internal_sysapps_domain_consul_ui: "{{ alb_sysapps_domain_consul_ui | default('consul.' + alb_internal_sysapps_domain) }}"
 
+alb_internal_sysapps_grafana_enabled: "{{ alb_node_grafana_enabled | default(false) }}"
+alb_internal_sysapps_grafana_domain: "{{ alb_node_grafana_domain | default('grafana.' + alb_internal_sysapps_domain) }}"
+alb_internal_sysapps_grafana_ip: "{{ alb_node_grafana_ip | default('127.0.0.1') }}"
+alb_internal_sysapps_grafana_port: "{{ alb_node_grafana_port | default('3000') }}"
+
+alb_internal_sysapps_prometheus_enabled: "{{ alb_node_prometheus_enabled | default(false) }}"
+alb_internal_sysapps_prometheus_domain: "{{ alb_node_prometheus_domain | default('prometheus.' + alb_internal_sysapps_domain) }}"
+alb_internal_sysapps_prometheus_ip: "{{ alb_node_prometheus_ip | default('127.0.0.1') }}"
+alb_internal_sysapps_prometheus_port: "{{ alb_node_prometheus_port | default('9090') }}"
+
 ### AP-ALB Control Node ________________________________________________________
 alb_internal_constrolnode_enabled: "{{ alb_constrolnode_enabled | default(false) }}"
 alb_internal_constrolnode_workspace: "{{ alb_constrolnode_workspace | default('/var/opt/alb-controlnode-default') }}"

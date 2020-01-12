@@ -75,3 +75,17 @@ alb_sysapps_alb:
     app_alb_strategy: "proxy"
     app_alb_proxy: "http://127.0.0.1:8500"
     app_state: "{{ alb_internal_node_storage_driver == 'consul' | ternary('present', 'absent') }}"
+
+  - app_uid: "_grafana"
+    app_domain: "{{ alb_internal_sysapps_grafana_domain }}"
+    app_alb_strategy: "proxy"
+    app_alb_proxy: "http://{{ alb_internal_sysapps_grafana_ip }}:{{ alb_internal_sysapps_grafana_port }}"
+    app_auth_basic_enabled: false # Basic auth may conflict with Grafana Auth.
+    app_state: "{{ alb_internal_sysapps_grafana_enabled|bool | ternary('present', 'absent') }}"
+
+  - app_uid: "_prometheus"
+    app_domain: "{{ alb_internal_sysapps_prometheus_domain }}"
+    app_alb_strategy: "proxy"
+    app_alb_proxy: "http://{{ alb_internal_sysapps_prometheus_ip }}:{{ alb_internal_sysapps_prometheus_port }}"
+    # app_auth_basic_enabled: false # Basic auth may conflict with Grafana Auth.
+    app_state: "{{ alb_internal_sysapps_prometheus_enabled|bool | ternary('present', 'absent') }}"

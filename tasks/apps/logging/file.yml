@@ -2,6 +2,8 @@
 # FILE:            {{ role_path }}/tasks/apps/logging/file.yml
 # LICENSE:         Public Domain
 
+# TODO: `app_state: absent` should affect this apps/logging (fititnt, 2020-01-12 02:38 BRT)
+
 - name: "apps | logging | file.yml: /var/log/app/[app_uid]/ directory"
   file:
     path: /var/log/app/{{ item.app_uid }}
