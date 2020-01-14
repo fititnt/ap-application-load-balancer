@@ -281,6 +281,7 @@ alb_apprule_automatichttps_httpsblock: |
 
   #  Let's Encrypt acme-challenge
   location /.well-known/acme-challenge/ {
+    auth_basic off;
     content_by_lua_block {
       auto_ssl:challenge_server()
     }
@@ -291,6 +292,7 @@ alb_apprule_automatichttp_httpsblock: |
   ## Automatic HTTPS / :80 port (DO NOT REMOVE) - Start
   #  Let's Encrypt acme-challenge
   location /.well-known/acme-challenge/ {
+    auth_basic off;
     content_by_lua_block {
       auto_ssl:challenge_server()
     }

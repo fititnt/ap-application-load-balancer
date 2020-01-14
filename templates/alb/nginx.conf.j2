@@ -255,6 +255,7 @@ http {
       server_name  _;
 
       location = /ping {
+          auth_basic off;
           access_log off;
           return 200 "pong\n";
       }
@@ -308,6 +309,7 @@ http {
         ssl_certificate_key /etc/ssl/resty-auto-ssl-fallback.key;
 
         location = /ping {
+            auth_basic off;
             access_log off;
             return 200 "pong\n";
         }

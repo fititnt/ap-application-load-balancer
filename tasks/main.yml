@@ -16,6 +16,11 @@
         # If behind NAT, this may not represent real public IPv4.
         # Alternative: https://docs.ansible.com/ansible/latest/modules/ipify_facts_module.html
         ansible_default_ipv4: "{{ ansible_default_ipv4.address | default('undefined') }}"
+      run_related:
+        alb_run_only_app_uid: "{{ alb_run_only_app_uid | default('undefined') }}"
+        alb_forceredeploy: "{{ alb_forceredeploy | default('undefined') }}"
+        ansible_run_tags: "{{ ansible_run_tags | default('undefined') }}"
+        ansible_skip_tags: "{{ ansible_skip_tags | default('undefined') }}"
   tags:
     - alb
     - always
