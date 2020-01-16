@@ -1,4 +1,4 @@
-# AP Application Load Balancer - v0.8.7-beta
+# AP Application Load Balancer - v0.9.0-beta
 
 [![GitHub: fititnt/ap-application-load-balancer](docs/img/badges/github.svg)](https://github.com/fititnt/ap-application-load-balancer) [![Website: ap-application-load-balancer.etica.ai](docs/img/badges/website.svg)](https://ap-application-load-balancer.etica.ai/)
 

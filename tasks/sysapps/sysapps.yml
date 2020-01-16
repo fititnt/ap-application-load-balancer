@@ -49,6 +49,7 @@
     - alb_internal_sysapps is defined and alb_internal_sysapps[0] is defined
     - alb_sysapps_htpassword is defined and alb_sysapps_htpassword[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+    - "(alb_run_only_app_uid is not defined)"
 
 - name: "sysapps | ALB Sysapp Rules"
   template:
@@ -69,6 +70,7 @@
   when:
     - alb_internal_sysapps is defined and alb_internal_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
   notify:
     - "reload openresty"
     - "info alb component sysapps"
@@ -84,6 +86,7 @@
   when:
     - alb_internal_sysapps is defined and alb_internal_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
 
 - name: "sysapps | mkdir /var/log/sysapp/[app_uid]/access.log"
   file:
@@ -98,6 +101,7 @@
   when:
     - alb_internal_sysapps is defined and alb_internal_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
 
 - name: "sysapps | mkdir /var/log/sysapp/[app_uid]/error.log"
   file:
@@ -112,3 +116,4 @@
   when:
     - alb_internal_sysapps is defined and alb_internal_sysapps[0] is defined
     - "(alb_sysapps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
