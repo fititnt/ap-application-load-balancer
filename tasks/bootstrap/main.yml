@@ -70,10 +70,12 @@
 
 ## Bootstraping, now with Python and Facts _____________________________________
 
-- name: "updated-system/main.yml"
-  include: updated-system/main.yml
-  tags:
-    - alb-bootstrap-updated-system
+# TODO: This feature may break a Galera Cluster when running agains all nodes
+#       and not in pararell. Disabling for now (fititnt, 2020-01-19 03:58 BRT)
+# - name: "updated-system/main.yml"
+#   include: updated-system/main.yml
+#   tags:
+#     - alb-bootstrap-updated-system
 
 - name: "basic-tools/main.yml"
   include: basic-tools/main.yml

@@ -16,6 +16,8 @@
     name: alb
     group: alb
     comment:  "ALB (Application Load Balancer) user"
+    generate_ssh_key: yes
+    create_home: yes
     state: present
 
 #- name: "bootstrap | alb-standard | user-groups: alb group"
