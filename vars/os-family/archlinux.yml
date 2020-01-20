@@ -12,6 +12,11 @@ alb_internal_package_manager_group: "{{ ansible_pkg_mgr }}"
 alb_internal_bootstrap_basic_tools:
   - name: rsync
     state: present
+  ## openssh-client
+  # Some conteiners may not have ssh-keygen command.
+  # (this needs be tested on all OSs to be sure about package name)
+  - name: openssh-client
+    state: present
   - name: net-tools
     state: present
 

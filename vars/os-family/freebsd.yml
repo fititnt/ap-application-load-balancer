@@ -20,6 +20,11 @@ ansible_python_interpreter: "/usr/local/bin/python3"
 alb_internal_bootstrap_basic_tools:
   - name: rsync
     state: present
+  ## openssh-client
+  # Some conteiners may not have ssh-keygen command.
+  # (this needs be tested on all OSs to be sure about package name)
+  - name: openssh-client
+    state: present
 #  - net-tools # FreeBSD 12 seems to already ship with netstat
 
 alb_internal_bootstrap_extra_tools:

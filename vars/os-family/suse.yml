@@ -15,6 +15,11 @@ alb_internal_bootstrap_basic_tools:
     state: present
   - name: rpm
     state: present
+  ## openssh-client
+  # Some conteiners may not have ssh-keygen command.
+  # (this needs be tested on all OSs to be sure about package name)
+  - name: openssh-client
+    state: present
   - name: rsync
     state: present
   - name: net-tools

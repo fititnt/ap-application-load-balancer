@@ -20,6 +20,10 @@
       stdout: "{{ alb_status_alb_apps.stdout | default('{}') | from_json }}"
       stderr_lines: "{{ alb_status_alb_apps.stderr_lines | default('undefined') }}"
       # raw: "{{ alb_status_alb_apps | default('undefined') }}"
+  # We ignore errors here because app_alb_raw, in come very specific cases, even
+  # if the same Ansible version generate the JSON export may not unpack without
+  # Errors.
+  ignore_errors: true
   when:
     - "alb_internal_status_alb_apps is defined and alb_internal_status_alb_apps"
     - "(alb_status_alb_apps.failed|bool is sameas false)"
