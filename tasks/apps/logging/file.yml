@@ -2,12 +2,12 @@
 # FILE:            {{ role_path }}/tasks/apps/logging/file.yml
 # LICENSE:         Public Domain
 
-# TODO: `app_state: absent` should affect this apps/logging (fititnt, 2020-01-12 02:38 BRT)
+# TODO: ignore this full check if apps/alb/openresty-conf.yml didin't changed (fititnt, 2020-01-21 06:15 BRT)
 
 - name: "apps | logging | file.yml: /var/log/app/[app_uid]/ directory"
   file:
     path: /var/log/app/{{ item.app_uid }}
-    state: directory
+    state: "{{ item.app_state | default('directory') }}"
     owner: "{{ alb_internal_root_user }}"
     group: "{{ alb_nginx_user }}"
   with_items: "{{ alb_internal_apps }}"
@@ -31,6 +31,7 @@
     - alb_internal_apps is defined and alb_internal_apps[0] is defined
     - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
     - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+    - "(item.app_state is not defined) or (item.app_state != 'absent')"
 
 - name: "apps | logging | file.yml: /var/log/app/[app_uid]/error.log"
   file:
@@ -47,3 +48,4 @@
     - alb_internal_apps is defined and alb_internal_apps[0] is defined
     - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
     - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+    - "(item.app_state is not defined) or (item.app_state != 'absent')"

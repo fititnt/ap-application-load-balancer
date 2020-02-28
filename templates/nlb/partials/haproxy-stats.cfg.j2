@@ -16,7 +16,7 @@ frontend stats
 
 {% if (alb_haproxy_stats_authcredentials is defined and (alb_haproxy_stats_authcredentials | length > 0) ) %}
 {% for userandpassword in alb_haproxy_stats_authcredentials %}
-      stats auth    {{ userandpassword.username }}:{{ userandpassword.password }}
+      stats auth    '{{ userandpassword.username }}':'{{ userandpassword.password }}'
 {% endfor %}
 {% else %}
 # alb_haproxy_stats_authcredentials empty

@@ -3,7 +3,7 @@
 # FILE:            {{ role_path }}/tasks/apps/alb/openresty-conf.yml
 # LICENSE:         Public Domain
 
-- name: "openresty | apps | alb | openresty-conf.yml: /opt/alb/apps/[item.app_uid].conf"
+- name: "apps | alb | openresty-conf.yml: /opt/alb/apps/[item.app_uid].conf (new, changes)"
   template:
     # src: "{{ item.vhost_template|default(alb_apps_serverblock_template) }}"
     src: "{{ alb_nginx_alb_stragies_folder }}/{{ item.app_alb_strategy }}.conf.j2"
@@ -23,7 +23,24 @@
     - alb_internal_apps is defined and alb_internal_apps[0] is defined
     - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
     - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+    - "(item.app_state is not defined) or (item.app_state != 'absent')"
   register: result_apps_rules
+  notify:
+    - "reload openresty"
+    - "info alb component apps"
+
+- name: "apps | alb | openresty-conf.yml: /opt/alb/apps/[item.app_uid].conf (remove if item.app_state=absent)"
+  file:
+    dest: "/opt/alb/apps/{{ item.app_uid }}.conf"
+    state: "{{ item.app_state }}"
+  with_items: "{{ alb_internal_apps }}"
+  when:
+    # - item.app_alb_strategy is defined
+    - alb_internal_apps is defined and alb_internal_apps[0] is defined
+    - "(alb_run_only_app_uid is not defined) or (alb_run_only_app_uid == item.app_uid)"
+    - "(alb_apps_facts_deployed is changed) or (alb_forceredeploy|bool)"
+    - "(item.app_state is defined) and (item.app_state == 'absent')"
+  # register: result_apps_rules
   notify:
     - "reload openresty"
     - "info alb component apps"
